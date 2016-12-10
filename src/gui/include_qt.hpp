@@ -1,0 +1,11 @@
+#include "../logging.hpp"
+#include <QMainWindow>
+#include <QApplication>
+#include <QPushButton>
+#include <QDialog>
+#include <QRadioButton>
+#include <QLineEdit>
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QSpinBox>
