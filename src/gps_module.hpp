@@ -6,11 +6,11 @@
 struct GpsFrame {
     double m_altitude;
     
-    double m_latitude = 0;
-    double m_longitude = 0;
+    double m_latitude = 0.0;
+    double m_longitude = 0.0;
     
-    double m_x = 0;
-    double m_y = 0;
+    double m_x = 0.0;
+    double m_y = 0.0;
 };
 
 struct GGAFrame : public GpsFrame {

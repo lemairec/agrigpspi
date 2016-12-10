@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(gps_agri)
+project(agri_gps_pi)
 
 configure_file (
 "${PROJECT_SOURCE_DIR}/src/environnement.hpp.in"
@@ -13,7 +13,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(Boost REQUIRED COMPONENTS system)
 include_directories( ${Boost_INCLUDE_DIR} )
 
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
 
 FILE(GLOB_RECURSE src_hpp src/*.hpp)
 FILE(GLOB_RECURSE src_cpp src/*.cpp)
@@ -21,10 +21,10 @@ FILE(GLOB_RECURSE src_cpp src/*.cpp)
 set(sources ${src_hpp} ${src_cpp} src/environnement.hpp.in)
 
 FIND_PACKAGE(Qt5Core)
-add_executable(gps_agri ${sources})
-qt5_use_modules(gps_agri Widgets)
+add_executable(agri_gps_pi ${sources})
+qt5_use_modules(agri_gps_pi Widgets)
 
-target_link_libraries(gps_agri ${Boost_LIBRARIES})
+target_link_libraries(agri_gps_pi ${Boost_LIBRARIES})
 
 ###
 # grouping files for visual studio or xcode

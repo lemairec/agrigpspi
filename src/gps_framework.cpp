@@ -163,7 +163,7 @@ void GpsFramework::exportHtml(){
 }
 
 void GpsFramework::readFile(){
-    std::ifstream infile("/Users/lemairec/fablab/agrigpspi/gps_fablab.ubx");
+    std::ifstream infile(GPS_TEST_FILE);
     std::string line;
     while (std::getline(infile, line))
     {
