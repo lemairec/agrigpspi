@@ -15,11 +15,11 @@ const std::string  ProjectVersion = "..";
 
 const std::string  ProjectCompleteName = "agri_gps_pi ..@PROJECT_VERSION_PATCH";
 
-const std::string  ProjectSourceDir = "/home/lemairec/workspace/agrigpspi";
-const std::string  ProjectSourceBin = "/home/lemairec/workspace/agrigpspi/build";
+const std::string  ProjectSourceDir = "/home/lemairec/agrigpspi";
+const std::string  ProjectSourceBin = "/home/lemairec/agrigpspi/build";
 
-#define LOG_FILE "/home/lemairec/workspace/agrigpspi/build/log.txt"
-#define GPS_LOG_FILE "/home/lemairec/workspace/agrigpspi/build/gps.ubx"
-#define GPS_TEST_FILE "/home/lemairec/workspace/agrigpspi/gps.ubx"
+#define LOG_FILE "/home/lemairec/agrigpspi/build/log.txt"
+#define GPS_LOG_FILE "/home/lemairec/agrigpspi/build/gps.ubx"
+#define GPS_TEST_FILE "/home/lemairec/agrigpspi/gps.ubx"
 
 #endif //ENVIRONNEMENT_H

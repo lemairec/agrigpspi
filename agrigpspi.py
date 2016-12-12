@@ -23,7 +23,7 @@ if platform.mac_ver()[0] != '':
 CPU_CORES = max(multiprocessing.cpu_count(), 1)
 PATH = os.getcwd();
 
-PATH_SRC = "~/workspace/agrigpspi"
+PATH_SRC = "~/agrigpspi"
 
 def mkdir_p(path):
     if not os.path.exists(path):
@@ -91,29 +91,29 @@ class AgriGpsPi(object):
             #call('brew tap homebrew/science')
             #call('brew install opencv')
             call('brew install qt5')
-            call('brew install fftw')
-            call('brew install libharu')
+            #call('brew install fftw')
+            #call('brew install libharu')
             #call('brew install boost')
-            call('brew install boost-python')
-            call('brew install fluid-synth')
+            #call('brew install boost-python')
+            #call('brew install fluid-synth')
         else:
             call('sudo apt-get update')
             call('sudo apt-get install -y git')
             call('sudo apt-get install -y build-essential')
             call('sudo apt-get install -y cmake rpm')
-            call('sudo apt-get install -y gdb')
+            #call('sudo apt-get install -y gdb')
+            #call('sudo apt-get install -y valgrind')
 
-            call('sudo apt-get install -y libcv-dev')
-            call('sudo apt-get install -y libopencv-dev')
-            call('sudo apt-get install -y libhighgui-dev')
-            call('sudo apt-get install -y valgrind')
+            #call('sudo apt-get install -y libcv-dev')
+            #call('sudo apt-get install -y libopencv-dev')
+            #call('sudo apt-get install -y libhighgui-dev')
             call('sudo apt-get install -y qtmultimedia5-dev')
-            call('sudo apt-get install -y exuberant-ctags')
+            #call('sudo apt-get install -y exuberant-ctags')
             #call('sudo apt-get install -y gitg gitk')
             #call('sudo apt-get install -y cmake-gui')
-        self.config_git()
-        self.install_vim()
-        self.run()
+        #self.config_git()
+        #self.install_vim()
+        self.clear()
 
 
     def run(self):
@@ -133,9 +133,14 @@ class AgriGpsPi(object):
         if OSX:
             print "warning OSX"
             return
-        call('rm -rf ~/weedvision/build; mkdir ~/weedvision/build');
-        call('find ~/weedvision -name \"*.swp\" -exec rm -rf {} \\;; find ~/weedvision -name \"*~\" -exec rm -rf {} \\;;');
+        call('rm -rf ' + PATH_SRC + '/build')
+        call('find ' + PATH_SRC + ' -name \"*.swp\" -exec rm -rf {} \\;; find ~/weedvision -name \"*~\" -exec rm -rf {} \\;;')
         self.run()
+
+    def setup(self):
+        call('cd ' + PATH_SRC)
+        call('git pull')
+        self.install()
 
     def piece3d(self):
         call('python ~/weedvision/piece3d/piece3d.py')
@@ -144,7 +149,7 @@ class AgriGpsPi(object):
         self.run()
 
     def vim_f6(self):
-        self.clear()
+        self.setup()
 
 
 if __name__ == '__main__':

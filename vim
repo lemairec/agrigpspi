@@ -35,7 +35,7 @@ class VimExec(object):
         call('./agrigpspi.py vim_f5');
 
     def vim_f6(self):
-        call('./weedvision vim_f6');
+        call('./agrigpspi.py vim_f6');
 
 
 if __name__ == '__main__':
