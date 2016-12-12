@@ -54,6 +54,8 @@ void MainWindow::setupUi(){
     m_statusBar = new QStatusBar;
     setStatusBar(m_statusBar);
     m_statusBar->showMessage("prêt");
+    
+    showFullScreen();
 }
 
 void MainWindow::setMessageStatusBar(QString & s){

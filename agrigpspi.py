@@ -141,7 +141,6 @@ class AgriGpsPi(object):
 
     def setup(self):
         call('cd ' + PATH_SRC)
-        call('git pull')
         self.install_desktop()
         self.install()
 

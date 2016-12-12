@@ -18,6 +18,7 @@ public:
     QPushButton * m_btnB;
     QPushButton * m_btnZoomUp;
     QPushButton * m_btnZoomDown;
+    QPushButton * m_btnClose;
 
     
     

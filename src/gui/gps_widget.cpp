@@ -24,11 +24,14 @@ GpsWidget::GpsWidget(){
     m_btnB->setGeometry(0,50, 50, 50);
     m_btnB->setText("B");
     m_btnZoomUp = new QPushButton(this);
-    m_btnZoomUp->setGeometry(0,300, 50, 50);
+    m_btnZoomUp->setGeometry(10,300, 40, 40);
     m_btnZoomUp->setText("+");
     m_btnZoomDown = new QPushButton(this);
-    m_btnZoomDown->setGeometry(0,350, 50, 50);
+    m_btnZoomDown->setGeometry(10,350, 40, 40);
     m_btnZoomDown->setText("-");
+    m_btnClose = new QPushButton(this);
+    m_btnClose->setGeometry(m_width - 50, 10, 40, 40);
+    m_btnClose->setText("x");
     addButtons();
     m_zoom = 10;
     
@@ -36,6 +39,7 @@ GpsWidget::GpsWidget(){
     connect(m_btnZoomDown, SIGNAL(clicked()), this, SLOT(onZoomDown()));
     connect(m_btnA, SIGNAL(clicked()), this, SLOT(onBtnA()));
     connect(m_btnB, SIGNAL(clicked()), this, SLOT(onBtnB()));
+    connect(m_btnClose, SIGNAL(clicked()), qApp,SLOT(quit()));
     m_penBlack = QPen(Qt::black);
     m_penRed = QPen(Qt::red);
     m_penBlue = QPen(Qt::blue);
