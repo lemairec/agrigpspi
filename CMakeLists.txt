@@ -8,6 +8,8 @@ configure_file (
 
 
 FIND_PACKAGE(Qt5Core)
+find_library(PTHREAD pthread)
+
 set(CMAKE_AUTOMOC ON)
 
 find_package(Boost REQUIRED COMPONENTS system)
@@ -24,7 +26,7 @@ FIND_PACKAGE(Qt5Core)
 add_executable(agri_gps_pi ${sources})
 qt5_use_modules(agri_gps_pi Widgets)
 
-target_link_libraries(agri_gps_pi ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(agri_gps_pi ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${PTHREAD})
 
 ###
 # grouping files for visual studio or xcode
