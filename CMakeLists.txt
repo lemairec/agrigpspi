@@ -24,7 +24,7 @@ FIND_PACKAGE(Qt5Core)
 add_executable(agri_gps_pi ${sources})
 qt5_use_modules(agri_gps_pi Widgets)
 
-target_link_libraries(agri_gps_pi ${Boost_LIBRARIES})
+target_link_libraries(agri_gps_pi ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 ###
 # grouping files for visual studio or xcode
