@@ -74,8 +74,8 @@ class AgriGpsPi(object):
         call('cp ~/weedvision/install/vimrc ~/.vimrc')
 
     def install_desktop(self):
-        call('sudo cp ~/weedvision/install/weedvision.desktop ~/Desktop')
-        call('sudo chmod +x ~/Desktop/weedvision.desktop')
+        call('sudo cp ' + PATH_SRC + '/install/agri_gps_pi.desktop ~/Desktop')
+        call('sudo chmod +x ~/Desktop/agri_gps_pi.desktop')
         #debug dex weedvision.desktop
 
     def config_git(self):
@@ -142,6 +142,7 @@ class AgriGpsPi(object):
     def setup(self):
         call('cd ' + PATH_SRC)
         call('git pull')
+        self.install_desktop()
         self.install()
 
     def piece3d(self):

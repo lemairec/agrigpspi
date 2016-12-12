@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=agri_gps_pi
+Exec=sh -c "~/agrigpspi/agrigpspi.py run"
+Terminal=true
