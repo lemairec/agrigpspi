@@ -7,6 +7,7 @@
 #include "../gps_framework.hpp"
 
 #include <math.h>
+#include <chrono>
 
 GpsWidget::GpsWidget(){
     connect(this, SIGNAL(onValueChangeSignal()), this, SLOT(onValueChangeSlot()));
@@ -68,7 +69,18 @@ void GpsWidget::addligne(double l, double x, double y){
     scene->addLine(m_width/2 + x0, m_height/2 - y0, m_width/2 + x1, m_height/2 - y1, m_penBlack);
 }
 
+auto last_update = std::chrono::system_clock::now();
+
 void GpsWidget::onValueChangeSlot(){
+    auto now = std::chrono::system_clock::now();
+    std::chrono::duration<double> diff = now - last_update;
+    if(diff.count() < 0.2){
+        INFO(diff.count());
+        return;
+    }
+    INFO(diff.count());
+    last_update = now;
+    
     int h = 400;
     int w = 800;
     //INFO(w << " " << h);
