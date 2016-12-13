@@ -41,12 +41,17 @@ public:
     double m_b;
     double m_c;
     double m_sqrt_m_a_m_b;
+    
+    double m_ab_x = 0.0;
+    double m_ab_y = 0.0;
+    
     void setAB();
     
     //deplacement
     double m_deplacementX;
     double m_deplacementY;
     double m_deplacementAngle;
+    bool m_sensAB = true;
     void calculDeplacement();
     
     std::list<GGAFrame *> m_list;

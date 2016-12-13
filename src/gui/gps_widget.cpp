@@ -122,7 +122,7 @@ void GpsWidget::onValueChangeSlot(){
     scene->addLine(w/2, h/2, w/2 + f.m_deplacementX*m_zoom, h/2 - f.m_deplacementY*m_zoom, m_penBlue                                                                                                                                                                                                                                                                                                                                 );
     
     std::ostringstream oss;
-    oss <<  "nbSt " << last_frame->m_nbrSattelites << " fix " << last_frame->m_fix;
+    oss <<  "nbSt " << last_frame->m_nbrSattelites << " fix " << last_frame->m_fix << " AB " << f.m_sensAB;
     //INFO(oss.str());
     QString s = QString::fromStdString(oss.str());
     emit setMessageStatusBar(s);

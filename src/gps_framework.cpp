@@ -92,6 +92,10 @@ void GpsFramework::savePointB(){
 }
 
 void GpsFramework::setAB(){
+    m_ab_x = m_pointB->m_x - m_pointA->m_x;
+    m_ab_y = m_pointB->m_y - m_pointA->m_y;
+    
+    
     m_a = -(m_pointB->m_y - m_pointA->m_y);
     m_b = m_pointB->m_x - m_pointA->m_x;
     m_c = -m_a * m_pointA->m_x - m_b *  m_pointA->m_y;
@@ -117,6 +121,12 @@ void GpsFramework::calculDeplacement(){
         if(m_deplacementX != 0){
             m_deplacementAngle = atan(m_deplacementY/m_deplacementX);
         }
+        
+        if(m_ab_x != 0 || m_ab_y != 0){
+            double det = m_ab_x*m_deplacementY + m_ab_y*m_deplacementX;
+            m_sensAB = (det > 0);
+        }
+        
     }
 }
 
