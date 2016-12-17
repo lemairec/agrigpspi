@@ -9,6 +9,8 @@
 #include <math.h>
 #include <chrono>
 
+#include <QGraphicsTextItem>
+
 GpsWidget::GpsWidget(){
     connect(this, SIGNAL(onValueChangeSignal()), this, SLOT(onValueChangeSlot()));
     scene = new QGraphicsScene(this);
@@ -33,6 +35,9 @@ GpsWidget::GpsWidget(){
     m_btnClose = new QPushButton(this);
     m_btnClose->setGeometry(m_width - 50, 10, 40, 40);
     m_btnClose->setText("x");
+    m_btnOptions = new QPushButton(this);
+    m_btnOptions->setGeometry(m_width - 50, 60, 40, 40);
+    m_btnOptions->setText("o");
     addButtons();
     m_zoom = 10;
     
@@ -55,6 +60,24 @@ void GpsWidget::drawCourbe(double l){
     
 }
 
+
+void GpsWidget::drawLines(double x, double y){
+    //addligne(0, x, y);
+    GpsFramework & f = GpsFramework::Instance();
+    double x0 = x;
+    double y0 = y;
+    double res = -(y0*f.m_b +(f.m_a * x0 + f.m_c));
+    double l = res / (f.m_b/cos(atan(-f.m_a/f.m_b)));
+    
+    int l0 = round(l/27)*27;
+    for(int i = -10; i <= 10; ++i){
+        addligne(l0 + i*27, x, y);
+    }
+    
+    //double y0*f.m_b + f.m_a * x0 + f.m_c= - res;
+    
+}
+
 void GpsWidget::addligne(double l, double x, double y){
     GpsFramework & f = GpsFramework::Instance();
     double res = l*f.m_b/cos(atan(-f.m_a/f.m_b));
@@ -71,14 +94,41 @@ void GpsWidget::addligne(double l, double x, double y){
 
 auto last_update = std::chrono::system_clock::now();
 
+void GpsWidget::drawBarreGuidage(){
+    GpsFramework & f = GpsFramework::Instance();
+    QBrush grayBrush(Qt::gray);
+    QBrush lightGrayBrush(Qt::lightGray);
+    QBrush green(Qt::green);
+    
+    scene->addRect(m_width/2-300, 0, 600, 40, m_penBlack, lightGrayBrush);
+    scene->addRect(m_width/2-50, 5, 100, 30, m_penBlack, grayBrush);
+    QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
+    auto textItem = scene->addText(s);
+    auto mBounds = textItem->boundingRect();
+    textItem->setPos(m_width/2 - mBounds.width()/2, 10);
+    for(int i = 0; i < 8; ++i){
+        scene->addRect(m_width/2 - 80 - 30*i, 10, 20, 20, m_penBlack, grayBrush);
+        scene->addRect(m_width/2 + 60 + 30*i, 10, 20, 20, m_penBlack, grayBrush);
+    }
+    if(f.m_ledAB > 0){
+        for(int i = 0; i < std::min(8, f.m_ledAB); ++i){
+            scene->addRect(m_width/2 - 80 - 30*i, 10, 20, 20, m_penBlack, green);
+        }
+    } else {
+        for(int i = 0; i < std::min(8, -f.m_ledAB); ++i){
+            scene->addRect(m_width/2 + 60 + 30*i, 10, 20, 20, m_penBlack, green);
+        }
+    }
+}
+
 void GpsWidget::onValueChangeSlot(){
     auto now = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = now - last_update;
     if(diff.count() < 0.2){
-        INFO(diff.count());
+        //INFO(diff.count());
         return;
     }
-    INFO(diff.count());
+    //INFO(diff.count());
     last_update = now;
     
     int h = 400;
@@ -86,6 +136,9 @@ void GpsWidget::onValueChangeSlot(){
     //INFO(w << " " << h);
         static int i = 0;
     QBrush greenBrush(Qt::darkGreen);
+    QColor c = Qt::red;
+    c.setAlpha(100);
+    QBrush testBrush(c);
     
     
     i += 1;
@@ -102,6 +155,7 @@ void GpsWidget::onValueChangeSlot(){
     drawCourbe(10);
     drawCourbe(100);
     
+    drawLines(x, y);
     
     for(auto frame : f.m_list){
         double x1  = (frame->m_x - x)*m_zoom;
@@ -124,14 +178,13 @@ void GpsWidget::onValueChangeSlot(){
         double xB  = (f.m_pointB->m_x - x)*m_zoom;
         double yB  = (f.m_pointB->m_y - y)*m_zoom;
         
-        addligne(0, x, y);
-        for(int i = -10; i <= 10; ++i){
-            addligne(i*27, x, y);
-        }
+        
         scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
     }
     
-    scene->addLine(w/2, h/2, w/2 + f.m_deplacementX*m_zoom, h/2 - f.m_deplacementY*m_zoom, m_penBlue                                                                                                                                                                                                                                                                                                                                 );
+    scene->addLine(w/2, h/2, w/2 + f.m_deplacementX*m_zoom, h/2 - f.m_deplacementY*m_zoom, m_penBlue);
+    
+    drawBarreGuidage();
     
     std::ostringstream oss;
     oss <<  "nbSt " << last_frame->m_nbrSattelites << " fix " << last_frame->m_fix << " AB " << f.m_sensAB;

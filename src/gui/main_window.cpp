@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     retranslateUi();
     
     connect(m_gpsWidget, SIGNAL(setMessageStatusBar(QString &)), this, SLOT(setMessageStatusBar(QString &)));
+    connect(m_gpsWidget->m_btnOptions, SIGNAL(clicked()), this, SLOT(openOptions()));
     
 }
 
@@ -32,17 +33,18 @@ void MainWindow::setupUi(){
     
     GPSButton = new QPushButton();
     
-    CloseButton = new QPushButton();
-    OptionsButton->setGeometry(QRect(20, 20, 100, 50));
-    GPSButton->setGeometry(QRect(20, 80, 100, 50));
-    CloseButton->setGeometry(QRect(20, 140, 100, 50));
     
     
     QTabWidget * tab = new QTabWidget();
     m_gpsWidget = new GpsWidget();
     tab->addTab(m_gpsWidget, "gps");
-    OptionsWidget * optionsWidget = new OptionsWidget();
-    tab->addTab(optionsWidget, "config");
+    m_optionsWidget = new OptionsWidget();
+    //tab->addTab(optionsWidget, "config");
+    
+    CloseButton = new QPushButton();
+    OptionsButton->setGeometry(QRect(20, 20, 100, 50));
+    GPSButton->setGeometry(QRect(20, 80, 100, 50));
+    CloseButton->setGeometry(QRect(20, 140, 100, 50));
     
     
     this->setCentralWidget(tab);
@@ -55,7 +57,9 @@ void MainWindow::setupUi(){
     setStatusBar(m_statusBar);
     m_statusBar->showMessage("prêt");
     
-    showFullScreen();
+    //OuvreOptions();
+    
+    //showFullScreen();
 }
 
 void MainWindow::setMessageStatusBar(QString & s){
@@ -70,8 +74,10 @@ void MainWindow::retranslateUi()
     CloseButton->setText(QApplication::translate("MainWindow", "CLOSE GUI", 0));
 }
 
-void MainWindow::OuvreOptionsRover(){
+void MainWindow::openOptions(){
+    m_optionsWidget->close();
+    m_optionsWidget->show();
+    m_optionsWidget->focusWidget();
+    m_optionsWidget->setHidden(false);
 
-}
-void MainWindow::OuvreOptions(){
 }

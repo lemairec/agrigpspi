@@ -12,6 +12,8 @@ class MainWindow : public QMainWindow
     QPushButton *CloseButton;
     
     QStatusBar *m_statusBar;
+    
+    QWidget * m_optionsWidget;
 public:
     GpsWidget * m_gpsWidget;
 
@@ -20,8 +22,7 @@ public:
     
     void test();
 public slots:
-    void OuvreOptions();
-    void OuvreOptionsRover();
+    void openOptions();
     void setMessageStatusBar(QString & s);
 
 private:

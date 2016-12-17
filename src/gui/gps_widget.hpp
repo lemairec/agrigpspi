@@ -19,6 +19,7 @@ public:
     QPushButton * m_btnZoomUp;
     QPushButton * m_btnZoomDown;
     QPushButton * m_btnClose;
+    QPushButton * m_btnOptions;
 
     
     
@@ -32,6 +33,7 @@ public:
     QBrush m_brushNo;
     void drawCourbe(double l);
     void addligne(double l, double x, double y);
+    void drawLines(double x, double y);
     
     double m_zoom;
 signals:
@@ -39,6 +41,7 @@ signals:
     void setMessageStatusBar(QString & s);
     
 public slots:
+    void drawBarreGuidage();
     void onValueChangeSlot();
     void onZoomUp();
     void onZoomDown();

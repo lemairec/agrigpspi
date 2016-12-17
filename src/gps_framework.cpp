@@ -1,14 +1,9 @@
 #include "gps_framework.hpp"
 #include "logging.hpp"
-extern "C"{
-#include <unistd.h>
-}
-#include <iostream>
-#include <fstream>
-#include <math.h>
-
 #include "config/config.hpp"
 #include "environnement.hpp"
+
+#include <math.h>
 #include <iostream>
 #include <fstream>
 std::ofstream gpslogFile;
@@ -39,8 +34,8 @@ GpsFramework & GpsFramework::Instance(){
 
 void GpsFramework::onGGAFrame(GGAFrame *frame){
     m_list.push_front(frame);
-    m_distance = distance(*frame);
     calculDeplacement();
+    m_distance = distance(*frame);
     if(m_observer){
         m_observer->onNewPoint();
     }
@@ -54,15 +49,40 @@ void GpsFramework::onGGAFrame(const std::string &frame){
 double GpsFramework::distance(GpsFrame & gpsPoint){
     if(m_pointA && m_pointB){
         double dist = (m_a * gpsPoint.m_x + m_b * gpsPoint.m_y + m_c)/m_sqrt_m_a_m_b;
-        INFO("distance Point AB " << dist);
+        if(!m_sensAB){
+            dist = -dist;
+        }
+        dist = fmod(dist, 27.0);
+        if(dist > 27.0/2){
+            dist -= 27.0;
+        }
+        if(dist < -27.0/2){
+            dist += 27.0;
+        }
+        if(dist < -27.0/2){
+            dist += 27.0;
+        }
+        if(dist > 27.0/2){
+            dist -= 27.0;
+        }
+        double coeff = 27.0/(2*6);
+        if(dist < 0.0){
+            dist = -dist;
+            m_ledAB = round(dist/coeff) + 1;
+        } else {
+            m_ledAB = -round(dist/coeff) - 1;
+        }
+        m_distanceAB = dist;
+        //INFO("distance Point AB " << dist);
         return dist;
     }else if(m_pointA){
         //double dist = distanceBetween(m_pointA, gpsPoint);
         double dx = m_pointA->m_x - gpsPoint.m_x;
         double dy = m_pointA->m_y - gpsPoint.m_y;
         double dist = sqrt(dx*dx + dy*dy);
-        INFO("distance Point A " << dist);
+        //INFO("distance Point A " << dist);
         return dist;
+        
    } else {
         return 0.0;
     }
@@ -173,13 +193,13 @@ void GpsFramework::exportHtml(){
 }
 
 void GpsFramework::readFile(){
-    std::ifstream infile(GPS_TEST_FILE);
+    std::ifstream infile("/Users/lemairec/fablab/agrigpspi/gps_warmo.ubx");
     std::string line;
     while (std::getline(infile, line))
     {
         if(!line.empty() && line[0] == '$'){
             m_gpsModule.readFrame(line);
-            QThread::msleep(20);
+            QThread::msleep(10);
         } else if(line == "[savePointA]"){
             savePointA();
         } else if(line == "[savePointB]"){

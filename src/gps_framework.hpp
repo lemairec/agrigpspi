@@ -44,6 +44,8 @@ public:
     
     double m_ab_x = 0.0;
     double m_ab_y = 0.0;
+    double m_distanceAB = 0.0;
+    int m_ledAB = 0;
     
     void setAB();
     
