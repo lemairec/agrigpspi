@@ -46,26 +46,26 @@ void GpsFramework::onGGAFrame(const std::string &frame){
 }
 
 
-double GpsFramework::distance(GpsFrame & gpsPoint){
+double GpsFramework::distance(GpsPoint & gpsPoint){
     if(m_pointA && m_pointB){
         double dist = (m_a * gpsPoint.m_x + m_b * gpsPoint.m_y + m_c)/m_sqrt_m_a_m_b;
         if(!m_sensAB){
             dist = -dist;
         }
-        dist = fmod(dist, 27.0);
-        if(dist > 27.0/2){
-            dist -= 27.0;
+        dist = fmod(dist, m_config.m_largeur);
+        if(dist > m_config.m_largeur/2){
+            dist -= m_config.m_largeur;
         }
-        if(dist < -27.0/2){
-            dist += 27.0;
+        if(dist < -m_config.m_largeur/2){
+            dist += m_config.m_largeur;
         }
-        if(dist < -27.0/2){
-            dist += 27.0;
+        if(dist < -m_config.m_largeur/2){
+            dist += m_config.m_largeur;
         }
-        if(dist > 27.0/2){
-            dist -= 27.0;
+        if(dist > m_config.m_largeur/2){
+            dist -= m_config.m_largeur;
         }
-        double coeff = 27.0/(2*6);
+        double coeff = m_config.m_largeur/(2*6);
         if(dist < 0.0){
             dist = -dist;
             m_ledAB = round(dist/coeff) + 1;
@@ -126,8 +126,8 @@ void GpsFramework::setAB(){
 
 void GpsFramework::calculDeplacement(){
     if(m_list.size() > 2){
-        GpsFrame * point1 = m_list.front();
-        GpsFrame * point2 = NULL;
+        GpsPoint * point1 = m_list.front();
+        GpsPoint * point2 = NULL;
         int i = 0;
         for(auto point : m_list){
             point2 = point;

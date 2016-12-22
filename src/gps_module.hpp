@@ -3,7 +3,7 @@
 
 #include <string>
 
-struct GpsFrame {
+struct GpsPoint {
     double m_altitude;
     
     double m_latitude = 0.0;
@@ -13,7 +13,7 @@ struct GpsFrame {
     double m_y = 0.0;
 };
 
-struct GGAFrame : public GpsFrame {
+struct GGAFrame : public GpsPoint {
     int m_fix;
     int m_nbrSattelites;
     double m_precision;
@@ -27,10 +27,10 @@ public:
     void readFrame(const std::string & frame);
     void readChar(char c);
     
-    void onGGAFrame(GGAFrame * frame);
+    void onGGAFrame(GGAFrame * ggaFrame);
     void onGGAFrame(const std::string & s);
     
-    void setXY(GpsFrame & frame);
+    void setXY(GpsPoint & frame);
 private:
     void resetBuffer();
     void parseBuffer();
@@ -51,7 +51,6 @@ private:
     int readInt();
     double readDouble();
     double readDeg();
-    
 };
 
 #endif // GPS_MODULE_H

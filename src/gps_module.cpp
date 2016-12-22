@@ -9,7 +9,9 @@
 const char * gngga_s = "$GNGGA,";
 const char * gpgga_s = "$GPGGA,";
 
+
 GpsModule::GpsModule(){
+    resetBuffer();
 }
 
 
@@ -20,8 +22,8 @@ void GpsModule::readFrame(const std::string & frame){
     readChar('\n');
 }
 
-void GpsModule::onGGAFrame(GGAFrame * frame){
-    GpsFramework::Instance().onGGAFrame(frame);
+void GpsModule::onGGAFrame(GGAFrame * ggaFrame){
+    GpsFramework::Instance().onGGAFrame(ggaFrame);
 }
 
 void GpsModule::onGGAFrame(const std::string & s){
@@ -217,8 +219,8 @@ double GpsModule::readDeg()
 }
 
 
-#define DEG2RAD(a)   ((a) / (180 / M_PI))
-#define RAD2DEG(a)   ((a) * (180 / M_PI))
+#define DEG2RAD(a)   ((a) / (180.0 / M_PI))
+#define RAD2DEG(a)   ((a) * (180.0 / M_PI))
 
 /**
  * TRANSFORME LAMBERT
@@ -236,13 +238,13 @@ double __YGLatitudeISO(double lat, double e)
     return log(tan(M_PI_4 + lat/2)*pow((1-e*sin(lat))/(1+e*sin(lat)),e/2));
 }
 
-void __YGCoordinatesTransform(GpsFrame & frame, double e, double n, double c, double lambda_c, double x_s, double y_s)
+void __YGCoordinatesTransform(GpsPoint & gpsPoint, double e, double n, double c, double lambda_c, double x_s, double y_s)
 {
-    double lon = DEG2RAD(frame.m_longitude);
-    double lat = DEG2RAD(frame.m_latitude);
+    double lon = DEG2RAD(gpsPoint.m_longitude);
+    double lat = DEG2RAD(gpsPoint.m_latitude);
     double latiso = __YGLatitudeISO(lat,e);
-    frame.m_x = x_s + c*exp(-n*latiso)*sin(n*(lon-lambda_c));
-    frame.m_y = y_s - c*exp(-n*latiso)*cos(n*(lon-lambda_c));
+    gpsPoint.m_x = x_s + c*exp(-n*latiso)*sin(n*(lon-lambda_c));
+    gpsPoint.m_y = y_s - c*exp(-n*latiso)*cos(n*(lon-lambda_c));
 
 }
 
@@ -253,7 +255,17 @@ static double lambert_ys[6]= {5657616.674, 6199695.768, 6791905.085, 7239161.542
 #define E_CLARK_IGN 0.08248325676
 #define LON_MERID_GREENWICH 0.04079234433
 
+#define LAMBERT_I 0
+#define LAMBERT_II 1
+#define LAMBERT_III 2
+#define LAMBERT_IV 3
+#define LAMBERT_II_E 4
+#define LAMBERT_93 5
+#define LAMBERT LAMBERT_93
 
+void __YGCoordinatesTransform(GpsPoint & gpsPoint){
+    __YGCoordinatesTransform(gpsPoint, E_CLARK_IGN, lambert_n[LAMBERT], lambert_c[LAMBERT], LON_MERID_GREENWICH, lambert_xs[LAMBERT], lambert_ys[LAMBERT]);
+}
 
 
 /**
@@ -266,11 +278,11 @@ double a = 6378249.2;
 double b = 6356515;
 double e_2 = (a*a-b*b)/(a*a);
 
-void __SetXYSpherique(GpsFrame & frame){
-    double lon = DEG2RAD(frame.m_longitude);
-    double lat = DEG2RAD(frame.m_latitude);
-    frame.m_x = b * lat * cos(lon);
-    frame.m_y = b * lon;
+void __SetXYSpherique(GpsPoint & gpsPoint){
+    double lon = DEG2RAD(gpsPoint.m_longitude);
+    double lat = DEG2RAD(gpsPoint.m_latitude);
+    gpsPoint.m_x = b * lat * cos(lon);
+    gpsPoint.m_y = b * lon;
 }
 
 /**
@@ -278,9 +290,21 @@ void __SetXYSpherique(GpsFrame & frame){
  *
  * http://wiki.openstreetmap.org/wiki/Mercator
  **/
+#define EARTH_RADIUS 6378137
+double lat2y_m(double lat) { return log(tan( DEG2RAD(lat) / 2 + M_PI/4 )) * EARTH_RADIUS; }
+double lon2x_m(double lon) { return          DEG2RAD(lon)                 * EARTH_RADIUS; }
 
-void GpsModule::setXY(GpsFrame & frame){
-    __YGCoordinatesTransform(frame, E_CLARK_IGN, lambert_n[0], lambert_c[0], LON_MERID_GREENWICH, lambert_xs[0], lambert_ys[0]);
+void __MercatorCoordinatesTransform(GpsPoint & gpsPoint)
+{
+    gpsPoint.m_x = lon2x_m(gpsPoint.m_longitude);
+    gpsPoint.m_y = lat2y_m(gpsPoint.m_latitude);
+    
+}
+
+
+void GpsModule::setXY(GpsPoint & gpsPoint){
+    int i = 1;
+    __YGCoordinatesTransform(gpsPoint);
     //__SetXYSpherique(frame);
 }
 

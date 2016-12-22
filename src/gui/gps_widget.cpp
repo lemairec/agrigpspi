@@ -69,9 +69,9 @@ void GpsWidget::drawLines(double x, double y){
     double res = -(y0*f.m_b +(f.m_a * x0 + f.m_c));
     double l = res / (f.m_b/cos(atan(-f.m_a/f.m_b)));
     
-    int l0 = round(l/27)*27;
+    int l0 = round(l/f.m_config.m_largeur)*f.m_config.m_largeur;
     for(int i = -10; i <= 10; ++i){
-        addligne(l0 + i*27, x, y);
+        addligne(l0 + i*f.m_config.m_largeur, x, y);
     }
     
     //double y0*f.m_b + f.m_a * x0 + f.m_c= - res;

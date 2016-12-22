@@ -22,7 +22,7 @@ public:
     void onGGAFrame(const std::string & frame);
     void main();
     
-    double distance(GpsFrame & gpsPoint);
+    double distance(GpsPoint & gpsPoint);
     
     void savePointA();
     void savePointB();
@@ -44,9 +44,6 @@ public:
     
     double m_ab_x = 0.0;
     double m_ab_y = 0.0;
-    double m_distanceAB = 0.0;
-    int m_ledAB = 0;
-    
     void setAB();
     
     //deplacement
@@ -55,6 +52,9 @@ public:
     double m_deplacementAngle;
     bool m_sensAB = true;
     void calculDeplacement();
+    
+    double m_distanceAB = 0.0;
+    int m_ledAB = 0;
     
     std::list<GGAFrame *> m_list;
     
