@@ -1,6 +1,5 @@
-#ifndef GPS_MODULE_H
-#define GPS_MODULE_H
-
+#ifndef GPS_H
+#define GPS_H
 #include <string>
 
 struct GpsPoint {
@@ -15,34 +14,37 @@ struct GpsPoint {
 
 struct GGAFrame : public GpsPoint {
     int m_fix;
-    int m_nbrSattelites;
+    int m_nbrSat;
     double m_precision;
     
+    double m_time;
+    double m_timeHour;
 };
 
 class GpsModule {
 public:
     GpsModule();
-    
-    void readFrame(const std::string & frame);
-    void readChar(char c);
+    void init();
     
     void onGGAFrame(GGAFrame * ggaFrame);
     void onGGAFrame(const std::string & s);
     
-    void setXY(GpsPoint & frame);
-private:
-    void resetBuffer();
-    void parseBuffer();
-    void parseGGA();
+    void readFrame(const std::string & frame);
+    void readChar(char c);
     
+    void setXY(GpsPoint & gpsPoint);
+private:
     int m_bufferIndLast = 0;
     char m_buffer[200];
     int m_tempInd = 0;
     
-    
+    void resetBuffer();
     void error();
     void debug();
+    
+    void parseBuffer();
+    void parseGGA();
+    void parseRMC();
     
     bool isEqual(const char * c, size_t size);
     void readUntilCommat();
@@ -51,6 +53,8 @@ private:
     int readInt();
     double readDouble();
     double readDeg();
+    
+    double getTimeHour(double d);
 };
 
-#endif // GPS_MODULE_H
+#endif //GPS_H

@@ -11,15 +11,11 @@ const char * gpgga_s = "$GPGGA,";
 
 
 GpsModule::GpsModule(){
-    resetBuffer();
+    init();
 }
 
-
-void GpsModule::readFrame(const std::string & frame){
-    for(char c : frame){
-        readChar(c);
-    }
-    readChar('\n');
+void GpsModule::init(){
+    resetBuffer();
 }
 
 void GpsModule::onGGAFrame(GGAFrame * ggaFrame){
@@ -31,23 +27,32 @@ void GpsModule::onGGAFrame(const std::string & s){
     //INFO(s);
 }
 
+void GpsModule::readFrame(const std::string & frame){
+    for(char c : frame){
+        readChar(c);
+    }
+    readChar('\n');
+}
+
+void GpsModule::readChar(char c){
+    if(c == '$'){
+        resetBuffer();
+    } else if(c == '\n'){
+        parseBuffer();
+    } else {
+        this->m_buffer[m_bufferIndLast] = c;
+        m_bufferIndLast++;
+    }
+}
+
+
 /**
  * Parsing
  **/
 
 //$GPGGA,114608.00,4905.46094,N,00332.09303,E,2,07,1.46,87.8,M,46.3,M,,0000*6B
 
-void GpsModule::readChar(char c){
-    if(c == '$'){
-        resetBuffer();
-    }
-    if(c == '\n'){
-        return parseBuffer();
-    } else {
-        this->m_buffer[m_bufferIndLast] = c;
-        m_bufferIndLast++;
-    }
-}
+
 
 void GpsModule::resetBuffer(){
     m_bufferIndLast = 0;
@@ -55,6 +60,21 @@ void GpsModule::resetBuffer(){
     //  m_buffer[i] = ' ';
     //}
 }
+
+
+void GpsModule::error(){
+    WARN("error");
+}
+
+void GpsModule::debug(){
+    /*Serial.print(m_tempInd);
+     Serial.print(" ");
+     Serial.print(m_buffer[m_tempInd-1]);
+     Serial.print(m_buffer[m_tempInd]);
+     Serial.print(m_buffer[m_tempInd+1]);
+     Serial.print("\n");*/
+}
+
 
 
 void GpsModule::parseBuffer(){
@@ -87,7 +107,7 @@ void GpsModule::parseGGA(){
     frame->m_longitude = readDeg();
     readUntilCommat();
     frame->m_fix = readInt();
-    frame->m_nbrSattelites = readInt();
+    frame->m_nbrSat = readInt();
     frame->m_precision = readDouble();
     frame->m_altitude = readDouble();
 
@@ -95,30 +115,6 @@ void GpsModule::parseGGA(){
     onGGAFrame(frame);
     
     
-}
-
-void GpsModule::error(){
-    WARN("error");
-}
-
-void GpsModule::debug(){
-    /*Serial.print(m_tempInd);
-    Serial.print(" ");
-    Serial.print(m_buffer[m_tempInd-1]);
-    Serial.print(m_buffer[m_tempInd]);
-    Serial.print(m_buffer[m_tempInd+1]);
-    Serial.print("\n");*/
-}
-
-void GpsModule::readUntilCommat(){
-    while(m_tempInd < m_bufferIndLast){
-        if(m_buffer[m_tempInd] == ','){
-            ++m_tempInd;
-            return;
-        }
-        ++m_tempInd;
-    }
-    error();
 }
 
 bool GpsModule::isEqual(const char * c, size_t size){
@@ -134,6 +130,16 @@ bool GpsModule::isEqual(const char * c, size_t size){
     return true;
 }
 
+void GpsModule::readUntilCommat(){
+    while(m_tempInd < m_bufferIndLast){
+        if(m_buffer[m_tempInd] == ','){
+            ++m_tempInd;
+            return;
+        }
+        ++m_tempInd;
+    }
+    error();
+}
 
 int GpsModule::getOneInt(){
     char c = m_buffer[m_tempInd];
@@ -180,6 +186,7 @@ int GpsModule::readInt(){
             ++m_tempInd;
         }
     }
+    error();
     return 0;
 }
 
@@ -303,7 +310,6 @@ void __MercatorCoordinatesTransform(GpsPoint & gpsPoint)
 
 
 void GpsModule::setXY(GpsPoint & gpsPoint){
-    int i = 1;
     __YGCoordinatesTransform(gpsPoint);
     //__SetXYSpherique(frame);
 }
