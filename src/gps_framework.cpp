@@ -47,7 +47,7 @@ void GpsFramework::onGGAFrame(const std::string &frame){
 
 
 double GpsFramework::distance(GpsPoint & gpsPoint){
-    if(m_pointA && m_pointB){
+    if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
         double dist = (m_a * gpsPoint.m_x + m_b * gpsPoint.m_y + m_c)/m_sqrt_m_a_m_b;
         if(!m_sensAB){
             dist = -dist;
@@ -75,10 +75,10 @@ double GpsFramework::distance(GpsPoint & gpsPoint){
         m_distanceAB = dist;
         //INFO("distance Point AB " << dist);
         return dist;
-    }else if(m_pointA){
+    }else if(m_pointA.m_x!=0){
         //double dist = distanceBetween(m_pointA, gpsPoint);
-        double dx = m_pointA->m_x - gpsPoint.m_x;
-        double dy = m_pointA->m_y - gpsPoint.m_y;
+        double dx = m_pointA.m_x - gpsPoint.m_x;
+        double dy = m_pointA.m_y - gpsPoint.m_y;
         double dist = sqrt(dx*dx + dy*dy);
         //INFO("distance Point A " << dist);
         return dist;
@@ -90,19 +90,21 @@ double GpsFramework::distance(GpsPoint & gpsPoint){
 
 void GpsFramework::savePointA(){
     if(!m_list.empty()){
-        m_pointA = (*m_list.begin());
+        m_pointA = *(*m_list.begin());
     }
     if(m_observer){
         m_observer->onNewPoint();
     }
     gpslogFile << "[savePointA]\n";
+    INFO(m_pointA.m_time << " " << m_pointA.m_latitude << " " << m_pointA.m_longitude);
 }
 
 void GpsFramework::savePointB(){
     if(!m_list.empty()){
-        m_pointB = (*m_list.begin());
+        m_pointB = *(*m_list.begin());
     }
-    if(m_pointA && m_pointB){
+    INFO(m_pointB.m_time << " " << m_pointB.m_latitude << " " << m_pointB.m_longitude);
+    if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
         setAB();
     }
     if(m_observer){
@@ -112,16 +114,16 @@ void GpsFramework::savePointB(){
 }
 
 void GpsFramework::setAB(){
-    m_ab_x = m_pointB->m_x - m_pointA->m_x;
-    m_ab_y = m_pointB->m_y - m_pointA->m_y;
+    m_ab_x = m_pointB.m_x - m_pointA.m_x;
+    m_ab_y = m_pointB.m_y - m_pointA.m_y;
     
     
-    m_a = -(m_pointB->m_y - m_pointA->m_y);
-    m_b = m_pointB->m_x - m_pointA->m_x;
-    m_c = -m_a * m_pointA->m_x - m_b *  m_pointA->m_y;
+    m_a = -(m_pointB.m_y - m_pointA.m_y);
+    m_b = m_pointB.m_x - m_pointA.m_x;
+    m_c = -m_a * m_pointA.m_x - m_b *  m_pointA.m_y;
     m_sqrt_m_a_m_b = sqrt(m_a*m_a + m_b*m_b);
-    //INFO("yb  " << m_pointB.m_y << " ya " << m_pointA.m_y << " xb " << m_pointB.m_x << " xa " << m_pointA.m_x);
-    //INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
+    INFO("yb  " << m_pointB.m_y << " ya " << m_pointA.m_y << " xb " << m_pointB.m_x << " xa " << m_pointA.m_x);
+    INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
 }
 
 void GpsFramework::calculDeplacement(){
@@ -257,7 +259,7 @@ void GpsFramework::test(){
     f2->m_longitude = 3.50073;
     m_gpsModule.setXY(*f2);
     INFO(f2->m_x << " " << f2->m_y);
-    onGGAFrame(f2);
+    onGGAFrame(*f2);
     INFO("res " << 13291);
     INFO(m_distance << " " << m_distance/13291);
     
@@ -265,7 +267,7 @@ void GpsFramework::test(){
     f2->m_latitude = 49.04;
     f2->m_longitude = 3.40;
     m_gpsModule.setXY(*f2);
-    onGGAFrame(f2);
+    onGGAFrame(*f2);
     INFO("res " << 592);
     INFO(m_distance << " " << m_distance/592);
 }

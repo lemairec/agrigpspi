@@ -162,21 +162,21 @@ void GpsWidget::onValueChangeSlot(){
         double y1  = (frame->m_y - y)*m_zoom;
         scene->addEllipse(w/2 + x1, h/2 - y1, 1, 1, m_penBlack, m_brushNo);
     }
-    if(f.m_pointA){
-        double xA  = (f.m_pointA->m_x - x)*m_zoom;
-        double yA  = (f.m_pointA->m_y - y)*m_zoom;
+    if(f.m_pointA.m_x!=0){
+        double xA  = (f.m_pointA.m_x - x)*m_zoom;
+        double yA  = (f.m_pointA.m_y - y)*m_zoom;
         scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
     }
-    if(f.m_pointB){
-        double xB  = (f.m_pointB->m_x - x)*m_zoom;
-        double yB  = (f.m_pointB->m_y - y)*m_zoom;
+    if(f.m_pointB.m_x!=0){
+        double xB  = (f.m_pointB.m_x - x)*m_zoom;
+        double yB  = (f.m_pointB.m_y - y)*m_zoom;
         scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
     }
-    if(f.m_pointA && f.m_pointB){
-        double xA  = (f.m_pointA->m_x - x)*m_zoom;
-        double yA  = (f.m_pointA->m_y - y)*m_zoom;
-        double xB  = (f.m_pointB->m_x - x)*m_zoom;
-        double yB  = (f.m_pointB->m_y - y)*m_zoom;
+    if(f.m_pointA.m_x!=0 && f.m_pointB.m_x!=0){
+        double xA  = (f.m_pointA.m_x - x)*m_zoom;
+        double yA  = (f.m_pointA.m_y - y)*m_zoom;
+        double xB  = (f.m_pointB.m_x - x)*m_zoom;
+        double yB  = (f.m_pointB.m_y - y)*m_zoom;
         
         
         scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);

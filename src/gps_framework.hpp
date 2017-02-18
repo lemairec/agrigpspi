@@ -29,8 +29,8 @@ public:
     
     void test();
     
-    GGAFrame * m_pointA = NULL;
-    GGAFrame * m_pointB = NULL;
+    GGAFrame m_pointA;
+    GGAFrame m_pointB;
     
     double m_distance;
     
