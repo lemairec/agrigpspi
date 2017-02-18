@@ -136,17 +136,21 @@ void GpsFramework::calculDeplacement(){
                 break;
             }
         }
-        m_deplacementX = point2->m_x - point1->m_x;
-        m_deplacementY = point2->m_y - point1->m_y;
+        m_deplacementX = point1->m_x - point2->m_x;
+        m_deplacementY = point1->m_y - point2->m_y;
         if(m_deplacementX != 0){
             m_deplacementAngle = atan(m_deplacementY/m_deplacementX);
         }
         
         if(m_ab_x != 0 || m_ab_y != 0){
             double det = m_ab_x*m_deplacementY + m_ab_y*m_deplacementX;
-            m_sensAB = (det > 0);
+            m_sensAB = (det < 0);
         }
         
+        double distance = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY)/1000.0;
+        double deplacementTime = point1->m_timeHour - point2->m_timeHour;
+        m_vitesse = distance/deplacementTime;
+        //INFO(deplacementTime << " " << vitesse);
     }
 }
 
@@ -214,8 +218,6 @@ void GpsFramework::readFile(){
 
 
 void GpsFramework::main(){
-    readFile();
-    return;
     try {
         
         Serial serial(m_config.m_port,m_config.m_baudrate);
@@ -230,6 +232,7 @@ void GpsFramework::main(){
     } catch(boost::system::system_error& e)
     {
         cout<<"Error: "<<e.what()<<endl;
+        INFO(m_config.m_port << " " << m_config.m_baudrate);
         return;
     }
     

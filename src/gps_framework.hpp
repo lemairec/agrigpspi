@@ -51,6 +51,7 @@ public:
     double m_deplacementY;
     double m_deplacementAngle;
     bool m_sensAB = true;
+    double m_vitesse;
     void calculDeplacement();
     
     double m_distanceAB = 0.0;
