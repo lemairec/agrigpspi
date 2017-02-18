@@ -6,10 +6,6 @@
 
 #include <math.h>
 
-const char * gngga_s = "$GNGGA,";
-const char * gpgga_s = "$GPGGA,";
-
-
 GpsModule::GpsModule(){
     init();
 }
@@ -36,6 +32,7 @@ void GpsModule::readFrame(const std::string & frame){
 
 void GpsModule::readChar(char c){
     if(c == '$'){
+        //INFO("readChar");
         resetBuffer();
     } else if(c == '\n'){
         parseBuffer();
@@ -83,11 +80,18 @@ void GpsModule::parseBuffer(){
     printBuffer();
 #endif
     //return true;
-    if(isEqual(gngga_s, 7)){
-        parseGGA();
-    }
-    if(isEqual(gpgga_s, 7)){
-        parseGGA();
+    if(m_buffer[0] == 'G'){
+        if(m_buffer[1] == 'N' || m_buffer[1] == 'P'){
+            if(m_buffer[2] == 'G' && m_buffer[3] == 'G' && m_buffer[4] == 'A'){
+                return parseGGA();
+            }
+        }
+    } else if (m_buffer[0] == 'S' && m_buffer[1] == 'P'){
+        if(m_buffer[2] == 'A'){
+            GpsFramework::Instance().savePointA();
+        } else if(m_buffer[2] == 'B'){
+            GpsFramework::Instance().savePointB();
+        }
     }
 }
 
@@ -101,7 +105,7 @@ void GpsModule::parseGGA(){
     GGAFrame * frame = new GGAFrame;
     
     readUntilCommat();
-    readUntilCommat();
+    frame->m_time = readDouble();
     frame->m_latitude = readDeg();
     readUntilCommat();
     frame->m_longitude = readDeg();
@@ -111,10 +115,9 @@ void GpsModule::parseGGA(){
     frame->m_precision = readDouble();
     frame->m_altitude = readDouble();
 
+    frame->m_timeHour = getTimeHour(frame->m_time);
     setXY(*frame);
     onGGAFrame(frame);
-    
-    
 }
 
 bool GpsModule::isEqual(const char * c, size_t size){
@@ -186,7 +189,6 @@ int GpsModule::readInt(){
             ++m_tempInd;
         }
     }
-    error();
     return 0;
 }
 
@@ -225,6 +227,16 @@ double GpsModule::readDeg()
     return h + minu/60.0;
 }
 
+
+double GpsModule::getTimeHour(double d)
+{
+    int h = d/10000;
+    int minu = (d/100-(h*100));
+    double s = d - h*10000.0 - minu*100.0;
+    double res = h + minu/60.0 + s/3600.0;
+    //INFO(d << " " << h << ":" << minu << ":" << s << " " << res);
+    return res;
+}
 
 #define DEG2RAD(a)   ((a) / (180.0 / M_PI))
 #define RAD2DEG(a)   ((a) * (180.0 / M_PI))

@@ -182,12 +182,12 @@ void GpsWidget::onValueChangeSlot(){
         scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
     }
     
-    scene->addLine(w/2, h/2, w/2 + f.m_deplacementX*m_zoom, h/2 - f.m_deplacementY*m_zoom, m_penBlue);
+    scene->addLine(w/2, h/2, w/2 - f.m_deplacementX*m_zoom, h/2 + f.m_deplacementY*m_zoom, m_penBlue);
     
     drawBarreGuidage();
     
     std::ostringstream oss;
-    oss <<  "nbSt " << last_frame->m_nbrSattelites << " fix " << last_frame->m_fix << " AB " << f.m_sensAB;
+    oss <<  "nbSt " << last_frame->m_nbrSat << " fix " << last_frame->m_fix << " AB " << f.m_sensAB << " v " << round(f.m_vitesse) << "km/h";
     //INFO(oss.str());
     QString s = QString::fromStdString(oss.str());
     emit setMessageStatusBar(s);

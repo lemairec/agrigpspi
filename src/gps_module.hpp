@@ -10,15 +10,16 @@ struct GpsPoint {
     
     double m_x = 0.0;
     double m_y = 0.0;
+    
+    double m_time;
+    double m_timeHour;
 };
 
 struct GGAFrame : public GpsPoint {
     int m_fix;
     int m_nbrSat;
     double m_precision;
-    
-    double m_time;
-    double m_timeHour;
+
 };
 
 class GpsModule {
