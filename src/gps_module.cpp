@@ -15,7 +15,7 @@ void GpsModule::init(){
 }
 
 void GpsModule::onGGAFrame(GGAFrame * ggaFrame){
-    GpsFramework::Instance().onGGAFrame(ggaFrame);
+    
 }
 
 void GpsModule::onGGAFrame(const std::string & s){
@@ -102,22 +102,21 @@ void GpsModule::parseGGA(){
     }
     onGGAFrame(s);
     
-    GGAFrame * frame = new GGAFrame;
+    readUntilCommat();
+    m_lastGGAEvent.m_time = readDouble();
+    m_lastGGAEvent.m_latitude = readDeg();
+    readUntilCommat();
+    m_lastGGAEvent.m_longitude = readDeg();
+    readUntilCommat();
+    m_lastGGAEvent.m_fix = readInt();
+    m_lastGGAEvent.m_nbrSat = readInt();
+    m_lastGGAEvent.m_precision = readDouble();
+    m_lastGGAEvent.m_altitude = readDouble();
     
-    readUntilCommat();
-    frame->m_time = readDouble();
-    frame->m_latitude = readDeg();
-    readUntilCommat();
-    frame->m_longitude = readDeg();
-    readUntilCommat();
-    frame->m_fix = readInt();
-    frame->m_nbrSat = readInt();
-    frame->m_precision = readDouble();
-    frame->m_altitude = readDouble();
-
-    frame->m_timeHour = getTimeHour(frame->m_time);
-    setXY(*frame);
-    onGGAFrame(frame);
+    m_lastGGAEvent.m_timeHour = getTimeHour(m_lastGGAEvent.m_time);
+    setXY(m_lastGGAEvent);
+    INFO("******** GGA");
+    GpsFramework::Instance().onGGAFrame(m_lastGGAEvent);
 }
 
 bool GpsModule::isEqual(const char * c, size_t size){

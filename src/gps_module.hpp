@@ -34,6 +34,8 @@ public:
     void readChar(char c);
     
     void setXY(GpsPoint & gpsPoint);
+    
+    GGAFrame m_lastGGAEvent;
 private:
     int m_bufferIndLast = 0;
     char m_buffer[200];

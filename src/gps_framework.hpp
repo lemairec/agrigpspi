@@ -18,7 +18,7 @@ public:
     
     void addGpsObserver(IGpsObserver *);
     void removeObserver();
-    void onGGAFrame(GGAFrame * frame);
+    void onGGAFrame(GGAFrame & frame);
     void onGGAFrame(const std::string & frame);
     void main();
     

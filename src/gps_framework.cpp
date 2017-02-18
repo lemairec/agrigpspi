@@ -32,7 +32,8 @@ GpsFramework & GpsFramework::Instance(){
     return gf;
 }
 
-void GpsFramework::onGGAFrame(GGAFrame *frame){
+void GpsFramework::onGGAFrame(GGAFrame & f){
+    GGAFrame * frame = new GGAFrame(f);
     m_list.push_front(frame);
     calculDeplacement();
     m_distance = distance(*frame);
