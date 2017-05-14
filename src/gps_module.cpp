@@ -31,11 +31,12 @@ void GpsModule::readFrame(const std::string & frame){
 }
 
 void GpsModule::readChar(char c){
+    std::cout << c;
     if(c == '$'){
         //INFO("readChar");
-        resetBuffer();
     } else if(c == '\n'){
         parseBuffer();
+        resetBuffer();
     } else {
         this->m_buffer[m_bufferIndLast] = c;
         m_bufferIndLast++;
@@ -263,7 +264,7 @@ void __YGCoordinatesTransform(GpsPoint & gpsPoint, double e, double n, double c,
     double latiso = __YGLatitudeISO(lat,e);
     gpsPoint.m_x = x_s + c*exp(-n*latiso)*sin(n*(lon-lambda_c));
     gpsPoint.m_y = y_s - c*exp(-n*latiso)*cos(n*(lon-lambda_c));
-
+    INFO(std::fixed << c*exp(-n*latiso) <<"  " << cos(n*(lon-lambda_c)) << "  " << gpsPoint.m_y);
 }
 
 static double lambert_n[6] = {0.7604059656, 0.7289686274, 0.6959127966, 0.6712679322, 0.7289686274, 0.7256077650};
@@ -292,11 +293,15 @@ double a = 6378249.2;
 double b = 6356515;
 double e_2 = (a*a-b*b)/(a*a);
 
+double LAT_REF = 49.045;
+double LON_REF = 3.4007;
+double temp_a = a * cos(DEG2RAD(LON_REF));
+
 void __SetXYSpherique(GpsPoint & gpsPoint){
-    double lon = DEG2RAD(gpsPoint.m_longitude);
-    double lat = DEG2RAD(gpsPoint.m_latitude);
-    gpsPoint.m_x = b * lat * cos(lon);
-    gpsPoint.m_y = b * lon;
+    double lon = DEG2RAD(gpsPoint.m_longitude - LON_REF);
+    double lat = DEG2RAD(gpsPoint.m_latitude - LAT_REF);
+    gpsPoint.m_x = a * cos(DEG2RAD(LAT_REF)) * lon;
+    gpsPoint.m_y = a * lat;
 }
 
 /**
@@ -317,8 +322,8 @@ void __MercatorCoordinatesTransform(GpsPoint & gpsPoint)
 
 
 void GpsModule::setXY(GpsPoint & gpsPoint){
-    __YGCoordinatesTransform(gpsPoint, E_CLARK_IGN, lambert_n[LAMBERT], lambert_c[LAMBERT], LON_MERID_GREENWICH, 0,0);
-    //__SetXYSpherique(frame);
+    //__YGCoordinatesTransform(gpsPoint, E_CLARK_IGN, lambert_n[LAMBERT], lambert_c[LAMBERT], LON_MERID_GREENWICH, 0.0, 0.0);
+    __SetXYSpherique(gpsPoint);
 }
 
 
