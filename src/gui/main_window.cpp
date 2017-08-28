@@ -16,21 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     setupUi();
     retranslateUi();
     
-    
-    auto actionPull = new QAction(tr("&Pull"), this);
-    connect(actionPull, SIGNAL(triggered()), this, SLOT(openPull()));
-    
-    auto actionQuitter = new QAction(tr("&Quitter"), this);
-    actionQuitter->setShortcut(tr("Ctrl+Q"));
-    connect(actionQuitter, SIGNAL(triggered()), qApp, SLOT(quit()));
-    
-    
-    auto fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(actionQuitter);
-    fileMenu->addAction(actionPull);
-    
-    
-   
     connect(m_gpsWidget, SIGNAL(setMessageStatusBar(QString &)), this, SLOT(setMessageStatusBar(QString &)));
     connect(m_gpsWidget->m_btnOptions, SIGNAL(clicked()), this, SLOT(openOptions()));
     
