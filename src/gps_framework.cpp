@@ -14,7 +14,7 @@ GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
     QString s = date.toString("yyyyMMdd_hhmm");
     
-    std::string file = ProjectSourceBin + "/gps_" + s.toUtf8().toStdString() + ".ubx";
+    std::string file = ProjectSourceBin + "/gps_" + s.toUtf8().constData() + ".ubx";
     INFO(file);
     gpslogFile.open(file, std::ios::out);
     m_config.load();

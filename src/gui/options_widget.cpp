@@ -50,7 +50,7 @@ void OptionsWidget::setValue(){
 
 void OptionsWidget::onValueChange(){
     GpsFramework::Instance().m_config.m_largeur = m_boxLargeur->value();
-    GpsFramework::Instance().m_config.m_input = m_boxInput->currentText().toUtf8().toStdString();
+    GpsFramework::Instance().m_config.m_input = m_boxInput->currentText().toUtf8().constData();
     GpsFramework::Instance().initOrLoadConfig();
 }
 
