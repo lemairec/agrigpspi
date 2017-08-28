@@ -6,7 +6,7 @@
 class Config  {
 public:
     double m_largeur = 27;
-    std::string m_port = "/dev/cu.usbmodem1411";
+    std::string m_input = "none";
     int m_baudrate = 9600;
 
     void save();

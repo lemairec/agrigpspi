@@ -35,6 +35,7 @@ public:
     double m_distance;
     
     Config m_config;
+    bool m_reloadConfig = true;
     
     //point
     double m_a;

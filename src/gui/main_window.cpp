@@ -51,8 +51,6 @@ void MainWindow::setupUi(){
     tab->setTabPosition(QTabWidget::South);
     
     
-    //OptionsBaseRtk * options = new OptionsBaseRtk(centralWidget);
-    //xoptions->setGeometry(QRect(140, 20, 680, 440));
     m_statusBar = new QStatusBar;
     setStatusBar(m_statusBar);
     m_statusBar->showMessage("prêt");
@@ -68,7 +66,7 @@ void MainWindow::setMessageStatusBar(QString & s){
 
 void MainWindow::retranslateUi()
 {
-    this->setWindowTitle(QApplication::translate("MainWindow", "RTKLIB for Raspberry", 0));
+    this->setWindowTitle(QApplication::translate("MainWindow", "AgriPi", 0));
     OptionsButton->setText(QApplication::translate("MainWindow", "Options"));
     GPSButton->setText(QApplication::translate("MainWindow", "GPS", 0));
     CloseButton->setText(QApplication::translate("MainWindow", "CLOSE GUI", 0));

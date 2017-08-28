@@ -2,6 +2,7 @@
 #include <QMainWindow>
 #include <QApplication>
 #include <QPushButton>
+#include <QComboBox>
 #include <QDialog>
 #include <QRadioButton>
 #include <QLineEdit>
@@ -9,3 +10,4 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QSpinBox>
+#include <QDate>
