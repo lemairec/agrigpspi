@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     
     auto fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(actionQuitter);
+    fileMenu->addAction(actionPull);
     
     
    
