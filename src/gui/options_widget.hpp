@@ -9,11 +9,12 @@ class OptionsWidget : public QDialog
     
     QSpinBox * m_boxLargeur;
     QComboBox * m_boxInput;
-
+    QPushButton * m_closeButton;
 public:
     OptionsWidget(QWidget *parent = 0);
     ~OptionsWidget();
     
+    QPushButton * m_pullButton;
     void setValue();
 public slots:
     void onValueChange();

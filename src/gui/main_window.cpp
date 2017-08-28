@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     
     connect(m_gpsWidget, SIGNAL(setMessageStatusBar(QString &)), this, SLOT(setMessageStatusBar(QString &)));
     connect(m_gpsWidget->m_btnOptions, SIGNAL(clicked()), this, SLOT(openOptions()));
+    connect(((OptionsWidget*)m_optionsWidget)->m_pullButton, SIGNAL(clicked()), this, SLOT(openPull()));
     
 }
 

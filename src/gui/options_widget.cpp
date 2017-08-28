@@ -33,8 +33,11 @@ OptionsWidget::OptionsWidget(QWidget *parent)
         hlayout->addWidget(m_boxInput);
         layout->addLayout(hlayout);
     }
-    
-    
+    m_closeButton = new QPushButton("ok");
+    layout->addWidget(m_closeButton);
+    connect(m_closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    m_pullButton = new QPushButton("pull");
+    layout->addWidget(m_pullButton);
     
     
     setValue();
