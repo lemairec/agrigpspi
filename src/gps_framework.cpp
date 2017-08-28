@@ -3,6 +3,7 @@
 #include "config/config.hpp"
 #include "environnement.hpp"
 
+#include <QDateTime>
 #include <math.h>
 #include <iostream>
 #include <fstream>
@@ -10,7 +11,12 @@ std::ofstream gpslogFile;
 
 
 GpsFramework::GpsFramework(){
-    gpslogFile.open(GPS_LOG_FILE, std::ios::out);
+    QDateTime date = QDateTime::currentDateTime();
+    QString s = date.toString("yyyyMMdd_hhmm");
+    
+    std::string file = ProjectSourceBin + "/gps_" + s.toUtf8().toStdString() + ".ubx";
+    INFO(file);
+    gpslogFile.open(file, std::ios::out);
     m_config.load();
     initOrLoadConfig();
 }
@@ -25,6 +31,7 @@ void GpsFramework::removeObserver(){
 
 void GpsFramework::initOrLoadConfig(){
     m_config.save();
+    m_reloadConfig = true;
 }
 
 GpsFramework & GpsFramework::Instance(){
@@ -208,7 +215,7 @@ void GpsFramework::exportHtml(){
 void GpsFramework::readFile(){
     std::ifstream infile("/Users/lemairec/fablab/agrigpspi/gps_warmo.ubx");
     std::string line;
-    while (std::getline(infile, line))
+    while (std::getline(infile, line) && !m_reloadConfig)
     {
         if(!line.empty() && line[0] == '$'){
             m_gpsModule.readFrame(line);
@@ -227,32 +234,33 @@ void GpsFramework::readFile(){
 
 
 void GpsFramework::main(){
-    //readFile();
-    try {
-        
-        Serial serial(m_config.m_port,m_config.m_baudrate);
-        
-        //serial.writeString("Hello world\n");
-        
-        while(true){
-            char c = serial.readChar();
-            m_gpsModule.readChar(c);
+    for(;;){
+        m_reloadConfig = false;
+        if(m_config.m_input == "file"){
+            readFile();
+        } else if (m_config.m_input == "none"){
+            
+        } else {
+            try {
+                
+                Serial serial(m_config.m_input,m_config.m_baudrate);
+                
+                //serial.writeString("Hello world\n");
+                
+                while(!m_reloadConfig){
+                    char c = serial.readChar();
+                    m_gpsModule.readChar(c);
+                }
+                
+            } catch(boost::system::system_error& e)
+            {
+                cout<<"Error: "<<e.what()<<endl;
+                INFO(m_config.m_input << " " << m_config.m_baudrate);
+                return;
+            }
         }
-        
-    } catch(boost::system::system_error& e)
-    {
-        cout<<"Error: "<<e.what()<<endl;
-        INFO(m_config.m_port << " " << m_config.m_baudrate);
-        return;
+        QThread::msleep(1000);
     }
-    
-    /*for(;;){
-        //INFO("tutu");
-        if(m_observer){
-            m_observer->onNewPoint();
-        }
-        QThread::msleep(10);
-    }*/
     
     
 }
