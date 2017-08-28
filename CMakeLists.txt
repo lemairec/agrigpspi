@@ -20,7 +20,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
 FILE(GLOB_RECURSE src_hpp src/*.hpp)
 FILE(GLOB_RECURSE src_cpp src/*.cpp)
 
-set(sources ${src_hpp} ${src_cpp} src/environnement.hpp.in)
+set(sources ${src_hpp} ${src_cpp} src/environnement.hpp.in README.md)
 
 FIND_PACKAGE(Qt5Core)
 add_executable(agri_gps_pi ${sources})
@@ -35,8 +35,11 @@ target_link_libraries(agri_gps_pi ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} $
 SET(dirlist "")
 FOREACH(file_path ${sources})
     GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
-    STRING(REPLACE "${PROJECT_SOURCE_DIR}/" "" dir_path2 ${dir_path})
-    SET(dir_list ${dir_list} ${dir_path2})
+    IF(dir_path STREQUAL "")
+    ELSE()
+        STRING(REPLACE "${PROJECT_SOURCE_DIR}/" "" dir_path2 ${dir_path})
+        SET(dir_list ${dir_list} ${dir_path2})
+    ENDIF()
 ENDFOREACH()
 LIST(REMOVE_DUPLICATES dir_list)
 
