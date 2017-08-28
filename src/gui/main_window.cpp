@@ -4,16 +4,28 @@
 #include <QGridLayout>
 #include <QTabWidget>
 #include <QStatusBar>
+#include <QAction>
+#include <QMenu>
+#include <QMenuBar>
+
 
 MainWindow::MainWindow(QWidget *parent)
     :QMainWindow(parent)
 {
     
-    
-    
     setupUi();
     retranslateUi();
     
+    
+    auto actionQuitter = new QAction(tr("&Quitter"), this);
+    actionQuitter->setShortcut(tr("Ctrl+Q"));
+    connect(actionQuitter, SIGNAL(triggered()), qApp, SLOT(quit()));
+    
+    auto fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(actionQuitter);
+    
+    
+   
     connect(m_gpsWidget, SIGNAL(setMessageStatusBar(QString &)), this, SLOT(setMessageStatusBar(QString &)));
     connect(m_gpsWidget->m_btnOptions, SIGNAL(clicked()), this, SLOT(openOptions()));
     
@@ -55,6 +67,7 @@ void MainWindow::setupUi(){
     setStatusBar(m_statusBar);
     m_statusBar->showMessage("prêt");
     
+    
     //OuvreOptions();
     
     //showFullScreen();
@@ -77,5 +90,11 @@ void MainWindow::openOptions(){
     m_optionsWidget->show();
     m_optionsWidget->focusWidget();
     m_optionsWidget->setHidden(false);
-
 }
+
+void MainWindow::openPull(){
+    QProcess process;
+    process.start("cd ~/agrigpspi; git pull");
+    exit(0);
+}
+
