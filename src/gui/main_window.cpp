@@ -17,9 +17,13 @@ MainWindow::MainWindow(QWidget *parent)
     retranslateUi();
     
     
+    auto actionPull = new QAction(tr("&Pull"), this);
+    connect(actionPull, SIGNAL(triggered()), this, SLOT(openPull()));
+    
     auto actionQuitter = new QAction(tr("&Quitter"), this);
     actionQuitter->setShortcut(tr("Ctrl+Q"));
     connect(actionQuitter, SIGNAL(triggered()), qApp, SLOT(quit()));
+    
     
     auto fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(actionQuitter);
