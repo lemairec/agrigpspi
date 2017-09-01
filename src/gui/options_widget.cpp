@@ -57,6 +57,8 @@ OptionsWidget::OptionsWidget(QWidget *parent)
     
     setValue();
     addSerial();
+    connect(this->m_pullButton, SIGNAL(clicked()), this, SLOT(openPull()));
+    
 }
 
 OptionsWidget::~OptionsWidget()
@@ -101,3 +103,10 @@ void OptionsWidget::onValueChange(){
     GpsFramework::Instance().initOrLoadConfig();
 }
 
+void OptionsWidget::openPull(){
+    std::string cmd = "cd " + ProjectSourceDir + "; git pull";
+    INFO(cmd);
+    std::string res = execute(cmd);
+    INFO(res);
+    exit(0);
+}

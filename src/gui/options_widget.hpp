@@ -19,6 +19,8 @@ public:
     void addSerial();
 public slots:
     void onValueChange();
+    void openPull();
+
 };
 
 #endif

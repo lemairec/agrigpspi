@@ -23,7 +23,6 @@ public:
     void test();
 public slots:
     void openOptions();
-    void openPull();
     void setMessageStatusBar(QString & s);
 
 private:
