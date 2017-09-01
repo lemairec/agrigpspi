@@ -1,6 +1,22 @@
 #include "options_widget.hpp"
 #include <QLabel>
 #include "../gps_framework.hpp"
+#include "../environnement.hpp"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <boost/algorithm/string.hpp>
+
+std::string execute(std::string cmd){
+    std::string file = ProjectSourceBin + "/tmp_cmd";
+    std::string cmd2 = cmd + " > " + file;
+    system(cmd2.c_str());
+    std::ifstream infile(file);
+    std::stringstream strStream;
+    strStream << infile.rdbuf();//read the file
+    std::string res = strStream.str();
+    return res;
+}
 
 OptionsWidget::OptionsWidget(QWidget *parent)
     :QDialog(parent)
@@ -26,7 +42,6 @@ OptionsWidget::OptionsWidget(QWidget *parent)
         m_boxInput = new QComboBox();
         m_boxInput->addItem("none");
         m_boxInput->addItem("file");
-        m_boxInput->addItem("/dev/cu.usbmodem1411");
         connect(m_boxInput, SIGNAL(currentIndexChanged(int)), this, SLOT(onValueChange()));
         
         hlayout->addWidget(label);
@@ -41,11 +56,40 @@ OptionsWidget::OptionsWidget(QWidget *parent)
     
     
     setValue();
+    addSerial();
 }
 
 OptionsWidget::~OptionsWidget()
 {
 }
+
+void OptionsWidget::addSerial(){
+    {
+        std::string res = execute("ls /dev/cu.*");
+        std::vector<std::string> strs;
+        boost::split(strs, res, boost::is_any_of("\n"));
+        for(auto s : strs){
+            if(!s.empty()){
+                INFO(s);
+                QString s2 = QString::fromStdString(s);
+                m_boxInput->addItem(s2);
+            }
+        }
+    }
+    {
+        std::string res = execute("ls /dev/ttyACM*");
+        std::vector<std::string> strs;
+        boost::split(strs, res, boost::is_any_of("\n"));
+        for(auto s : strs){
+            if(!s.empty()){
+                INFO(s);
+                QString s2 = QString::fromStdString(s);
+                m_boxInput->addItem(s2);
+            }
+        }
+    }
+}
+
 
 void OptionsWidget::setValue(){
     m_boxLargeur->setValue(GpsFramework::Instance().m_config.m_largeur);

@@ -16,6 +16,7 @@ public:
     
     QPushButton * m_pullButton;
     void setValue();
+    void addSerial();
 public slots:
     void onValueChange();
 };
