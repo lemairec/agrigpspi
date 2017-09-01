@@ -11,11 +11,13 @@
 
 #include <QGraphicsTextItem>
 
+#define MY_HEIGTH 380
+
 GpsWidget::GpsWidget(){
     connect(this, SIGNAL(onValueChangeSignal()), this, SLOT(onValueChangeSlot()));
     scene = new QGraphicsScene(this);
     this->setScene(scene);
-    m_height = 400;
+    m_height = MY_HEIGTH;
     m_width = 800;
     scene->setSceneRect(0, 0, m_width, m_height);
     setFixedSize(m_width + 2, m_height + 2);
@@ -27,10 +29,10 @@ GpsWidget::GpsWidget(){
     m_btnB->setGeometry(0,50, 50, 50);
     m_btnB->setText("B");
     m_btnZoomUp = new QPushButton(this);
-    m_btnZoomUp->setGeometry(10,300, 40, 40);
+    m_btnZoomUp->setGeometry(10,MY_HEIGTH-90, 40, 40);
     m_btnZoomUp->setText("+");
     m_btnZoomDown = new QPushButton(this);
-    m_btnZoomDown->setGeometry(10,350, 40, 40);
+    m_btnZoomDown->setGeometry(10,MY_HEIGTH-40, 40, 40);
     m_btnZoomDown->setText("-");
     m_btnClose = new QPushButton(this);
     m_btnClose->setGeometry(m_width - 50, 10, 40, 40);
