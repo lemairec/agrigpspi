@@ -93,6 +93,7 @@ double GpsFramework::distance(GpsPoint & gpsPoint){
         double dx = m_pointA.m_x - gpsPoint.m_x;
         double dy = m_pointA.m_y - gpsPoint.m_y;
         double dist = sqrt(dx*dx + dy*dy);
+        m_distanceAB = dist;
         //INFO("distance Point A " << dist);
         return dist;
         
@@ -218,6 +219,10 @@ void GpsFramework::readFile(){
     while (std::getline(infile, line) && !m_reloadConfig)
     {
         if(!line.empty() && line[0] == '$'){
+            m_gpsModule.readFrame(line);
+            QThread::msleep(10);
+        }else if(!line.empty() && line[0] == 'G'){
+            line = '$'+line;
             m_gpsModule.readFrame(line);
             QThread::msleep(10);
         } else if(line == "[savePointA]"){

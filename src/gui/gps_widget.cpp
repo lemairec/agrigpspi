@@ -11,16 +11,19 @@
 
 #include <QGraphicsTextItem>
 
-#define MY_HEIGTH 380
+#define MY_HEIGTH 400
+#define MY_WIDTH 800
+
 
 GpsWidget::GpsWidget(){
     connect(this, SIGNAL(onValueChangeSignal()), this, SLOT(onValueChangeSlot()));
     scene = new QGraphicsScene(this);
     this->setScene(scene);
     m_height = MY_HEIGTH;
-    m_width = 800;
+    m_width = MY_WIDTH;
     scene->setSceneRect(0, 0, m_width, m_height);
     setFixedSize(m_width + 2, m_height + 2);
+    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     
     m_btnA = new QPushButton(this);
     m_btnA->setGeometry(0,50, 50, 50);
@@ -141,8 +144,8 @@ void GpsWidget::onValueChangeSlot(){
     //INFO(diff.count());
     last_update = now;
     
-    int h = MY_HEIGTH;
-    int w = 800;
+    int h = m_height;
+    int w = m_width;
     //INFO(w << " " << h);
         static int i = 0;
     QBrush greenBrush(Qt::darkGreen);

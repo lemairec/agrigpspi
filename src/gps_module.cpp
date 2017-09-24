@@ -295,12 +295,12 @@ double e_2 = (a*a-b*b)/(a*a);
 
 double LAT_REF = 49.045;
 double LON_REF = 3.4007;
-double temp_a = a * cos(DEG2RAD(LON_REF));
+double temp_a = a * cos(DEG2RAD(LAT_REF));
 
 void __SetXYSpherique(GpsPoint & gpsPoint){
     double lon = DEG2RAD(gpsPoint.m_longitude - LON_REF);
     double lat = DEG2RAD(gpsPoint.m_latitude - LAT_REF);
-    gpsPoint.m_x = a * cos(DEG2RAD(LAT_REF)) * lon;
+    gpsPoint.m_x = temp_a * lon;
     gpsPoint.m_y = a * lat;
 }
 
