@@ -141,7 +141,7 @@ void GpsWidget::onValueChangeSlot(){
     //INFO(diff.count());
     last_update = now;
     
-    int h = 400;
+    int h = MY_HEIGTH;
     int w = 800;
     //INFO(w << " " << h);
         static int i = 0;
