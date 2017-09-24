@@ -23,10 +23,10 @@ GpsWidget::GpsWidget(){
     setFixedSize(m_width + 2, m_height + 2);
     
     m_btnA = new QPushButton(this);
-    m_btnA->setGeometry(0,0, 50, 50);
+    m_btnA->setGeometry(0,50, 50, 50);
     m_btnA->setText("A");
     m_btnB = new QPushButton(this);
-    m_btnB->setGeometry(0,50, 50, 50);
+    m_btnB->setGeometry(0,100, 50, 50);
     m_btnB->setText("B");
     m_btnZoomUp = new QPushButton(this);
     m_btnZoomUp->setGeometry(10,MY_HEIGTH-90, 40, 40);
@@ -121,6 +121,14 @@ void GpsWidget::drawBarreGuidage(){
             scene->addRect(m_width/2 + 60 + 30*i, 10, 20, 20, m_penBlack, green);
         }
     }
+    
+    scene->addRect(0, 0, 80, 40, m_penBlack, lightGrayBrush);
+    s = QString::number(f.m_vitesse, 'f', 2) + " km/h";
+    textItem = scene->addText(s);
+    mBounds = textItem->boundingRect();
+    textItem->setPos(40 - mBounds.width()/2, 10);
+    
+    
 }
 
 void GpsWidget::onValueChangeSlot(){
