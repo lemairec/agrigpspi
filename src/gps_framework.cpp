@@ -214,7 +214,7 @@ void GpsFramework::exportHtml(){
 }
 
 void GpsFramework::readFile(){
-    std::ifstream infile("/Users/lemairec/fablab/agrigpspi/gps_warmo.ubx");
+    std::ifstream infile(GPS_TEST_FILE);
     std::string line;
     while (std::getline(infile, line) && !m_reloadConfig)
     {
