@@ -40,8 +40,8 @@ OptionsWidget::OptionsWidget(QWidget *parent)
         QHBoxLayout * hlayout = new QHBoxLayout();
         QLabel * label = new QLabel("input");
         m_boxInput = new QComboBox();
-        m_boxInput->addItem("file");
         m_boxInput->addItem("none");
+        m_boxInput->addItem("file");
         connect(m_boxInput, SIGNAL(currentIndexChanged(int)), this, SLOT(onValueChange()));
         
         hlayout->addWidget(label);

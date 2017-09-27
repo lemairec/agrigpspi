@@ -293,8 +293,8 @@ double a = 6378249.2;
 double b = 6356515;
 double e_2 = (a*a-b*b)/(a*a);
 
-double LAT_REF = 49.045;
-double LON_REF = 3.4007;
+double LAT_REF = 49.375;
+double LON_REF = 4.222;
 double temp_a = a * cos(DEG2RAD(LAT_REF));
 
 void __SetXYSpherique(GpsPoint & gpsPoint){
