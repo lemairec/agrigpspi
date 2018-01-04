@@ -6,9 +6,12 @@
 class Config  {
 public:
     double m_largeur = 27;
-    std::string m_input = "none";
+    std::string m_input;
     int m_baudrate = 9600;
+    std::string m_file;
 
+    Config();
+    
     void save();
     void load();
 };

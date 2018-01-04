@@ -4,6 +4,12 @@
 #include "../environnement.hpp"
 #include "../logging.hpp"
 
+Config::Config(){
+    m_input = "none";
+    m_file = GPS_TEST_FILE;
+    //m_input= "file";
+    //m_file = ProjectSourceDir + "/gps_warmo.ubx";
+}
 
 void Config::save(){
     std::string s = ProjectSourceBin + "/agrigps.ini";

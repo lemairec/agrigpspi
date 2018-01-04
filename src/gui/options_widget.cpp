@@ -29,7 +29,6 @@ OptionsWidget::OptionsWidget(QWidget *parent)
         QLabel * label = new QLabel("largeur");
         m_boxLargeur = new QSpinBox();
         m_boxLargeur->setRange(0,50);
-        connect(m_boxLargeur, SIGNAL(valueChanged(int)), this, SLOT(onValueChange()));
         
         hlayout->addWidget(label);
         hlayout->addWidget(m_boxLargeur);
@@ -42,7 +41,6 @@ OptionsWidget::OptionsWidget(QWidget *parent)
         m_boxInput = new QComboBox();
         m_boxInput->addItem("none");
         m_boxInput->addItem("file");
-        connect(m_boxInput, SIGNAL(currentIndexChanged(int)), this, SLOT(onValueChange()));
         
         hlayout->addWidget(label);
         hlayout->addWidget(m_boxInput);
@@ -57,6 +55,10 @@ OptionsWidget::OptionsWidget(QWidget *parent)
     
     setValue();
     addSerial();
+    
+    connect(m_boxLargeur, SIGNAL(valueChanged(int)), this, SLOT(onValueChange()));
+    connect(m_boxInput, SIGNAL(currentIndexChanged(int)), this, SLOT(onValueChange()));
+    
     connect(this->m_pullButton, SIGNAL(clicked()), this, SLOT(openPull()));
     
 }

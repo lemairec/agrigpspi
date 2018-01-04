@@ -214,17 +214,21 @@ void GpsFramework::exportHtml(){
 }
 
 void GpsFramework::readFile(){
-    std::ifstream infile(GPS_TEST_FILE);
+    std::ifstream infile(m_config.m_file);
+    if(!infile.is_open()){
+        INFO("can not open " << m_config.m_file);
+        return;
+    }
     std::string line;
     while (std::getline(infile, line) && !m_reloadConfig)
     {
         if(!line.empty() && line[0] == '$'){
             m_gpsModule.readFrame(line);
-            QThread::msleep(10);
+            QThread::msleep(1);
         }else if(!line.empty() && line[0] == 'G'){
             line = '$'+line;
             m_gpsModule.readFrame(line);
-            QThread::msleep(10);
+            QThread::msleep(1);
         } else if(line == "[savePointA]"){
             savePointA();
         } else if(line == "[savePointB]"){
@@ -233,7 +237,8 @@ void GpsFramework::readFile(){
         //INFO(line);
         
     }
-    exportHtml();
+    m_config.m_input = "none";
+    //exportHtml();
 }
 
 
