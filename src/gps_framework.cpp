@@ -213,6 +213,7 @@ void GpsFramework::exportHtml(){
     infile << oss.str();
 }
 
+#define SLEEP_TIME 1
 void GpsFramework::readFile(){
     std::ifstream infile(m_config.m_file);
     if(!infile.is_open()){
@@ -220,15 +221,17 @@ void GpsFramework::readFile(){
         return;
     }
     std::string line;
+    
+    std::chrono::time_point<std::chrono::system_clock> start_time = std::chrono::system_clock::now();
     while (std::getline(infile, line) && !m_reloadConfig)
     {
         if(!line.empty() && line[0] == '$'){
             m_gpsModule.readFrame(line);
-            QThread::msleep(1);
+            QThread::msleep(SLEEP_TIME);
         }else if(!line.empty() && line[0] == 'G'){
             line = '$'+line;
             m_gpsModule.readFrame(line);
-            QThread::msleep(1);
+            QThread::msleep(SLEEP_TIME);
         } else if(line == "[savePointA]"){
             savePointA();
         } else if(line == "[savePointB]"){
@@ -237,6 +240,9 @@ void GpsFramework::readFile(){
         //INFO(line);
         
     }
+    std::chrono::time_point<std::chrono::system_clock> end_time = std::chrono::system_clock::now();
+    INFO("Wall time passed: " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count()
+);
     m_config.m_input = "none";
     //exportHtml();
 }

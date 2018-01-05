@@ -31,7 +31,7 @@ void GpsModule::readFrame(const std::string & frame){
 }
 
 void GpsModule::readChar(char c){
-    std::cout << c;
+    //std::cout << c;
     if(c == '$'){
         //INFO("readChar");
     } else if(c == '\n'){
@@ -116,7 +116,7 @@ void GpsModule::parseGGA(){
     
     m_lastGGAEvent.m_timeHour = getTimeHour(m_lastGGAEvent.m_time);
     setXY(m_lastGGAEvent);
-    INFO("******** GGA");
+    //INFO("******** GGA");
     GpsFramework::Instance().onGGAFrame(m_lastGGAEvent);
 }
 
