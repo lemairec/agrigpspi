@@ -135,14 +135,13 @@ void GpsWidget::drawBarreGuidage(){
 }
 
 void GpsWidget::onValueChangeSlot(){
-    auto now = std::chrono::system_clock::now();
-    std::chrono::duration<double> diff = now - last_update;
+    auto begin = std::chrono::system_clock::now();
+    std::chrono::duration<double> diff = begin - last_update;
     if(diff.count() < 0.2){
-        //INFO(diff.count());
+        INFO(diff.count());
         return;
     }
     //INFO(diff.count());
-    last_update = now;
     
     int h = m_height;
     int w = m_width;
@@ -199,8 +198,12 @@ void GpsWidget::onValueChangeSlot(){
     
     drawBarreGuidage();
     
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<double> diff2 = begin - end;
+    last_update = end;
+    
     std::ostringstream oss;
-    oss <<  "nbSt " << last_frame->m_nbrSat << " fix " << last_frame->m_fix << " AB " << f.m_sensAB << " v " << round(f.m_vitesse) << "km/h";
+    oss <<  "nbSt " << last_frame->m_nbrSat << ", fix " << last_frame->m_fix << ", AB " << f.m_sensAB << ", v " << round(f.m_vitesse) << "km/h, draw " << diff2.count();
     //INFO(oss.str());
     QString s = QString::fromStdString(oss.str());
     emit setMessageStatusBar(s);
