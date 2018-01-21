@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 project(agri_gps_pi)
 
 configure_file (
-"${PROJECT_SOURCE_DIR}/src/environnement.hpp.in"
-"${PROJECT_SOURCE_DIR}/src/environnement.hpp"
+    "${PROJECT_SOURCE_DIR}/src/environnement.hpp.in"
+    "${PROJECT_BINARY_DIR}/environnement.hpp"
 )
+include_directories("${PROJECT_BINARY_DIR}")
+
 
 
 FIND_PACKAGE(Qt5Core)
@@ -13,14 +15,14 @@ find_library(PTHREAD pthread)
 set(CMAKE_AUTOMOC ON)
 
 find_package(Boost REQUIRED COMPONENTS system)
-include_directories( ${Boost_INCLUDE_DIR} )
+include_directories( ${Boost_INCLUDE_DIR}   )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
 
 FILE(GLOB_RECURSE src_hpp src/*.hpp)
 FILE(GLOB_RECURSE src_cpp src/*.cpp)
 
-set(sources ${src_hpp} ${src_cpp} src/environnement.hpp.in README.md)
+set(sources ${src_hpp} ${src_cpp} ${PROJECT_BINARY_DIR}/environnement.hpp src/environnement.hpp.in README.md)
 
 FIND_PACKAGE(Qt5Core)
 add_executable(agri_gps_pi ${sources})

@@ -1,7 +1,7 @@
 #include "options_widget.hpp"
 #include <QLabel>
 #include "../gps_framework.hpp"
-#include "../environnement.hpp"
+#include "environnement.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>

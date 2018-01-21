@@ -1,7 +1,7 @@
 #include "config.hpp"
 #include <QString>
 #include <QSettings>
-#include "../environnement.hpp"
+#include "environnement.hpp"
 #include "../logging.hpp"
 
 Config::Config(){
