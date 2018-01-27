@@ -11,40 +11,31 @@
 
 #include <QGraphicsTextItem>
 
-#define MY_HEIGTH 400
 #define MY_WIDTH 800
+#define MY_HEIGTH 400
 
 
 GpsWidget::GpsWidget(){
     connect(this, SIGNAL(onValueChangeSignal()), this, SLOT(onValueChangeSlot()));
     scene = new QGraphicsScene(this);
     this->setScene(scene);
-    m_height = MY_HEIGTH;
-    m_width = MY_WIDTH;
+    
+    m_btnA = new QPushButton(this);
+    m_btnB = new QPushButton(this);
+    m_btnZoomUp = new QPushButton(this);
+    m_btnZoomDown = new QPushButton(this);
+    m_btnClose = new QPushButton(this);
+    m_btnOptions = new QPushButton(this);
+    
+    setSize(MY_WIDTH, MY_HEIGTH);
     scene->setSceneRect(0, 0, m_width, m_height);
     setFixedSize(m_width + 2, m_height + 2);
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     
-    m_btnA = new QPushButton(this);
-    m_btnA->setGeometry(0,50, 50, 50);
-    m_btnA->setText("A");
-    m_btnB = new QPushButton(this);
-    m_btnB->setGeometry(0,100, 50, 50);
-    m_btnB->setText("B");
-    m_btnZoomUp = new QPushButton(this);
-    m_btnZoomUp->setGeometry(10,MY_HEIGTH-90, 40, 40);
-    m_btnZoomUp->setText("+");
-    m_btnZoomDown = new QPushButton(this);
-    m_btnZoomDown->setGeometry(10,MY_HEIGTH-40, 40, 40);
-    m_btnZoomDown->setText("-");
-    m_btnClose = new QPushButton(this);
-    m_btnClose->setGeometry(m_width - 50, 10, 40, 40);
-    m_btnClose->setText("x");
-    m_btnOptions = new QPushButton(this);
-    m_btnOptions->setGeometry(m_width - 50, 60, 40, 40);
-    m_btnOptions->setText("o");
+    
     addButtons();
     m_zoom = 10;
+    
     
     connect(m_btnZoomUp, SIGNAL(clicked()), this, SLOT(onZoomUp()));
     connect(m_btnZoomDown, SIGNAL(clicked()), this, SLOT(onZoomDown()));
@@ -54,6 +45,42 @@ GpsWidget::GpsWidget(){
     m_penBlack = QPen(Qt::black);
     m_penRed = QPen(Qt::red);
     m_penBlue = QPen(Qt::blue);
+    
+    m_brushGreen = QBrush(QColor(0, 250, 0, 100));
+    m_penNo.setColor(QColor(0, 250, 0, 0));
+    //m_brushGreen.a
+}
+
+void GpsWidget::setSize(int width, int height){
+    INFO(width << " " << height);
+    m_width = width;
+    m_height = height;
+    m_widthMax = width/2+50;
+    m_heightMax = height/2+50;
+    scene->setSceneRect(0, 0, m_width, m_height);
+    setFixedSize(m_width + 2, m_height + 2);
+    
+    m_btnA->setGeometry(0,50, 50, 50);
+    m_btnA->setText("A");
+    m_btnB->setGeometry(0,100, 50, 50);
+    m_btnB->setText("B");
+    m_btnZoomUp->setGeometry(10,m_height-90, 40, 40);
+    m_btnZoomUp->setText("+");
+    m_btnZoomDown->setGeometry(10,m_height-40, 40, 40);
+    m_btnZoomDown->setText("-");
+    m_btnClose->setGeometry(m_width - 50, 10, 40, 40);
+    m_btnClose->setText("x");
+    m_btnOptions->setGeometry(m_width - 50, 60, 40, 40);
+    m_btnOptions->setText("o");
+}
+void GpsWidget::resizeEvent(QResizeEvent* event)
+{
+//    m_height = parentWidget()->parentWidget()->size().height();
+//    m_width = parentWidget()->parentWidget()->size().width();
+    
+    
+    
+    
 }
 
 void GpsWidget::onNewPoint(){
@@ -62,7 +89,7 @@ void GpsWidget::onNewPoint(){
 
 void GpsWidget::drawCourbe(double l){
     scene->addEllipse(m_width/2 - l*m_zoom, m_height/2 - l*m_zoom, l*m_zoom*2, l*m_zoom*2, m_penBlack, m_brushNo);
-    
+    //INFO(m_height);
 }
 
 
@@ -86,11 +113,11 @@ void GpsWidget::drawLines(double x, double y){
 void GpsWidget::addligne(double l, double x, double y){
     GpsFramework & f = GpsFramework::Instance();
     double res = l*f.m_b/cos(atan(-f.m_a/f.m_b));
-    double x0 = -400/m_zoom + x;
+    double x0 = -m_width/m_zoom + x;
     double y0 = -(f.m_a * x0 + f.m_c + res)/f.m_b;
     x0 = (x0 - x)*m_zoom;
     y0 = (y0 - y)*m_zoom;
-    double x1 = 400/m_zoom + x;
+    double x1 = m_width/m_zoom + x;
     double y1 = -(f.m_a * x1 + f.m_c + res)/f.m_b;
     x1 = (x1 - x)*m_zoom;
     y1 = (y1 - y)*m_zoom;
@@ -138,7 +165,7 @@ void GpsWidget::onValueChangeSlot(){
     auto begin = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = begin - last_update;
     if(diff.count() < 0.2){
-        INFO(diff.count());
+   //     INFO(diff.count());
         return;
     }
     //INFO(diff.count());
@@ -169,10 +196,54 @@ void GpsWidget::onValueChangeSlot(){
     
     drawLines(x, y);
     
+    double x1 = 0;
+    double y1 = 0;
+    double xA_prev = 0, yA_prev = 0, xB_prev = 0, yB_prev = 0;
+    
+    double l = f.m_config.m_largeur*m_zoom/2;
+    int j = 0;
+    int init = 0;
+    
     for(auto frame : f.m_list){
-        double x1  = (frame->m_x - x)*m_zoom;
-        double y1  = (frame->m_y - y)*m_zoom;
-        scene->addEllipse(w/2 + x1, h/2 - y1, 1, 1, m_penBlack, m_brushNo);
+        double x0  = (frame->m_x - x)*m_zoom;
+        double y0  = (frame->m_y - y)*m_zoom;
+        
+        if(x0 < -m_widthMax || x0 > m_widthMax || y0 < -m_heightMax || y0 > m_heightMax ){
+            init = 0;
+            continue;
+        }
+        double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+        if(y1 != y0){
+            if(init != 0){
+                double res = (x1-x0)/(y1-y0);
+                double i = 1.0;
+                if(y1-y0 > 0){
+                    i = -1.0;
+                }
+                double xA = x1+ i*l/sqrt(1+res*res);
+                double yA = y1-(xA-x1)*res;
+                double xB = x1- i*l/sqrt(1+res*res);
+                double yB = y1-(xB-x1)*res;
+                
+                if(init !=1 && dist > 0.1*l*l){
+                    QPolygon polygon;
+                    polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB_prev, h/2 - yB_prev)<< QPoint(w/2 + xA_prev, h/2 - yA_prev);
+                    scene->addPolygon(polygon, m_penNo, m_brushGreen);
+                }
+                xA_prev = xA, yA_prev = yA, xB_prev = xB, yB_prev = yB;
+            }
+            x1 = x0;
+            y1 = y0;
+            ++init;
+            
+            //scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
+            //scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
+            
+            //scene->addEllipse(w/2 + xB, h/2 - yB, 20, 20, m_penRed, m_brushGreen);
+            
+        }
+        scene->addEllipse(w/2 + x0, h/2 - y0, 1, 1, m_penBlack, m_brushNo);
+        j ++;
     }
     if(f.m_pointA.m_x!=0){
         double xA  = (f.m_pointA.m_x - x)*m_zoom;

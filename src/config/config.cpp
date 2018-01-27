@@ -12,7 +12,7 @@ Config::Config(){
 }
 
 void Config::save(){
-    std::string s = ProjectSourceBin + "/agrigps.ini";
+    std::string s = CONFIG_FILE;
     QString path = QString::fromStdString(s);
     QSettings settings(path, QSettings::IniFormat);
     
@@ -20,12 +20,12 @@ void Config::save(){
 }
 
 void Config::load(){
-    std::string s = ProjectSourceBin + "/agrigps.ini";
+    std::string s = CONFIG_FILE;
     QString qpath = QString::fromStdString(s);
     QSettings settings(qpath, QSettings::IniFormat);
     
     if(settings.contains("largeur")){
-        m_largeur = settings.value("largeur").toInt();
+        m_largeur = settings.value("largeur").toDouble();
     }
     INFO(m_largeur);
 }

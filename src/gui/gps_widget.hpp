@@ -25,20 +25,30 @@ public:
     
     void addButtons();
 
-    int m_height;
     int m_width;
+    int m_height;
+    int m_widthMax;
+    int m_heightMax;
+    
     QPen m_penBlack;
     QPen m_penRed;
     QPen m_penBlue;
+    QPen m_penNo;
     QBrush m_brushNo;
+    QBrush m_brushGreen;
     void drawCourbe(double l);
     void addligne(double l, double x, double y);
     void drawLines(double x, double y);
     
     double m_zoom;
+    
+    void setSize(int width, int height);
+    void resizeEvent(QResizeEvent* event);
+
 signals:
     void onValueChangeSignal();
     void setMessageStatusBar(QString & s);
+   
     
 public slots:
     void drawBarreGuidage();

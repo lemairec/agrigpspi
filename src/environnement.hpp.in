@@ -18,6 +18,7 @@ const std::string  ProjectCompleteName = "@CMAKE_PROJECT_NAME@ @PROJECT_VERSION_
 const std::string  ProjectSourceDir = "@PROJECT_SOURCE_DIR@";
 const std::string  ProjectSourceBin = "@PROJECT_BINARY_DIR@";
 
+#define CONFIG_FILE "@PROJECT_BINARY_DIR@/agrigps.ini"
 #define LOG_FILE "@PROJECT_BINARY_DIR@/log.txt"
 #define GPS_LOG_FILE "@PROJECT_BINARY_DIR@/gps.ubx"
 #define GPS_TEST_FILE "@PROJECT_SOURCE_DIR@/gps.ubx"

@@ -21,6 +21,9 @@ public:
     ~MainWindow();
     
     void test();
+    void resizeEvent(QResizeEvent* event){
+        m_gpsWidget->setSize(size().width()-8, size().height()-60);
+    }
 public slots:
     void openOptions();
     void setMessageStatusBar(QString & s);
