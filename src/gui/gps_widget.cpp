@@ -198,18 +198,21 @@ void GpsWidget::onValueChangeSlot(){
     
     double x1 = 0;
     double y1 = 0;
-    double xA_prev = 0, yA_prev = 0, xB_prev = 0, yB_prev = 0;
+    double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
     
     double l = f.m_config.m_largeur*m_zoom/2;
     int j = 0;
-    int init = 0;
+    int init = 1;
     
-    for(auto frame : f.m_list){
+    for(auto it = f.m_list.begin(); it != f.m_list.end(); ++it){
+        auto frame = (*it);
         double x0  = (frame->m_x - x)*m_zoom;
         double y0  = (frame->m_y - y)*m_zoom;
         
         if(x0 < -m_widthMax || x0 > m_widthMax || y0 < -m_heightMax || y0 > m_heightMax ){
-            init = 0;
+            init = 1;
+            x1 = x0;
+            y1 = y0;
             continue;
         }
         double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
@@ -220,17 +223,30 @@ void GpsWidget::onValueChangeSlot(){
                 if(y1-y0 > 0){
                     i = -1.0;
                 }
-                double xA = x1+ i*l/sqrt(1+res*res);
-                double yA = y1-(xA-x1)*res;
-                double xB = x1- i*l/sqrt(1+res*res);
-                double yB = y1-(xB-x1)*res;
+                double xA = x0+ i*l/sqrt(1+res*res);
+                double yA = y0-(xA-x0)*res;
+                double xB = x0- i*l/sqrt(1+res*res);
+                double yB = y0-(xB-x0)*res;
                 
-                if(init !=1 && dist > 0.1*l*l){
+                if(init != 1 && dist > 0.1*l*l){
                     QPolygon polygon;
-                    polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB_prev, h/2 - yB_prev)<< QPoint(w/2 + xA_prev, h/2 - yA_prev);
+                    polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
                     scene->addPolygon(polygon, m_penNo, m_brushGreen);
+                } else if(init == 1) {
+                    double res = (x1-x0)/(y1-y0);
+                    double i = 1.0;
+                    if(y1-y0 > 0){
+                        i = -1.0;
+                    }
+                    double xA1 = x1+ i*l/sqrt(1+res*res);
+                    double yA1 = y1-(xA1-x1)*res;
+                    double xB1 = x1- i*l/sqrt(1+res*res);
+                    double yB1 = y1-(xB1-x1)*res;
+                    QPolygon polygon;
+                    polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
+                    scene->addPolygon(polygon, m_penRed, m_brushGreen);
                 }
-                xA_prev = xA, yA_prev = yA, xB_prev = xB, yB_prev = yB;
+                xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
             }
             x1 = x0;
             y1 = y0;
