@@ -9,6 +9,7 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QDoubleSpinBox>
 #include <QSpinBox>
 #include <QDate>
 #include <QProcess>

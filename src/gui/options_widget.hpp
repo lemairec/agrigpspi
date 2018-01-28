@@ -7,9 +7,9 @@ class OptionsWidget : public QDialog
 {
     Q_OBJECT
     
-    QSpinBox * m_boxLargeur;
+    QDoubleSpinBox * m_boxLargeur;
     QComboBox * m_boxInput;
-    QPushButton * m_closeButton;
+    QPushButton * m_okButton;
 public:
     OptionsWidget(QWidget *parent = 0);
     ~OptionsWidget();
@@ -18,7 +18,7 @@ public:
     void setValue();
     void addSerial();
 public slots:
-    void onValueChange();
+    void onOk();
     void openPull();
 
 };

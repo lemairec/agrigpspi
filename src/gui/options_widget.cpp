@@ -27,7 +27,8 @@ OptionsWidget::OptionsWidget(QWidget *parent)
     {
         QHBoxLayout * hlayout = new QHBoxLayout();
         QLabel * label = new QLabel("largeur");
-        m_boxLargeur = new QSpinBox();
+        m_boxLargeur = new QDoubleSpinBox();
+        m_boxLargeur->setSingleStep(0.2);
         m_boxLargeur->setRange(0,50);
         
         hlayout->addWidget(label);
@@ -46,9 +47,8 @@ OptionsWidget::OptionsWidget(QWidget *parent)
         hlayout->addWidget(m_boxInput);
         layout->addLayout(hlayout);
     }
-    m_closeButton = new QPushButton("ok");
-    layout->addWidget(m_closeButton);
-    connect(m_closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    m_okButton = new QPushButton("ok");
+    layout->addWidget(m_okButton);
     m_pullButton = new QPushButton("pull");
     layout->addWidget(m_pullButton);
     
@@ -56,10 +56,11 @@ OptionsWidget::OptionsWidget(QWidget *parent)
     setValue();
     addSerial();
     
-    connect(m_boxLargeur, SIGNAL(valueChanged(int)), this, SLOT(onValueChange()));
+    connect(m_boxLargeur, SIGNAL(valueChanged(double)), this, SLOT(onValueChange()));
     connect(m_boxInput, SIGNAL(currentIndexChanged(int)), this, SLOT(onValueChange()));
     
-    connect(this->m_pullButton, SIGNAL(clicked()), this, SLOT(openPull()));
+    connect(m_okButton, SIGNAL(clicked()), this, SLOT(onOk()));
+    connect(m_pullButton, SIGNAL(clicked()), this, SLOT(openPull()));
     
 }
 
@@ -99,10 +100,12 @@ void OptionsWidget::setValue(){
     m_boxLargeur->setValue(GpsFramework::Instance().m_config.m_largeur);
 }
 
-void OptionsWidget::onValueChange(){
+void OptionsWidget::onOk(){
     GpsFramework::Instance().m_config.m_largeur = m_boxLargeur->value();
     GpsFramework::Instance().m_config.m_input = m_boxInput->currentText().toUtf8().constData();
+    GpsFramework::Instance().m_config.save();
     GpsFramework::Instance().initOrLoadConfig();
+    close();
 }
 
 void OptionsWidget::openPull(){
