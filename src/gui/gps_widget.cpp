@@ -46,7 +46,7 @@ GpsWidget::GpsWidget(){
     m_penRed = QPen(Qt::red);
     m_penBlue = QPen(Qt::blue);
     
-    m_brushGreen = QBrush(QColor(0, 250, 0, 100));
+    m_brushGreen = QBrush(QColor(0, 150, 0, 100));
     m_penNo.setColor(QColor(0, 250, 0, 0));
     //m_brushGreen.a
 }
@@ -170,22 +170,21 @@ void GpsWidget::onValueChangeSlot(){
     }
     //INFO(diff.count());
     
+    GpsFramework & f = GpsFramework::Instance();
+    m_widthMax = m_width/2+f.m_config.m_largeur*m_zoom/2;
+    m_heightMax = m_height/2+f.m_config.m_largeur*m_zoom/2;
+    
     int h = m_height;
     int w = m_width;
     //INFO(w << " " << h);
         static int i = 0;
-    QBrush greenBrush(Qt::darkGreen);
-    QColor c = Qt::red;
-    c.setAlpha(100);
-    QBrush testBrush(c);
     
     
     i += 1;
     scene->clear();
     
     
-    scene->addRect(0, 0, w, h, m_penBlack, greenBrush);
-    GpsFramework & f = GpsFramework::Instance();
+    //scene->addRect(0, 0, w, h, m_penBlack, greenBrush);
     auto last_frame = (*f.m_list.begin());
     double x = last_frame->m_x;
     double y = last_frame->m_y;
@@ -202,7 +201,7 @@ void GpsWidget::onValueChangeSlot(){
     
     double l = f.m_config.m_largeur*m_zoom/2;
     int j = 0;
-    int init = 1;
+    int init = 0;
     
     for(auto it = f.m_list.begin(); it != f.m_list.end(); ++it){
         auto frame = (*it);
@@ -210,44 +209,45 @@ void GpsWidget::onValueChangeSlot(){
         double y0  = (frame->m_y - y)*m_zoom;
         
         if(x0 < -m_widthMax || x0 > m_widthMax || y0 < -m_heightMax || y0 > m_heightMax ){
-            init = 1;
+            init = 0;
             x1 = x0;
             y1 = y0;
             continue;
         }
         double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
         if(y1 != y0){
+            double res = (x1-x0)/(y1-y0);
+            double i = 1.0;
+            if(y1-y0 > 0){
+                i = -1.0;
+            }
+            double xA = x0+ i*l/sqrt(1+res*res);
+            double yA = y0-(xA-x0)*res;
+            double xB = x0- i*l/sqrt(1+res*res);
+            double yB = y0-(xB-x0)*res;
+            
+            if(dist < 0.1*l*l){
+                //continue;
+            }
             if(init != 0){
+                QPolygon polygon;
+                polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
+                scene->addPolygon(polygon, m_penNo, m_brushGreen);
+            } else if(init == 0) {
                 double res = (x1-x0)/(y1-y0);
                 double i = 1.0;
                 if(y1-y0 > 0){
                     i = -1.0;
                 }
-                double xA = x0+ i*l/sqrt(1+res*res);
-                double yA = y0-(xA-x0)*res;
-                double xB = x0- i*l/sqrt(1+res*res);
-                double yB = y0-(xB-x0)*res;
-                
-                if(init != 1 && dist > 0.1*l*l){
-                    QPolygon polygon;
-                    polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
-                    scene->addPolygon(polygon, m_penNo, m_brushGreen);
-                } else if(init == 1) {
-                    double res = (x1-x0)/(y1-y0);
-                    double i = 1.0;
-                    if(y1-y0 > 0){
-                        i = -1.0;
-                    }
-                    double xA1 = x1+ i*l/sqrt(1+res*res);
-                    double yA1 = y1-(xA1-x1)*res;
-                    double xB1 = x1- i*l/sqrt(1+res*res);
-                    double yB1 = y1-(xB1-x1)*res;
-                    QPolygon polygon;
-                    polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
-                    scene->addPolygon(polygon, m_penRed, m_brushGreen);
-                }
-                xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
+                double xA1 = x1+ i*l/sqrt(1+res*res);
+                double yA1 = y1-(xA1-x1)*res;
+                double xB1 = x1- i*l/sqrt(1+res*res);
+                double yB1 = y1-(xB1-x1)*res;
+                QPolygon polygon;
+                polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
+                scene->addPolygon(polygon, m_penNo, m_brushGreen);
             }
+            xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
             x1 = x0;
             y1 = y0;
             ++init;
