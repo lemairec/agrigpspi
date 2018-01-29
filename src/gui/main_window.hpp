@@ -22,7 +22,7 @@ public:
     
     void test();
     void resizeEvent(QResizeEvent* event){
-        m_gpsWidget->setSize(size().width()-8, size().height()-60);
+        m_gpsWidget->setSize(size().width()-8, size().height()-65);
     }
 public slots:
     void openOptions();
