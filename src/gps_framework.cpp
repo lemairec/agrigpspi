@@ -241,9 +241,12 @@ void GpsFramework::readFile(){
         
     }
     std::chrono::time_point<std::chrono::system_clock> end_time = std::chrono::system_clock::now();
-    INFO("Wall time passed: " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count()
-);
-    m_config.m_input = "none";
+    INFO("Wall time passed: " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count());
+    if(!m_reloadConfig){
+        m_config.m_input = "none";
+    } else {
+        m_list.clear();
+    }
     //exportHtml();
 }
 
