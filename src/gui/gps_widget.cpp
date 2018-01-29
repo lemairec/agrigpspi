@@ -103,26 +103,44 @@ void GpsWidget::drawLines(double x, double y){
     double l = res / (f.m_b/cos(atan(-f.m_a/f.m_b)));
     
     int l0 = round(l/f.m_config.m_largeur)*f.m_config.m_largeur;
-    for(int i = -10; i <= 10; ++i){
-        addligne(l0 + i*f.m_config.m_largeur, x, y);
+    for(int i = 0; i < 1000; ++i){
+        if(! addligne(l0 + i*f.m_config.m_largeur, x, y, i)){
+            break;
+        }
     }
-    
-    //double y0*f.m_b + f.m_a * x0 + f.m_c= - res;
-    
+    for(int i = 1; i < 1000; ++i){
+        if(! addligne(l0 + -i*f.m_config.m_largeur, x, y, i)){
+            break;
+        }
+    }
 }
 
-void GpsWidget::addligne(double l, double x, double y){
+bool GpsWidget::addligne(double l, double x, double y, int i){
     GpsFramework & f = GpsFramework::Instance();
     double res = l*f.m_b/cos(atan(-f.m_a/f.m_b));
-    double x0 = -m_width/m_zoom + x;
+    double x0 = -m_width/(m_zoom*2) + x;
     double y0 = -(f.m_a * x0 + f.m_c + res)/f.m_b;
     x0 = (x0 - x)*m_zoom;
     y0 = (y0 - y)*m_zoom;
-    double x1 = m_width/m_zoom + x;
+    double x1 = m_width/(m_zoom*2) + x;
     double y1 = -(f.m_a * x1 + f.m_c + res)/f.m_b;
     x1 = (x1 - x)*m_zoom;
     y1 = (y1 - y)*m_zoom;
-    scene->addLine(m_width/2 + x0, m_height/2 - y0, m_width/2 + x1, m_height/2 - y1, m_penBlack);
+    
+    if(i%10 == 0){
+        scene->addLine(m_width/2 + x0, m_height/2 - y0, m_width/2 + x1, m_height/2 - y1, m_penBlue);
+    } else {
+        scene->addLine(m_width/2 + x0, m_height/2 - y0, m_width/2 + x1, m_height/2 - y1, m_penBlack);
+    }
+    if(y0 > m_height/2 && y1 > m_height/2){
+        return false;
+    }
+    
+    if(y0 < -m_height/2 && y1 < -m_height/2){
+        return false;
+    }
+    return true;
+    
 }
 
 auto last_update = std::chrono::system_clock::now();

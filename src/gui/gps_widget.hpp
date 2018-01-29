@@ -37,7 +37,7 @@ public:
     QBrush m_brushNo;
     QBrush m_brushGreen;
     void drawCourbe(double l);
-    void addligne(double l, double x, double y);
+    bool addligne(double l, double x, double y, int i);
     void drawLines(double x, double y);
     
     double m_zoom;
