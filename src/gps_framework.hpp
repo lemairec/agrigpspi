@@ -4,6 +4,7 @@
 #include <QThread>
 #include "gps_module.hpp"
 #include "config/config.hpp"
+#include <chrono>
 
 class IGpsObserver {
 public:
