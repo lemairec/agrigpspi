@@ -29,12 +29,12 @@ void BaseWidget::setSize(int width, int height){
     
     m_buttons.push_front(Button(m_width*3/4-30,80,0));
     
-    m_buttons.push_front(Button(m_width*3/8 + 30, 160,11));
-    m_buttons.push_front(Button(m_width*3/8 - 30 , 160,12));
-    m_buttons.push_front(Button(m_width/2 + 30, 160,21));
-    m_buttons.push_front(Button(m_width/2 - 30, 160,22));
-    m_buttons.push_front(Button(m_width*5/8 + 30, 160,31));
-    m_buttons.push_front(Button(m_width*3/8 - 30 , 160,32));
+    m_buttons.push_front(Button(m_width*3/8 + 22, 160,11));
+    m_buttons.push_front(Button(m_width*3/8 - 22 , 160,12));
+    m_buttons.push_front(Button(m_width/2 + 22, 160,21));
+    m_buttons.push_front(Button(m_width/2 - 22, 160,22));
+    m_buttons.push_front(Button(m_width*5/8 + 22, 160,31));
+    m_buttons.push_front(Button(m_width*5/8 - 22 , 160,32));
     
     m_buttons.push_front(Button(m_width*3/8 - 30 , m_height-50,100));
 }
@@ -42,7 +42,7 @@ void BaseWidget::setSize(int width, int height){
 void BaseWidget::drawText(QGraphicsScene * scene, const std::string & text, int x, int y, int size, bool center){
     QString s = QString::fromStdString(text);
     auto textItem = scene->addText(QString(s));
-    textItem->setFont(QFont("arial", size, 1, false));
+    textItem->setFont(QFont("Latin", size, 1, false));
     if(center){
         auto mBounds = textItem->boundingRect();
         textItem->setPos(x-mBounds.width()/2, y);
@@ -50,6 +50,21 @@ void BaseWidget::drawText(QGraphicsScene * scene, const std::string & text, int 
          textItem->setPos(x, y);
     }
     
+}
+
+/**
+ * OPTION WIDGET
+ **/
+
+std::string execute(std::string cmd){
+    std::string file = ProjectSourceBin + "/tmp_cmd";
+    std::string cmd2 = cmd + " > " + file;
+    system(cmd2.c_str());
+    std::ifstream infile(file);
+    std::stringstream strStream;
+    strStream << infile.rdbuf();//read the file
+    std::string res = strStream.str();
+    return res;
 }
 
 
@@ -108,6 +123,7 @@ void OptionsWidget::draw(QGraphicsScene * scene){
         
         if(button.m_id == 0){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(200, 0, 0)));
+            drawText(scene, "X", button.m_x, button.m_y-12, 15, true);
         }
         
         if(button.m_id == 100){
@@ -178,17 +194,6 @@ void OptionsWidget::onButton(const Button & button){
     m_gpsWidget->onValueChangeSlot(true);
 };
 
-std::string execute(std::string cmd){
-    std::string file = ProjectSourceBin + "/tmp_cmd";
-    std::string cmd2 = cmd + " > " + file;
-    system(cmd2.c_str());
-    std::ifstream infile(file);
-    std::stringstream strStream;
-    strStream << infile.rdbuf();//read the file
-    std::string res = strStream.str();
-    return res;
-}
-
 void OptionsWidget::addSerials(){
     m_serials.clear();
     {
@@ -213,80 +218,3 @@ void OptionsWidget::addSerials(){
         }
     }
 }
-
-/*#include <QLabel>
-#include "../gps_framework.hpp"
-
-
-
-OptionsWidget::OptionsWidget(QWidget *parent)
-    :QDialog(parent)
-{
-    QVBoxLayout * layout = new QVBoxLayout();
-    setLayout(layout);
-    
-    {
-        QHBoxLayout * hlayout = new QHBoxLayout();
-        QLabel * label = new QLabel("largeur");
-        m_boxLargeur = new QDoubleSpinBox();
-        m_boxLargeur->setSingleStep(0.2);
-        m_boxLargeur->setRange(0,50);
-        
-        hlayout->addWidget(label);
-        hlayout->addWidget(m_boxLargeur);
-        layout->addLayout(hlayout);
-    }
-    
-    {
-        QHBoxLayout * hlayout = new QHBoxLayout();
-        QLabel * label = new QLabel("input");
-        m_boxInput = new QComboBox();
-        m_boxInput->addItem("none");
-        m_boxInput->addItem("file");
-        
-        hlayout->addWidget(label);
-        hlayout->addWidget(m_boxInput);
-        layout->addLayout(hlayout);
-    }
-    m_okButton = new QPushButton("ok");
-    layout->addWidget(m_okButton);
-    m_pullButton = new QPushButton("pull");
-    layout->addWidget(m_pullButton);
-    
-    
-    setValue();
-    addSerial();
-    
-    connect(m_boxLargeur, SIGNAL(valueChanged(double)), this, SLOT(onOk()));
-    connect(m_boxInput, SIGNAL(currentIndexChanged(int)), this, SLOT(onOk()));
-    
-    connect(m_okButton, SIGNAL(clicked()), this, SLOT(onOk()));
-    connect(m_pullButton, SIGNAL(clicked()), this, SLOT(openPull()));
-    
-}
-
-OptionsWidget::~OptionsWidget()
-{
-}
-
-
-
-
-void OptionsWidget::setValue(){
-    m_boxLargeur->setValue(GpsFramework::Instance().m_config.m_largeur);
-}
-
-void OptionsWidget::onOk(){
-    INFO("ok");
-    GpsFramework::Instance().m_config.m_largeur = m_boxLargeur->value();
-    GpsFramework::Instance().m_config.m_input = m_boxInput->currentText().toUtf8().constData();
-    GpsFramework::Instance().m_config.save();
-    GpsFramework::Instance().initOrLoadConfig();
-    INFO("close");
-    //close();
-    INFO("ok done");
-}
-
-void OptionsWidget::openPull(){
- 
-}*/

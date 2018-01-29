@@ -12,8 +12,8 @@
 #include <QGraphicsTextItem>
 #include <QMouseEvent>
 
-#define MY_WIDTH 400
-#define MY_HEIGTH 200
+#define MY_WIDTH 800
+#define MY_HEIGTH 400
 
 
 GpsWidget::GpsWidget()
@@ -57,10 +57,10 @@ void GpsWidget::setSize(int width, int height){
     INFO(width << " " << height);
     m_width = width;
     m_height = height;
-    m_widthMax = width/2+50;
-    m_heightMax = height/2+50;
     scene->setSceneRect(0, 0, m_width-5, m_height-5);
     //scene->setSceneRect(0, 0, m_width+100, m_height+100);
+    m_widthMax = m_width/2+50;
+    m_heightMax = m_height/2+50;
     
     m_btnA->setGeometry(0,50, 50, 50);
     m_btnA->setText("A");
