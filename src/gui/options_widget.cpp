@@ -187,8 +187,8 @@ void OptionsWidget::onButton(const Button & button){
     if(id == 100){
         std::string cmd = "cd " + ProjectSourceDir + "; git pull";
         INFO(cmd);
-        //std::string res = execute(cmd);
-        //INFO(res);
+        std::string res = execute(cmd);
+        INFO(res);
         exit(0);
     }
     m_gpsWidget->onValueChangeSlot(true);
