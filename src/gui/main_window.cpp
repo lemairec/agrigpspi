@@ -60,7 +60,8 @@ void MainWindow::setupUi(){
     
     //OuvreOptions();
     
-    showMaximized();
+    //showMaximized();
+    showFullScreen();
 }
 
 void MainWindow::setMessageStatusBar(QString & s){

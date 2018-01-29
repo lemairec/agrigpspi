@@ -213,7 +213,7 @@ void GpsFramework::exportHtml(){
     infile << oss.str();
 }
 
-#define SLEEP_TIME 1
+#define SLEEP_TIME 20
 void GpsFramework::readFile(){
     std::ifstream infile(m_config.m_file);
     if(!infile.is_open()){

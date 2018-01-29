@@ -101,11 +101,14 @@ void OptionsWidget::setValue(){
 }
 
 void OptionsWidget::onOk(){
+    INFO("ok");
     GpsFramework::Instance().m_config.m_largeur = m_boxLargeur->value();
     GpsFramework::Instance().m_config.m_input = m_boxInput->currentText().toUtf8().constData();
     GpsFramework::Instance().m_config.save();
     GpsFramework::Instance().initOrLoadConfig();
+    INFO("close");
     close();
+    INFO("ok done");
 }
 
 void OptionsWidget::openPull(){

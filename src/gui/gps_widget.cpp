@@ -202,7 +202,9 @@ void GpsWidget::onValueChangeSlot(){
     i += 1;
     scene->clear();
     
-    
+    if(f.m_list.size() < 2){
+        return;
+    }
     //scene->addRect(0, 0, w, h, m_penBlack, greenBrush);
     auto last_frame = (*f.m_list.begin());
     double x = last_frame->m_x;

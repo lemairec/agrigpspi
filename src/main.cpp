@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     GpsFramework & framework = GpsFramework::Instance();
-    framework.test();
+    //framework.test();
     QApplication app(argc, argv);
     MainWindow m;
     framework.addGpsObserver(m.m_gpsWidget);
