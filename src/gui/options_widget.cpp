@@ -34,7 +34,9 @@ void BaseWidget::setSize(int width, int height){
     m_buttons.push_front(Button(m_width/2 + 30, 160,21));
     m_buttons.push_front(Button(m_width/2 - 30, 160,22));
     m_buttons.push_front(Button(m_width*5/8 + 30, 160,31));
-    m_buttons.push_front(Button(m_width*5/8 - 30 , 160,32));
+    m_buttons.push_front(Button(m_width*3/8 - 30 , 160,32));
+    
+    m_buttons.push_front(Button(m_width*3/8 - 30 , m_height-50,100));
 }
 
 void BaseWidget::drawText(QGraphicsScene * scene, const std::string & text, int x, int y, int size, bool center){
@@ -64,7 +66,7 @@ void OptionsWidget::open(){
     m_serials.push_front("file");
     m_serials.push_front("none");
     for(auto serial: m_serials){
-        auto b = Button(m_width*3/8 + 30, 250 + i*40,101+i);
+        auto b = Button(m_width*3/8 + 30, 250 + i*40,1001+i);
         b.m_desc = serial;
         m_buttons.push_back(b);
         ++i;
@@ -108,7 +110,12 @@ void OptionsWidget::draw(QGraphicsScene * scene){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(200, 0, 0)));
         }
         
-        if(button.m_id > 100){
+        if(button.m_id == 100){
+            scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(100, 100, 100)));
+            drawText(scene, "mettre à jour", button.m_x+80, button.m_y-12, 15, true);
+        }
+        
+        if(button.m_id > 1000){
             scene->addEllipse(button.m_x-15, button.m_y-15, 30, 30, QPen(QColor(0,0,0)), QBrush(QColor(150, 150, 150)));
             drawText(scene, button.m_desc, button.m_x+20, button.m_y-15, 20, false);
             if(button.m_desc == f.m_config.m_input){
@@ -155,10 +162,18 @@ void OptionsWidget::onButton(const Button & button){
         f.initOrLoadConfig();
     }
     
-    if(id>100){
+    if(id>1000){
         GpsFramework & f = GpsFramework::Instance();
         f.m_config.m_input = button.m_desc;
         f.initOrLoadConfig();
+    }
+    
+    if(id == 100){
+        std::string cmd = "cd " + ProjectSourceDir + "; git pull";
+        INFO(cmd);
+        //std::string res = execute(cmd);
+        //INFO(res);
+        exit(0);
     }
     m_gpsWidget->onValueChangeSlot(true);
 };
@@ -273,9 +288,5 @@ void OptionsWidget::onOk(){
 }
 
 void OptionsWidget::openPull(){
-    std::string cmd = "cd " + ProjectSourceDir + "; git pull";
-    INFO(cmd);
-    std::string res = execute(cmd);
-    INFO(res);
-    exit(0);
+ 
 }*/
