@@ -45,6 +45,8 @@ public:
     void setSize(int width, int height);
     void resizeEvent(QResizeEvent* event);
 
+    
+    void mouseReleaseEvent ( QMouseEvent * event );
 signals:
     void onValueChangeSignal();
     void setMessageStatusBar(QString & s);
@@ -52,7 +54,7 @@ signals:
     
 public slots:
     void drawBarreGuidage();
-    void onValueChangeSlot();
+    void onValueChangeSlot(bool force = false);
     void onZoomUp();
     void onZoomDown();
     void onBtnA();

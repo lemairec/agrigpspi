@@ -70,18 +70,15 @@ void GpsWidget::setSize(int width, int height){
     m_btnClose->setText("x");
     m_btnOptions->setGeometry(m_width - 50, 60, 40, 40);
     m_btnOptions->setText("o");
+    
+    onValueChangeSlot(true);
 }
 void GpsWidget::resizeEvent(QResizeEvent* event)
 {
     
     int width = geometry().width();
     int height = geometry().height();
-    INFO(m_width << " " << m_height);
     setSize(width, height);
-    onValueChangeSlot();
-    
-    
-    
 }
 
 void GpsWidget::onNewPoint(){
@@ -180,10 +177,10 @@ void GpsWidget::drawBarreGuidage(){
     
 }
 
-void GpsWidget::onValueChangeSlot(){
+void GpsWidget::onValueChangeSlot(bool force){
     auto begin = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = begin - last_update;
-    if(diff.count() < 0.2){
+    if(!force && diff.count() < 0.2){
    //     INFO(diff.count());
         return;
     }
@@ -195,126 +192,132 @@ void GpsWidget::onValueChangeSlot(){
     
     int h = m_height;
     int w = m_width;
-    //INFO(w << " " << h);
-        static int i = 0;
+    INFO(w << " " << h);
     
-    
-    i += 1;
     scene->clear();
     
-    if(f.m_list.size() < 2){
-        return;
-    }
-    //scene->addRect(0, 0, w, h, m_penBlack, greenBrush);
-    auto last_frame = (*f.m_list.begin());
-    double x = last_frame->m_x;
-    double y = last_frame->m_y;
-   
-    drawCourbe(1);
-    drawCourbe(10);
-    drawCourbe(100);
-    
-    drawLines(x, y);
-    
-    double x1 = 0;
-    double y1 = 0;
-    double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
-    
-    double l = f.m_config.m_largeur*m_zoom/2;
-    int j = 0;
-    int init = 0;
-    
-    for(auto it = f.m_list.begin(); it != f.m_list.end(); ++it){
-        auto frame = (*it);
-        double x0  = (frame->m_x - x)*m_zoom;
-        double y0  = (frame->m_y - y)*m_zoom;
+    double x = 0;
+    double y = 0;
+    std::ostringstream oss;
+    if(f.m_list.size() > 2){
+        auto last_frame = (*f.m_list.begin());
+        x = last_frame->m_x;
+        y = last_frame->m_y;
+       
         
-        if(x0 < -m_widthMax || x0 > m_widthMax || y0 < -m_heightMax || y0 > m_heightMax ){
-            init = 0;
-            x1 = x0;
-            y1 = y0;
-            continue;
-        }
-        double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
-        if(y1 != y0){
-            double res = (x1-x0)/(y1-y0);
-            double i = 1.0;
-            if(y1-y0 > 0){
-                i = -1.0;
-            }
-            double xA = x0+ i*l/sqrt(1+res*res);
-            double yA = y0-(xA-x0)*res;
-            double xB = x0- i*l/sqrt(1+res*res);
-            double yB = y0-(xB-x0)*res;
+        double x1 = 0;
+        double y1 = 0;
+        double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
+        
+        double l = f.m_config.m_largeur*m_zoom/2;
+        int j = 0;
+        int init = 0;
+        
+        for(auto it = f.m_list.begin(); it != f.m_list.end(); ++it){
+            auto frame = (*it);
+            double x0  = (frame->m_x - x)*m_zoom;
+            double y0  = (frame->m_y - y)*m_zoom;
             
-            if(dist < 0.1*l*l){
-                //continue;
+            if(x0 < -m_widthMax || x0 > m_widthMax || y0 < -m_heightMax || y0 > m_heightMax ){
+                init = 0;
+                x1 = x0;
+                y1 = y0;
+                continue;
             }
-            if(init != 0){
-                QPolygon polygon;
-                polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
-                scene->addPolygon(polygon, m_penNo, m_brushGreen);
-            } else if(init == 0) {
+            double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+            if(y1 != y0){
                 double res = (x1-x0)/(y1-y0);
                 double i = 1.0;
                 if(y1-y0 > 0){
                     i = -1.0;
                 }
-                double xA1 = x1+ i*l/sqrt(1+res*res);
-                double yA1 = y1-(xA1-x1)*res;
-                double xB1 = x1- i*l/sqrt(1+res*res);
-                double yB1 = y1-(xB1-x1)*res;
-                QPolygon polygon;
-                polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
-                scene->addPolygon(polygon, m_penNo, m_brushGreen);
+                double xA = x0+ i*l/sqrt(1+res*res);
+                double yA = y0-(xA-x0)*res;
+                double xB = x0- i*l/sqrt(1+res*res);
+                double yB = y0-(xB-x0)*res;
+                
+                if(dist < 0.1*l*l){
+                    //continue;
+                }
+                if(init != 0){
+                    QPolygon polygon;
+                    polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
+                    scene->addPolygon(polygon, m_penNo, m_brushGreen);
+                } else if(init == 0) {
+                    double res = (x1-x0)/(y1-y0);
+                    double i = 1.0;
+                    if(y1-y0 > 0){
+                        i = -1.0;
+                    }
+                    double xA1 = x1+ i*l/sqrt(1+res*res);
+                    double yA1 = y1-(xA1-x1)*res;
+                    double xB1 = x1- i*l/sqrt(1+res*res);
+                    double yB1 = y1-(xB1-x1)*res;
+                    QPolygon polygon;
+                    polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
+                    scene->addPolygon(polygon, m_penNo, m_brushGreen);
+                }
+                xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
+                x1 = x0;
+                y1 = y0;
+                ++init;
+                
+                //scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
+                //scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
+                
+                //scene->addEllipse(w/2 + xB, h/2 - yB, 20, 20, m_penRed, m_brushGreen);
+                
             }
-            xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
-            x1 = x0;
-            y1 = y0;
-            ++init;
-            
-            //scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
-            //scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
-            
-            //scene->addEllipse(w/2 + xB, h/2 - yB, 20, 20, m_penRed, m_brushGreen);
-            
+            scene->addEllipse(w/2 + x0, h/2 - y0, 1, 1, m_penBlack, m_brushNo);
+            j ++;
         }
-        scene->addEllipse(w/2 + x0, h/2 - y0, 1, 1, m_penBlack, m_brushNo);
-        j ++;
-    }
-    if(f.m_pointA.m_x!=0){
-        double xA  = (f.m_pointA.m_x - x)*m_zoom;
-        double yA  = (f.m_pointA.m_y - y)*m_zoom;
-        scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
-    }
-    if(f.m_pointB.m_x!=0){
-        double xB  = (f.m_pointB.m_x - x)*m_zoom;
-        double yB  = (f.m_pointB.m_y - y)*m_zoom;
-        scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
-    }
-    if(f.m_pointA.m_x!=0 && f.m_pointB.m_x!=0){
-        double xA  = (f.m_pointA.m_x - x)*m_zoom;
-        double yA  = (f.m_pointA.m_y - y)*m_zoom;
-        double xB  = (f.m_pointB.m_x - x)*m_zoom;
-        double yB  = (f.m_pointB.m_y - y)*m_zoom;
         
+        if(f.m_pointA.m_x!=0){
+            double xA  = (f.m_pointA.m_x - x)*m_zoom;
+            double yA  = (f.m_pointA.m_y - y)*m_zoom;
+            scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
+        }
+        if(f.m_pointB.m_x!=0){
+            double xB  = (f.m_pointB.m_x - x)*m_zoom;
+            double yB  = (f.m_pointB.m_y - y)*m_zoom;
+            scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
+        }
+        if(f.m_pointA.m_x!=0 && f.m_pointB.m_x!=0){
+            double xA  = (f.m_pointA.m_x - x)*m_zoom;
+            double yA  = (f.m_pointA.m_y - y)*m_zoom;
+            double xB  = (f.m_pointB.m_x - x)*m_zoom;
+            double yB  = (f.m_pointB.m_y - y)*m_zoom;
+            
+            
+            scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
+        }
         
-        scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
+        scene->addLine(w/2, h/2, w/2 - f.m_deplacementX*m_zoom, h/2 + f.m_deplacementY*m_zoom, m_penBlue);
+        
+        //INFO(oss.str());
+        oss <<  "nbSt " << last_frame->m_nbrSat << ", fix " << last_frame->m_fix << ", AB " << f.m_sensAB << ", v " << round(f.m_vitesse) << "km/h";
     }
+    drawLines(x, y);
     
-    scene->addLine(w/2, h/2, w/2 - f.m_deplacementX*m_zoom, h/2 + f.m_deplacementY*m_zoom, m_penBlue);
+    drawCourbe(1);
+    drawCourbe(10);
+    //drawCourbe(100);
     
     drawBarreGuidage();
     
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> diff2 = begin - end;
-    last_update = end;
-    
-    std::ostringstream oss;
-    oss <<  "nbSt " << last_frame->m_nbrSat << ", fix " << last_frame->m_fix << ", AB " << f.m_sensAB << ", v " << round(f.m_vitesse) << "km/h, draw " << diff2.count();
-    //INFO(oss.str());
+    oss << "draw " << diff2.count();
     QString s = QString::fromStdString(oss.str());
     emit setMessageStatusBar(s);
+    
+    last_update = end;
+    
+    
+}
+
+void GpsWidget::mouseReleaseEvent ( QMouseEvent * event ){
+    
 }
 
 void GpsWidget::addButtons(){
