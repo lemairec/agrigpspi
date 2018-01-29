@@ -96,6 +96,7 @@ void GpsModule::parseBuffer(){
     }
 }
 
+//$GNGGA,110138.80,4902.71554,N,00324.04388,E,1,07,1.94,46.6,M,46.3,M,,*71
 void GpsModule::parseGGA(){
     std::string s = "";
     for(size_t i =0; i < m_bufferIndLast; ++i){
@@ -111,7 +112,7 @@ void GpsModule::parseGGA(){
     readUntilCommat();
     m_lastGGAEvent.m_fix = readInt();
     m_lastGGAEvent.m_nbrSat = readInt();
-    m_lastGGAEvent.m_precision = readDouble();
+    m_lastGGAEvent.m_hdop = readDouble();
     m_lastGGAEvent.m_altitude = readDouble();
     
     m_lastGGAEvent.m_timeHour = getTimeHour(m_lastGGAEvent.m_time);

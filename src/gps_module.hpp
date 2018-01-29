@@ -18,7 +18,7 @@ struct GpsPoint {
 struct GGAFrame : public GpsPoint {
     int m_fix;
     int m_nbrSat;
-    double m_precision;
+    double m_hdop;
 
 };
 

@@ -167,15 +167,59 @@ void GpsWidget::drawBarreGuidage(){
             scene->addRect(m_width/2 + 60 + 30*i, 10, 20, 20, m_penBlack, green);
         }
     }
+}
+
+void GpsWidget::drawVitesse(){
+    GpsFramework & f = GpsFramework::Instance();
+    QBrush lightGrayBrush(Qt::lightGray);
     
     scene->addRect(0, 0, 80, 40, m_penBlack, lightGrayBrush);
-    s = QString::number(f.m_vitesse, 'f', 2) + " km/h";
-    textItem = scene->addText(s);
-    mBounds = textItem->boundingRect();
+    QString s = QString::number(f.m_vitesse, 'f', 2) + " km/h";
+    auto textItem = scene->addText(s);
+    auto mBounds = textItem->boundingRect();
     textItem->setPos(40 - mBounds.width()/2, 10);
-    
-    
 }
+
+void GpsWidget::drawSattelite(){
+    GpsFramework & f = GpsFramework::Instance();
+    QBrush lightGrayBrush(Qt::lightGray);
+    if(f.m_list.size() > 2){
+        auto last_frame = (*f.m_list.begin());
+        scene->addRect(m_width-100, m_height-90, 100, 90, m_penBlack, lightGrayBrush);
+        QString s = QString::number(last_frame->m_nbrSat) + " satellites";
+        auto textItem = scene->addText(s);
+        textItem->setPos(m_width-100, m_height-90);
+        
+        if(last_frame->m_fix == 1){
+            s = "GPS";
+        } else if(last_frame->m_fix == 2){
+            s = "DGPS";
+        } else {
+            s = "invalid";
+        }
+        textItem = scene->addText(s);
+        textItem->setPos(m_width-100, m_height-75);
+        
+        s = "hdop " + QString::number(last_frame->m_hdop, 'f', 2);
+        textItem = scene->addText(s);
+        textItem->setPos(m_width-100, m_height-60);
+    
+        s = "altitude " + QString::number(last_frame->m_altitude);
+        textItem = scene->addText(s);
+        textItem->setPos(m_width-100, m_height-40);
+        
+        int h = last_frame->m_time/10000;
+        int min = (int)(last_frame->m_time/100) - h*100;
+        double sec = last_frame->m_time - h*10000 - min*100;
+        s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
+        textItem = scene->addText(s);
+        textItem->setPos(m_width-100, m_height-25);
+        
+        int time = last_frame->m_time;
+        INFO(time);
+    }
+}
+
 
 void GpsWidget::onValueChangeSlot(bool force){
     auto begin = std::chrono::system_clock::now();
@@ -304,6 +348,8 @@ void GpsWidget::onValueChangeSlot(bool force){
     //drawCourbe(100);
     
     drawBarreGuidage();
+    drawVitesse();
+    drawSattelite();
     
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> diff2 = begin - end;
