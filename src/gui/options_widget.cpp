@@ -56,8 +56,8 @@ OptionsWidget::OptionsWidget(QWidget *parent)
     setValue();
     addSerial();
     
-    connect(m_boxLargeur, SIGNAL(valueChanged(double)), this, SLOT(onValueChange()));
-    connect(m_boxInput, SIGNAL(currentIndexChanged(int)), this, SLOT(onValueChange()));
+    //connect(m_boxLargeur, SIGNAL(valueChanged(double)), this, SLOT(onValueChange()));
+    //connect(m_boxInput, SIGNAL(currentIndexChanged(int)), this, SLOT(onValueChange()));
     
     connect(m_okButton, SIGNAL(clicked()), this, SLOT(onOk()));
     connect(m_pullButton, SIGNAL(clicked()), this, SLOT(openPull()));
