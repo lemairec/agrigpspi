@@ -11,8 +11,8 @@
 
 #include <QGraphicsTextItem>
 
-#define MY_WIDTH 800
-#define MY_HEIGTH 400
+#define MY_WIDTH 400
+#define MY_HEIGTH 200
 
 
 GpsWidget::GpsWidget(){
@@ -28,8 +28,6 @@ GpsWidget::GpsWidget(){
     m_btnOptions = new QPushButton(this);
     
     setSize(MY_WIDTH, MY_HEIGTH);
-    scene->setSceneRect(0, 0, m_width, m_height);
-    setFixedSize(m_width + 2, m_height + 2);
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     
     
@@ -57,8 +55,8 @@ void GpsWidget::setSize(int width, int height){
     m_height = height;
     m_widthMax = width/2+50;
     m_heightMax = height/2+50;
-    scene->setSceneRect(0, 0, m_width, m_height);
-    setFixedSize(m_width + 2, m_height + 2);
+    scene->setSceneRect(0, 0, m_width-5, m_height-5);
+    //scene->setSceneRect(0, 0, m_width+100, m_height+100);
     
     m_btnA->setGeometry(0,50, 50, 50);
     m_btnA->setText("A");
@@ -75,9 +73,12 @@ void GpsWidget::setSize(int width, int height){
 }
 void GpsWidget::resizeEvent(QResizeEvent* event)
 {
-//    m_height = parentWidget()->parentWidget()->size().height();
-//    m_width = parentWidget()->parentWidget()->size().width();
     
+    int width = geometry().width();
+    int height = geometry().height();
+    INFO(m_width << " " << m_height);
+    setSize(width, height);
+    onValueChangeSlot();
     
     
     
