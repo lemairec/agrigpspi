@@ -37,9 +37,7 @@ void MainWindow::setupUi(){
     
     
     
-    QTabWidget * tab = new QTabWidget();
     m_gpsWidget = new GpsWidget();
-    tab->addTab(m_gpsWidget, "gps");
     m_optionsWidget = new OptionsWidget();
     //tab->addTab(optionsWidget, "config");
     
@@ -49,8 +47,7 @@ void MainWindow::setupUi(){
     CloseButton->setGeometry(QRect(20, 140, 100, 50));
     
     
-    this->setCentralWidget(tab);
-    tab->setTabPosition(QTabWidget::South);
+    this->setCentralWidget(m_gpsWidget);
     
     
     m_statusBar = new QStatusBar;
