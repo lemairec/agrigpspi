@@ -17,8 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
     retranslateUi();
     
     connect(m_gpsWidget, SIGNAL(setMessageStatusBar(QString &)), this, SLOT(setMessageStatusBar(QString &)));
-    connect(m_gpsWidget->m_btnOptions, SIGNAL(clicked()), this, SLOT(openOptions()));
-    
 }
 
 MainWindow::~MainWindow()
@@ -38,7 +36,7 @@ void MainWindow::setupUi(){
     
     
     m_gpsWidget = new GpsWidget();
-    m_optionsWidget = new OptionsWidget();
+    //m_optionsWidget = new OptionsWidget();
     //tab->addTab(optionsWidget, "config");
     
     CloseButton = new QPushButton();
@@ -72,12 +70,4 @@ void MainWindow::retranslateUi()
     GPSButton->setText(QApplication::translate("MainWindow", "GPS", 0));
     CloseButton->setText(QApplication::translate("MainWindow", "CLOSE GUI", 0));
 }
-
-void MainWindow::openOptions(){
-    m_optionsWidget->close();
-    m_optionsWidget->show();
-    m_optionsWidget->focusWidget();
-    m_optionsWidget->setHidden(false);
-}
-
 

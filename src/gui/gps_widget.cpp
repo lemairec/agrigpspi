@@ -10,12 +10,15 @@
 #include <chrono>
 
 #include <QGraphicsTextItem>
+#include <QMouseEvent>
 
 #define MY_WIDTH 400
 #define MY_HEIGTH 200
 
 
-GpsWidget::GpsWidget(){
+GpsWidget::GpsWidget()
+:m_optionsWidget(this)
+{
     connect(this, SIGNAL(onValueChangeSignal()), this, SLOT(onValueChangeSlot()));
     scene = new QGraphicsScene(this);
     this->setScene(scene);
@@ -40,6 +43,7 @@ GpsWidget::GpsWidget(){
     connect(m_btnA, SIGNAL(clicked()), this, SLOT(onBtnA()));
     connect(m_btnB, SIGNAL(clicked()), this, SLOT(onBtnB()));
     connect(m_btnClose, SIGNAL(clicked()), qApp,SLOT(quit()));
+    connect(m_btnOptions, SIGNAL(clicked()), this,SLOT(onOption()));
     m_penBlack = QPen(Qt::black);
     m_penRed = QPen(Qt::red);
     m_penBlue = QPen(Qt::blue);
@@ -70,6 +74,7 @@ void GpsWidget::setSize(int width, int height){
     m_btnClose->setText("x");
     m_btnOptions->setGeometry(m_width - 50, 60, 40, 40);
     m_btnOptions->setText("o");
+    m_optionsWidget.setSize(m_width, m_height);
     
     onValueChangeSlot(true);
 }
@@ -99,14 +104,14 @@ void GpsWidget::drawLines(double x, double y){
     double res = -(y0*f.m_b +(f.m_a * x0 + f.m_c));
     double l = res / (f.m_b/cos(atan(-f.m_a/f.m_b)));
     
-    int l0 = round(l/f.m_config.m_largeur)*f.m_config.m_largeur;
+    int i0 = round(l/f.m_config.m_largeur);
     for(int i = 0; i < 1000; ++i){
-        if(! addligne(l0 + i*f.m_config.m_largeur, x, y, i)){
+        if(! addligne((i0 + i)*f.m_config.m_largeur, x, y, i)){
             break;
         }
     }
     for(int i = 1; i < 1000; ++i){
-        if(! addligne(l0 + -i*f.m_config.m_largeur, x, y, i)){
+        if(! addligne((i0 - i)*f.m_config.m_largeur, x, y, i)){
             break;
         }
     }
@@ -130,6 +135,7 @@ bool GpsWidget::addligne(double l, double x, double y, int i){
         scene->addLine(m_width/2 + x0, m_height/2 - y0, m_width/2 + x1, m_height/2 - y1, m_penBlack);
     }
     if(y0 > m_height/2 && y1 > m_height/2){
+        INFO(y0 << " " << y1 << " up " << i);
         return false;
     }
     
@@ -145,8 +151,8 @@ auto last_update = std::chrono::system_clock::now();
 void GpsWidget::drawBarreGuidage(){
     GpsFramework & f = GpsFramework::Instance();
     QBrush grayBrush(Qt::gray);
-    QBrush lightGrayBrush(Qt::lightGray);
     QBrush green(Qt::green);
+    QBrush lightGrayBrush(Qt::lightGray);
     
     scene->addRect(m_width/2-300, 0, 600, 40, m_penBlack, lightGrayBrush);
     scene->addRect(m_width/2-50, 5, 100, 30, m_penBlack, grayBrush);
@@ -234,8 +240,8 @@ void GpsWidget::onValueChangeSlot(bool force){
     m_widthMax = m_width/2+f.m_config.m_largeur*m_zoom/2;
     m_heightMax = m_height/2+f.m_config.m_largeur*m_zoom/2;
     
-    int h = m_height;
-    int w = m_width;
+    double h = m_height;
+    double w = m_width;
     INFO(w << " " << h);
     
     scene->clear();
@@ -269,6 +275,9 @@ void GpsWidget::onValueChangeSlot(bool force){
                 continue;
             }
             double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+            if(dist < l*l*0.2){
+                continue;
+            }
             if(y1 != y0){
                 double res = (x1-x0)/(y1-y0);
                 double i = 1.0;
@@ -316,32 +325,33 @@ void GpsWidget::onValueChangeSlot(bool force){
             j ++;
         }
         
-        if(f.m_pointA.m_x!=0){
-            double xA  = (f.m_pointA.m_x - x)*m_zoom;
-            double yA  = (f.m_pointA.m_y - y)*m_zoom;
-            scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
-        }
-        if(f.m_pointB.m_x!=0){
-            double xB  = (f.m_pointB.m_x - x)*m_zoom;
-            double yB  = (f.m_pointB.m_y - y)*m_zoom;
-            scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
-        }
-        if(f.m_pointA.m_x!=0 && f.m_pointB.m_x!=0){
-            double xA  = (f.m_pointA.m_x - x)*m_zoom;
-            double yA  = (f.m_pointA.m_y - y)*m_zoom;
-            double xB  = (f.m_pointB.m_x - x)*m_zoom;
-            double yB  = (f.m_pointB.m_y - y)*m_zoom;
-            
-            
-            scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
-        }
-        
         scene->addLine(w/2, h/2, w/2 - f.m_deplacementX*m_zoom, h/2 + f.m_deplacementY*m_zoom, m_penBlue);
         
         //INFO(oss.str());
         oss <<  "nbSt " << last_frame->m_nbrSat << ", fix " << last_frame->m_fix << ", AB " << f.m_sensAB << ", v " << round(f.m_vitesse) << "km/h";
     }
     drawLines(x, y);
+    
+    
+    if(f.m_pointA.m_x!=0){
+        double xA  = (f.m_pointA.m_x - x)*m_zoom;
+        double yA  = (f.m_pointA.m_y - y)*m_zoom;
+        scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
+    }
+    if(f.m_pointB.m_x!=0){
+        double xB  = (f.m_pointB.m_x - x)*m_zoom;
+        double yB  = (f.m_pointB.m_y - y)*m_zoom;
+        scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
+    }
+    if(f.m_pointA.m_x!=0 && f.m_pointB.m_x!=0){
+        double xA  = (f.m_pointA.m_x - x)*m_zoom;
+        double yA  = (f.m_pointA.m_y - y)*m_zoom;
+        double xB  = (f.m_pointB.m_x - x)*m_zoom;
+        double yB  = (f.m_pointB.m_y - y)*m_zoom;
+        
+        
+        scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
+    }
     
     drawCourbe(1);
     drawCourbe(10);
@@ -351,6 +361,7 @@ void GpsWidget::onValueChangeSlot(bool force){
     drawVitesse();
     drawSattelite();
     
+    addButtons();
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> diff2 = begin - end;
     oss << "draw " << diff2.count();
@@ -358,15 +369,21 @@ void GpsWidget::onValueChangeSlot(bool force){
     emit setMessageStatusBar(s);
     
     last_update = end;
-    
+    if(!m_optionsWidget.m_close){
+        m_optionsWidget.draw(scene);
+    }
     
 }
 
 void GpsWidget::mouseReleaseEvent ( QMouseEvent * event ){
-    
+    if(!m_optionsWidget.m_close){
+        m_optionsWidget.onMouse(event->x(), event->y());
+    }
 }
 
 void GpsWidget::addButtons(){
+        
+    //scene->addText(<#const QString &text#>)
     //scene->addWidget(m_btnA);
     //scene->addWidget(m_btnB);
     //scene->addWidget(m_btnZoomUp);
@@ -388,4 +405,9 @@ void GpsWidget::onBtnA(){
 }
 void GpsWidget::onBtnB(){
     GpsFramework::Instance().savePointB();
+}
+
+void GpsWidget::onOption(){
+    m_optionsWidget.open();
+    onValueChangeSlot(true);
 }

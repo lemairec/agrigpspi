@@ -25,7 +25,6 @@ public:
         m_gpsWidget->resizeEvent(event);
     }
 public slots:
-    void openOptions();
     void setMessageStatusBar(QString & s);
 
 private:

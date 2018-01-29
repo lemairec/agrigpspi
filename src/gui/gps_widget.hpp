@@ -3,9 +3,7 @@
 
 #include "include_qt.hpp"
 #include "../gps_framework.hpp"
-
-#include <QGraphicsView>
-#include <QGraphicsScene>
+#include "options_widget.hpp"
 
 class GpsWidget : public QGraphicsView, public IGpsObserver {
 Q_OBJECT
@@ -21,7 +19,7 @@ public:
     QPushButton * m_btnClose;
     QPushButton * m_btnOptions;
 
-    
+    OptionsWidget m_optionsWidget;
     
     void addButtons();
 
@@ -36,9 +34,12 @@ public:
     QPen m_penNo;
     QBrush m_brushNo;
     QBrush m_brushGreen;
+    
     void drawCourbe(double l);
     bool addligne(double l, double x, double y, int i);
     void drawLines(double x, double y);
+    void drawVitesse();
+    void drawSattelite();
     
     double m_zoom;
     
@@ -59,6 +60,7 @@ public slots:
     void onZoomDown();
     void onBtnA();
     void onBtnB();
+    void onOption();
 };
 
 #endif // GPS_WIDGET_H

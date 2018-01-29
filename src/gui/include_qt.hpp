@@ -13,3 +13,6 @@
 #include <QSpinBox>
 #include <QDate>
 #include <QProcess>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsTextItem>
