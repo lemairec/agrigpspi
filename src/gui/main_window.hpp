@@ -5,15 +5,9 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     
-    
     QWidget *centralWidget;
-    QPushButton *OptionsButton;
-    QPushButton *GPSButton;
-    QPushButton *CloseButton;
     
     QStatusBar *m_statusBar;
-    
-    QWidget * m_optionsWidget;
 public:
     GpsWidget * m_gpsWidget;
 
@@ -29,5 +23,4 @@ public slots:
 
 private:
     void setupUi();
-    void retranslateUi();
 };
