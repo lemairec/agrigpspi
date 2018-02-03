@@ -106,12 +106,12 @@ void GpsWidget::drawLines(double x, double y){
     
     int i0 = round(l/f.m_config.m_largeur);
     for(int i = 0; i < 1000; ++i){
-        if(! addligne((i0 + i)*f.m_config.m_largeur, x, y, i)){
+        if(! addligne((i0 + i)*f.m_config.m_largeur, x, y, i-i0)){
             break;
         }
     }
     for(int i = 1; i < 1000; ++i){
-        if(! addligne((i0 - i)*f.m_config.m_largeur, x, y, i)){
+        if(! addligne((i0 - i)*f.m_config.m_largeur, x, y, i-i0)){
             break;
         }
     }
