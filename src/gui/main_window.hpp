@@ -6,8 +6,6 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
     QWidget *centralWidget;
-    
-    QStatusBar *m_statusBar;
 public:
     GpsWidget * m_gpsWidget;
 
@@ -18,9 +16,6 @@ public:
     void resizeEvent(QResizeEvent* event){
         m_gpsWidget->resizeEvent(event);
     }
-public slots:
-    void setMessageStatusBar(QString & s);
-
 private:
     void setupUi();
 };
