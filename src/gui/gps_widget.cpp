@@ -20,9 +20,7 @@
 
 #define BUTTON_A 0
 #define BUTTON_B 1
-
 #define BUTTON_ZOOM_UP 2
-
 #define BUTTON_ZOOM_DOWN 3
 #define BUTTON_CLOSE 4
 #define BUTTON_OPTION 5

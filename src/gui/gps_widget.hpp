@@ -1,8 +1,8 @@
 #ifndef GPS_WIDGET_H
 #define GPS_WIDGET_H
 
-#include "include_qt.hpp"
 #include "../gps_framework.hpp"
+#include "base_widget.hpp"
 #include "options_widget.hpp"
 
 class GpsWidget : public BaseWidget {

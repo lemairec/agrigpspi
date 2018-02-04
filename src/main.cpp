@@ -1,4 +1,4 @@
-#include "gui/main_window.hpp"
+#include "gui/qt/main_window.hpp"
 #include <QApplication>
 #include "gps_framework.hpp"
 

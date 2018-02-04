@@ -1,4 +1,4 @@
-#include "../logging.hpp"
+#include "../../logging.hpp"
 #include <QMainWindow>
 #include <QApplication>
 #include <QPushButton>

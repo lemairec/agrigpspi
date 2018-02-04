@@ -1,5 +1,5 @@
 #include "include_qt.hpp"
-#include "gps_widget.hpp"
+#include "../gps_widget.hpp"
 
 
 class View : public QGraphicsView {

@@ -1,5 +1,5 @@
 #include "main_window.hpp"
-#include "options_widget.hpp"
+#include "../options_widget.hpp"
 
 #include <QGridLayout>
 #include <QTabWidget>
