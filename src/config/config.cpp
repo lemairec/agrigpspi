@@ -13,7 +13,7 @@ Config::Config(){
     m_input = "none";
     m_file = GPS_TEST_FILE;
     m_input= "file";
-    m_file = ProjectSourceDir + "/gps_20170927_1119.ubx";
+    m_file = ProjectSourceDir + "/gps_travail_3m.ubx";
 }
 
 void Config::save(){
