@@ -30,7 +30,7 @@ void BaseWidget::setSize(int width, int height){
     m_buttons.push_front(Button(m_width*3/8 - 30 , m_height-50,100));
 }
 
-void BaseWidget::drawText(QGraphicsScene * scene, const std::string & text, int x, int y, int size, bool center){
+void BaseWidget::drawText(const std::string & text, int x, int y, int size, bool center){
     QString s = QString::fromStdString(text);
     auto textItem = scene->addText(QString(s));
     textItem->setFont(QFont("Latin", size, 1, false));

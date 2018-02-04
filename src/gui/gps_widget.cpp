@@ -11,10 +11,6 @@
 #include "../gps_framework.hpp"
 
 
-#include <QGraphicsTextItem>
-#include <QMouseEvent>
-
-
 #define MY_WIDTH 800
 #define MY_HEIGTH 400
 
@@ -346,7 +342,7 @@ void GpsWidget::draw_force(){
     std::chrono::duration<double> diff2 = end - begin;
     std::ostringstream oss;
     oss << "draw " << diff2.count();
-    drawText(scene, oss.str(), m_width-190, m_height-20, 10, false);
+    drawText(oss.str(), m_width-190, m_height-20, 10, false);
     
     last_update = end;
     if(!m_optionsWidget.m_close){
@@ -359,28 +355,28 @@ void GpsWidget::addButtons(){
     for(auto button : m_buttons){
         if(button.m_id == BUTTON_A){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(100, 100, 200)));
-            drawText(scene, "A", button.m_x, button.m_y-12, 15, true);
+            drawText("A", button.m_x, button.m_y-12, 15, true);
         } else if(button.m_id == BUTTON_B){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(100, 100, 200)));
-            drawText(scene, "B", button.m_x, button.m_y-12, 15, true);
+            drawText("B", button.m_x, button.m_y-12, 15, true);
         } else if(button.m_id == BUTTON_CLOSE){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(200, 0, 0)));
-            drawText(scene, "X", button.m_x, button.m_y-12, 15, true);
+            drawText("X", button.m_x, button.m_y-12, 15, true);
         } else if(button.m_id == BUTTON_OPTION){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(0, 200, 0)));
-            drawText(scene, "O", button.m_x, button.m_y-12, 15, true);
+            drawText("O", button.m_x, button.m_y-12, 15, true);
         } else if(button.m_id == BUTTON_ZOOM_UP){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(100, 100, 100)));
-            drawText(scene, "+", button.m_x, button.m_y-12, 15, true);
+            drawText("+", button.m_x, button.m_y-12, 15, true);
         } else if(button.m_id == BUTTON_ZOOM_DOWN){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(100, 100, 100)));
-            drawText(scene, "-", button.m_x, button.m_y-12, 15, true);
+            drawText("-", button.m_x, button.m_y-12, 15, true);
         }
     }
     
     std::ostringstream out;
     out << "x " << m_zoom;
-    drawText(scene, out.str(), 30, m_height - 95, 15, false);
+    drawText(out.str(), 30, m_height - 95, 15, false);
 }
 
 void GpsWidget::onButton(const Button & button){

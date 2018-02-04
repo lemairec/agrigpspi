@@ -1,10 +1,10 @@
 #ifndef GPS_FRAMEWORK_H
 #define GPS_FRAMEWORK_H
 
-#include <QThread>
 #include "gps_module.hpp"
 #include "config/config.hpp"
 #include <chrono>
+#include <QThread>
 
 class IGpsObserver {
 public:

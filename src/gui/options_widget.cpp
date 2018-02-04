@@ -35,8 +35,8 @@ void OptionsWidget::open(){
     addSerials();
     setSize(m_width, m_height);
     int i = 0;
-    m_serials.push_front("file");
-    m_serials.push_front("none");
+    m_serials.push_back("file");
+    m_serials.push_back("none");
     for(auto serial: m_serials){
         auto b = Button(m_width*3/8 + 30, 250 + i*40,1001+i);
         b.m_desc = serial;
@@ -49,7 +49,7 @@ void OptionsWidget::draw(){
     scene->addRect(m_width/4, 50, m_width/2, m_height-60, QPen(QColor(0,0,0)), QBrush(QColor(200,200,200)));
     GpsFramework & f = GpsFramework::Instance();
     QString s = "largueur " + QString::number(f.m_config.m_largeur, 'f', 2) + " m";
-    drawText(scene, s.toUtf8().constData(), m_width/2, 100, 30, true);
+    drawText(s.toUtf8().constData(), m_width/2, 100, 30, true);
     
     for(auto button : m_buttons){
         if(button.m_id == 11 || button.m_id == 21 || button.m_id == 31){
@@ -62,7 +62,7 @@ void OptionsWidget::draw(){
             } else {
                 s = "+ 5";;
             }
-            drawText(scene, s, button.m_x, button.m_y-12, 15, true);
+            drawText(s, button.m_x, button.m_y-12, 15, true);
         }
         
         if(button.m_id == 12 || button.m_id == 22 || button.m_id == 32){
@@ -75,22 +75,22 @@ void OptionsWidget::draw(){
             } else {
                 s = "- 5";;
             }
-            drawText(scene, s, button.m_x, button.m_y-12, 15, true);
+            drawText(s, button.m_x, button.m_y-12, 15, true);
         }
         
         if(button.m_id == 0){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(200, 0, 0)));
-            drawText(scene, "X", button.m_x, button.m_y-12, 15, true);
+            drawText("X", button.m_x, button.m_y-12, 15, true);
         }
         
         if(button.m_id == 100){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(100, 100, 100)));
-            drawText(scene, "mettre à jour", button.m_x+80, button.m_y-12, 15, true);
+            drawText("mettre à jour", button.m_x+80, button.m_y-12, 15, true);
         }
         
         if(button.m_id > 1000){
             scene->addEllipse(button.m_x-15, button.m_y-15, 30, 30, QPen(QColor(0,0,0)), QBrush(QColor(150, 150, 150)));
-            drawText(scene, button.m_desc, button.m_x+20, button.m_y-15, 20, false);
+            drawText(button.m_desc, button.m_x+20, button.m_y-15, 20, false);
             if(button.m_desc == f.m_config.m_input){
                 scene->addEllipse(button.m_x-10, button.m_y-10, 20, 20, QPen(QColor(0,0,0)), QBrush(QColor(0, 0, 0)));
             }
@@ -98,7 +98,7 @@ void OptionsWidget::draw(){
     }
     
     
-    drawText(scene, "entrée", m_width/2, 200, 30, true);
+    drawText("entrée", m_width/2, 200, 30, true);
     
 }
 

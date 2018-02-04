@@ -34,7 +34,7 @@ public:
     
     void setSize(int width, int height);
     
-    void drawText(QGraphicsScene * scene, const std::string & text, int x, int y, int size, bool center);
+    void drawText(const std::string & text, int x, int y, int size, bool center);
 };
 
 #endif

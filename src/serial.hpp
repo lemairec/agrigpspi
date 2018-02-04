@@ -33,30 +33,6 @@ public:
         boost::asio::write(serial,boost::asio::buffer(s.c_str(),s.size()));
     }
     
-    /**
-     * Blocks until a line is received from the serial device.
-     * Eventual '\n' or '\r\n' characters at the end of the string are removed.
-     * \return a string containing the received line
-     * \throws boost::system::system_error on failure
-     */
-    std::string readLine()
-    {
-        //Reading data char by char, code is optimized for simplicity, not speed
-        char c;
-        std::string result;
-        for(;;)
-        {
-            switch(c)
-            {
-                case '\r':
-                    break;
-                case '\n':
-                    return result;
-                default:
-                    result+=c;
-            }
-        }
-    }
     
     char readChar()
     {
