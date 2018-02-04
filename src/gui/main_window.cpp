@@ -7,15 +7,33 @@
 #include <QAction>
 #include <QMenu>
 #include <QMenuBar>
+#include <QResizeEvent>
 
+void View::setupUi(){
+    scene = new QGraphicsScene(this);
+    setScene(scene);
+    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    
+    m_gpsWidget = new GpsWidget();
+    m_gpsWidget->setScene(scene);
+    m_gpsWidget->m_optionsWidget.setScene(scene);
+    
+};
+
+void View::mouseReleaseEvent ( QMouseEvent * event ){
+    m_gpsWidget->onMouse(event->x(), event->y());
+    if(!m_gpsWidget->m_optionsWidget.m_close){
+        m_gpsWidget->m_optionsWidget.onMouse(event->x(), event->y());
+    }
+    m_gpsWidget->draw_force();
+}
 
 MainWindow::MainWindow(QWidget *parent)
     :QMainWindow(parent)
 {
+    connect(this, SIGNAL(onValueChangeSignal()), this, SLOT(onValueChangeSlot()));
     
     setupUi();
-    
-    connect(m_gpsWidget, SIGNAL(setMessageStatusBar(QString &)), this, SLOT(setMessageStatusBar(QString &)));
 }
 
 MainWindow::~MainWindow()
@@ -29,9 +47,29 @@ void MainWindow::setupUi(){
     }
     this->resize(800, 480);
     
-    m_gpsWidget = new GpsWidget();
-    this->setCentralWidget(m_gpsWidget);
-    //showMaximized();
-    showFullScreen();
+    m_view = new View();
+    m_view->setupUi();
+    this->setCentralWidget(m_view);
     
+    showMaximized();
+    //showFullScreen();
 }
+
+void MainWindow::resizeEvent(QResizeEvent *event){
+    int width = event->size().width();
+    int height = event->size().height();
+    m_view->scene->setSceneRect(0, 0, width+100, height+100);
+    
+    m_view->m_gpsWidget->setSize(width, height);
+    //m_gpsWidget->resizeEvent(event);
+}
+
+void MainWindow::onNewPoint(){
+    emit onValueChangeSignal();
+}
+
+void MainWindow::onValueChangeSlot(){
+    m_view->m_gpsWidget->draw();
+}
+
+

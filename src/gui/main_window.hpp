@@ -1,21 +1,39 @@
 #include "include_qt.hpp"
 #include "gps_widget.hpp"
 
-class MainWindow : public QMainWindow
+
+class View : public QGraphicsView {
+public:
+    GpsWidget * m_gpsWidget;
+    QGraphicsScene * scene;
+
+    void setupUi();
+    void mouseReleaseEvent ( QMouseEvent * event );
+};
+
+class MainWindow : public QMainWindow, public IGpsObserver
 {
     Q_OBJECT
     
     QWidget *centralWidget;
 public:
-    GpsWidget * m_gpsWidget;
+    View * m_view;
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     
     void test();
-    void resizeEvent(QResizeEvent* event){
-        m_gpsWidget->resizeEvent(event);
-    }
-private:
+    void resizeEvent(QResizeEvent* event);
+
+protected:
     void setupUi();
+    void onNewPoint();
+    
+
+signals:
+    void onValueChangeSignal();
+
+public slots:
+    void onValueChangeSlot();
+    
 };

@@ -88,7 +88,7 @@ void OptionsWidget::open(){
     }
 }
 
-void OptionsWidget::draw(QGraphicsScene * scene){
+void OptionsWidget::draw(){
     scene->addRect(m_width/4, 50, m_width/2, m_height-60, QPen(QColor(0,0,0)), QBrush(QColor(200,200,200)));
     GpsFramework & f = GpsFramework::Instance();
     QString s = "largueur " + QString::number(f.m_config.m_largeur, 'f', 2) + " m";
@@ -191,7 +191,7 @@ void OptionsWidget::onButton(const Button & button){
         INFO(res);
         exit(0);
     }
-    m_gpsWidget->onValueChangeSlot(true);
+    //m_gpsWidget->onValueChangeSlot(true);
 };
 
 void OptionsWidget::addSerials(){

@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     //framework.test();
     QApplication app(argc, argv);
     MainWindow m;
-    framework.addGpsObserver(m.m_gpsWidget);
+    framework.addGpsObserver(&m);
     m.show();
     INFO(QThread::currentThreadId());
     GpsThread * gpsThread = new GpsThread(framework);

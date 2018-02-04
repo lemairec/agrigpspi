@@ -18,13 +18,18 @@ struct Button{
 };
 
 class BaseWidget{
+protected:
+    QGraphicsScene * scene;
 public:
     std::list<Button> m_buttons;
     int m_width;
     int m_height;
     bool m_close = true;
     
-    virtual void draw(QGraphicsScene * scene) = 0;
+    void setScene(QGraphicsScene * s){
+        scene = s;
+    }
+    virtual void draw() = 0;
     virtual void onButton(const Button & button);
     virtual void onMouse(int x, int y);
     
@@ -40,7 +45,7 @@ class OptionsWidget : public BaseWidget
     std::list<std::string> m_serials;
 public:
     OptionsWidget(GpsWidget * widget);
-    virtual void draw(QGraphicsScene * scene);
+    virtual void draw();
     virtual void onButton(const Button & button);
     
     void open();

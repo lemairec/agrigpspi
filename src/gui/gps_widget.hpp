@@ -5,20 +5,10 @@
 #include "../gps_framework.hpp"
 #include "options_widget.hpp"
 
-class GpsWidget : public QGraphicsView, public IGpsObserver {
-Q_OBJECT
+class GpsWidget : public BaseWidget {
 public:
     GpsWidget();
-    void onNewPoint();
-
-    QGraphicsScene * scene;
-    QPushButton * m_btnA;
-    QPushButton * m_btnB;
-    QPushButton * m_btnZoomUp;
-    QPushButton * m_btnZoomDown;
-    QPushButton * m_btnClose;
-    QPushButton * m_btnOptions;
-
+    
     OptionsWidget m_optionsWidget;
     
     void addButtons();
@@ -40,27 +30,18 @@ public:
     void drawLines(double x, double y);
     void drawVitesse();
     void drawSattelite();
+    void draw();
+    void draw_force();
     
     double m_zoom;
     
     void setSize(int width, int height);
-    void resizeEvent(QResizeEvent* event);
-
+    
     
     void mouseReleaseEvent ( QMouseEvent * event );
-signals:
-    void onValueChangeSignal();
-    void setMessageStatusBar(QString & s);
-   
-    
-public slots:
+
     void drawBarreGuidage();
-    void onValueChangeSlot(bool force = false);
-    void onZoomUp();
-    void onZoomDown();
-    void onBtnA();
-    void onBtnB();
-    void onOption();
+    void onButton(const Button & button);
 };
 
 #endif // GPS_WIDGET_H
