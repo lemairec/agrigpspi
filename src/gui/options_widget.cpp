@@ -9,6 +9,11 @@
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 
+#define BUTTON_CLOSE  0
+#define BUTTON_UPDATE 100
+#define BUTTON_RESET  101
+
+
 /**
  * OPTION WIDGET
  **/
@@ -30,10 +35,29 @@ OptionsWidget::OptionsWidget(GpsWidget * gpsWidget){
     
 }
 
+void OptionsWidget::setSize(int width, int height){
+    m_width = width;
+    m_height = height;
+}
+
 void OptionsWidget::open(){
     m_close = false;
     addSerials();
-    setSize(m_width, m_height);
+    m_buttons.clear();
+    
+    m_buttons.push_front(Button(m_width*3/4-30,80, BUTTON_CLOSE));
+    
+    m_buttons.push_front(Button(m_width*3/8 + 22, 160,11));
+    m_buttons.push_front(Button(m_width*3/8 - 22 , 160,12));
+    m_buttons.push_front(Button(m_width/2 + 22, 160,21));
+    m_buttons.push_front(Button(m_width/2 - 22, 160,22));
+    m_buttons.push_front(Button(m_width*5/8 + 22, 160,31));
+    m_buttons.push_front(Button(m_width*5/8 - 22 , 160,32));
+    
+    m_buttons.push_front(Button(m_width*1/4 + 60 , m_height-50, BUTTON_UPDATE));
+    m_buttons.push_front(Button(m_width*3/4 - 60 , m_height-50, BUTTON_RESET));
+
+    
     int i = 0;
     m_serials.push_back("file");
     m_serials.push_back("none");
@@ -78,14 +102,19 @@ void OptionsWidget::draw(){
             drawText(s, button.m_x, button.m_y-12, 15, true);
         }
         
-        if(button.m_id == 0){
+        if(button.m_id == BUTTON_CLOSE){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(200, 0, 0)));
             drawText("X", button.m_x, button.m_y-12, 15, true);
         }
         
-        if(button.m_id == 100){
+        if(button.m_id == BUTTON_UPDATE){
             scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(100, 100, 100)));
             drawText("mettre à jour", button.m_x+80, button.m_y-12, 15, true);
+        }
+        
+        if(button.m_id == BUTTON_RESET){
+            scene->addEllipse(button.m_x-20, button.m_y-20, 40, 40, QPen(QColor(0,0,0)), QBrush(QColor(100, 100, 100)));
+            drawText("reset", button.m_x-60, button.m_y-12, 15, true);
         }
         
         if(button.m_id > 1000){
@@ -144,14 +173,24 @@ void OptionsWidget::onButton(const Button & button){
     if(id == 100){
         MainWindow::Instance_ptr()->showMinimized();
         std::string cmd = "cd " + ProjectSourceDir + "; git pull";
-        INFO(cmd);
-        std::string res = execute(cmd);
-        INFO(res);
-        usleep(5000000);
-        exit(0);
+        run(cmd);
+    }
+    
+    if(id == 101){
+        MainWindow::Instance_ptr()->showMinimized();
+        std::string cmd = "rm -rf " + ProjectSourceBin + ";";
+        run(cmd);
     }
     //m_gpsWidget->onValueChangeSlot(true);
 };
+
+void OptionsWidget::run(const std::string & cmd){
+    INFO(cmd);
+    std::string res = execute(cmd);
+    INFO(res);
+    usleep(5000000);
+    exit(0);
+}
 
 void OptionsWidget::addSerials(){
     m_serials.clear();

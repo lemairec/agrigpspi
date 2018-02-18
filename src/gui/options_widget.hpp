@@ -15,8 +15,11 @@ public:
     virtual void draw();
     virtual void onButton(const Button & button);
     
+    void setSize(int width, int height);
     void open();
     void addSerials();
+    
+    void run(const std::string & str);
 };
 
 #endif
