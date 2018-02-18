@@ -2,7 +2,7 @@
 #include "../gps_framework.hpp"
 #include "gps_widget.hpp"
 #include "environnement.hpp"
-
+#include "qt/main_window.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -142,10 +142,12 @@ void OptionsWidget::onButton(const Button & button){
     }
     
     if(id == 100){
+        MainWindow::Instance_ptr()->showMinimized();
         std::string cmd = "cd " + ProjectSourceDir + "; git pull";
         INFO(cmd);
         std::string res = execute(cmd);
         INFO(res);
+        sleep(5000);
         exit(0);
     }
     //m_gpsWidget->onValueChangeSlot(true);
