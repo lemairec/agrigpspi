@@ -6,8 +6,12 @@
 
 #include <math.h>
 
+double LAT_REF = 49.375;
+double LON_REF = 4.222;
+
 GpsModule::GpsModule(){
     init();
+    //setRef(LAT_REF, LON_REF);
 }
 
 void GpsModule::init(){
@@ -294,14 +298,11 @@ double a = 6378249.2;
 double b = 6356515;
 double e_2 = (a*a-b*b)/(a*a);
 
-double LAT_REF = 49.375;
-double LON_REF = 4.222;
-double temp_a = a * cos(DEG2RAD(LAT_REF));
 
-void __SetXYSpherique(GpsPoint & gpsPoint){
-    double lon = DEG2RAD(gpsPoint.m_longitude - LON_REF);
-    double lat = DEG2RAD(gpsPoint.m_latitude - LAT_REF);
-    gpsPoint.m_x = temp_a * lon;
+void GpsModule::SetXYSpherique(GpsPoint & gpsPoint){
+    double lon = DEG2RAD(gpsPoint.m_longitude - m_longitudeRef);
+    double lat = DEG2RAD(gpsPoint.m_latitude - m_latitudeRef);
+    gpsPoint.m_x = m_acosLatRef * lon;
     gpsPoint.m_y = a * lat;
 }
 
@@ -322,9 +323,15 @@ void __MercatorCoordinatesTransform(GpsPoint & gpsPoint)
 }
 
 
+void GpsModule::setRef(double latitude, double longitude){
+    m_latitudeRef = latitude;
+    m_longitudeRef = longitude;
+    m_acosLatRef = a * cos(DEG2RAD(latitude));
+}
+
 void GpsModule::setXY(GpsPoint & gpsPoint){
     //__YGCoordinatesTransform(gpsPoint, E_CLARK_IGN, lambert_n[LAMBERT], lambert_c[LAMBERT], LON_MERID_GREENWICH, 0.0, 0.0);
-    __SetXYSpherique(gpsPoint);
+    SetXYSpherique(gpsPoint);
 }
 
 

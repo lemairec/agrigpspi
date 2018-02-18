@@ -11,7 +11,7 @@ struct GpsPoint {
     double m_x = 0.0;
     double m_y = 0.0;
     
-    double m_time;
+    double m_time = 0.0;
     double m_timeHour;
 };
 
@@ -20,6 +20,9 @@ struct GGAFrame : public GpsPoint {
     int m_nbrSat;
     double m_hdop;
 
+    bool isOk(){
+        return m_nbrSat > 6;
+    }
 };
 
 class GpsModule {
@@ -34,12 +37,17 @@ public:
     void readChar(char c);
     
     void setXY(GpsPoint & gpsPoint);
+    void setRef(double latitude, double longitude);
     
     GGAFrame m_lastGGAEvent;
+    double m_latitudeRef = 0;
 private:
     int m_bufferIndLast = 0;
     char m_buffer[200];
     int m_tempInd = 0;
+    
+    double m_longitudeRef = 0;
+    double m_acosLatRef = 0;
     
     void resetBuffer();
     void error();
@@ -48,6 +56,8 @@ private:
     void parseBuffer();
     void parseGGA();
     void parseRMC();
+    
+    void SetXYSpherique(GpsPoint & gpsPoint);
     
     bool isEqual(const char * c, size_t size);
     void readUntilCommat();

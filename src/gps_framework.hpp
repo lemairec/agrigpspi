@@ -21,6 +21,7 @@ public:
     void removeObserver();
     void onGGAFrame(GGAFrame & frame);
     void onGGAFrame(const std::string & frame);
+    void setRef(double latitude, double longitude);
     void main();
     
     double distance(GpsPoint & gpsPoint);

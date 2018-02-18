@@ -39,9 +39,30 @@ GpsFramework & GpsFramework::Instance(){
     return gf;
 }
 
+void GpsFramework::setRef(double latitude, double longitude){
+    m_gpsModule.setRef(latitude, longitude);
+    for(auto l: m_list){
+        m_gpsModule.setXY(*l);
+    }
+    if(m_pointA.m_time != 0){
+        m_gpsModule.setXY(m_pointA);
+    }
+    if(m_pointB.m_time != 0){
+        m_gpsModule.setXY(m_pointB);
+    }
+}
+
 void GpsFramework::onGGAFrame(GGAFrame & f){
+    if(!f.isOk()){
+        return;
+    }
+    if(m_gpsModule.m_latitudeRef == 0){
+        setRef(f.m_latitude, f.m_longitude);
+        return;
+    }
     GGAFrame * frame = new GGAFrame(f);
     m_list.push_front(frame);
+    
     calculDeplacement();
     m_distance = distance(*frame);
     if(m_observer){
@@ -109,6 +130,8 @@ void GpsFramework::savePointA(){
     if(m_observer){
         m_observer->onNewPoint();
     }
+    setRef(m_pointA.m_latitude, m_pointA.m_longitude);
+    
     gpslogFile << "[savePointA]\n";
     INFO(m_pointA.m_time << " " << m_pointA.m_latitude << " " << m_pointA.m_longitude);
 }
@@ -118,7 +141,7 @@ void GpsFramework::savePointB(){
         m_pointB = *(*m_list.begin());
     }
     INFO(m_pointB.m_time << " " << m_pointB.m_latitude << " " << m_pointB.m_longitude);
-    if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
+    if(m_pointA.m_time!=0 && m_pointB.m_time!=0){
         setAB();
     }
     if(m_observer){
@@ -131,6 +154,7 @@ void GpsFramework::setAB(){
     //m_pointA.m_x = 1; m_pointA.m_y = 1;
     m_ab_x = m_pointB.m_x - m_pointA.m_x;
     m_ab_y = m_pointB.m_y - m_pointA.m_y;
+    setRef((m_pointA.m_latitude + m_pointB.m_latitude)/2, (m_pointA.m_longitude + m_pointB.m_longitude)/2);
     
     
     m_a = -(m_pointB.m_y - m_pointA.m_y);
