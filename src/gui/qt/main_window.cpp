@@ -28,6 +28,11 @@ void View::mouseReleaseEvent ( QMouseEvent * event ){
     m_gpsWidget->draw_force();
 }
 
+MainWindow * MainWindow::Instance_ptr(){
+    static MainWindow gf;
+    return &gf;
+}
+
 MainWindow::MainWindow(QWidget *parent)
     :QMainWindow(parent)
 {

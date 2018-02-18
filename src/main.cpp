@@ -8,9 +8,9 @@ int main(int argc, char *argv[])
     GpsFramework & framework = GpsFramework::Instance();
     //framework.test();
     QApplication app(argc, argv);
-    MainWindow m;
-    framework.addGpsObserver(&m);
-    m.show();
+    MainWindow * m = MainWindow::Instance_ptr();
+    framework.addGpsObserver(m);
+    m->show();
     INFO(QThread::currentThreadId());
     GpsThread * gpsThread = new GpsThread(framework);
     gpsThread->start();
