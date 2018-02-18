@@ -147,7 +147,7 @@ void OptionsWidget::onButton(const Button & button){
         INFO(cmd);
         std::string res = execute(cmd);
         INFO(res);
-        sleep(5000);
+        usleep(5000000);
         exit(0);
     }
     //m_gpsWidget->onValueChangeSlot(true);
