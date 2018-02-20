@@ -279,6 +279,9 @@ void GpsFramework::readFile(){
 void GpsFramework::main(){
     for(;;){
         m_reloadConfig = false;
+        if(m_observer){
+            m_observer->onNewPoint();
+        }
         if(m_config.m_input == "file"){
             readFile();
         } else if (m_config.m_input == "none"){

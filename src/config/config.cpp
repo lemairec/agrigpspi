@@ -22,6 +22,8 @@ void Config::save(){
     QSettings settings(path, QSettings::IniFormat);
     
     settings.setValue("largeur", m_largeur);
+    QString input2 = QString::fromStdString(m_input);
+    settings.setValue("input", input2);
 }
 
 void Config::load(){
@@ -31,6 +33,9 @@ void Config::load(){
     
     if(settings.contains("largeur")){
         m_largeur = settings.value("largeur").toDouble();
+    }
+    if(settings.contains("input")){
+        m_input = settings.value("input").toString().toUtf8().constData();
     }
     INFO(m_largeur);
 }
