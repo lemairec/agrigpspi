@@ -61,6 +61,7 @@ public:
     int m_ledAB = 0;
     
     std::list<GGAFrame *> m_list;
+    GGAFrame m_lastGGAFrame;
     
     void exportHtml();
 private:

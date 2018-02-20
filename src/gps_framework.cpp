@@ -31,6 +31,13 @@ void GpsFramework::removeObserver(){
 
 void GpsFramework::initOrLoadConfig(){
     m_config.save();
+    m_pointA.m_latitude = m_config.m_a_lat;
+    m_pointA.m_longitude = m_config.m_a_lon;
+    m_pointA.m_nbrSat = 100;
+    m_pointB.m_latitude = m_config.m_b_lat;
+    m_pointB.m_longitude = m_config.m_b_lon;
+    m_pointB.m_nbrSat = 100;
+    setAB();
     m_reloadConfig = true;
 }
 
@@ -44,27 +51,28 @@ void GpsFramework::setRef(double latitude, double longitude){
     for(auto l: m_list){
         m_gpsModule.setXY(*l);
     }
-    if(m_pointA.m_time != 0){
+    if(m_pointA.isOk()){
         m_gpsModule.setXY(m_pointA);
     }
-    if(m_pointB.m_time != 0){
+    if(m_pointB.isOk()){
         m_gpsModule.setXY(m_pointB);
     }
 }
 
 void GpsFramework::onGGAFrame(GGAFrame & f){
-    if(!f.isOk()){
-        return;
+    m_lastGGAFrame = GGAFrame(f);
+    if(f.isOk()){
+        if(m_gpsModule.m_latitudeRef == 0){
+            setRef(f.m_latitude, f.m_longitude);
+            return;
+        }
+        GGAFrame * frame = new GGAFrame(f);
+        m_list.push_front(frame);
+        
+        calculDeplacement();
+        m_distance = distance(*frame);
     }
-    if(m_gpsModule.m_latitudeRef == 0){
-        setRef(f.m_latitude, f.m_longitude);
-        return;
-    }
-    GGAFrame * frame = new GGAFrame(f);
-    m_list.push_front(frame);
-    
-    calculDeplacement();
-    m_distance = distance(*frame);
+   
     if(m_observer){
         m_observer->onNewPoint();
     }
@@ -140,6 +148,7 @@ void GpsFramework::savePointB(){
     if(!m_list.empty()){
         m_pointB = *(*m_list.begin());
     }
+    
     INFO(m_pointB.m_time << " " << m_pointB.m_latitude << " " << m_pointB.m_longitude);
     if(m_pointA.m_time!=0 && m_pointB.m_time!=0){
         setAB();
@@ -151,6 +160,12 @@ void GpsFramework::savePointB(){
 }
 
 void GpsFramework::setAB(){
+    m_config.m_a_lat = m_pointA.m_latitude;
+    m_config.m_a_lon = m_pointA.m_longitude;
+    m_config.m_b_lat = m_pointB.m_latitude;
+    m_config.m_b_lon = m_pointB.m_longitude;
+    m_config.save();
+    
     //m_pointA.m_x = 1; m_pointA.m_y = 1;
     m_ab_x = m_pointB.m_x - m_pointA.m_x;
     m_ab_y = m_pointB.m_y - m_pointA.m_y;
@@ -237,7 +252,7 @@ void GpsFramework::exportHtml(){
     infile << oss.str();
 }
 
-#define SLEEP_TIME 20
+#define SLEEP_TIME 50
 void GpsFramework::readFile(){
     std::ifstream infile(m_config.m_file);
     if(!infile.is_open()){

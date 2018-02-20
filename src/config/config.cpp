@@ -21,6 +21,12 @@ void Config::save(){
     QString path = QString::fromStdString(s);
     QSettings settings(path, QSettings::IniFormat);
     
+    settings.setValue("a_lat", m_a_lat);
+    settings.setValue("a_lon", m_a_lon);
+    settings.setValue("b_lat", m_b_lat);
+    settings.setValue("b_lon", m_b_lon);
+    
+    
     settings.setValue("largeur", m_largeur);
     QString input2 = QString::fromStdString(m_input);
     settings.setValue("input", input2);
@@ -37,5 +43,19 @@ void Config::load(){
     if(settings.contains("input")){
         m_input = settings.value("input").toString().toUtf8().constData();
     }
+    
+    if(settings.contains("a_lat")){
+        m_a_lat = settings.value("a_lat").toDouble();
+    }
+    if(settings.contains("a_lon")){
+        m_a_lon = settings.value("a_lon").toDouble();
+    }
+    if(settings.contains("b_lat")){
+        m_b_lat = settings.value("b_lat").toDouble();
+    }
+    if(settings.contains("b_lon")){
+        m_b_lon = settings.value("b_lon").toDouble();
+    }
+    
     INFO(m_largeur);
 }

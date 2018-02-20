@@ -6,9 +6,6 @@
 
 #include <math.h>
 
-double LAT_REF = 49.375;
-double LON_REF = 4.222;
-
 GpsModule::GpsModule(){
     init();
     //setRef(LAT_REF, LON_REF);

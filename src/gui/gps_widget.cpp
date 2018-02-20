@@ -157,41 +157,39 @@ void GpsWidget::drawVitesse(){
 void GpsWidget::drawSattelite(){
     GpsFramework & f = GpsFramework::Instance();
     QBrush lightGrayBrush(Qt::lightGray);
-    if(f.m_list.size() > 2){
-        auto last_frame = (*f.m_list.begin());
-        scene->addRect(m_width-100, m_height-90, 100, 90, m_penBlack, lightGrayBrush);
-        QString s = QString::number(last_frame->m_nbrSat) + " satellites";
-        auto textItem = scene->addText(s);
-        textItem->setPos(m_width-100, m_height-90);
-        
-        if(last_frame->m_fix == 1){
-            s = "GPS";
-        } else if(last_frame->m_fix == 2){
-            s = "DGPS";
-        } else {
-            s = "invalid";
-        }
-        textItem = scene->addText(s);
-        textItem->setPos(m_width-100, m_height-75);
-        
-        s = "hdop " + QString::number(last_frame->m_hdop, 'f', 2);
-        textItem = scene->addText(s);
-        textItem->setPos(m_width-100, m_height-60);
+    auto last_frame = f.m_lastGGAFrame;
+    scene->addRect(m_width-100, m_height-90, 100, 90, m_penBlack, lightGrayBrush);
+    QString s = QString::number(last_frame.m_nbrSat) + " satellites";
+    auto textItem = scene->addText(s);
+    textItem->setPos(m_width-100, m_height-90);
     
-        s = "altitude " + QString::number(last_frame->m_altitude);
-        textItem = scene->addText(s);
-        textItem->setPos(m_width-100, m_height-40);
-        
-        int h = last_frame->m_time/10000;
-        int min = (int)(last_frame->m_time/100) - h*100;
-        double sec = last_frame->m_time - h*10000 - min*100;
-        s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
-        textItem = scene->addText(s);
-        textItem->setPos(m_width-100, m_height-25);
-        
-        int time = last_frame->m_time;
-        INFO(time);
+    if(last_frame.m_fix == 1){
+        s = "GPS";
+    } else if(last_frame.m_fix == 2){
+        s = "DGPS";
+    } else {
+        s = "invalid";
     }
+    textItem = scene->addText(s);
+    textItem->setPos(m_width-100, m_height-75);
+    
+    s = "hdop " + QString::number(last_frame.m_hdop, 'f', 2);
+    textItem = scene->addText(s);
+    textItem->setPos(m_width-100, m_height-60);
+
+    s = "altitude " + QString::number(last_frame.m_altitude);
+    textItem = scene->addText(s);
+    textItem->setPos(m_width-100, m_height-40);
+    
+    int h = last_frame.m_time/10000;
+    int min = (int)(last_frame.m_time/100) - h*100;
+    double sec = last_frame.m_time - h*10000 - min*100;
+    s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
+    textItem = scene->addText(s);
+    textItem->setPos(m_width-100, m_height-25);
+    
+    int time = last_frame.m_time;
+    INFO(time);
 }
 
 
@@ -216,7 +214,7 @@ void GpsWidget::draw_force(){
     
     double h = m_height;
     double w = m_width;
-    INFO(w << " " << h);
+    //INFO(w << " " << h);
     
     scene->clear();
     
@@ -305,23 +303,23 @@ void GpsWidget::draw_force(){
     drawLines(x, y);
     
     
-    if(f.m_pointA.m_x!=0){
+    if(f.m_pointA.isOk()){
         double xA  = (f.m_pointA.m_x - x)*m_zoom;
         double yA  = (f.m_pointA.m_y - y)*m_zoom;
         scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
     }
-    if(f.m_pointB.m_x!=0){
+    if(f.m_pointB.isOk()){
         double xB  = (f.m_pointB.m_x - x)*m_zoom;
         double yB  = (f.m_pointB.m_y - y)*m_zoom;
         scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
     }
-    if(f.m_pointA.m_x!=0 && f.m_pointB.m_x!=0){
+    if(f.m_pointA.isOk() && f.m_pointB.isOk()){
         double xA  = (f.m_pointA.m_x - x)*m_zoom;
         double yA  = (f.m_pointA.m_y - y)*m_zoom;
         double xB  = (f.m_pointB.m_x - x)*m_zoom;
         double yB  = (f.m_pointB.m_y - y)*m_zoom;
         
-        
+        INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
         scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
     }
     
