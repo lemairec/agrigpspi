@@ -126,8 +126,7 @@ class AgriGpsPi(object):
         for i in range(2,len(sys.argv)):
             s += " " + sys.argv[i]
         print "run " + s
-        call('cd ' + PATH_SRC)
-        mkdir_p(PATH_SRC+'/build')
+        call('cd ' + PATH_SRC + ';mkdir -p '+PATH_SRC+'/build')
         call('cd ' + PATH_SRC + '/build && cmake .. && make -j '+ str(CPU_CORES)
             + ' && ' + PATH_SRC + '/build/agri_gps_pi ' + s);
 
