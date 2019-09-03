@@ -47,18 +47,30 @@ public:
     
     double m_ab_x = 0.0;
     double m_ab_y = 0.0;
+    
+    double m_angleAB = 0;
     void setAB();
     
     //deplacement
     double m_deplacementX;
     double m_deplacementY;
     double m_deplacementAngle;
+    double m_distance_last_point;
+    double m_time_last_point;
     bool m_sensAB = true;
     double m_vitesse;
     void calculDeplacement();
     
     double m_distanceAB = 0.0;
     int m_ledAB = 0;
+    
+    //surface
+    double m_surface = 0;
+    double m_surface_h = 0;
+    double m_surface_h2 = 0;
+    
+    void clearSurface();
+    void calculSurface();
     
     std::list<GGAFrame *> m_list;
     GGAFrame m_lastGGAFrame;

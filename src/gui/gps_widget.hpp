@@ -29,6 +29,7 @@ public:
     bool addligne(double l, double x, double y, int i);
     void drawLines(double x, double y);
     void drawVitesse();
+    void drawSurface();
     void drawSattelite();
     void draw();
     void draw_force();

@@ -70,6 +70,8 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
         m_list.push_front(frame);
         
         calculDeplacement();
+        
+        calculSurface();
         m_distance = distance(*frame);
     }
    
@@ -142,6 +144,7 @@ void GpsFramework::savePointA(){
     
     gpslogFile << "[savePointA]\n";
     INFO(m_pointA.m_time << " " << m_pointA.m_latitude << " " << m_pointA.m_longitude);
+    clearSurface();
 }
 
 void GpsFramework::savePointB(){
@@ -167,15 +170,21 @@ void GpsFramework::setAB(){
     m_config.save();
     
     //m_pointA.m_x = 1; m_pointA.m_y = 1;
+    setRef((m_pointA.m_latitude + m_pointB.m_latitude)/2, (m_pointA.m_longitude + m_pointB.m_longitude)/2);
     m_ab_x = m_pointB.m_x - m_pointA.m_x;
     m_ab_y = m_pointB.m_y - m_pointA.m_y;
-    setRef((m_pointA.m_latitude + m_pointB.m_latitude)/2, (m_pointA.m_longitude + m_pointB.m_longitude)/2);
     
     
     m_a = -(m_pointB.m_y - m_pointA.m_y);
     m_b = m_pointB.m_x - m_pointA.m_x;
     m_c = -m_a * m_pointA.m_x - m_b *  m_pointA.m_y;
     m_sqrt_m_a_m_b = sqrt(m_a*m_a + m_b*m_b);
+    
+    if(m_ab_y != 0 && m_ab_x != 0){
+        m_angleAB = atan(m_ab_y/m_ab_x);
+    } else {
+        m_angleAB = 0;
+    }
     INFO("yb  " << std::fixed << m_pointB.m_y << " ya " << m_pointA.m_y << " xb " << m_pointB.m_x << " xa " << m_pointA.m_x);
     INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
 }
@@ -203,9 +212,9 @@ void GpsFramework::calculDeplacement(){
             m_sensAB = (det < 0);
         }
         
-        double distance = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY)/1000.0;
-        double deplacementTime = point1->m_timeHour - point2->m_timeHour;
-        m_vitesse = distance/deplacementTime;
+        m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
+        m_time_last_point = point1->m_timeHour - point2->m_timeHour;
+        m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
         //INFO(deplacementTime << " " << vitesse);
     }
 }
@@ -285,6 +294,7 @@ void GpsFramework::readFile(){
         m_config.m_input = "none";
     } else {
         m_list.clear();
+        clearSurface();
     }
     //exportHtml();
 }
@@ -363,5 +373,27 @@ void GpsFramework::test(){
     onGGAFrame(f2);
     INFO("res " << 592);
     INFO(m_distance << " " << m_distance/592<<  " %");
+}
+
+void GpsFramework::clearSurface(){
+    m_surface = 0;
+}
+
+void GpsFramework::calculSurface(){
+    if(m_distance_last_point <30){
+        double diff_angle = m_angleAB - m_deplacementAngle;
+        if(std::abs(diff_angle) < 0.1){
+            double surface = m_distance_last_point*m_config.m_largeur/10000.0;
+            m_surface += surface/2;
+            m_surface_h = surface/m_time_last_point;
+            
+        }
+        if(m_list.size()>2){
+            INFO(m_list.front()->m_timeHour<< " " << m_pointA.m_timeHour);
+            INFO(m_list.front()->m_timeHour - m_pointA.m_timeHour);
+            m_surface_h2 = m_surface/(m_list.front()->m_timeHour - m_pointA.m_timeHour);
+        }
+        
+    }
 }
 

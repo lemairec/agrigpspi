@@ -154,6 +154,25 @@ void GpsWidget::drawVitesse(){
     textItem->setPos(40 - mBounds.width()/2, 10);
 }
 
+void GpsWidget::drawSurface(){
+    GpsFramework & f = GpsFramework::Instance();
+    QBrush lightGrayBrush(Qt::lightGray);
+    
+    scene->addRect(0, m_height/2, 80, 40, m_penBlack, lightGrayBrush);
+    QString s = QString::number(f.m_surface, 'f', 2) + " ha";
+    auto textItem = scene->addText(s);
+    auto mBounds = textItem->boundingRect();
+    textItem->setPos(40 - mBounds.width()/2, m_height/2);
+    QString s2 = QString::number(f.m_surface_h, 'f', 2) + " ha/h";
+    auto textItem2 = scene->addText(s2);
+    auto mBounds2 = textItem->boundingRect();
+    textItem2->setPos(40 - mBounds2.width()/2, m_height/2+20);
+    QString s3 = QString::number(f.m_surface_h2, 'f', 2) + " ha/h";
+    auto textItem3 = scene->addText(s3);
+    auto mBounds3 = textItem->boundingRect();
+    textItem3->setPos(40 - mBounds3.width()/2, m_height/2+40);
+}
+
 void GpsWidget::drawSattelite(){
     GpsFramework & f = GpsFramework::Instance();
     QBrush lightGrayBrush(Qt::lightGray);
@@ -329,6 +348,7 @@ void GpsWidget::draw_force(){
     
     drawBarreGuidage();
     drawVitesse();
+    drawSurface();
     drawSattelite();
     
     addButtons();
