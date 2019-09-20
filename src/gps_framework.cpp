@@ -31,6 +31,7 @@ void GpsFramework::removeObserver(){
 
 void GpsFramework::initOrLoadConfig(){
     m_config.save();
+     
     m_pointA.m_latitude = m_config.m_a_lat;
     m_pointA.m_longitude = m_config.m_a_lon;
     m_pointA.m_nbrSat = 100;
@@ -217,7 +218,7 @@ void GpsFramework::calculDeplacement(){
         m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
         //INFO(deplacementTime << " " << vitesse);
     }
-    calculContourExterieur();
+    //calculContourExterieur();
 }
 
 #include <iostream>
@@ -393,7 +394,6 @@ void GpsFramework::calculSurface(){
         if(m_list.size()>2){
             //INFO(m_list.front()->m_timeHour<< " " << m_pointA.m_timeHour);
             //INFO(m_list.front()->m_timeHour - m_pointA.m_timeHour);
-            m_surface_h2 = m_surface/(m_list.front()->m_timeHour - m_pointA.m_timeHour);
         }
         
     }
@@ -475,6 +475,7 @@ void GpsFramework::calculContourExterieur(){
             
         } while (p != l);  // Whil
         m_contour.push_back(m_contour[0]);
-        m_surface = polygonArea(m_contour)/10000.0;
+        m_surface_exterieur = polygonArea(m_contour)/10000.0;
+        m_surface_exterieur_h = m_surface_exterieur/(m_list.front()->m_timeHour - m_pointA.m_timeHour);
     }
 }

@@ -168,18 +168,34 @@ void GpsWidget::drawSurface(){
     QBrush lightGrayBrush(Qt::lightGray);
     
     scene->addRect(0, m_height/2, 80, 40, m_penBlack, lightGrayBrush);
-    QString s = QString::number(f.m_surface, 'f', 2) + " ha";
-    auto textItem = scene->addText(s);
-    auto mBounds = textItem->boundingRect();
-    textItem->setPos(40 - mBounds.width()/2, m_height/2);
+    {
+        QString s = QString::number(f.m_surface, 'f', 2) + " ha";
+        auto textItem = scene->addText(s);
+        auto mBounds = textItem->boundingRect();
+        textItem->setPos(40 - mBounds.width()/2, m_height/2);
+    }
     QString s2 = QString::number(f.m_surface_h, 'f', 2) + " ha/h";
     auto textItem2 = scene->addText(s2);
-    auto mBounds2 = textItem->boundingRect();
+    auto mBounds2 = textItem2->boundingRect();
     textItem2->setPos(40 - mBounds2.width()/2, m_height/2+20);
-    QString s3 = QString::number(f.m_surface_h2, 'f', 2) + " ha/h";
-    auto textItem3 = scene->addText(s3);
-    auto mBounds3 = textItem->boundingRect();
-    textItem3->setPos(40 - mBounds3.width()/2, m_height/2+40);
+    {
+        QString s = "exterieur";
+        auto textItem = scene->addText(s);
+        auto mBounds = textItem->boundingRect();
+        textItem->setPos(40 - mBounds.width()/2, m_height/2+60);
+    }
+    {
+        QString s = QString::number(f.m_surface_exterieur, 'f', 2) + " ha";
+        auto textItem = scene->addText(s);
+        auto mBounds = textItem->boundingRect();
+        textItem->setPos(40 - mBounds.width()/2, m_height/2+80);
+    }
+    {
+        QString s = QString::number(f.m_surface_exterieur_h, 'f', 2) + " ha/h";
+        auto textItem = scene->addText(s);
+        auto mBounds = textItem->boundingRect();
+        textItem->setPos(40 - mBounds.width()/2, m_height/2+100);
+    }
 }
 
 void GpsWidget::drawSattelite(){

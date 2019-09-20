@@ -72,9 +72,10 @@ public:
     //surface
     double m_surface = 0;
     double m_surface_h = 0;
-    double m_surface_h2 = 0;
-    
+     
     //contour_exterieur;
+    double m_surface_exterieur = 0;
+    double m_surface_exterieur_h = 0;
     std::vector<GGAFrame_ptr> m_contour;
     void calculContourExterieur();
     
