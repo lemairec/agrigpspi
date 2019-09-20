@@ -64,15 +64,24 @@ public:
     double m_distanceAB = 0.0;
     int m_ledAB = 0;
     
+    //algo pure poursuite
+    double m_angle_pure_poursuite;
+    double m_poursuite_x, mm_poursuite_y;
+    void calculPurePoursuite();
+    
     //surface
     double m_surface = 0;
     double m_surface_h = 0;
     double m_surface_h2 = 0;
     
+    //contour_exterieur;
+    std::vector<GGAFrame_ptr> m_contour;
+    void calculContourExterieur();
+    
     void clearSurface();
     void calculSurface();
     
-    std::list<GGAFrame *> m_list;
+    std::list<GGAFrame_ptr> m_list;
     GGAFrame m_lastGGAFrame;
     
     void exportHtml();

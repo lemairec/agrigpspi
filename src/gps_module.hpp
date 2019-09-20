@@ -25,6 +25,8 @@ struct GGAFrame : public GpsPoint {
     }
 };
 
+typedef std::shared_ptr<GGAFrame> GGAFrame_ptr;
+
 class GpsModule {
 public:
     GpsModule();

@@ -71,15 +71,16 @@ void GpsWidget::drawLines(double x, double y){
     double y0 = y;
     double res = -(y0*f.m_b +(f.m_a * x0 + f.m_c));
     double l = res / (f.m_b/cos(atan(-f.m_a/f.m_b)));
+    //INFO("l " << l << " x " << x << " res " << res);
     
     int i0 = round(l/f.m_config.m_largeur);
     for(int i = 0; i < 1000; ++i){
-        if(! addligne((i0 + i)*f.m_config.m_largeur, x, y, i-i0)){
+        if(! addligne((i0 + i)*f.m_config.m_largeur, x, y, i0 + i)){
             break;
         }
     }
     for(int i = 1; i < 1000; ++i){
-        if(! addligne((i0 - i)*f.m_config.m_largeur, x, y, i-i0)){
+        if(! addligne((i0 - i)*f.m_config.m_largeur, x, y, i0 - i)){
             break;
         }
     }
@@ -97,19 +98,27 @@ bool GpsWidget::addligne(double l, double x, double y, int i){
     x1 = (x1 - x)*m_zoom;
     y1 = (y1 - y)*m_zoom;
     
+    if(y0 > m_height/2 && y1 > m_height/2){
+        return false;
+    }
+  
+    if(y0 < -m_height/2 && y1 < -m_height/2){
+        return false;
+    }
+    
+    QString s = QString::number(i);
+    auto textItem = scene->addText(s);
+    auto mBounds = textItem->boundingRect();
+    textItem->setPos(m_width/2 + (x1+x0)/2 - mBounds.width()/2, m_height/2 - (y1+y0)/2  - mBounds.height()/2);
+    //INFO(x1 << " " << x0);
+    
+    
     if(i%10 == 0){
         scene->addLine(m_width/2 + x0, m_height/2 - y0, m_width/2 + x1, m_height/2 - y1, m_penBlue);
     } else {
         scene->addLine(m_width/2 + x0, m_height/2 - y0, m_width/2 + x1, m_height/2 - y1, m_penBlack);
     }
-    if(y0 > m_height/2 && y1 > m_height/2){
-        INFO(y0 << " " << y1 << " up " << i);
-        return false;
-    }
     
-    if(y0 < -m_height/2 && y1 < -m_height/2){
-        return false;
-    }
     return true;
     
 }
@@ -208,7 +217,21 @@ void GpsWidget::drawSattelite(){
     textItem->setPos(m_width-100, m_height-25);
     
     int time = last_frame.m_time;
-    INFO(time);
+    //INFO(time);
+}
+
+void GpsWidget::drawContour(double x, double y){
+    GpsFramework & f = GpsFramework::Instance();
+    double last_x = 0, last_y;
+    for(auto l : f.m_contour){
+        double x1 = m_width/2+(l->m_x-x)*m_zoom;
+        double y1 = m_height/2-(l->m_y-y)*m_zoom;
+        if(last_x != 0){
+            scene->addLine(x1,y1, last_x, last_y, m_penRed);
+        }
+        last_x = x1; last_y = y1;
+    }
+    
 }
 
 
@@ -338,7 +361,7 @@ void GpsWidget::draw_force(){
         double xB  = (f.m_pointB.m_x - x)*m_zoom;
         double yB  = (f.m_pointB.m_y - y)*m_zoom;
         
-        INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
+        //INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
         scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
     }
     
@@ -350,6 +373,7 @@ void GpsWidget::draw_force(){
     drawVitesse();
     drawSurface();
     drawSattelite();
+    drawContour(x, y);
     
     addButtons();
     

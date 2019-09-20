@@ -31,6 +31,8 @@ public:
     void drawVitesse();
     void drawSurface();
     void drawSattelite();
+    void drawContour(double x, double y);
+    
     void draw();
     void draw_force();
     

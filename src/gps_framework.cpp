@@ -66,7 +66,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
             setRef(f.m_latitude, f.m_longitude);
             return;
         }
-        GGAFrame * frame = new GGAFrame(f);
+        GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
         m_list.push_front(frame);
         
         calculDeplacement();
@@ -191,8 +191,8 @@ void GpsFramework::setAB(){
 
 void GpsFramework::calculDeplacement(){
     if(m_list.size() > 2){
-        GpsPoint * point1 = m_list.front();
-        GpsPoint * point2 = NULL;
+        GGAFrame_ptr point1 = m_list.front();
+        GGAFrame_ptr point2 = NULL;
         int i = 0;
         for(auto point : m_list){
             point2 = point;
@@ -217,6 +217,7 @@ void GpsFramework::calculDeplacement(){
         m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
         //INFO(deplacementTime << " " << vitesse);
     }
+    calculContourExterieur();
 }
 
 #include <iostream>
@@ -339,7 +340,7 @@ void GpsFramework::main(){
 
 void GpsFramework::test(){
     m_gpsModule.readFrame("$GNGGA,110138.80,4902.71554,N,00324.04388,E,1,07,1.94,46.6,M,46.3,M,,*71");
-    GGAFrame * f = m_list.front();
+    GGAFrame_ptr f = m_list.front();
     INFO(f->m_latitude << " " << f->m_longitude);
     savePointA();
     GGAFrame f2;
@@ -375,6 +376,7 @@ void GpsFramework::test(){
     INFO(m_distance << " " << m_distance/592<<  " %");
 }
 
+//surface
 void GpsFramework::clearSurface(){
     m_surface = 0;
 }
@@ -389,11 +391,90 @@ void GpsFramework::calculSurface(){
             
         }
         if(m_list.size()>2){
-            INFO(m_list.front()->m_timeHour<< " " << m_pointA.m_timeHour);
-            INFO(m_list.front()->m_timeHour - m_pointA.m_timeHour);
+            //INFO(m_list.front()->m_timeHour<< " " << m_pointA.m_timeHour);
+            //INFO(m_list.front()->m_timeHour - m_pointA.m_timeHour);
             m_surface_h2 = m_surface/(m_list.front()->m_timeHour - m_pointA.m_timeHour);
         }
         
     }
 }
 
+
+
+// pure pousuite
+void GpsFramework::calculPurePoursuite(){
+    
+}
+int orientation(GGAFrame & p, GGAFrame & q, GGAFrame & r)
+{
+    double val = (q.m_y - p.m_y) * (r.m_x - q.m_x) -
+    (q.m_x - p.m_x) * (r.m_y - q.m_y);
+    
+    if (val == 0) return 0;  // colinear
+    return (val > 0)? 1: 2; // clock or counterclock wise
+}
+
+double cp(GGAFrame & a, GGAFrame &  b){ //returns cross product
+    return a.m_x*b.m_y-a.m_y*b.m_x;
+}
+
+double polygonArea(std::vector<GGAFrame_ptr> tab)
+{
+    double area = 0;
+    int n = tab.size();
+    double sum=0.0;
+    for(int i=0; i<n; i++){
+        sum+=cp(*tab[i], *tab[(i+1)%n]); //%n is for last triangle
+    }
+    return abs(sum)/2.0;
+}
+
+
+void GpsFramework::calculContourExterieur(){
+    if(m_list.size()>10){
+        m_contour.clear();
+        // Find the leftmost point
+        std::vector<GGAFrame_ptr> points;
+        for(auto p: m_list){
+            points.push_back(p);
+        }
+        
+        int l = 0;
+        int n = points.size();
+        for (int i = 1; i < n; i++)
+            if (points[i]->m_x < points[l]->m_x)
+                l = i;
+        
+        // Start from leftmost point, keep moving counterclockwise
+        // until reach the start point again.  This loop runs O(h)
+        // times where h is number of points in result or output.
+        int p = l, q;
+        do
+        {
+            // Add current point to result
+            m_contour.push_back(points[p]);
+            
+            // Search for a point 'q' such that orientation(p, x,
+            // q) is counterclockwise for all points 'x'. The idea
+            // is to keep track of last visited most counterclock-
+            // wise point in q. If any point 'i' is more counterclock-
+            // wise than q, then update q.
+            q = (p+1)%n;
+            for (int i = 0; i < n; i++)
+            {
+                // If i is more counterclockwise than current q, then
+                // update q
+                if (orientation(*points[p], *points[i], *points[q]) == 2)
+                    q = i;
+            }
+            
+            // Now q is the most counterclockwise with respect to p
+            // Set p as q for next iteration, so that q is added to
+            // result 'hull'
+            p = q;
+            
+        } while (p != l);  // Whil
+        m_contour.push_back(m_contour[0]);
+        m_surface = polygonArea(m_contour)/10000.0;
+    }
+}
