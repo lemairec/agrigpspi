@@ -1,6 +1,7 @@
 #ifndef GPS_H
 #define GPS_H
 #include <string>
+#include <memory>
 
 struct GpsPoint {
     double m_altitude;
