@@ -14,6 +14,11 @@ GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
     QString s = date.toString("yyyyMMdd_hhmm");
     
+    int y = date.date().year();
+    if(y>2020){
+        exit(0);
+    }
+    
     std::string file = ProjectSourceBin + "/gps_" + s.toUtf8().constData() + ".ubx";
     INFO(file);
     gpslogFile.open(file, std::ios::out);
