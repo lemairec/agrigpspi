@@ -25,6 +25,7 @@ void Config::save(){
     
     settings.setValue("largeur", m_largeur);
     settings.setValue("sensDraw", m_sensDraw);
+    settings.setValue("debug", m_debug);
     
     QString input2 = QString::fromStdString(m_input);
     settings.setValue("input", input2);
@@ -52,6 +53,9 @@ void Config::load(){
     }
     if(settings.contains("sensDraw")){
         m_sensDraw = settings.value("sensDraw").toBool();
+    }
+    if(settings.contains("debug")){
+        m_debug = settings.value("debug").toBool();
     }
     
     if(settings.contains("input")){

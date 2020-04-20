@@ -22,8 +22,6 @@
 #define BUTTON_CLOSE 4
 #define BUTTON_OPTION 5
 
-bool debug = false;
-
 QGraphicsPixmapItem * item;
 QPixmap * p;
 
@@ -65,6 +63,8 @@ GpsWidget::GpsWidget()
     m_imgB = loadImage("/images/b.png");
     m_imgOption = loadImage("/images/option.png");
     m_imgSat = loadImage("/images/sat.png");
+
+    m_imgFleche = loadImage("/images/fleche.png");
 
 
 }
@@ -383,19 +383,19 @@ void GpsWidget::draw_force(){
     
     addButtons();
     
-    
-    if(debug){
-        drawDebug();
-    }
-        
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> diff2 = end - begin;
-    if(debug){
+    if(f.m_config.m_debug){
+        int x = m_width-100;
+        int y = m_height-70;
+        
         QBrush lightGrayBrush(Qt::lightGray);
-        scene->addRect(m_width-200, m_height-30, 100, 30, m_penBlack, lightGrayBrush);
+        scene->addRect(x, y, 100, 30, m_penBlack, lightGrayBrush);
         std::ostringstream oss;
         oss << "draw " << diff2.count();
-        drawText(oss.str(), m_width-190, m_height-20, 10, false);
+        drawText(oss.str(), x+10, y+10, 10, false);
+    
+        drawDebug();
     }
     
     last_update = end;
@@ -425,6 +425,13 @@ void GpsWidget::drawTracteur(){
     double yA = -xA*res;
     
     scene->addLine(w/2+xA, h/2-yA, w/2 - xA, h/2 + yA, m_penBlue2);
+    
+    /*auto item = new QGraphicsPixmapItem(*m_imgFleche);
+    item->setScale(0.4);
+    item->setPos(w/2+10, h/2-50);
+     item->setRotation(atan(x/y)/(2*3.14)*360);
+     scene->addItem(item);*/
+    
 }
 
 void GpsWidget::drawBottom(){
@@ -444,6 +451,38 @@ void GpsWidget::drawBottom(){
     auto mBounds = textItems_vitesse->boundingRect();
     textItems_vitesse->setDefaultTextColor(Qt::white);
     textItems_vitesse->setPos(m_width-60 - mBounds.width()/2, m_height-35);
+    
+    auto last_frame = f.m_lastGGAFrame;
+    {
+        QString s_vitesse = "hdop : " + QString::number(last_frame.m_hdop, 'f', 2);
+        auto textItems_vitesse = scene->addText(s_vitesse);
+        auto mBounds = textItems_vitesse->boundingRect();
+        textItems_vitesse->setDefaultTextColor(Qt::white);
+        textItems_vitesse->setPos(100 - mBounds.width()/2, m_height-35);
+    }
+    
+    {
+        QString s_vitesse = "sat : " + QString::number(last_frame.m_nbrSat);
+        auto textItems_vitesse = scene->addText(s_vitesse);
+        auto mBounds = textItems_vitesse->boundingRect();
+        textItems_vitesse->setDefaultTextColor(Qt::white);
+        textItems_vitesse->setPos(180 - mBounds.width()/2, m_height-35);
+    }
+    {
+        std::string s;
+        if(last_frame.m_fix == 1){
+            s = "GPS";
+        } else if(last_frame.m_fix == 2){
+            s = "DGPS";
+        } else {
+            s = "invalid";
+        }
+        QString s_vitesse = QString::fromStdString(s);
+        auto textItems_vitesse = scene->addText(s_vitesse);
+        auto mBounds = textItems_vitesse->boundingRect();
+        textItems_vitesse->setDefaultTextColor(Qt::white);
+        textItems_vitesse->setPos(260 - mBounds.width()/2, m_height-35);
+    }
     
     /*scene->addRect(m_width/2-50, 5, 100, 30, m_penBlack, m_grayBrush);
     QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
@@ -470,82 +509,88 @@ void GpsWidget::drawDebug(){
     QBrush lightGrayBrush(Qt::lightGray);
     
     //surface
-    scene->addRect(0, m_height/2, 80, 40, m_penBlack, lightGrayBrush);
     {
-        QString s = QString::number(f.m_surface, 'f', 2) + " ha";
-        auto textItem = scene->addText(s);
-        auto mBounds = textItem->boundingRect();
-        textItem->setPos(40 - mBounds.width()/2, m_height/2);
-    }
-    QString s2 = QString::number(f.m_surface_h, 'f', 2) + " ha/h";
-    auto textItem2 = scene->addText(s2);
-    auto mBounds2 = textItem2->boundingRect();
-    textItem2->setPos(40 - mBounds2.width()/2, m_height/2+20);
-    {
-        QString s = "exterieur";
-        auto textItem = scene->addText(s);
-        auto mBounds = textItem->boundingRect();
-        textItem->setPos(40 - mBounds.width()/2, m_height/2+60);
-    }
-    {
-        QString s = QString::number(f.m_surface_exterieur, 'f', 2) + " ha";
-        auto textItem = scene->addText(s);
-        auto mBounds = textItem->boundingRect();
-        textItem->setPos(40 - mBounds.width()/2, m_height/2+80);
-    }
-    {
-        QString s = QString::number(f.m_surface_exterieur_h, 'f', 2) + " ha/h";
-        auto textItem = scene->addText(s);
-        auto mBounds = textItem->boundingRect();
-        textItem->setPos(40 - mBounds.width()/2, m_height/2+100);
+        int x = 0;
+        int y = m_height-300;
+        
+        scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
+        {
+            QString s = QString::number(f.m_surface, 'f', 2) + " ha";
+            auto textItem = scene->addText(s);
+            auto mBounds = textItem->boundingRect();
+            textItem->setPos(x, y);
+        }
+        QString s2 = QString::number(f.m_surface_h, 'f', 2) + " ha/h";
+        auto textItem2 = scene->addText(s2);
+        auto mBounds2 = textItem2->boundingRect();
+        textItem2->setPos(x, y+15);
+        {
+            QString s = "exterieur";
+            auto textItem = scene->addText(s);
+            auto mBounds = textItem->boundingRect();
+            textItem->setPos(x, y+40);
+        }
+        {
+            QString s = QString::number(f.m_surface_exterieur, 'f', 2) + " ha";
+            auto textItem = scene->addText(s);
+            auto mBounds = textItem->boundingRect();
+            textItem->setPos(x, y+55);
+        }
+        {
+            QString s = QString::number(f.m_surface_exterieur_h, 'f', 2) + " ha/h";
+            auto textItem = scene->addText(s);
+            auto mBounds = textItem->boundingRect();
+            textItem->setPos(x, y+70);
+        }
     }
     
     //zoom
-    std::ostringstream out;
-    out << "x " << m_zoom;
-    drawText(out.str(), 30, m_height - 95, 15, false);
+    {
+        int x =  m_width-100;
+        int y = m_height*0.6;
+        std::ostringstream out;
+        out << "x " << m_zoom;
+        drawText(out.str(),x, y, 15, false);
+    }
     
     //sattelite
-    auto last_frame = f.m_lastGGAFrame;
-    scene->addRect(m_width-100, m_height-90, 100, 90, m_penBlack, lightGrayBrush);
-    QString s = QString::number(last_frame.m_nbrSat) + " satellites";
-    auto textItem = scene->addText(s);
-    textItem->setPos(m_width-100, m_height-90);
+    {
+        int x = 0;
+        int y = m_height-140;
+        
+        auto last_frame = f.m_lastGGAFrame;
+        scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
+        QString s = QString::number(last_frame.m_nbrSat) + " satellites";
+        auto textItem = scene->addText(s);
+        textItem->setPos(x, y);
 
-    if(last_frame.m_fix == 1){
-     s = "GPS";
-    } else if(last_frame.m_fix == 2){
-     s = "DGPS";
-    } else {
-     s = "invalid";
+        if(last_frame.m_fix == 1){
+         s = "GPS";
+        } else if(last_frame.m_fix == 2){
+         s = "DGPS";
+        } else {
+         s = "invalid";
+        }
+        textItem = scene->addText(s);
+        textItem->setPos(x, y+15);
+
+        s = "hdop " + QString::number(last_frame.m_hdop, 'f', 2);
+        textItem = scene->addText(s);
+        textItem->setPos(x, y+30);
+
+        s = "altitude " + QString::number(last_frame.m_altitude);
+        textItem = scene->addText(s);
+        textItem->setPos(x, y+50);
+
+        int h = last_frame.m_time/10000;
+        int min = (int)(last_frame.m_time/100) - h*100;
+        double sec = last_frame.m_time - h*10000 - min*100;
+        s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
+        textItem = scene->addText(s);
+        textItem->setPos(x, y+65);
+
+        int time = last_frame.m_time;
     }
-    textItem = scene->addText(s);
-    textItem->setPos(m_width-100, m_height-75);
-
-    s = "hdop " + QString::number(last_frame.m_hdop, 'f', 2);
-    textItem = scene->addText(s);
-    textItem->setPos(m_width-100, m_height-60);
-
-    s = "altitude " + QString::number(last_frame.m_altitude);
-    textItem = scene->addText(s);
-    textItem->setPos(m_width-100, m_height-40);
-
-    int h = last_frame.m_time/10000;
-    int min = (int)(last_frame.m_time/100) - h*100;
-    double sec = last_frame.m_time - h*10000 - min*100;
-    s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
-    textItem = scene->addText(s);
-    textItem->setPos(m_width-100, m_height-25);
-
-    int time = last_frame.m_time;
-    
-    //vitesse
-    scene->addRect(0, 0, 80, 40, m_penBlack, lightGrayBrush);
-    QString s_vitesse = QString::number(f.m_vitesse, 'f', 2) + " km/h";
-    auto textItems_vitesse = scene->addText(s_vitesse);
-    auto mBounds = textItems_vitesse->boundingRect();
-    textItems_vitesse->setPos(40 - mBounds.width()/2, 10);
-
 }
 
 void GpsWidget::addButtons(){

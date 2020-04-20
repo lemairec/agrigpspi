@@ -20,6 +20,7 @@ class OptionWidget : public BaseWidget {
     ButtonGui * m_button_p1minus3;
     
     ButtonGui * m_button_sens;
+    ButtonGui * m_button_debug;
     
     
     std::list<ButtonGui *> m_buttonp2Serials;

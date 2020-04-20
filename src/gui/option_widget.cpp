@@ -45,7 +45,7 @@ OptionWidget::OptionWidget(){
     m_button_p1minus3 = new ButtonGui(0.6-dist, 0.3, rayon, 0);
     
     m_button_sens = new ButtonGui(0.3, 0.5, rayon, 0);
-    
+    m_button_debug = new ButtonGui(0.4, 0.5, rayon, 0);
     
     
     //page 3
@@ -105,6 +105,13 @@ void OptionWidget::drawPage1(){
         drawButtonLabel(m_button_sens, COLOR_CHECK);
     } else {
         drawButtonLabel(m_button_sens, COLOR_OTHER);
+        
+    }
+    
+    if(f.m_config.m_debug){
+        drawButtonLabel(m_button_debug, COLOR_CHECK);
+    } else {
+        drawButtonLabel(m_button_debug, COLOR_OTHER);
         
     }
 }
@@ -208,6 +215,10 @@ void OptionWidget::onMousePage1(double x, double y){
     } else if(m_button_sens->isActive(x,y)){
         GpsFramework & f = GpsFramework::Instance();
         f.m_config.m_sensDraw = !f.m_config.m_sensDraw;
+        f.initOrLoadConfig();
+    } else if(m_button_debug->isActive(x,y)){
+        GpsFramework & f = GpsFramework::Instance();
+        f.m_config.m_debug = !f.m_config.m_debug;
         f.initOrLoadConfig();
     }
 }
