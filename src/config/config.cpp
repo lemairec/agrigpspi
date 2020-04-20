@@ -21,15 +21,25 @@ void Config::save(){
     QString path = QString::fromStdString(s);
     QSettings settings(path, QSettings::IniFormat);
     
-    settings.setValue("a_lat", m_a_lat);
-    settings.setValue("a_lon", m_a_lon);
-    settings.setValue("b_lat", m_b_lat);
-    settings.setValue("b_lon", m_b_lon);
-    
+     
     
     settings.setValue("largeur", m_largeur);
+    settings.setValue("sensDraw", m_sensDraw);
+    
     QString input2 = QString::fromStdString(m_input);
     settings.setValue("input", input2);
+    settings.setValue("baudrate", m_baudrate);
+    
+    QString inputPilot = QString::fromStdString(m_inputPilot);
+    settings.setValue("inputPilot", inputPilot);
+    settings.setValue("baudratePilot", m_baudratePilot);
+    
+    
+    settings.setValue("a_lat", m_a_lat);
+     settings.setValue("a_lon", m_a_lon);
+     settings.setValue("b_lat", m_b_lat);
+     settings.setValue("b_lon", m_b_lon);
+    
 }
 
 void Config::load(){
@@ -40,8 +50,22 @@ void Config::load(){
     if(settings.contains("largeur")){
         m_largeur = settings.value("largeur").toDouble();
     }
+    if(settings.contains("sensDraw")){
+        m_sensDraw = settings.value("sensDraw").toBool();
+    }
+    
     if(settings.contains("input")){
         m_input = settings.value("input").toString().toUtf8().constData();
+    }
+    if(settings.contains("baudrate")){
+        m_baudrate = settings.value("baudrate").toInt();
+    }
+    
+    if(settings.contains("inputPilot")){
+        m_inputPilot = settings.value("inputPilot").toString().toUtf8().constData();
+    }
+    if(settings.contains("baudratePilot")){
+        m_baudratePilot = settings.value("baudratePilot").toInt();
     }
     
     if(settings.contains("a_lat")){

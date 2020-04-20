@@ -7,3 +7,4 @@
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
 #include <QMouseEvent>
+#include <QGraphicsPixmapItem>

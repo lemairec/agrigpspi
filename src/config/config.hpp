@@ -11,11 +11,16 @@ public:
     int m_baudrate = 9600;
     std::string m_file;
     
+    std::string m_inputPilot = "none";
+    int m_baudratePilot = 9600;
+    
     double m_a_lat = 0;
     double m_a_lon = 0;
     double m_b_lat = 0;
     double m_b_lon = 0;
 
+    bool m_sensDraw = false;
+    
     Config();
     
     void save();

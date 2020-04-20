@@ -31,6 +31,8 @@ void GpsFramework::removeObserver(){
 
 void GpsFramework::initOrLoadConfig(){
     m_config.save();
+    
+    m_pilotModule.initOrLoadConfig(m_config);
      
     m_pointA.m_latitude = m_config.m_a_lat;
     m_pointA.m_longitude = m_config.m_a_lon;

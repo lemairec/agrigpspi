@@ -2,6 +2,7 @@
 #define GPS_FRAMEWORK_H
 
 #include "gps_module.hpp"
+#include "pilot_module.hpp"
 #include "config/config.hpp"
 #include <chrono>
 #include <QThread>
@@ -55,6 +56,7 @@ public:
     double m_deplacementX;
     double m_deplacementY;
     double m_deplacementAngle;
+    
     double m_distance_last_point;
     double m_time_last_point;
     bool m_sensAB = true;
@@ -86,6 +88,9 @@ public:
     GGAFrame m_lastGGAFrame;
     
     void exportHtml();
+    
+    PilotModule m_pilotModule;
+    
 private:
     IGpsObserver * m_observer = NULL;
     GpsModule m_gpsModule;

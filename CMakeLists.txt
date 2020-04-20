@@ -8,7 +8,6 @@ configure_file (
 include_directories("${PROJECT_BINARY_DIR}")
 
 
-
 FIND_PACKAGE(Qt5Core)
 find_library(PTHREAD pthread)
 

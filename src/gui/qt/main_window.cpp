@@ -1,5 +1,5 @@
 #include "main_window.hpp"
-#include "../options_widget.hpp"
+#include "../option_widget.hpp"
 
 #include <QGridLayout>
 #include <QTabWidget>
@@ -23,7 +23,7 @@ void View::setupUi(){
 void View::mouseReleaseEvent ( QMouseEvent * event ){
     m_gpsWidget->onMouse(event->x(), event->y());
     if(!m_gpsWidget->m_optionsWidget.m_close){
-        m_gpsWidget->m_optionsWidget.onMouse(event->x(), event->y());
+        m_gpsWidget->m_optionsWidget.onMouseInt(event->x(), event->y());
     }
     m_gpsWidget->draw_force();
 }
@@ -57,7 +57,7 @@ void MainWindow::setupUi(){
     this->setCentralWidget(m_view);
     
     //showMaximized();
-    showFullScreen();
+    //showFullScreen();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event){
