@@ -57,13 +57,15 @@ void MainWindow::setupUi(){
     this->setCentralWidget(m_view);
     
     //showMaximized();
-    //showFullScreen();
+    showFullScreen();
 }
 
+//debug
+//m_view->scene->setSceneRect(0, 0, width-10, height-10);
 void MainWindow::resizeEvent(QResizeEvent *event){
     int width = event->size().width();
     int height = event->size().height();
-    m_view->scene->setSceneRect(0, 0, width-10, height-10);
+    m_view->scene->setSceneRect(0, 0, width, height);
     
     m_view->m_gpsWidget->setSize(width, height);
     //m_gpsWidget->resizeEvent(event);
