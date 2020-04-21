@@ -16,7 +16,7 @@ GpsFramework::GpsFramework(){
     
     int y = date.date().year();
     if(y>(1011+1011)){
-        exit(0);
+    //    exit(0);
     }
     
     std::string file = ProjectSourceBin + "/gps_" + s.toUtf8().constData() + ".ubx";
