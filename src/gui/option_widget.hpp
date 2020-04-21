@@ -24,6 +24,7 @@ class OptionWidget : public BaseWidget {
     
     
     std::list<ButtonGui *> m_buttonp2Serials;
+    std::list<ButtonGui *> m_buttonp2Baurates;
     
     //page2
     ButtonGui * m_button_p3add1;
@@ -40,6 +41,7 @@ class OptionWidget : public BaseWidget {
     ValueGui * m_kvitesse;
     
     std::list<ButtonGui *> m_buttonp3Serials;
+    std::list<ButtonGui *> m_buttonp3Baurates;
     
     void addSerials();
     

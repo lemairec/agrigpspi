@@ -134,6 +134,15 @@ void OptionWidget::drawPage2(){
         drawText(button->m_label, button->m_x+0.04, button->m_y);
     }
     
+    for(auto button: m_buttonp2Baurates){
+        if(button->m_labelInt == f.m_config.m_baudrate){
+            drawButton(button, COLOR_CHECK);
+        } else {
+            drawButton(button, COLOR_OTHER);
+        }
+        drawText(button->m_label, button->m_x+0.04, button->m_y);
+    }
+    
 }
 
 void OptionWidget::drawPage3(){
@@ -157,6 +166,15 @@ void OptionWidget::drawPage3(){
         }
         drawText(button->m_label, button->m_x+0.04, button->m_y);
         
+    }
+    
+    for(auto button: m_buttonp3Baurates){
+        if(button->m_labelInt == f.m_config.m_baudratePilot){
+            drawButton(button, COLOR_CHECK);
+        } else {
+            drawButton(button, COLOR_OTHER);
+        }
+        drawText(button->m_label, button->m_x+0.04, button->m_y);
     }
 }
 
@@ -242,6 +260,14 @@ void OptionWidget::onMousePage2(double x, double y){
             f.initOrLoadConfig();
         }
     }
+    
+    for(auto button: m_buttonp2Baurates){
+        if(button->isActive(x,y)){
+            GpsFramework & f = GpsFramework::Instance();
+            f.m_config.m_baudrate = button->m_labelInt;
+            f.initOrLoadConfig();
+        }
+    }
 }
 
 
@@ -251,6 +277,13 @@ void OptionWidget::onMousePage3(double x, double y){
     for(auto button: m_buttonp3Serials){
         if(button->isActive(x,y)){
             f.m_config.m_inputPilot = button->m_label;
+            f.initOrLoadConfig();
+        }
+    }
+    for(auto button: m_buttonp3Baurates){
+        if(button->isActive(x,y)){
+            GpsFramework & f = GpsFramework::Instance();
+            f.m_config.m_baudratePilot = button->m_labelInt;
             f.initOrLoadConfig();
         }
     }
@@ -319,6 +352,19 @@ void OptionWidget::addSerials(){
             m_buttonp3Serials.push_back(button2);
         }
         
+        ++i;
+    }
+    
+    std::list<int> baurates;
+    
+    baurates.push_back(9600);
+    baurates.push_back(115200);
+    for(auto baurate: baurates){
+        auto button = new ButtonGui(0.3, 0.45+i*0.05, 0.02, 0);
+        button->m_label = std::to_string(baurate);
+        button->m_labelInt = baurate;
+        m_buttonp3Baurates.push_back(button);
+        m_buttonp2Baurates.push_back(button);
         ++i;
     }
 }
