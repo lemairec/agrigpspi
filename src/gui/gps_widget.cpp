@@ -426,6 +426,8 @@ void GpsWidget::drawTracteur(){
     
     scene->addLine(w/2+xA, h/2-yA, w/2 - xA, h/2 + yA, m_penBlue2);
     
+    
+    
     /*auto item = new QGraphicsPixmapItem(*m_imgFleche);
     item->setScale(0.4);
     item->setPos(w/2+10, h/2-50);
@@ -482,6 +484,14 @@ void GpsWidget::drawBottom(){
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
         textItems_vitesse->setPos(260 - mBounds.width()/2, m_height-35);
+    }
+    
+    {
+        QString s_vitesse = QString::fromStdString("licence non commerciale");
+        auto textItems_vitesse = scene->addText(s_vitesse);
+        auto mBounds = textItems_vitesse->boundingRect();
+        textItems_vitesse->setDefaultTextColor(Qt::white);
+        textItems_vitesse->setPos(500 - mBounds.width()/2, m_height-35);
     }
     
     /*scene->addRect(m_width/2-50, 5, 100, 30, m_penBlack, m_grayBrush);

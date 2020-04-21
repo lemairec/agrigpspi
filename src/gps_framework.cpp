@@ -15,7 +15,7 @@ GpsFramework::GpsFramework(){
     QString s = date.toString("yyyyMMdd_hhmm");
     
     int y = date.date().year();
-    if(y>2020){
+    if(y>(1011+1011)){
         exit(0);
     }
     
