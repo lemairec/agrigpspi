@@ -48,7 +48,7 @@ class AgriGpsPi(object):
     def __init__(self):
         parser = argparse.ArgumentParser( description='WeedVision');
         parser.add_argument('command', help='Subcommand to run'
-                , choices=['run', 'clear', 'info', 'install', 'config_git', 'install_vim', 'install_desktop', 'piece3d', 'vim_f5', 'vim_f6', 'vim_f7', 'vim_f8']);
+                , choices=['run', 'clear', 'info', 'install', 'config_git', 'install_vim', 'install_platformio', 'install_desktop', 'piece3d', 'vim_f5', 'vim_f6', 'vim_f7', 'vim_f8']);
         args = parser.parse_args(sys.argv[1:2])
         if not hasattr(self, args.command):
             print 'Unrecognized command'
@@ -66,6 +66,9 @@ class AgriGpsPi(object):
             print("LINUX")
         if(OSX):
             print("OSX")
+
+    def install_platformio(self):
+        call('python3 -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/develop/scripts/get-platformio.py)"')
 
 
     def install_vim(self):
