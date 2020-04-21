@@ -74,8 +74,8 @@ void GpsWidget::setSize(int width, int height){
     INFO(width << " " << height);
     m_width = width;
     m_height = height;
-    m_widthMax = m_width/2+50;
-    m_heightMax = m_height/2+50;
+    m_widthMax = m_width/2;
+    m_heightMax = m_height/2;
     
     m_buttons.clear();
     
