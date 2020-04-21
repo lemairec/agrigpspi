@@ -64,6 +64,7 @@ struct ButtonGui{
     int m_type = 0;
     
     std::string m_label = "";
+    int m_labelInt = 0;
 };
 
 struct ValueGui{
