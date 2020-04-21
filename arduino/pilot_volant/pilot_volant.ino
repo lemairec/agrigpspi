@@ -81,9 +81,9 @@ int myReadChar(char c){
 void parseBuffer(){
   if(m_buffer[0] == 'H'){
     Serial.println("");
-    Serial.println("$R;010");
-    Serial.println("$L;010");
-    Serial.println("$D;010");
+    Serial.println("$R;1");
+    Serial.println("$L;100");
+    Serial.println("$D;200");
     Serial.println("$V");
     Serial.println("");
   } else if(m_buffer[0] == 'V'){
@@ -94,16 +94,16 @@ void parseBuffer(){
     Serial.print("$INIT;");
     Serial.println(pin);
   } else if(m_buffer[0] == 'R'){
-    int i0 = myReadChar(m_buffer[3]);
-    int i1 = myReadChar(m_buffer[4]);
-    int i2 = myReadChar(m_buffer[5]);
-    int res = i0*100+i1*10+i2;
+    int res = 0;
+    for(int i=2; i<m_bufferIndLast-1; ++i){
+      res = res*10+myReadChar(m_buffer[i]);
+    }
     goRight(res);
   } else if(m_buffer[0] == 'L'){
-    int i0 = myReadChar(m_buffer[3]);
-    int i1 = myReadChar(m_buffer[4]);
-    int i2 = myReadChar(m_buffer[5]);
-    int res = i0*100+i1*10+i2;
+    int res = 0;
+    for(int i=2; i<m_bufferIndLast-1; ++i){
+      res = res*10+myReadChar(m_buffer[i]);
+    }
     goLeft(res);
   }  else {
     Serial.println("$error");
@@ -113,7 +113,7 @@ void parseBuffer(){
 int my_delay = 100;
 
 void goRight(int l){
-  Serial.print("Right");
+  Serial.print("Right ");
   Serial.println(l);
   digitalWrite(6, HIGH);
   for(int i =0;i<l;++i){
@@ -125,7 +125,7 @@ void goRight(int l){
 }
 
 void goLeft(int l){
-  Serial.print("Left");
+  Serial.print("Left ");
   Serial.println(l);
   digitalWrite(6, LOW);
   for(int i =0;i<l;++i){
