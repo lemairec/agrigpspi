@@ -19,6 +19,11 @@ public:
     double m_b_lat = 0;
     double m_b_lon = 0;
 
+    double m_kp = 100;
+    double m_ki = 100;
+    double m_kd = 100;
+    double m_kvitesse = 100;
+    
     bool m_sensDraw = false;
     bool m_debug = false;
     

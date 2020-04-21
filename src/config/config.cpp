@@ -37,10 +37,14 @@ void Config::save(){
     
     
     settings.setValue("a_lat", m_a_lat);
-     settings.setValue("a_lon", m_a_lon);
-     settings.setValue("b_lat", m_b_lat);
-     settings.setValue("b_lon", m_b_lon);
+    settings.setValue("a_lon", m_a_lon);
+    settings.setValue("b_lat", m_b_lat);
+    settings.setValue("b_lon", m_b_lon);
     
+    settings.setValue("k_p", m_kp);
+    settings.setValue("k_i", m_ki);
+    settings.setValue("k_d", m_kd);
+    settings.setValue("k_vitesse", m_kvitesse);
 }
 
 void Config::load(){
@@ -83,6 +87,19 @@ void Config::load(){
     }
     if(settings.contains("b_lon")){
         m_b_lon = settings.value("b_lon").toDouble();
+    }
+    
+    if(settings.contains("k_p")){
+        m_kp = settings.value("k_p").toDouble();
+    }
+    if(settings.contains("k_i")){
+        m_ki = settings.value("k_i").toDouble();
+    }
+    if(settings.contains("k_d")){
+        m_kd = settings.value("k_d").toDouble();
+    }
+    if(settings.contains("k_vitesse")){
+        m_kvitesse = settings.value("k_vitesse").toDouble();
     }
     
     INFO(m_largeur);

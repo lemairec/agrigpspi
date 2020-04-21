@@ -1,5 +1,8 @@
 #include "base_widget.hpp"
 #include "environnement.hpp"
+#include <iostream>
+#include <sstream>
+
 
 /*void BaseWidget::onMouse(int x, int y){
     for(auto button : m_buttons){
@@ -77,7 +80,7 @@ int ValueGui::isActive(double x, double y){
     return 0;
 }
 
-double ValueGui::getValue(double x, double y){
+double ValueGui::getMultValue(double x, double y){
     if(m_buttonAdd.isActive(x, y)){
         return 1.1;
     }
@@ -117,7 +120,7 @@ void BaseWidget::drawText(const std::string & text, double x, double y){
       //  auto mBounds = textItem->boundingRect();
       //  textItem->setPos(x-mBounds.width()/2, y);
     //} else {
-        textItem->setPos(x*m_width, y*m_height);
+        textItem->setPos(x*m_width, y*m_height-18);
     //}
     
 }
@@ -197,3 +200,14 @@ QPixmap * BaseWidget::loadImage(const std::string & s){
     QPixmap * res  = new QPixmap(QPixmap::fromImage(image2));
     return res;
 }
+
+void BaseWidget::drawValueGui(ValueGui * valueGui, double value){
+    drawButtonLabel(&(valueGui->m_buttonMinus), 0);
+    drawButtonLabel(&(valueGui->m_buttonAdd), 0);
+    
+    std::ostringstream strs;
+    strs << valueGui->m_label << value;
+    drawText(strs.str(), valueGui->m_x + 3*valueGui->m_rayon, valueGui->m_y);
+    
+}
+

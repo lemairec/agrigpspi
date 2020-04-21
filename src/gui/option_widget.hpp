@@ -33,6 +33,12 @@ class OptionWidget : public BaseWidget {
     ButtonGui * m_button_p3test2;
     ButtonGui * m_button_p3test3;
     
+    //page3
+    ValueGui * m_kp;
+    ValueGui * m_ki;
+    ValueGui * m_kd;
+    ValueGui * m_kvitesse;
+    
     std::list<ButtonGui *> m_buttonp3Serials;
     
     void addSerials();

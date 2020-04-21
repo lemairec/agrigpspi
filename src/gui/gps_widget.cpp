@@ -43,6 +43,7 @@ GpsWidget::GpsWidget()
     m_greenBrush = QBrush (Qt::green);
     
     m_brushGreen = QBrush(QColor(0, 150, 0, 100));
+    m_brushGreenTractor = QBrush(QColor(0, 150, 0));
     m_penNo.setColor(QColor(0, 250, 0, 0));
     //m_brushGreen.a
     

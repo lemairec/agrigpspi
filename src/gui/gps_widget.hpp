@@ -25,6 +25,7 @@ public:
     QPen m_penNo;
     QBrush m_brushNo;
     QBrush m_brushGreen;
+    QBrush m_brushGreenTractor;
     QBrush m_grayBrush;
     QBrush m_greenBrush;
     QBrush m_lightGrayBrush;

@@ -49,6 +49,11 @@ OptionWidget::OptionWidget(){
     
     
     //page 3
+    m_kp = new ValueGui(0.3, 0.3, PETIT_RAYON*0.5, 0, "kp ");
+    m_ki = new ValueGui(0.3, 0.35, PETIT_RAYON*0.5, 0, "ki ");
+    m_kd = new ValueGui(0.3, 0.4, PETIT_RAYON*0.5, 0, "kd ");
+    m_kvitesse = new ValueGui(0.3, 0.45, PETIT_RAYON*0.5, 0, "kvitesse ");
+    
     m_button_p3test1  = new ButtonGui(0.4, 0.8, rayon, 0);
     m_button_p3test2  = new ButtonGui(0.5, 0.8, rayon, 0);
     m_button_p3test3  = new ButtonGui(0.6, 0.8, rayon, 0);
@@ -126,26 +131,31 @@ void OptionWidget::drawPage2(){
         } else {
             drawButton(button, COLOR_OTHER);
         }
-        drawText(button->m_label, button->m_x+0.04, button->m_y-0.04);
+        drawText(button->m_label, button->m_x+0.04, button->m_y);
     }
     
 }
 
 void OptionWidget::drawPage3(){
+    GpsFramework & f = GpsFramework::Instance();
     drawText("Pilot", 0.5*m_width, 0.2*m_height, 20, true);
     
     drawButtonLabel(m_button_p3test1, COLOR_GREEN);
     drawButtonLabel(m_button_p3test2, COLOR_RED);
     drawButtonLabel(m_button_p3test3, COLOR_GREEN);
     
-    GpsFramework & f = GpsFramework::Instance();
+    drawValueGui(m_kp, f.m_config.m_kp);
+    drawValueGui(m_ki, f.m_config.m_ki);
+    drawValueGui(m_kd, f.m_config.m_kd);
+    drawValueGui(m_kvitesse, f.m_config.m_kvitesse);
+    
     for(auto button: m_buttonp3Serials){
         if(button->m_label == f.m_config.m_inputPilot){
             drawButton(button, COLOR_CHECK);
         } else {
             drawButton(button, COLOR_OTHER);
         }
-        drawText(button->m_label, button->m_x+0.04, button->m_y-0.04);
+        drawText(button->m_label, button->m_x+0.04, button->m_y);
         
     }
 }
@@ -236,25 +246,30 @@ void OptionWidget::onMousePage2(double x, double y){
 
 
 void OptionWidget::onMousePage3(double x, double y){
+    GpsFramework & f = GpsFramework::Instance();
+    
     for(auto button: m_buttonp3Serials){
         if(button->isActive(x,y)){
-            GpsFramework & f = GpsFramework::Instance();
             f.m_config.m_inputPilot = button->m_label;
             f.initOrLoadConfig();
         }
     }
     if(m_button_p3test1->isActive(x,y)){
-        GpsFramework & f = GpsFramework::Instance();
         f.m_pilotModule.test(-10);
     } else if(m_button_p3test2->isActive(x,y)){
-        GpsFramework & f = GpsFramework::Instance();
         f.m_pilotModule.test(0);
         
     } else if(m_button_p3test3->isActive(x,y)){
-       GpsFramework & f = GpsFramework::Instance();
        f.m_pilotModule.test(10);
        
    }
+    
+    INFO(m_kp->getMultValue(x,y));
+    f.m_config.m_kp = f.m_config.m_kp * m_kp->getMultValue(x,y);
+    f.m_config.m_ki = f.m_config.m_ki *m_ki->getMultValue(x,y);
+    f.m_config.m_kd *= m_kd->getMultValue(x,y);
+    f.m_config.m_kvitesse *= m_kvitesse->getMultValue(x,y);
+    f.initOrLoadConfig();
 
 }
 
