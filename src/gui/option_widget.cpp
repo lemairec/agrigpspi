@@ -58,10 +58,10 @@ OptionWidget::OptionWidget(){
     
     
     //page 4
-    m_kp = new ValueGui(0.3, 0.3, PETIT_RAYON*0.5, 0, "kp ");
-    m_ki = new ValueGui(0.3, 0.35, PETIT_RAYON*0.5, 0, "ki ");
-    m_kd = new ValueGui(0.3, 0.4, PETIT_RAYON*0.5, 0, "kd ");
-    m_kvitesse = new ValueGui(0.3, 0.45, PETIT_RAYON*0.5, 0, "kvitesse ");
+    m_kp = new ValueGui(0.3, 0.3, PETIT_RAYON, 0, "kp ");
+    m_ki = new ValueGui(0.3, 0.4, PETIT_RAYON, 0, "ki ");
+    m_kd = new ValueGui(0.3, 0.5, PETIT_RAYON, 0, "kd ");
+    m_kvitesse = new ValueGui(0.3, 0.6, PETIT_RAYON, 0, "kvitesse ");
     
     //m_button_gps = new ButtonGui(0.25, 0.3, GROS_BUTTON, 0);
     //m_button_line = new ButtonGui(0.5, 0.3, GROS_BUTTON, 0);
