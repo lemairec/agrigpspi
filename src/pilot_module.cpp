@@ -16,7 +16,14 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_d = config.m_kd;
     m_serial = NULL;
     if(config.m_inputPilot != "none"){
-        m_serial = new Serial(config.m_inputPilot,9600);
+        try {
+            m_serial = new Serial(config.m_inputPilot,9600);
+        } catch(boost::system::system_error& e)
+        {
+            WARN(config.m_input << " " << config.m_baudrate);
+            m_serial = NULL;
+        }
+       
     }
     
 }
