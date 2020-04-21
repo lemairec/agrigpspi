@@ -102,6 +102,7 @@ void GpsWidget::drawLines(double x, double y){
     double l = res / (f.m_b/cos(atan(-f.m_a/f.m_b)));
     //INFO("l " << l << " x " << x << " res " << res);
     
+    
     int i0 = round(l/f.m_config.m_largeur);
     for(int i = 0; i < 100; ++i){
         if(! addligne((i0 + i)*f.m_config.m_largeur, x, y, i0 + i)){
@@ -143,6 +144,14 @@ bool GpsWidget::addligne(double l, double x, double y, int i){
     double y1 = -(a * x1 + f.m_c + res)/b;
     x1 = (x1 - x)*m_zoom;
     y1 = (y1 - y)*m_zoom;
+
+    if(y0 > m_height/2 && y1 > m_height/2){
+        return false;
+    }
+    
+    if(y0 < -m_height/2 && y1 < -m_height/2){
+        return false;
+    }
     
     double x02;
     double y02;
