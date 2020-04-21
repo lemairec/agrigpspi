@@ -56,6 +56,7 @@ GpsWidget::GpsWidget()
     m_buttonMinus  = new ButtonGui(1-temp, 0.7, GROS_BUTTON, 0);
     
     m_buttonOption  = new ButtonGui(temp, temp, GROS_BUTTON, 0);
+    m_buttonPause  = new ButtonGui(temp, 0.5, GROS_BUTTON, 0);
     
     m_imgClose = loadImage("/images/close.png");
     m_imgPlus = loadImage("/images/plus.png");
@@ -214,10 +215,7 @@ void GpsWidget::draw(){
     bool force = false;
     auto begin = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = begin - last_update;
-    if(!force && diff.count() < 0.2){
-   //     INFO(diff.count());
-        return;
-    }
+    
     //INFO(diff.count());
     draw_force();
 }
@@ -385,7 +383,7 @@ void GpsWidget::draw_force(){
     addButtons();
     
     auto end = std::chrono::system_clock::now();
-    std::chrono::duration<double> diff2 = end - begin;
+    std::chrono::duration<double, std::ratio<1, 1000>> diff2 = end - begin;
     if(f.m_config.m_debug){
         int x = m_width-100;
         int y = m_height-70;
@@ -393,7 +391,7 @@ void GpsWidget::draw_force(){
         QBrush lightGrayBrush(Qt::lightGray);
         scene->addRect(x, y, 100, 30, m_penBlack, lightGrayBrush);
         std::ostringstream oss;
-        oss << "draw " << diff2.count();
+        oss << "draw " << diff2.count() << " ms ";
         drawText(oss.str(), x+10, y+10, 10, false);
     
         drawDebug();
@@ -611,6 +609,7 @@ void GpsWidget::addButtons(){
     drawButtonImage(m_buttonB, *m_imgB);
     drawButtonImage(m_buttonOption, *m_imgOption);
     drawButtonImage(m_buttonClose, *m_imgClose);
+    drawButton(m_buttonPause);
 }
 
 void GpsWidget::onButton(const Button & button){
@@ -641,6 +640,8 @@ void GpsWidget::onMouse(int x, int y){
     } else if(m_buttonOption->isActive(x2, y2)){
         m_optionsWidget.open();
         m_optionsWidget.m_close = false;
+    } else if(m_buttonPause->isActive(x2, y2)){
+        GpsFramework::Instance().m_pause = !GpsFramework::Instance().m_pause;
     }
     draw();
 }

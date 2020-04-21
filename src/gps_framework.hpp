@@ -40,6 +40,8 @@ public:
     Config m_config;
     bool m_reloadConfig = true;
     
+    bool m_pause = false;
+    
     //point
     double m_a;
     double m_b;

@@ -46,6 +46,7 @@ public:
     ButtonGui * m_buttonA;
     ButtonGui * m_buttonB;
     ButtonGui * m_buttonOption;
+    ButtonGui * m_buttonPause;
     
     
     void drawCourbe(double l);
