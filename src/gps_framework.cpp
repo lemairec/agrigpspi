@@ -77,6 +77,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
         GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
         m_list.push_front(frame);
         
+        m_pilotModule.run(m_distanceAB);
         calculDeplacement();
         
         calculSurface();
@@ -118,13 +119,13 @@ double GpsFramework::distance(GpsPoint & gpsPoint){
             dist -= m_config.m_largeur;
         }
         double coeff = m_config.m_largeur/(2*6);
+        m_distanceAB = dist;
         if(dist < 0.0){
             dist = -dist;
             m_ledAB = round(dist/coeff) + 1;
         } else {
             m_ledAB = -round(dist/coeff) - 1;
         }
-        m_distanceAB = dist;
         //INFO("distance Point AB " << dist);
         return dist;
     }else if(m_pointA.m_x!=0){

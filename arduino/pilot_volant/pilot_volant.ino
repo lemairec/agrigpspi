@@ -110,7 +110,7 @@ void parseBuffer(){
   }
 }
 
-int my_delay = 100;
+int my_delay = 200;
 
 void goRight(int l){
   Serial.print("Right ");
