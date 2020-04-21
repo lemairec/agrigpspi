@@ -337,6 +337,17 @@ void OptionWidget::addSerials(){
             }
         }
     }
+    {
+        std::string res = execute2("ls /dev/ttyUSB*");
+        std::vector<std::string> strs;
+        boost::split(strs, res, boost::is_any_of("\n"));
+        for(auto s : strs){
+            if(!s.empty()){
+                INFO(s);
+                m_serials.push_back(s);
+            }
+        }
+    }
     
     m_buttonp2Serials.clear();
     m_buttonp3Serials.clear();
