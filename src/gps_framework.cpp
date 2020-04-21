@@ -72,14 +72,11 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
     if(f.isOk()){
         if(m_gpsModule.m_latitudeRef == 0){
             setRef(f.m_latitude, f.m_longitude);
-            //return;
+            return;
         }
         GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
-        if(!m_pause){
-            
-            m_list.push_front(frame);
-        }
-            
+        m_list.push_front(frame);
+        
         calculDeplacement();
         
         calculSurface();

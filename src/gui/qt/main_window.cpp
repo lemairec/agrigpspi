@@ -57,12 +57,11 @@ void MainWindow::setupUi(){
     this->setCentralWidget(m_view);
     
     //showMaximized();
-    //showFullScreen();
+    showFullScreen();
 }
 
 //debug
 //m_view->scene->setSceneRect(0, 0, width-10, height-10);
-
 void MainWindow::resizeEvent(QResizeEvent *event){
     int width = event->size().width();
     int height = event->size().height();

@@ -1,7 +1,7 @@
 import serial
 
 ser = serial.Serial(
-    port='/dev/cu.usbmodem1452201',
+    port='/dev/cu.wchusbserial1420',
     baudrate=9600
 )
 
