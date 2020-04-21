@@ -23,7 +23,7 @@ void PilotModule::test(int i){
         return;
     }
     if(i<0){
-        m_serial->writeString("$R;1000\n");
+        m_serial->writeString("$R;10000\n");
     } else {
         m_serial->writeString("$L;1000\n");
     }

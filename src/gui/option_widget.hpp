@@ -8,6 +8,7 @@ class OptionWidget : public BaseWidget {
     ButtonGui * m_button_p1 = NULL;
     ButtonGui * m_button_p2 = NULL;
     ButtonGui * m_button_p3 = NULL;
+    ButtonGui * m_button_p4 = NULL;
     
     int m_page = 1;
     
@@ -52,11 +53,13 @@ public:
     virtual void drawPage1();
     virtual void drawPage2();
     virtual void drawPage3();
+    virtual void drawPage4();
     
     virtual void onMouse(double x, double y);
     virtual void onMousePage1(double x, double y);
     virtual void onMousePage2(double x, double y);
     virtual void onMousePage3(double x, double y);
+    virtual void onMousePage4(double x, double y);
     
     void open();
     

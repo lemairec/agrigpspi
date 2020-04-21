@@ -27,6 +27,7 @@ OptionWidget::OptionWidget(){
     m_button_p1  = new ButtonGui(0.3, 0.15, GROS_BUTTON, 0);
     m_button_p2  = new ButtonGui(0.4, 0.15, GROS_BUTTON, 0);
     m_button_p3  = new ButtonGui(0.5, 0.15, GROS_BUTTON, 0);
+    m_button_p4  = new ButtonGui(0.6, 0.15, GROS_BUTTON, 0);
     
     
     //page 1
@@ -49,14 +50,18 @@ OptionWidget::OptionWidget(){
     
     
     //page 3
-    m_kp = new ValueGui(0.3, 0.3, PETIT_RAYON*0.5, 0, "kp ");
-    m_ki = new ValueGui(0.3, 0.35, PETIT_RAYON*0.5, 0, "ki ");
-    m_kd = new ValueGui(0.3, 0.4, PETIT_RAYON*0.5, 0, "kd ");
-    m_kvitesse = new ValueGui(0.3, 0.45, PETIT_RAYON*0.5, 0, "kvitesse ");
+     
     
     m_button_p3test1  = new ButtonGui(0.4, 0.8, rayon, 0);
     m_button_p3test2  = new ButtonGui(0.5, 0.8, rayon, 0);
     m_button_p3test3  = new ButtonGui(0.6, 0.8, rayon, 0);
+    
+    
+    //page 4
+    m_kp = new ValueGui(0.3, 0.3, PETIT_RAYON*0.5, 0, "kp ");
+    m_ki = new ValueGui(0.3, 0.35, PETIT_RAYON*0.5, 0, "ki ");
+    m_kd = new ValueGui(0.3, 0.4, PETIT_RAYON*0.5, 0, "kd ");
+    m_kvitesse = new ValueGui(0.3, 0.45, PETIT_RAYON*0.5, 0, "kvitesse ");
     
     //m_button_gps = new ButtonGui(0.25, 0.3, GROS_BUTTON, 0);
     //m_button_line = new ButtonGui(0.5, 0.3, GROS_BUTTON, 0);
@@ -77,17 +82,26 @@ void OptionWidget::draw(){
         drawButtonLabel(m_button_p1, COLOR_CHECK);
         drawButtonLabel(m_button_p2, COLOR_OTHER);
         drawButtonLabel(m_button_p3, COLOR_OTHER);
+        drawButtonLabel(m_button_p4, COLOR_OTHER);
         drawPage1();
     } else if(m_page == 2){
         drawButtonLabel(m_button_p1, COLOR_OTHER);
         drawButtonLabel(m_button_p2, COLOR_CHECK);
         drawButtonLabel(m_button_p3, COLOR_OTHER);
+        drawButtonLabel(m_button_p4, COLOR_OTHER);
         drawPage2();
     } else if(m_page == 3){
         drawButtonLabel(m_button_p1, COLOR_OTHER);
         drawButtonLabel(m_button_p2, COLOR_OTHER);
         drawButtonLabel(m_button_p3, COLOR_CHECK);
+        drawButtonLabel(m_button_p4, COLOR_OTHER);
         drawPage3();
+    }else if(m_page == 4){
+        drawButtonLabel(m_button_p1, COLOR_OTHER);
+        drawButtonLabel(m_button_p2, COLOR_OTHER);
+        drawButtonLabel(m_button_p3, COLOR_OTHER);
+        drawButtonLabel(m_button_p4, COLOR_CHECK);
+        drawPage4();
     }
      
     
@@ -153,11 +167,6 @@ void OptionWidget::drawPage3(){
     drawButtonLabel(m_button_p3test2, COLOR_RED);
     drawButtonLabel(m_button_p3test3, COLOR_GREEN);
     
-    drawValueGui(m_kp, f.m_config.m_kp);
-    drawValueGui(m_ki, f.m_config.m_ki);
-    drawValueGui(m_kd, f.m_config.m_kd);
-    drawValueGui(m_kvitesse, f.m_config.m_kvitesse);
-    
     for(auto button: m_buttonp3Serials){
         if(button->m_label == f.m_config.m_inputPilot){
             drawButton(button, COLOR_CHECK);
@@ -178,6 +187,17 @@ void OptionWidget::drawPage3(){
     }
 }
 
+void OptionWidget::drawPage4(){
+    GpsFramework & f = GpsFramework::Instance();
+    drawText("Pilot 2", 0.5*m_width, 0.2*m_height, 20, true);
+    
+    drawValueGui(m_kp, f.m_config.m_kp);
+    drawValueGui(m_ki, f.m_config.m_ki);
+    drawValueGui(m_kd, f.m_config.m_kd);
+    drawValueGui(m_kvitesse, f.m_config.m_kvitesse);
+}
+
+
 void OptionWidget::onMouse(double x, double y){
     
     if(m_button_close->isActive(x,y)){
@@ -187,14 +207,18 @@ void OptionWidget::onMouse(double x, double y){
     } else if(m_button_p2->isActive(x,y)){
             m_page = 2;
     } else if(m_button_p3->isActive(x,y)){
-        m_page = 3;
+            m_page = 3;
+    } else if(m_button_p4->isActive(x,y)){
+        m_page = 4;
     } else {
         if(m_page == 1){
             onMousePage1(x, y);
         } else if(m_page == 2){
             onMousePage2(x, y);
+        } else if(m_page == 3){
+            onMousePage3(x, y);
         } else {
-           onMousePage3(x, y);
+           onMousePage4(x, y);
        }
     }
     
@@ -296,6 +320,11 @@ void OptionWidget::onMousePage3(double x, double y){
        f.m_pilotModule.test(10);
        
    }
+
+}
+
+void OptionWidget::onMousePage4(double x, double y){
+    GpsFramework & f = GpsFramework::Instance();
     
     INFO(m_kp->getMultValue(x,y));
     f.m_config.m_kp = f.m_config.m_kp * m_kp->getMultValue(x,y);
@@ -353,12 +382,12 @@ void OptionWidget::addSerials(){
     m_buttonp3Serials.clear();
     int i=0;
     for(auto serial: m_serials){
-        auto button = new ButtonGui(0.3, 0.45+i*0.05, 0.02, 0);
+        auto button = new ButtonGui(0.3, 0.35+i*0.05, 0.02, 0);
         button->m_label = serial;
         m_buttonp2Serials.push_back(button);
         
         if(serial != "file"){
-            auto button2 = new ButtonGui(0.3, 0.45+i*0.05, 0.02, 0);
+            auto button2 = new ButtonGui(0.3, 0.35+i*0.05, 0.02, 0);
             button2->m_label = serial;
             m_buttonp3Serials.push_back(button2);
         }
@@ -371,7 +400,7 @@ void OptionWidget::addSerials(){
     baurates.push_back(9600);
     baurates.push_back(115200);
     for(auto baurate: baurates){
-        auto button = new ButtonGui(0.3, 0.45+i*0.05, 0.02, 0);
+        auto button = new ButtonGui(0.3, 0.35+i*0.05, 0.02, 0);
         button->m_label = std::to_string(baurate);
         button->m_labelInt = baurate;
         m_buttonp3Baurates.push_back(button);
