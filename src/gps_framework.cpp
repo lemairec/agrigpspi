@@ -205,31 +205,41 @@ void GpsFramework::calculDeplacement(){
         int i = 0;
         for(auto point : m_list){
             point2 = point;
-            i++;
-            if(i > 2){
+            
+            double x = point1->m_x - point2->m_x;
+            double y = point1->m_y - point2->m_y;
+            
+            double d = x*x+y*y;
+            if(i>20){
                 break;
             }
+            point2 = NULL;
+            ++i;
         }
-        double x = point1->m_x - point2->m_x;
-        double y = point1->m_y - point2->m_y;
-        
-        double coeff = 0.3; //1ok
-        m_deplacementX = m_deplacementX*(1-coeff)+x*coeff;
-        m_deplacementY = m_deplacementY*(1-coeff)+y*coeff;
-        
-        if(m_deplacementX != 0){
-            m_deplacementAngle = atan(m_deplacementY/m_deplacementX);
-        }
-        
-        if(m_ab_x != 0 || m_ab_y != 0){
-            double det = m_a*m_deplacementY - m_b*m_deplacementX;
-            m_sensAB = (det < 0);
-        }
-        
-        m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
-        m_time_last_point = point1->m_timeHour - point2->m_timeHour;
-        if(m_time_last_point > 0){
-            m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
+        if(point2!=NULL){
+            double x = point1->m_x - point2->m_x;
+            double y = point1->m_y - point2->m_y;
+            
+            m_deplacementX = x;
+            m_deplacementY = y;
+            
+            if(m_deplacementX != 0){
+                m_deplacementAngle = atan(m_deplacementY/m_deplacementX);
+            }
+            
+            if(m_ab_x != 0 || m_ab_y != 0){
+                double det = m_a*m_deplacementY - m_b*m_deplacementX;
+                m_sensAB = (det < 0);
+            }
+            
+            m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
+            m_time_last_point = point1->m_timeHour - point2->m_timeHour;
+            if(m_time_last_point > 0){
+                m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
+                if(m_vitesse >50){
+                    INFO("erreur");
+                }
+            }
         }
         //INFO(deplacementTime << " " << vitesse);
     }
@@ -278,7 +288,7 @@ void GpsFramework::exportHtml(){
     infile << oss.str();
 }
 
-#define SLEEP_TIME 50
+#define SLEEP_TIME 100
 void GpsFramework::readFile(){
     std::ifstream infile(m_config.m_file);
     if(!infile.is_open()){
