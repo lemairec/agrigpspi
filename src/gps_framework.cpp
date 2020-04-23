@@ -42,9 +42,11 @@ void GpsFramework::initOrLoadConfig(){
     m_pointA.m_latitude = m_config.m_a_lat;
     m_pointA.m_longitude = m_config.m_a_lon;
     m_pointA.m_nbrSat = 100;
+    m_pointA.m_fix = 100;
     m_pointB.m_latitude = m_config.m_b_lat;
     m_pointB.m_longitude = m_config.m_b_lon;
     m_pointB.m_nbrSat = 100;
+    m_pointB.m_fix = 100;
     setAB();
     m_reloadConfig = true;
 }
@@ -210,7 +212,7 @@ void GpsFramework::calculDeplacement(){
             double y = point1->m_y - point2->m_y;
             
             double d = x*x+y*y;
-            if(d>3*3){
+            if(d>(3*3)){
                 break;
             }
             point2 = NULL;
@@ -408,20 +410,43 @@ void GpsFramework::clearSurface(){
 }
 
 void GpsFramework::calculSurface(){
-    if(m_distance_last_point <30){
+    double l = m_config.m_largeur;
+    m_surface = 0;
+    if(m_list.size()>0){
+        auto last_frame = (*m_list.begin());
+        double x1 = last_frame->m_x;
+        double y1 = last_frame->m_y;
+        
+        for(auto it = m_list.begin(); it != m_list.end(); ++it){
+            auto frame = (*it);
+            double x0 = frame->m_x;
+            double y0 = frame->m_y;
+            
+            double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+            if(dist < l*l*0.2){
+                continue;
+            }
+            
+            double surface = std::sqrt(dist)*m_config.m_largeur/10000.0;
+            m_surface += surface/2;
+            
+            x1 = x0;
+            y1 = y0;
+        }
+    }
+        
+        
+    /*if(m_distance_last_point <30){
         double diff_angle = m_angleAB - m_deplacementAngle;
-        if(std::abs(diff_angle) < 0.1){
+        //if(std::abs(diff_angle) < 0.1){
             double surface = m_distance_last_point*m_config.m_largeur/10000.0;
             m_surface += surface/2;
             m_surface_h = surface/m_time_last_point;
             
-        }
-        if(m_list.size()>2){
-            //INFO(m_list.front()->m_timeHour<< " " << m_pointA.m_timeHour);
-            //INFO(m_list.front()->m_timeHour - m_pointA.m_timeHour);
-        }
+        //}
+
         
-    }
+    }*/
 }
 
 
