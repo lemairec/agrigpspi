@@ -32,7 +32,7 @@ void PilotModule::run(double value){
     double dv = value-m_last_value;
     int res = m_p*value+m_d*dv;
     
-    INFO(m_p << "x" << value << "+" << m_d << "x" << dv << "  " << res);
+    //INFO(m_p << "x" << value << "+" << m_d << "x" << dv << "  " << res);
     m_last_value=value;
     if(m_serial == NULL){
         return;

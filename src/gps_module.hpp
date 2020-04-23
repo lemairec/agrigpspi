@@ -22,7 +22,7 @@ struct GGAFrame : public GpsPoint {
     double m_hdop;
 
     bool isOk(){
-        return m_nbrSat > 6;
+        return m_fix > 0;
     }
 };
 
