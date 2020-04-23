@@ -38,6 +38,9 @@ public:
     QPixmap * m_imgB;
     QPixmap * m_imgOption;
     QPixmap * m_imgSat;
+    QPixmap * m_imgSatVert;
+    QPixmap * m_imgSatOrange;
+    QPixmap * m_imgSatRouge;
     QPixmap * m_imgFleche;
     
     ButtonGui * m_buttonClose;

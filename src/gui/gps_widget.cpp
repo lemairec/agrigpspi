@@ -64,6 +64,9 @@ GpsWidget::GpsWidget()
     m_imgB = loadImage("/images/b.png");
     m_imgOption = loadImage("/images/option.png");
     m_imgSat = loadImage("/images/sat.png");
+    m_imgSatVert = loadImage("/images/sat_vert.png");
+    m_imgSatOrange = loadImage("/images/sat_orange.png");
+    m_imgSatRouge = loadImage("/images/sat_rouge.png");
 
     m_imgFleche = loadImage("/images/fleche.png");
 
@@ -225,7 +228,7 @@ void GpsWidget::draw(){
     std::chrono::duration<double> diff = begin - last_update;
     if(!force && diff.count() < 0.2){
    //     INFO(diff.count());
-        //return;
+        return;
     }
     //INFO(diff.count());
     draw_force();
@@ -345,7 +348,9 @@ void GpsWidget::draw_force(){
                 //scene->addEllipse(w/2 + xB, h/2 - yB, 20, 20, m_penRed, m_brushGreen);
                 
             }
-            scene->addEllipse(w/2 + x0, h/2 - y0, 1, 1, m_penBlack, m_brushNo);
+            if(f.m_config.m_debug){
+                scene->addEllipse(w/2 + x0, h/2 - y0, 1, 1, m_penBlack, m_brushNo);
+            }
             j ++;
         }
         //INFO(oss.str());
@@ -459,7 +464,17 @@ void GpsWidget::drawBottom(){
     
     scene->addRect(0, m_height-40, m_width, 40, m_penBlack, m_lightGrayBrush);
     
-    auto item = new QGraphicsPixmapItem(*m_imgSat);
+    auto last_frame = f.m_lastGGAFrame;
+    QPixmap * img;
+    if(last_frame.m_fix == 1){
+       img = m_imgSatOrange;
+    } else if(last_frame.m_fix > 1){
+       img = m_imgSatVert;
+    } else {
+       img = m_imgSatRouge;
+    }
+
+    auto item = new QGraphicsPixmapItem(*img);
     item->setScale(0.4);
     item->setPos(5, m_height-45);
     scene->addItem(item);
@@ -472,7 +487,6 @@ void GpsWidget::drawBottom(){
     textItems_vitesse->setDefaultTextColor(Qt::white);
     textItems_vitesse->setPos(m_width-60 - mBounds.width()/2, m_height-35);
     
-    auto last_frame = f.m_lastGGAFrame;
     {
         QString s_vitesse = "hdop : " + QString::number(last_frame.m_hdop, 'f', 2);
         auto textItems_vitesse = scene->addText(s_vitesse);
@@ -509,9 +523,16 @@ void GpsWidget::drawBottom(){
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(500 - mBounds.width()/2, m_height-35);
+        textItems_vitesse->setPos(450 - mBounds.width()/2, m_height-35);
     }
     
+    {
+        QString s = QString::number(f.m_surface, 'f', 2) + " ha";
+        auto textItem = scene->addText(s);
+        auto mBounds = textItem->boundingRect();
+        textItem->setDefaultTextColor(Qt::white);
+        textItem->setPos(650 - mBounds.width()/2, m_height-35);
+    }
     /*scene->addRect(m_width/2-50, 5, 100, 30, m_penBlack, m_grayBrush);
     QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
     auto textItem = scene->addText(s);
@@ -530,6 +551,15 @@ void GpsWidget::drawBottom(){
             scene->addRect(m_width/2 + 60 + 30*i, 10, 20, 20, m_penBlack, m_greenBrush);
         }
     }*/
+    
+    if(last_frame.m_fix < 1){
+        int x = m_width/2;
+        int y = m_height/2;
+        scene->addRect(x-200, y-30, 400, 60, m_penBlack, m_grayBrush);
+        {
+            drawText("mauvaise réception GPS", x, y-10, 20, true);
+        }
+    }
 }
 
 void GpsWidget::drawDebug(){
