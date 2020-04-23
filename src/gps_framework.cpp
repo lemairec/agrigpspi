@@ -210,7 +210,7 @@ void GpsFramework::calculDeplacement(){
             double y = point1->m_y - point2->m_y;
             
             double d = x*x+y*y;
-            if(i>20){
+            if(d>3*3){
                 break;
             }
             point2 = NULL;
@@ -288,7 +288,7 @@ void GpsFramework::exportHtml(){
     infile << oss.str();
 }
 
-#define SLEEP_TIME 100
+#define SLEEP_TIME 50
 void GpsFramework::readFile(){
     std::ifstream infile(m_config.m_file);
     if(!infile.is_open()){
