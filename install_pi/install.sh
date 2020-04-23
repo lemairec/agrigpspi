@@ -1,4 +1,4 @@
-cp ~/agripi/install_agrigpspi/agripi.desktop ~/Desktop
-sudo chmod +x ~/Desktop/agripi.desktop
+cp ~/agrigpspi/install_pi/agrigpspi.desktop ~/Desktop
+sudo chmod +x ~/Desktop/agrigpspi.desktop
 mkdir -p ~/.config/autostart
-cp ~/agripi/install_agrigpspi/agripi_autostart.desktop ~/.config/autostart
+cp ~/agrigpspi/install_agrigpspi/agrigpspi_autostart.desktop ~/.config/autostart
