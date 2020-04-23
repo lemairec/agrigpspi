@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=agripi
+Exec=sh -c "~/agrigpspi/agrigpspi.py run"
+Terminal=true
+Hidden=false
+X-GNOME-Autostart-enabled=true
