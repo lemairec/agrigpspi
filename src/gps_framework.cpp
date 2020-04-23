@@ -210,8 +210,13 @@ void GpsFramework::calculDeplacement(){
                 break;
             }
         }
-        m_deplacementX = point1->m_x - point2->m_x;
-        m_deplacementY = point1->m_y - point2->m_y;
+        double x = point1->m_x - point2->m_x;
+        double y = point1->m_y - point2->m_y;
+        
+        double coeff = 0.3; //1ok
+        m_deplacementX = m_deplacementX*(1-coeff)+x*coeff;
+        m_deplacementY = m_deplacementY*(1-coeff)+y*coeff;
+        
         if(m_deplacementX != 0){
             m_deplacementAngle = atan(m_deplacementY/m_deplacementX);
         }
@@ -223,7 +228,9 @@ void GpsFramework::calculDeplacement(){
         
         m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
         m_time_last_point = point1->m_timeHour - point2->m_timeHour;
-        m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
+        if(m_time_last_point > 0){
+            m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
+        }
         //INFO(deplacementTime << " " << vitesse);
     }
     //calculContourExterieur();
