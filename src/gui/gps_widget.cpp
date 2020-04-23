@@ -430,9 +430,17 @@ void GpsWidget::drawTracteur(){
     
     double l = f.m_config.m_largeur*m_zoom/2;
     
-    double res = x/y;
-    double xA = l/(sqrt(1+res*res));
-    double yA = -xA*res;
+    double xA;
+    double yA;
+    if(y==0){
+        xA=0;
+        yA=l;
+    } else {
+        double res = x/y;
+        xA = l/(sqrt(1+res*res));
+        yA = -xA*res;
+    }
+    
     
     scene->addLine(w/2+xA, h/2-yA, w/2 - xA, h/2 + yA, m_penBlue2);
     
