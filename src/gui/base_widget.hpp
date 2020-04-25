@@ -61,7 +61,7 @@ protected:
     QBrush m_grayBrush;
     QBrush m_greenBrush;
     QBrush m_brushDarkGray;
-    QBrush m_lightGrayDebugBrush;
+    QBrush m_brushLightGrayDebug;
     
 public:
     void setScene(QGraphicsScene * s){

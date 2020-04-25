@@ -460,7 +460,7 @@ void GpsWidget::drawBottom(){
     scene->addItem(item);
     
     
-    //scene->addRect(0, m_height-40, 80, 40, m_penBlack, m_lightGrayDebugBrush);
+    //scene->addRect(0, m_height-40, 80, 40, m_penBlack, m_brushLightGrayDebug);
     QString s_vitesse = QString::number(f.m_vitesse, 'f', 2) + " km/h";
     auto textItems_vitesse = scene->addText(s_vitesse);
     auto mBounds = textItems_vitesse->boundingRect();

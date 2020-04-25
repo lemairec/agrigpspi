@@ -65,7 +65,7 @@ BaseWidget::BaseWidget(){
     m_grayBrush = QBrush (QColor(160,160,160));
     
     m_brushDarkGray = QBrush (QColor(60,60,60));
-    m_lightGrayDebugBrush = QBrush (QColor(120,120,120));
+    m_brushLightGrayDebug = QBrush (QColor(120,120,120));
     m_greenBrush = QBrush (Qt::green);
     
     m_brushWhite = QBrush(QColor(255,255,255));
