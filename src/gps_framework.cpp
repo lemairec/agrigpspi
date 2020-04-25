@@ -428,7 +428,7 @@ void GpsFramework::calculSurface(){
             }
             
             double surface = std::sqrt(dist)*m_config.m_largeur/10000.0;
-            m_surface += surface/2;
+            m_surface += surface;
             
             x1 = x0;
             y1 = y0;
