@@ -23,17 +23,23 @@ std::string execute2(std::string cmd){
 
 OptionWidget::OptionWidget(){
     
-    m_imgClose = loadImage("/images/close.png");
+    m_imgClose = loadImage("/images/ok.png");
     m_imgPlus = loadImage("/images/plus.png");
     m_imgMinus = loadImage("/images/minus.png");
+    m_imgSatBlanc = loadImage("/images/sat_blanc.png");
+    m_imgSatGris = loadImage("/images/sat_gris.png");
+    m_imgVolantBlanc = loadImage("/images/volant_blanc.png");
+    m_imgVolantGris = loadImage("/images/volant_gris.png");
+    m_imgOutilBlanc = loadImage("/images/outil_blanc.png");
+    m_imgOutilGris = loadImage("/images/outil_gris.png");
     
     m_button_close = new ButtonGui(0.75, 0.83, GROS_BUTTON, 0);
     
-    m_button_p1  = new ButtonGui(0.24, 0.15, GROS_BUTTON, 0);
-    m_button_p2  = new ButtonGui(0.24, 0.25, GROS_BUTTON, 0);
-    m_button_p3  = new ButtonGui(0.24, 0.35, GROS_BUTTON, 0);
-    m_button_p4  = new ButtonGui(0.24, 0.45, GROS_BUTTON, 0);
-    m_button_p5  = new ButtonGui(0.24, 0.55, GROS_BUTTON, 0);
+    m_button_p1  = new ButtonGui(0.24, 0.20, GROS_BUTTON, 0);
+    m_button_p2  = new ButtonGui(0.24, 0.30, GROS_BUTTON, 0);
+    m_button_p3  = new ButtonGui(0.24, 0.40, GROS_BUTTON, 0);
+    m_button_p4  = new ButtonGui(0.24, 0.50, GROS_BUTTON, 0);
+    m_button_p5  = new ButtonGui(0.24, 0.60, GROS_BUTTON, 0);
     
     
     //page 1
@@ -83,40 +89,42 @@ void OptionWidget::draw(){
     drawButtonImage(m_button_close, *m_imgClose);
     
     if(m_page == 1){
-        drawButtonLabel(m_button_p1, COLOR_CHECK);
+        drawButtonImage(m_button_p1, *m_imgOutilBlanc);
         drawPage1();
     } else {
-        drawButtonLabel(m_button_p1, COLOR_OTHER);
+        drawButtonImage(m_button_p1, *m_imgOutilGris);
     }
     
     if(m_page == 2){
-        drawButtonLabel(m_button_p2, COLOR_CHECK);
+        drawButtonImage(m_button_p2, *m_imgSatBlanc);
         drawPage2();
     } else {
-        drawButtonLabel(m_button_p2, COLOR_OTHER);
+       drawButtonImage(m_button_p2, *m_imgSatGris);
+        
     }
     
     if(m_page == 3){
-        drawButtonLabel(m_button_p3, COLOR_CHECK);
+        drawButtonImage(m_button_p3, *m_imgVolantBlanc);
         drawPage3();
     } else {
-        drawButtonLabel(m_button_p3, COLOR_OTHER);
+        drawButtonImage(m_button_p3, *m_imgVolantGris);
+        
     }
     
     if(m_page == 4){
-        drawButtonLabel(m_button_p4, COLOR_CHECK);
+        drawButtonImage(m_button_p4, *m_imgVolantBlanc);
         drawPage4();
     } else {
-        drawButtonLabel(m_button_p4, COLOR_OTHER);
+        drawButtonImage(m_button_p4, *m_imgVolantGris);
     }
     
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_config.m_debug){
         if(m_page == 5){
-            drawButtonLabel(m_button_p5, COLOR_CHECK);
+            drawButtonImage(m_button_p5, *m_imgVolantBlanc);
             drawPage5();
         } else {
-            drawButtonLabel(m_button_p5, COLOR_OTHER);
+            drawButtonImage(m_button_p5, *m_imgVolantGris);
         }
     }
 }
