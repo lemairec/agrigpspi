@@ -30,23 +30,6 @@ GpsWidget::GpsWidget()
 {
     m_zoom = 10;
     
-    
-    m_penBlack = QPen(Qt::black);
-    m_penRed = QPen(Qt::red);
-    m_penBlue = QPen(Qt::blue);
-    m_penBlue2 = QPen(Qt::blue, 3);
-    
-    m_grayBrush = QBrush (QColor(160,160,160));
-    
-    m_lightGrayBrush = QBrush (QColor(60,60,60));
-    m_lightGrayDebugBrush = QBrush (QColor(120,120,120));
-    m_greenBrush = QBrush (Qt::green);
-    
-    m_brushGreen = QBrush(QColor(0, 150, 0, 100));
-    m_brushGreenTractor = QBrush(QColor(0, 150, 0));
-    m_penNo.setColor(QColor(0, 250, 0, 0));
-    //m_brushGreen.a
-    
     double temp = 0.05;
     m_buttonClose  = new ButtonGui(1-temp, temp, GROS_BUTTON, 0);
     m_buttonA  = new ButtonGui(1-temp, 0.3, GROS_BUTTON, 0);
@@ -79,10 +62,7 @@ void GpsWidget::setSize(int width, int height){
     m_height = height;
     m_widthMax = m_width/2-50;
     m_heightMax = m_height/2-50;
-    
-    m_buttons.clear();
-    
-    
+
     m_optionsWidget.setSize(m_width, m_height);
     
 //    onValueChangeSlot(true);
@@ -185,7 +165,7 @@ auto last_update = std::chrono::system_clock::now();
 void GpsWidget::drawBarreGuidage(){
     GpsFramework & f = GpsFramework::Instance();
      
-    scene->addRect(m_width/2-300, 0, 600, 40, m_penBlack, m_lightGrayBrush);
+    scene->addRect(m_width/2-300, 0, 600, 40, m_penBlack, m_brushDarkGray);
     scene->addRect(m_width/2-50, 5, 100, 30, m_penBlack, m_grayBrush);
     QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
     auto textItem = scene->addText(s);
@@ -462,7 +442,7 @@ void GpsWidget::drawTracteur(){
 void GpsWidget::drawBottom(){
     GpsFramework & f = GpsFramework::Instance();
     
-    scene->addRect(0, m_height-40, m_width, 40, m_penBlack, m_lightGrayBrush);
+    scene->addRect(0, m_height-40, m_width, 40, m_penBlack, m_brushDarkGray);
     
     auto last_frame = f.m_lastGGAFrame;
     QPixmap * img;
@@ -660,17 +640,8 @@ void GpsWidget::addButtons(){
     drawButtonImage(m_buttonClose, *m_imgClose);
 }
 
-void GpsWidget::onButton(const Button & button){
-    
-}
 
 void GpsWidget::onMouse(int x, int y){
-    for(auto button : m_buttons){
-        if(x > button.m_x - 20  && x < button.m_x + 20 && y > button.m_y - 20  && y < button.m_y + 20){
-            onButton(button);
-        }
-    }
-    
     double x2 = x/m_width;
     double y2 = y/m_height;
     if(m_buttonClose->isActive(x2, y2)){

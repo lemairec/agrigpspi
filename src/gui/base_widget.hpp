@@ -4,45 +4,6 @@
 #include "qt/include_qt.hpp"
 #include "../gps_framework.hpp"
 
-struct Button{
-    double m_x = 0;
-    double m_y = 0;
-    int m_id = 0;
-    std::string m_desc;
-    
-    Button(int x, int y, int id)
-    :m_x(x), m_y(y), m_id(id)
-    {
-    }
-};
-
-/*class BaseWidget{
-protected:
-    QGraphicsScene * scene;
-public:
-    std::list<Button> m_buttons;
-    int m_width;
-    int m_height;
-    bool m_close = true;
-    
-    void setScene(QGraphicsScene * s){
-        scene = s;
-    }
-    virtual void draw() = 0;
-    virtual void onButton(const Button & button);
-    virtual void onMouse(int x, int y);
-    
-    void setSize(int width, int height);
-    
-    void drawText(const std::string & text, int x, int y, int size, bool center);
-};*/
-
-/**
- 
- NEW !!!
- 
- */
-
 const double PETIT_RAYON = 0.035;
 const double GROS_BUTTON = 0.04;
 const double PETIT_INTER = PETIT_RAYON*1.2;
@@ -88,6 +49,20 @@ struct ValueGui{
 class BaseWidget{
 protected:
     QGraphicsScene * scene;
+    QPen m_penBlack;
+    QPen m_penRed;
+    QPen m_penBlue;
+    QPen m_penBlue2;
+    QPen m_penNo;
+    QBrush m_brushNo;
+    QBrush m_brushWhite;
+    QBrush m_brushGreen;
+    QBrush m_brushGreenTractor;
+    QBrush m_grayBrush;
+    QBrush m_greenBrush;
+    QBrush m_brushDarkGray;
+    QBrush m_lightGrayDebugBrush;
+    
 public:
     void setScene(QGraphicsScene * s){
         scene = s;
@@ -96,6 +71,8 @@ public:
     double m_width;
     double m_height;
     bool m_close = true;
+    
+    BaseWidget();
     
     virtual void draw() = 0;
     virtual void onButton(const ButtonGui & button){};
@@ -119,8 +96,6 @@ public:
 
     QPixmap * loadImage(const std::string & s);
 };
-
-
 
 
 

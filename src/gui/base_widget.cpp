@@ -3,52 +3,6 @@
 #include <iostream>
 #include <sstream>
 
-
-/*void BaseWidget::onMouse(int x, int y){
-    for(auto button : m_buttons){
-        if(x > button.m_x - 20  && x < button.m_x + 20 && y > button.m_y - 20  && y < button.m_y + 20){
-            onButton(button);
-        }
-    }
-}
-
-void BaseWidget::onButton(const Button & button){
-}
-
-
-void BaseWidget::setSize(int width, int height){
-    m_width = width;
-    m_height = height;
-    
-    m_buttons.clear();
-}
-
-void BaseWidget::drawText(const std::string & text, int x, int y, int size, bool center){
-    QString s = QString::fromStdString(text);
-    auto textItem = scene->addText(QString(s));
-    textItem->setFont(QFont("Latin", size, 1, false));
-    if(center){
-        auto mBounds = textItem->boundingRect();
-        textItem->setPos(x-mBounds.width()/2, y);
-    } else {
-        textItem->setPos(x, y);
-    }
-    
-}*/
-
-
-
-
-/**
- 
- 
- NEW!
- 
- 
- 
- */
-
-
 ButtonGui::ButtonGui(double x, double y, double rayon, int type)
 :m_x(x), m_y(y), m_rayon(rayon), m_type(type)
 {
@@ -99,6 +53,27 @@ double ValueGui::getIntValue(double x, double y){
     }
     return 0;
 }
+
+
+
+BaseWidget::BaseWidget(){
+    m_penBlack = QPen(Qt::black);
+    m_penRed = QPen(Qt::red);
+    m_penBlue = QPen(Qt::blue);
+    m_penBlue2 = QPen(Qt::blue, 3);
+    
+    m_grayBrush = QBrush (QColor(160,160,160));
+    
+    m_brushDarkGray = QBrush (QColor(60,60,60));
+    m_lightGrayDebugBrush = QBrush (QColor(120,120,120));
+    m_greenBrush = QBrush (Qt::green);
+    
+    m_brushWhite = QBrush(QColor(255,255,255));
+    m_brushGreen = QBrush(QColor(0, 150, 0, 100));
+    m_brushGreenTractor = QBrush(QColor(0, 150, 0));
+    m_penNo.setColor(QColor(0, 250, 0, 0));
+}
+
 
 void BaseWidget::setSize(int width, int height){
     m_width = width;

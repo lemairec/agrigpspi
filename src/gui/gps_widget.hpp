@@ -15,22 +15,7 @@ public:
 
     int m_widthMax;
     int m_heightMax;
-    
-    std::list<Button> m_buttons;
-    
-    QPen m_penBlack;
-    QPen m_penRed;
-    QPen m_penBlue;
-    QPen m_penBlue2;
-    QPen m_penNo;
-    QBrush m_brushNo;
-    QBrush m_brushGreen;
-    QBrush m_brushGreenTractor;
-    QBrush m_grayBrush;
-    QBrush m_greenBrush;
-    QBrush m_lightGrayBrush;
-    QBrush m_lightGrayDebugBrush;
-    
+
     QPixmap * m_imgClose;
     QPixmap * m_imgPlus;
     QPixmap * m_imgMinus;
@@ -80,8 +65,6 @@ public:
     void mouseReleaseEvent ( QMouseEvent * event );
 
     void drawBarreGuidage();
-    void onButton(const Button & button);
-    
     
     void onMouse(int x, int y);
 };
