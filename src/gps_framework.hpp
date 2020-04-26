@@ -12,6 +12,16 @@ public:
     virtual void onNewPoint() = 0;
 };
 
+class SurfaceToDraw{
+public:
+    bool m_isClose = false;
+    std::list<GGAFrame_ptr> m_points;
+    GGAFrame_ptr m_lastPointOk = nullptr;
+    GGAFrame_ptr m_lastPoint = nullptr;
+};
+
+typedef std::shared_ptr<SurfaceToDraw> SurfaceToDraw_ptr;
+
 class GpsFramework {
     GpsFramework();
 public:
@@ -84,13 +94,20 @@ public:
     void clearSurface();
     void calculSurface();
     
+    void calculDraw(GGAFrame_ptr);
+    
+    
     std::list<GGAFrame_ptr> m_list;
+    std::list<SurfaceToDraw_ptr> m_listSurfaceToDraw;
     GGAFrame m_lastGGAFrame;
     
     void exportHtml();
     
     PilotModule m_pilotModule;
     
+    void changeDraw();
+    bool m_pauseDraw = false;
+       
 private:
     IGpsObserver * m_observer = NULL;
     GpsModule m_gpsModule;

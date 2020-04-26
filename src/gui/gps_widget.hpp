@@ -27,6 +27,8 @@ public:
     QPixmap * m_imgSatOrange;
     QPixmap * m_imgSatRouge;
     QPixmap * m_imgFleche;
+    QPixmap * m_imgChampGris;
+    QPixmap * m_imgChampVert;
     
     ButtonGui * m_buttonClose;
     ButtonGui * m_buttonPlus;
@@ -35,6 +37,7 @@ public:
     ButtonGui * m_buttonB;
     ButtonGui * m_buttonOption;
     
+    ButtonGui * m_buttonChamp;
     
     void drawCourbe(double l);
     bool addligne(double l, double x, double y, int i);

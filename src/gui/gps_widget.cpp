@@ -39,6 +39,7 @@ GpsWidget::GpsWidget()
     m_buttonMinus  = new ButtonGui(1-temp, 0.7, GROS_BUTTON, 0);
     
     m_buttonOption  = new ButtonGui(temp, temp, GROS_BUTTON, 0);
+    m_buttonChamp  = new ButtonGui(temp, 0.3, GROS_BUTTON, 0);
     
     m_imgClose = loadImage("/images/close.png");
     m_imgPlus = loadImage("/images/plus.png");
@@ -51,6 +52,9 @@ GpsWidget::GpsWidget()
     m_imgSatOrange = loadImage("/images/sat_orange.png");
     m_imgSatRouge = loadImage("/images/sat_rouge.png");
 
+    m_imgChampGris = loadImage("/images/champ_gris.png");
+    m_imgChampVert = loadImage("/images/champ_vert.png");
+    
     m_imgFleche = loadImage("/images/fleche.png");
 
 
@@ -251,21 +255,25 @@ void GpsWidget::draw_force(){
     
     double x = 0;
     double y = 0;
-    if(f.m_list.size() > 2){
-        auto last_frame = (*f.m_list.begin());
+    
+    if(f.m_list.size() == 0){
+        return;
+    }
+    for(auto s: f.m_listSurfaceToDraw){
+    if(s->m_points.size() > 2){
+        auto last_frame = *(f.m_list.begin());
         x = last_frame->m_x;
         y = last_frame->m_y;
        
-        
-        double x1 = 0;
-        double y1 = 0;
+        double x1 = (s->m_lastPoint->m_x - x)*m_zoom;
+        double y1 = (s->m_lastPoint->m_y - y)*m_zoom;
         double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
         
         double l = f.m_config.m_largeur*m_zoom/2;
         int j = 0;
         int init = 0;
         
-        for(auto it = f.m_list.begin(); it != f.m_list.end(); ++it){
+        for(auto it = s->m_points.begin(); it != s->m_points.end(); ++it){
             auto frame = (*it);
             double x_temp  = (frame->m_x - x)*m_zoom;
             double y_temp  = (frame->m_y - y)*m_zoom;
@@ -296,9 +304,6 @@ void GpsWidget::draw_force(){
                 double xB = x0- i*l/sqrt(1+res*res);
                 double yB = y0-(xB-x0)*res;
                 
-                if(dist < 0.1*l*l){
-                    //continue;
-                }
                 if(init != 0){
                     QPolygon polygon;
                     polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
@@ -334,6 +339,7 @@ void GpsWidget::draw_force(){
             j ++;
         }
         //INFO(oss.str());
+    }
     }
     drawLines(x, y);
     
@@ -638,6 +644,13 @@ void GpsWidget::addButtons(){
     drawButtonImage(m_buttonB, *m_imgB);
     drawButtonImage(m_buttonOption, *m_imgOption);
     drawButtonImage(m_buttonClose, *m_imgClose);
+    
+    GpsFramework & f = GpsFramework::Instance();
+    if(f.m_pauseDraw){
+        drawButtonImage(m_buttonChamp, *m_imgChampGris);
+    } else {
+        drawButtonImage(m_buttonChamp, *m_imgChampVert);
+    }
 }
 
 
@@ -659,6 +672,8 @@ void GpsWidget::onMouse(int x, int y){
     } else if(m_buttonOption->isActive(x2, y2)){
         m_optionsWidget.open();
         m_optionsWidget.m_close = false;
+    } else if(m_buttonChamp->isActive(x2, y2)){
+        GpsFramework::Instance().changeDraw();
     }
     draw();
 }
