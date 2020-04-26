@@ -32,6 +32,8 @@ OptionWidget::OptionWidget(){
     m_imgVolantGris = loadImage("/images/volant_gris.png");
     m_imgOutilBlanc = loadImage("/images/outil_blanc.png");
     m_imgOutilGris = loadImage("/images/outil_gris.png");
+    m_imgOptionBlanc = loadImage("/images/option_blanc.png");
+    m_imgOptionGris = loadImage("/images/option_gris.png");
     
     m_button_close = new ButtonGui(0.75, 0.83, GROS_BUTTON, 0);
     
@@ -112,19 +114,19 @@ void OptionWidget::draw(){
     }
     
     if(m_page == 4){
-        drawButtonImage(m_button_p4, *m_imgVolantBlanc);
+        drawButtonImage(m_button_p4, *m_imgOptionBlanc);
         drawPage4();
     } else {
-        drawButtonImage(m_button_p4, *m_imgVolantGris);
+        drawButtonImage(m_button_p4, *m_imgOptionGris);
     }
     
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_config.m_debug){
         if(m_page == 5){
-            drawButtonImage(m_button_p5, *m_imgVolantBlanc);
+            drawButtonImage(m_button_p5, *m_imgOptionBlanc);
             drawPage5();
         } else {
-            drawButtonImage(m_button_p5, *m_imgVolantGris);
+            drawButtonImage(m_button_p5, *m_imgOptionGris);
         }
     }
 }

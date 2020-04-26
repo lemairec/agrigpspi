@@ -13,7 +13,9 @@ class OptionWidget : public BaseWidget {
     QPixmap * m_imgVolantGris;
     QPixmap * m_imgOutilBlanc;
     QPixmap * m_imgOutilGris;
-    
+    QPixmap * m_imgOptionBlanc;
+    QPixmap * m_imgOptionGris;
+      
     ButtonGui * m_button_close = NULL;
     
     ButtonGui * m_button_p1 = NULL;
