@@ -61,6 +61,13 @@ void GpsFramework::setRef(double latitude, double longitude){
     for(auto l: m_list){
         m_gpsModule.setXY(*l);
     }
+    for(auto l: m_listSurfaceToDraw){
+        m_gpsModule.setXY(*l->m_lastPoint);
+        m_gpsModule.setXY(*l->m_lastPointOk);
+        for(auto l2: l->m_points){
+           m_gpsModule.setXY(*l2);
+       }
+    }
     if(m_pointA.isOk()){
         m_gpsModule.setXY(m_pointA);
     }
@@ -78,12 +85,18 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
         }
         GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
         m_list.push_front(frame);
+        if(m_list.size()>100){
+            m_list.pop_back();
+        };
+        
         
         m_pilotModule.run(m_distanceAB);
         calculDeplacement();
         
         calculSurface();
         m_distance = distance(*frame);
+        
+        calculDraw(frame);
     }
    
     if(m_observer){
@@ -248,6 +261,40 @@ void GpsFramework::calculDeplacement(){
     //calculContourExterieur();
 }
 
+void GpsFramework::changeDraw(){
+    if(m_pauseDraw == false){
+        m_pauseDraw = true;
+    } else {
+        SurfaceToDraw_ptr p(new SurfaceToDraw());
+        m_listSurfaceToDraw.push_front(p);
+        m_pauseDraw = false;
+    }
+}
+
+void GpsFramework::calculDraw(GGAFrame_ptr p){
+    if(m_listSurfaceToDraw.size()==0){
+        SurfaceToDraw_ptr p(new SurfaceToDraw());
+        m_listSurfaceToDraw.push_front(p);
+    }
+    if(m_pauseDraw){
+        return;
+    }
+    
+    auto s = m_listSurfaceToDraw.front();
+    
+    s->m_lastPoint = p;
+    if(s->m_lastPointOk == NULL){
+        s->m_lastPointOk = p;
+    }
+    double x = s->m_lastPointOk->m_x - s->m_lastPoint->m_x;
+    double y = s->m_lastPointOk->m_y - s->m_lastPoint->m_y;
+    double dist = x*x + y*y;
+    if(dist > 1){
+        s->m_lastPointOk = p;
+        s->m_points.push_front(p);
+    }
+}
+
 #include <iostream>
 #include "serial.hpp"
 
@@ -323,6 +370,7 @@ void GpsFramework::readFile(){
         m_config.m_input = "none";
     } else {
         m_list.clear();
+        m_listSurfaceToDraw.clear();
         clearSurface();
     }
     //exportHtml();
@@ -412,29 +460,25 @@ void GpsFramework::clearSurface(){
 void GpsFramework::calculSurface(){
     double l = m_config.m_largeur;
     m_surface = 0;
-    if(m_list.size()>0){
-        auto last_frame = (*m_list.begin());
-        double x1 = last_frame->m_x;
-        double y1 = last_frame->m_y;
-        
-        for(auto it = m_list.begin(); it != m_list.end(); ++it){
-            auto frame = (*it);
-            double x0 = frame->m_x;
-            double y0 = frame->m_y;
-            
-            double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
-            if(dist < l*l*0.2){
-                continue;
+    for(auto s : m_listSurfaceToDraw){
+        if(s->m_points.size()>0){
+            auto last_frame = s->m_lastPoint;
+            double x1 = last_frame->m_x;
+            double y1 = last_frame->m_y;
+            for(auto it = s->m_points.begin(); it != s->m_points.end(); ++it){
+                auto frame = (*it);
+                double x0 = frame->m_x;
+                double y0 = frame->m_y;
+                double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+                
+                double surface = std::sqrt(dist)*m_config.m_largeur/10000.0;
+                m_surface += surface;
+                
+                x1 = x0;
+                y1 = y0;
             }
-            
-            double surface = std::sqrt(dist)*m_config.m_largeur/10000.0;
-            m_surface += surface;
-            
-            x1 = x0;
-            y1 = y0;
         }
     }
-        
         
     /*if(m_distance_last_point <30){
         double diff_angle = m_angleAB - m_deplacementAngle;
