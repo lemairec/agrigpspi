@@ -391,10 +391,22 @@ void GpsWidget::drawTracteur(){
     double w = m_width;
     GpsFramework & f = GpsFramework::Instance();
     
+    double dx = f.m_deplacementX;
+    double dy = f.m_deplacementY;
+    
+    double l2 = 5;
+    double res = sqrt(dx*dx+dy*dy);
+    dx = dx/res*l2;
+    dy = dy/res*l2;
+    
     double x;
     double y;
     
-    //projete(f.m_deplacementX*m_zoom, f.m_deplacementY*m_zoom, x, y);
+    double x2;
+    double y2;
+    
+    my_projete(m_xref+dx, m_yref+dy, x, y);
+    my_projete(m_xref+dx/4, m_yref+dy/4, x2, y2);
     
     
     //scene->addLine(w/2, h/2, w/2 + x, h/2 - y, m_penBlue);
@@ -413,15 +425,12 @@ void GpsWidget::drawTracteur(){
     }
     
     
-    scene->addLine(w/2+xA, h/2-yA, w/2 - xA, h/2 + yA, m_penBlue2);
+     
+    QPolygon polygon;
+    polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + x2, h/2 - y2) << QPoint(w/2 - xA, h/2 + yA)<< QPoint(w/2 + x, h/2 - y);
+    scene->addPolygon(polygon, m_penNo, m_brushGreenTractor);
     
-    
-    
-    /*auto item = new QGraphicsPixmapItem(*m_imgFleche);
-    item->setScale(0.4);
-    item->setPos(w/2+10, h/2-50);
-     item->setRotation(atan(x/y)/(2*3.14)*360);
-     scene->addItem(item);*/
+    scene->addLine(w/2+xA, h/2-yA, w/2 - xA, h/2 + yA, m_penBlue);
     
 }
 
