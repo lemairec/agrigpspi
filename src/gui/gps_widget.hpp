@@ -40,22 +40,28 @@ public:
     ButtonGui * m_buttonChamp;
     
     void drawCourbe(double l);
-    bool addligne(double l, double x, double y, int i);
-    void drawLines(double x, double y);
+    bool addligne(double l, int i);
+    void drawLines();
     void drawTracteur();
     void drawBottom();
     void drawDebug();
-    void drawContour(double x, double y);
+    void drawContour();
     
     void draw();
     void draw_force();
     
     double m_zoom;
     
+    
+    
     //angle
+    double m_xref;
+    double m_yref;
     double m_a;
     double m_cosA;
     double m_sinA;
+    
+    void my_projete(double x, double y, double & x_res, double & y_res);
    
     //courbe
     double m_la;

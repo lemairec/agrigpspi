@@ -79,11 +79,11 @@ void GpsWidget::drawCourbe(double l){
 }
 
 
-void GpsWidget::drawLines(double x, double y){
+void GpsWidget::drawLines(){
     //addligne(0, x, y);
     GpsFramework & f = GpsFramework::Instance();
-    double x0 = x;
-    double y0 = y;
+    double x0 = m_xref;
+    double y0 = m_yref;
     double res = -(y0*f.m_b +(f.m_a * x0 + f.m_c));
     double l = res / (f.m_b/cos(atan(-f.m_a/f.m_b)));
     //INFO("l " << l << " x " << x << " res " << res);
@@ -91,61 +91,53 @@ void GpsWidget::drawLines(double x, double y){
     
     int i0 = round(l/f.m_config.m_largeur);
     for(int i = 0; i < 100; ++i){
-        if(! addligne((i0 + i)*f.m_config.m_largeur, x, y, i0 + i)){
+        if(! addligne((i0 + i)*f.m_config.m_largeur, i0 + i)){
             break;
         }
     }
     for(int i = 1; i < 100; ++i){
-        if(! addligne((i0 - i)*f.m_config.m_largeur, x, y, i0 - i)){
+        if(! addligne((i0 - i)*f.m_config.m_largeur, i0 - i)){
             break;
         }
     }
 }
 
-double cosA;
-double sinA;
-void projete(double x, double y, double & x_res, double & y_res){
+void GpsWidget::my_projete(double x, double y, double & x_res, double & y_res){
+    double x1_temp = (x - m_xref)*m_zoom;
+    double y1_temp = (y - m_yref)*m_zoom;
     
-    x_res = x;
-    y_res = y;
-    
-    x_res = x*cosA +y*sinA;
-    y_res  = -x*sinA +y*cosA;
-    
+    x_res = x1_temp*m_cosA +y1_temp*m_sinA;
+    y_res  = -x1_temp*m_sinA +y1_temp*m_cosA;
 }
 
-
-bool GpsWidget::addligne(double l, double x, double y, int i){
+bool GpsWidget::addligne(double l, int i){
     GpsFramework & f = GpsFramework::Instance();
     
     double a = f.m_a;
     double b = f.m_b;
     
     double res = l*b/cos(atan(-a/b));
-    double x0 = -m_width/(m_zoom*2) + x;
+    double x0 = -m_width/(m_zoom*2) + m_xref;
     double y0 = -(a * x0 + f.m_c + res)/b;
-    x0 = (x0 - x)*m_zoom;
-    y0 = (y0 - y)*m_zoom;
-    double x1 = m_width/(m_zoom*2) + x;
-    double y1 = -(a * x1 + f.m_c + res)/b;
-    x1 = (x1 - x)*m_zoom;
-    y1 = (y1 - y)*m_zoom;
-
-    if(y0 > m_height/2 && y1 > m_height/2){
-        return false;
-    }
     
-    if(y0 < -m_height/2 && y1 < -m_height/2){
-        return false;
-    }
+    double x1 = m_width/(m_zoom*2) + m_xref;
+    double y1 = -(a * x1 + f.m_c + res)/b;
     
     double x02;
     double y02;
     double x12;
     double y12;
     
-    projete(x0,y0,x02, y02);
-    projete(x1,y1,x12, y12);
+    my_projete(x0, y0, x02, y02);
+    my_projete(x1, y1, x12, y12);
+    
+    if(y02 > m_height/2 && y12 > m_height/2){
+        return false;
+    }
+    
+    if(y02 < -m_height/2 && y12 < -m_height/2){
+        return false;
+    }
     
     QString s = QString::number(i);
     auto textItem = scene->addText(s);
@@ -190,8 +182,10 @@ void GpsWidget::drawBarreGuidage(){
     }
 }
 
-void GpsWidget::drawContour(double x, double y){
+void GpsWidget::drawContour(){
     GpsFramework & f = GpsFramework::Instance();
+    double x = m_xref;
+    double y = m_yref;
     double last_x = 0, last_y;
     for(auto l : f.m_contour){
         double x1 = m_width/2+(l->m_x-x)*m_zoom;
@@ -218,6 +212,8 @@ void GpsWidget::draw(){
     draw_force();
 }
 
+
+
 void GpsWidget::draw_force(){
     auto begin = std::chrono::system_clock::now();
     GpsFramework & f = GpsFramework::Instance();
@@ -238,14 +234,17 @@ void GpsWidget::draw_force(){
     if(!f.m_config.m_sensDraw){
         m_a = 0;
     }
+    
+    if(f.m_list.size() >0){
+        auto last_frame = *(f.m_list.begin());
+        m_xref = last_frame->m_x;
+        m_yref = last_frame->m_y;
+    }
     //
     //INFO(f.m_deplacementY << " " << f.m_deplacementX << " " << (a/(2*3.14)*360));
     
     m_cosA = cos(m_a);
     m_sinA = sin(m_a);
-    
-    cosA = m_cosA;
-    sinA = m_sinA;
     
     double h = m_height;
     double w = m_width;
@@ -253,23 +252,13 @@ void GpsWidget::draw_force(){
     
     scene->clear();
     
-    double x = 0;
-    double y = 0;
-    
     if(f.m_list.size() >0){
         for(auto s: f.m_listSurfaceToDraw){
             if(s->m_points.size() > 2){
-                auto last_frame = *(f.m_list.begin());
-                x = last_frame->m_x;
-                y = last_frame->m_y;
-               
-                double x1_temp = (s->m_lastPoint->m_x - x)*m_zoom;
-                double y1_temp = (s->m_lastPoint->m_y - y)*m_zoom;
-                double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
-                
                 double x1, y1;
-                projete(x1_temp, y1_temp, x1, y1);
+                my_projete(s->m_lastPoint->m_x, s->m_lastPoint->m_y, x1, y1);
                 
+                double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
                 
                 double l = f.m_config.m_largeur*m_zoom/2;
                 int j = 0;
@@ -277,14 +266,10 @@ void GpsWidget::draw_force(){
                 
                 for(auto it = s->m_points.begin(); it != s->m_points.end(); ++it){
                     auto frame = (*it);
-                    double x_temp  = (frame->m_x - x)*m_zoom;
-                    double y_temp  = (frame->m_y - y)*m_zoom;
                     
-                    double x0;
-                    double y0;
-                    
-                    projete(x_temp, y_temp, x0, y0);
-                    
+                    double x0, y0;
+                    my_projete(frame->m_x, frame->m_y, x0, y0);
+                     
                     if(x0 < -m_widthMax || x0 > m_widthMax || y0 < -m_heightMax || y0 > m_heightMax ){
                         init = 0;
                         x1 = x0;
@@ -344,36 +329,28 @@ void GpsWidget::draw_force(){
             }
         }
     }
-    drawLines(x, y);
+    drawLines();
     
     
     if(f.m_pointA.isOk()){
-        double xA  = (f.m_pointA.m_x - x)*m_zoom;
-        double yA  = (f.m_pointA.m_y - y)*m_zoom;
+        double xA, yA;
+        my_projete(f.m_pointA.m_x, f.m_pointA.m_y, xA, yA);
         scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
     }
     if(f.m_pointB.isOk()){
-        double xB  = (f.m_pointB.m_x - x)*m_zoom;
-        double yB  = (f.m_pointB.m_y - y)*m_zoom;
+        double xB, yB;
+        my_projete(f.m_pointB.m_x, f.m_pointB.m_y, xB, yB);
         scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
     }
     if(f.m_pointA.isOk() && f.m_pointB.isOk()){
-        double xA  = (f.m_pointA.m_x - x)*m_zoom;
-        double yA  = (f.m_pointA.m_y - y)*m_zoom;
-        double xB  = (f.m_pointB.m_x - x)*m_zoom;
-        double yB  = (f.m_pointB.m_y - y)*m_zoom;
-        
-        double xA2;
-        double yA2;
-        double xB2;
-        double yB2;
-        
-        projete(xA, yA, xA2, yA2);
-        projete(xB, yB, xB2, yB2);
+        double xA, yA;
+        my_projete(f.m_pointA.m_x, f.m_pointA.m_y, xA, yA);
+        double xB, yB;
+        my_projete(f.m_pointB.m_x, f.m_pointB.m_y, xB, yB);
         
         
         //INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
-        scene->addLine(w/2 + xA2, h/2 - yA2, w/2 + xB2, h/2 - yB2, m_penRed);
+        scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
     }
     
     //drawCourbe(1);
@@ -381,7 +358,7 @@ void GpsWidget::draw_force(){
     //drawCourbe(100);
     
     drawBarreGuidage();
-    drawContour(x, y);
+    drawContour();
     drawTracteur();
     drawBottom();
     
@@ -417,10 +394,10 @@ void GpsWidget::drawTracteur(){
     double x;
     double y;
     
-    projete(f.m_deplacementX*m_zoom, f.m_deplacementY*m_zoom, x, y);
+    //projete(f.m_deplacementX*m_zoom, f.m_deplacementY*m_zoom, x, y);
     
     
-    scene->addLine(w/2, h/2, w/2 + x, h/2 - y, m_penBlue);
+    //scene->addLine(w/2, h/2, w/2 + x, h/2 - y, m_penBlue);
     
     double l = f.m_config.m_largeur*m_zoom/2;
     
