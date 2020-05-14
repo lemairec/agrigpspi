@@ -79,7 +79,7 @@ OptionWidget::OptionWidget(){
     //m_button_gps = new ButtonGui(0.25, 0.3, GROS_BUTTON, 0);
     //m_button_line = new ButtonGui(0.5, 0.3, GROS_BUTTON, 0);
     
-    m_close=false;
+    //m_close=false;
     //addSerials();
 }
 
