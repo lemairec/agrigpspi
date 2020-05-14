@@ -40,6 +40,7 @@ GpsWidget::GpsWidget()
     
     m_buttonOption  = new ButtonGui(temp, temp, GROS_BUTTON, 0);
     m_buttonChamp  = new ButtonGui(temp, 0.3, GROS_BUTTON, 0);
+    m_buttonVolant  = new ButtonGui(temp, 0.65, GROS_BUTTON, 0);
     
     m_imgClose = loadImage("/images/close.png");
     m_imgPlus = loadImage("/images/plus.png");
@@ -54,6 +55,8 @@ GpsWidget::GpsWidget()
 
     m_imgChampGris = loadImage("/images/champ_gris.png");
     m_imgChampVert = loadImage("/images/champ_vert.png");
+    m_imgVolantGris = loadImage("/images/volant_gris.png");
+    m_imgVolantVert = loadImage("/images/volant_vert.png");
     
     m_imgFleche = loadImage("/images/fleche.png");
 
@@ -640,6 +643,12 @@ void GpsWidget::addButtons(){
     } else {
         drawButtonImage(m_buttonChamp, *m_imgChampVert);
     }
+    
+    if(f.m_volantEngaged){
+        drawButtonImage(m_buttonVolant, *m_imgVolantVert);
+    } else {
+        drawButtonImage(m_buttonVolant, *m_imgVolantGris);
+    }
 }
 
 
@@ -663,6 +672,8 @@ void GpsWidget::onMouse(int x, int y){
         m_optionsWidget.m_close = false;
     } else if(m_buttonChamp->isActive(x2, y2)){
         GpsFramework::Instance().changeDraw();
+    } else if(m_buttonVolant->isActive(x2, y2)){
+        GpsFramework::Instance().m_volantEngaged = !GpsFramework::Instance().m_volantEngaged;
     }
     draw();
 }

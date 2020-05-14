@@ -107,7 +107,8 @@ public:
     
     void changeDraw();
     bool m_pauseDraw = false;
-       
+    bool m_volantEngaged = false;
+         
 private:
     IGpsObserver * m_observer = NULL;
     GpsModule m_gpsModule;

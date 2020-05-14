@@ -89,8 +89,9 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
             m_list.pop_back();
         };
         
-        
-        m_pilotModule.run(m_distanceAB);
+        if(m_volantEngaged){
+            m_pilotModule.run(m_distanceAB);
+        }
         calculDeplacement();
         
         calculSurface();
