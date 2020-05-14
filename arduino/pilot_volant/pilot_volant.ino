@@ -146,12 +146,12 @@ void goRight(int l){
   Serial.print("Right ");
   Serial.println(l);
   turnMotor2(l,true);
-
+  Serial.println("right ok");
 }
 
 void goLeft(int l){
   Serial.print("Left ");
   Serial.println(l);
   turnMotor2(l,false);
-
+  Serial.println("left ok");
 }
