@@ -46,6 +46,35 @@ struct ValueGui{
     int m_type = 0;
 };
 
+struct SelectButtonGui{
+    SelectButtonGui(double x, double y, double rayon);
+
+    double m_x = 0;
+    double m_y = 0;
+    double m_rayon = 0;
+    
+    std::string m_label;
+    std::vector<std::string> m_values;
+    int selectedValue = 0;
+    ButtonGui m_buttonOpen;
+    bool m_open = false;
+    
+    std::vector<ButtonGui *> m_buttons;
+    
+    void addValue(std::string s);
+    void clear();
+    
+    std::string getStringValue(){
+        if(selectedValue < m_values.size()){
+            return m_values[selectedValue];
+        } else {
+            return "error";
+        }
+    }
+    
+    int m_type = 0;
+};
+
 class BaseWidget{
 protected:
     QGraphicsScene * scene;
@@ -85,6 +114,8 @@ public:
     void drawButtonLabel(ButtonGui * button, int color = 0);
     void drawButtonImage(ButtonGui * button, QPixmap & pixmap);
 
+    void drawSelectButtonGui(SelectButtonGui * select);
+    
     void drawLabel(std::string s, double x, double y);
     void drawLabel2(std::string s, double x, double y);
      

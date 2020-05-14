@@ -54,6 +54,22 @@ double ValueGui::getIntValue(double x, double y){
     return 0;
 }
 
+SelectButtonGui::SelectButtonGui(double x, double y, double rayon)
+    : m_x(x), m_y(y), m_rayon(rayon), m_buttonOpen(x, y, rayon, 0)
+{
+    
+}
+
+void SelectButtonGui::addValue(std::string s){
+    m_values.push_back(s);
+    m_buttons.clear();
+    for(size_t i = 0; i < m_values.size(); ++i){
+        m_buttons.push_back(new ButtonGui(m_x+m_rayon, m_y+m_rayon*2*(i+1), m_rayon*0.8, 0));
+    }
+}
+void clear();
+
+
 
 
 BaseWidget::BaseWidget(){

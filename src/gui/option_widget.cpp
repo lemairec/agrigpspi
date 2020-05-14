@@ -66,8 +66,9 @@ OptionWidget::OptionWidget(){
     //page 5
     double dist2 = 0.08;
     
-    m_button_algo1 = new ButtonGui(0.35, 0.25, rayon, 0);
-    m_button_algo2 = new ButtonGui(0.35, 0.35, rayon, 0);
+    m_select_button = new SelectButtonGui(0.35, 0.25, rayon);
+    m_select_button->addValue("algo_pid");
+    m_select_button->addValue("algo_cl");
     
     m_button_algo1kp = new ValueGui(0.35, 0.5+dist2, PETIT_RAYON, 0, "kp ");
     m_button_algo1kd = new ValueGui(0.35, 0.5+2*dist2, PETIT_RAYON, 0, "kd ");
@@ -80,6 +81,7 @@ OptionWidget::OptionWidget(){
     //m_button_line = new ButtonGui(0.5, 0.3, GROS_BUTTON, 0);
     
     //m_close=false;
+    //m_page =5;
     //addSerials();
 }
 
@@ -221,27 +223,65 @@ void OptionWidget::drawPage4(){
 
 void OptionWidget::drawPage5(){
     GpsFramework & f = GpsFramework::Instance();
+    m_select_button->selectedValue = f.m_config.m_algo;
+    
     drawText("Autoguidage", 0.55*m_width, 0.15*m_height, 20, true);
     
-    drawText("Algo PID", 0.4, 0.25);
-    drawText("Algo CL", 0.4, 0.35);
-       
+    
     if(f.m_config.m_algo == ALGO_PID){
-        drawButtonLabel(m_button_algo1, COLOR_CHECK);
-        drawButtonLabel(m_button_algo2, COLOR_OTHER);
-        
         drawValueGui(m_button_algo1kp, f.m_config.m_algo1_kp);
         drawValueGui(m_button_algo1kd, f.m_config.m_algo1_kd);
     } else {
-        drawButtonLabel(m_button_algo1, COLOR_OTHER);
-        drawButtonLabel(m_button_algo2, COLOR_CHECK);
-        
         drawValueGui(m_button_algo2k, f.m_config.m_algo2_k);
+    }
+    
+    drawButtonLabel(&(m_select_button->m_buttonOpen));
+    if(m_select_button->m_open){
+        scene->addRect(m_select_button->m_x*m_width, m_select_button->m_y*m_height, m_width*0.4, (m_select_button->m_buttons.size()+1)*m_select_button->m_rayon*2*m_height, m_penBlack, m_brushLightGrayDebug);
+        for(size_t i = 0; i < m_select_button->m_buttons.size(); ++i){
+            drawButtonLabel(m_select_button->m_buttons[i]);
+            drawText(m_select_button->m_values[i], 0.4, m_select_button->m_buttons[i]->m_y);
+        }
+    } else {
+        drawText(m_select_button->getStringValue(), 0.4, m_select_button->m_buttonOpen.m_y);
     }
     
     drawButtonLabel(m_button_p5test1, COLOR_GREEN);
     
     drawButtonLabel(m_button_p5test3, COLOR_GREEN);
+}
+
+void OptionWidget::onMousePage5(double x, double y){
+    GpsFramework & f = GpsFramework::Instance();
+    
+    if(m_select_button->m_open){
+        for(size_t i = 0; i < m_select_button->m_buttons.size(); ++i){
+            if(m_select_button->m_buttons[i]->isActive(x, y)){
+                m_select_button->selectedValue = i;
+                m_select_button->m_open = false;
+                f.m_config.m_algo = i;
+                f.initOrLoadConfig();
+                return;
+            };
+        }
+        
+    }
+    if( m_select_button->m_buttonOpen.isActive(x, y)){
+        m_select_button->m_open = !m_select_button->m_open;
+    }
+    
+    if(m_button_p5test1->isActive(x,y)){
+        f.m_pilotModule.test(-10);
+    } else if(m_button_p5test3->isActive(x,y)){
+        f.m_pilotModule.test(10);
+    }
+    
+    if(f.m_config.m_algo == ALGO_PID){
+        f.m_config.m_algo1_kp = f.m_config.m_algo1_kp * m_button_algo1kp->getMultValue(x,y);
+        f.m_config.m_algo1_kd = f.m_config.m_algo1_kd * m_button_algo1kp->getMultValue(x,y);
+    } else {
+        f.m_config.m_algo2_k = f.m_config.m_algo2_k * m_button_algo2k->getMultValue(x,y);
+    }
 }
 
 
@@ -363,30 +403,7 @@ void OptionWidget::onMousePage4(double x, double y){
 
 }
 
-void OptionWidget::onMousePage5(double x, double y){
-    GpsFramework & f = GpsFramework::Instance();
-    
-    
-    if(m_button_p5test1->isActive(x,y)){
-        f.m_pilotModule.test(-10);
-    } else if(m_button_p5test3->isActive(x,y)){
-        f.m_pilotModule.test(10);
-    }
-    
-    if(m_button_algo1->isActive(x,y)){
-        f.m_config.m_algo = ALGO_PID;
-    } else if(m_button_algo2->isActive(x,y)){
-        f.m_config.m_algo = ALGO_2;
-    }
-    
-    if(f.m_config.m_algo == ALGO_PID){
-        f.m_config.m_algo1_kp = f.m_config.m_algo1_kp * m_button_algo1kp->getMultValue(x,y);
-        f.m_config.m_algo1_kd = f.m_config.m_algo1_kd * m_button_algo1kp->getMultValue(x,y);
-    } else {
-        f.m_config.m_algo2_k = f.m_config.m_algo2_k * m_button_algo2k->getMultValue(x,y);
-    }
-    f.initOrLoadConfig();
-}
+
 
 
 
