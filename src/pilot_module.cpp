@@ -11,9 +11,10 @@ void PilotModule::initOrLoadConfig(Config & config){
     if(m_serial){
         delete(m_serial);
     }
-    m_p = config.m_kp;
-    m_i = config.m_ki;
-    m_d = config.m_kd;
+    m_algo = config.m_algo;
+    m_algo1_kp = config.m_algo1_kp;
+    m_algo1_kd = config.m_algo1_kd;
+    m_algo2_k = config.m_algo2_k;
     m_serial = NULL;
     if(config.m_inputPilot != "none"){
         try {
@@ -25,17 +26,29 @@ void PilotModule::initOrLoadConfig(Config & config){
         }
        
     }
+    clear();
     
 }
 
+void PilotModule::clear(){
+    m_value_volant = 0;
+}
+
 void PilotModule::run(double value){
-    double dv = value-m_last_value;
-    int res = m_p*value+m_d*dv;
-    
-    //INFO(m_p << "x" << value << "+" << m_d << "x" << dv << "  " << res);
-    m_last_value=value;
-    if(m_serial == NULL){
-        return;
+    int res = 0;
+    if(m_algo == ALGO_PID){
+        double dv = value-m_last_value;
+        res = m_algo1_kp*value+m_algo1_kd*dv;
+        
+        //INFO(m_p << "x" << value << "+" << m_d << "x" << dv << "  " << res);
+        m_last_value=value;
+        if(m_serial == NULL){
+            return;
+        }
+    } else {
+        double value2 = m_algo2_k*value;
+        res = value2 - m_value_volant;
+        m_value_volant += res;
     }
     
     

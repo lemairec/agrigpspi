@@ -41,10 +41,10 @@ void Config::save(){
     settings.setValue("b_lat", m_b_lat);
     settings.setValue("b_lon", m_b_lon);
     
-    settings.setValue("k_p", m_kp);
-    settings.setValue("k_i", m_ki);
-    settings.setValue("k_d", m_kd);
-    settings.setValue("k_vitesse", m_kvitesse);
+    settings.setValue("m_algo", m_algo);
+    settings.setValue("m_algo1_kp", m_algo1_kp);
+    settings.setValue("m_algo1_kd", m_algo1_kd);
+    settings.setValue("m_algo2_k", m_algo2_k);
 }
 
 void Config::load(){
@@ -89,17 +89,17 @@ void Config::load(){
         m_b_lon = settings.value("b_lon").toDouble();
     }
     
-    if(settings.contains("k_p")){
-        m_kp = settings.value("k_p").toDouble();
+    if(settings.contains("m_algo")){
+        m_algo = settings.value("m_algo").toInt();
     }
-    if(settings.contains("k_i")){
-        m_ki = settings.value("k_i").toDouble();
+    if(settings.contains("m_algo1_kp")){
+        m_algo1_kp = settings.value("m_algo1_kp").toDouble();
     }
-    if(settings.contains("k_d")){
-        m_kd = settings.value("k_d").toDouble();
+    if(settings.contains("m_algo1_kd")){
+        m_algo1_kd = settings.value("m_algo1_kd").toDouble();
     }
-    if(settings.contains("k_vitesse")){
-        m_kvitesse = settings.value("k_vitesse").toDouble();
+    if(settings.contains("m_algo2_k")){
+        m_algo2_k = settings.value("m_algo2_k").toDouble();
     }
     
     INFO(m_largeur);

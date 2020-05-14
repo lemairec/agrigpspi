@@ -48,15 +48,18 @@ class OptionWidget : public BaseWidget {
     ButtonGui * m_button_sens;
     ButtonGui * m_button_debug;
     
-    ValueGui * m_kp;
-    ValueGui * m_ki;
-    ValueGui * m_kd;
-    ValueGui * m_kvitesse;
     
     //page5
-    ButtonGui * m_button_p3test1;
-    ButtonGui * m_button_p3test2;
-    ButtonGui * m_button_p3test3;
+    ButtonGui * m_button_algo1;
+    ButtonGui * m_button_algo2;
+    
+    ValueGui * m_button_algo1kp;
+    ValueGui * m_button_algo1kd;
+    
+    ValueGui * m_button_algo2k;
+    
+    ButtonGui * m_button_p5test1;
+    ButtonGui * m_button_p5test3;
     
     
     void addSerials();

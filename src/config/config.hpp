@@ -3,6 +3,9 @@
 
 #include <string>
 
+#define ALGO_PID 0
+#define ALGO_2 1
+
 class Config  {
 public:
     double m_largeur = 27;
@@ -19,13 +22,16 @@ public:
     double m_b_lat = 0;
     double m_b_lon = 0;
 
-    double m_kp = 100;
-    double m_ki = 100;
-    double m_kd = 100;
-    double m_kvitesse = 100;
     
     bool m_sensDraw = false;
     bool m_debug = false;
+    
+    int m_algo = 0;
+    
+    double m_algo1_kp = 100;
+    double m_algo1_kd = 100;
+    double m_algo2_k = 100;
+    
     
     Config();
     
