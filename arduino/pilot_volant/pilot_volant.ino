@@ -2,24 +2,54 @@
 
 String a;
 
+
+#define MOTOR_ENABLE_PIN 10 //pwm
+#define MOTOR_PIN1 8
+#define MOTOR_PIN2 7
+
+#define MOTOR_ENCODER A1
+
+
 void version(){
   Serial.println("PILOT_0_0_1");
 }
 
+void turnMotor2(int pas, boolean reverse){
+  int i = 0;
+  int oldValue = 0;
 
-void setup(){
-  Serial.begin(9600);
-  version();
-
-  pinMode(8, OUTPUT);
-  digitalWrite(8, LOW);
-  pinMode(6, OUTPUT);
-  pinMode(3, OUTPUT);
-  Serial.println("Ok");
-
-
+  SetMotor2(250, reverse);
+  
+  while(i<pas){
+    int  read = digitalRead(MOTOR_ENCODER);
+    if(read!=oldValue){
+      if(read==1){
+        ++i;
+      }
+      oldValue=read;
+    }
+  }
+  SetMotor2(0, reverse);
   
 }
+
+void SetMotor2(int speed, boolean reverse)
+{
+  analogWrite(MOTOR_ENABLE_PIN, speed);
+  digitalWrite(MOTOR_PIN1, ! reverse);
+  digitalWrite(MOTOR_PIN2, reverse);
+}
+void setup(){
+  pinMode(MOTOR_ENCODER, INPUT);
+  pinMode(MOTOR_PIN1, OUTPUT);
+  pinMode(MOTOR_PIN2, OUTPUT);
+  pinMode(MOTOR_ENABLE_PIN, OUTPUT);
+  
+  Serial.begin(9600);
+  version();
+ 
+}
+
 
 
 
@@ -83,7 +113,6 @@ void parseBuffer(){
     Serial.println("");
     Serial.println("$R;1");
     Serial.println("$L;100");
-    Serial.println("$D;200");
     Serial.println("$V");
     Serial.println("");
   } else if(m_buffer[0] == 'V'){
@@ -113,25 +142,16 @@ void parseBuffer(){
 int my_delay = 200;
 
 void goRight(int l){
+  
   Serial.print("Right ");
   Serial.println(l);
-  digitalWrite(6, HIGH);
-  for(int i =0;i<l;++i){
-    digitalWrite(3, HIGH);
-    delayMicroseconds(my_delay);
-    digitalWrite(3, LOW);
-    delayMicroseconds(my_delay);
-  }
+  turnMotor2(l,true);
+
 }
 
 void goLeft(int l){
   Serial.print("Left ");
   Serial.println(l);
-  digitalWrite(6, LOW);
-  for(int i =0;i<l;++i){
-    digitalWrite(3, HIGH);
-    delayMicroseconds(my_delay);
-    digitalWrite(3, LOW);
-    delayMicroseconds(my_delay);
-  }
+  turnMotor2(l,false);
+
 }
