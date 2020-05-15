@@ -18,7 +18,7 @@ void turnMotor2(int pas, boolean reverse){
   int i = 0;
   int oldValue = 0;
 
-  SetMotor2(250, reverse);
+  SetMotor2(255, reverse);
   
   while(i<pas){
     int  read = digitalRead(MOTOR_ENCODER);

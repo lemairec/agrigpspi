@@ -262,9 +262,9 @@ void OptionWidget::onMousePage5(double x, double y){
     }
     
     if(m_button_p5test1->isActive(x,y)){
-        f.m_pilotModule.test(-10);
+        f.m_pilotModule.test(-200);
     } else if(m_button_p5test3->isActive(x,y)){
-        f.m_pilotModule.test(10);
+        f.m_pilotModule.test(200);
     }
     
     if(f.m_config.m_algo == ALGO_PID){
