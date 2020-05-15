@@ -52,7 +52,7 @@ class OptionWidget : public BaseWidget {
     //page5
     ButtonGui * m_button_algo1;
     ButtonGui * m_button_algo2;
-    SelectButtonGui * m_select_button;
+    SelectButtonGui * m_button_select_algo;
     
     ValueGui * m_button_algo1kp;
     ValueGui * m_button_algo1kd;

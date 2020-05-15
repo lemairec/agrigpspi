@@ -114,7 +114,8 @@ public:
     void drawButtonLabel(ButtonGui * button, int color = 0);
     void drawButtonImage(ButtonGui * button, QPixmap & pixmap);
 
-    void drawSelectButtonGui(SelectButtonGui * select);
+    void drawSelectButtonGuiOpen(SelectButtonGui * select);
+    void drawSelectButtonGuiClose(SelectButtonGui * select);
     
     void drawLabel(std::string s, double x, double y);
     void drawLabel2(std::string s, double x, double y);

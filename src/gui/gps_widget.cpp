@@ -644,7 +644,7 @@ void GpsWidget::addButtons(){
         drawButtonImage(m_buttonChamp, *m_imgChampVert);
     }
     
-    if(f.m_volantEngaged){
+    if(f.getVolantEngaged()){
         drawButtonImage(m_buttonVolant, *m_imgVolantVert);
     } else {
         drawButtonImage(m_buttonVolant, *m_imgVolantGris);
@@ -673,7 +673,7 @@ void GpsWidget::onMouse(int x, int y){
     } else if(m_buttonChamp->isActive(x2, y2)){
         GpsFramework::Instance().changeDraw();
     } else if(m_buttonVolant->isActive(x2, y2)){
-        GpsFramework::Instance().m_volantEngaged = !GpsFramework::Instance().m_volantEngaged;
+        GpsFramework::Instance().setVolantEngaged(!GpsFramework::Instance().getVolantEngaged());
     }
     draw();
 }

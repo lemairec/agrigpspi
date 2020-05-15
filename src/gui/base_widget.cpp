@@ -172,6 +172,27 @@ void BaseWidget::drawButtonLabel(ButtonGui * button, int color){
     drawText(button->m_label, button->m_x-20, button->m_y);
 }
 
+void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
+    if(select->m_open){
+        scene->addRect(select->m_x*m_width, select->m_y*m_height, m_width*0.4, (select->m_buttons.size()+1)*select->m_rayon*2*m_height, m_penBlack, m_brushLightGrayDebug);
+        for(size_t i = 0; i < select->m_buttons.size(); ++i){
+            if(select->selectedValue == i){
+                drawButtonLabel(select->m_buttons[i], COLOR_CHECK);
+            } else {
+                drawButtonLabel(select->m_buttons[i], COLOR_OTHER);
+            }
+            drawText(select->m_values[i], 0.4, select->m_buttons[i]->m_y);
+        }
+    }
+}
+
+void BaseWidget::drawSelectButtonGuiClose(SelectButtonGui *select){
+    if(!select->m_open){
+        drawButtonLabel(&(select->m_buttonOpen));
+        drawText(select->getStringValue(), 0.4, select->m_buttonOpen.m_y);
+    }
+}
+
 void BaseWidget::drawText(const std::string & text, int x, int y, int size, bool center){
     QString s = QString::fromStdString(text);
     auto textItem = scene->addText(QString(s));

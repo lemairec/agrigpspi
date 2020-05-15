@@ -574,3 +574,13 @@ void GpsFramework::calculContourExterieur(){
         m_surface_exterieur_h = m_surface_exterieur/(m_list.front()->m_timeHour - m_pointA.m_timeHour);
     }
 }
+
+
+void GpsFramework::setVolantEngaged(bool value){
+    m_volantEngaged = value;
+    m_pilotModule.clear();
+}
+
+bool GpsFramework::getVolantEngaged(){
+    return m_volantEngaged;
+}

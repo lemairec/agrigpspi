@@ -60,9 +60,12 @@ void PilotModule::run(double value){
     } else {
         out << "$L;" << res << "\n";
     }
-    INFO(out.str()  );
-    m_serial->writeString(out.str());
-    
+    INFO(value << " " << res);
+    if(m_serial){
+        m_serial->writeString(out.str());
+    } else {
+        WARN("###################serial");
+    }
 }
 
 void PilotModule::test(int i){
