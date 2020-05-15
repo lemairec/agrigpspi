@@ -10,10 +10,7 @@ class Serial;
 class PilotModule {
     Serial * m_serial = NULL;
     double m_last_value = 0;
-    int m_algo;
-    double m_algo1_kp;
-    double m_algo1_kd;
-    double m_algo2_k;
+    double m_algo_k;
        
     int m_value_volant = 0;
 public:

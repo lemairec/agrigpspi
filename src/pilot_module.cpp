@@ -11,10 +11,8 @@ void PilotModule::initOrLoadConfig(Config & config){
     if(m_serial){
         delete(m_serial);
     }
-    m_algo = config.m_algo;
-    m_algo1_kp = config.m_algo1_kp;
-    m_algo1_kd = config.m_algo1_kd;
-    m_algo2_k = config.m_algo2_k;
+    m_algo_k = config.m_algo_k;
+    
     m_serial = NULL;
     if(config.m_inputPilot != "none"){
         try {
@@ -35,21 +33,11 @@ void PilotModule::clear(){
 }
 
 void PilotModule::run(double value){
-    int res = 0;
-    if(m_algo == ALGO_PID){
-        double dv = value-m_last_value;
-        res = m_algo1_kp*value+m_algo1_kd*dv;
-        
-        //INFO(m_p << "x" << value << "+" << m_d << "x" << dv << "  " << res);
-        m_last_value=value;
-        if(m_serial == NULL){
-            return;
-        }
-    } else {
-        double value2 = m_algo2_k*value;
-        res = value2 - m_value_volant;
-        m_value_volant += res;
-    }
+
+    
+    double value2 = m_algo_k*value;
+    int res = value2 - m_value_volant;
+    m_value_volant += res;
     
     
     std::ostringstream out;
@@ -72,6 +60,7 @@ void PilotModule::test(int i){
     if(m_serial == NULL){
         return;
     }
+    INFO("$R;1000\n");
     if(i<0){
         m_serial->writeString("$R;1000\n");
     } else {

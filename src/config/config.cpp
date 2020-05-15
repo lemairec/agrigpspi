@@ -42,9 +42,8 @@ void Config::save(){
     settings.setValue("b_lon", m_b_lon);
     
     settings.setValue("m_algo", m_algo);
-    settings.setValue("m_algo1_kp", m_algo1_kp);
-    settings.setValue("m_algo1_kd", m_algo1_kd);
-    settings.setValue("m_algo2_k", m_algo2_k);
+    settings.setValue("m_algo_k", m_algo_k);
+    settings.setValue("m_algofk_lookahead_d", m_algofk_lookahead_d);
 }
 
 void Config::load(){
@@ -92,15 +91,10 @@ void Config::load(){
     if(settings.contains("m_algo")){
         m_algo = settings.value("m_algo").toInt();
     }
-    if(settings.contains("m_algo1_kp")){
-        m_algo1_kp = settings.value("m_algo1_kp").toDouble();
+    if(settings.contains("m_algo_k")){
+        m_algo_k = settings.value("m_algo_k").toDouble();
     }
-    if(settings.contains("m_algo1_kd")){
-        m_algo1_kd = settings.value("m_algo1_kd").toDouble();
+    if(settings.contains("m_algofk_lookahead_d")){
+        m_algofk_lookahead_d = settings.value("m_algofk_lookahead_d").toDouble();
     }
-    if(settings.contains("m_algo2_k")){
-        m_algo2_k = settings.value("m_algo2_k").toDouble();
-    }
-    
-    INFO(m_largeur);
 }

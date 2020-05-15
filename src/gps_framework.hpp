@@ -77,9 +77,10 @@ public:
     int m_ledAB = 0;
     
     //algo pure poursuite
-    double m_angle_pure_poursuite;
-    double m_poursuite_x, mm_poursuite_y;
-    void calculPurePoursuite();
+    int m_algo;
+    double m_algofk_lookahead_d;
+    double m_angle_correction;
+    void calculAngleCorrection();
     
     //surface
     double m_surface = 0;

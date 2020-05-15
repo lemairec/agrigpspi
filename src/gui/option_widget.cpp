@@ -67,15 +67,16 @@ OptionWidget::OptionWidget(){
     double dist2 = 0.08;
     
     m_button_select_algo = new SelectButtonGui(0.35, 0.25, rayon*0.8);
-    m_button_select_algo->addValue("algo_pid");
-    m_button_select_algo->addValue("algo_cl");
+    m_button_select_algo->addValue("algo_naif");
+    m_button_select_algo->addValue("algo_follow_karott");
     
-    m_button_algo1kp = new ValueGui(0.35, 0.5+dist2, PETIT_RAYON, 0, "kp ");
-    m_button_algo1kd = new ValueGui(0.35, 0.5+2*dist2, PETIT_RAYON, 0, "kd ");
-    m_button_algo2k = new ValueGui(0.35, 0.5+dist2, PETIT_RAYON, 0, "k  ");
- 
+    m_button_algofk_lookahead_d = new ValueGui(0.35, 0.5, PETIT_RAYON, 0, "fk lookahead ");
+   
+    m_button_algok = new ValueGui(0.35, 0.7, PETIT_RAYON, 0, "k ");
+    
     m_button_p5test1  = new ButtonGui(0.4, 0.8, rayon, 0);
     m_button_p5test3  = new ButtonGui(0.6, 0.8, rayon, 0);
+    
     
     //m_button_gps = new ButtonGui(0.25, 0.3, GROS_BUTTON, 0);
     //m_button_line = new ButtonGui(0.5, 0.3, GROS_BUTTON, 0);
@@ -226,12 +227,10 @@ void OptionWidget::drawPage5(){
     drawText("Autoguidage", 0.55*m_width, 0.15*m_height, 20, true);
     
     
-    if(f.m_config.m_algo == ALGO_PID){
-        drawValueGui(m_button_algo1kp, f.m_config.m_algo1_kp);
-        drawValueGui(m_button_algo1kd, f.m_config.m_algo1_kd);
-    } else {
-        drawValueGui(m_button_algo2k, f.m_config.m_algo2_k);
+    if(f.m_config.m_algo == ALGO_FOLLOW_CARROT){
+        drawValueGui(m_button_algofk_lookahead_d, f.m_config.m_algofk_lookahead_d);
     }
+    drawValueGui(m_button_algok, f.m_config.m_algo_k);
     
     drawSelectButtonGuiClose(m_button_select_algo);
       
@@ -269,12 +268,11 @@ void OptionWidget::onMousePage5(double x, double y){
         return;
     }
     
-    if(f.m_config.m_algo == ALGO_PID){
-        f.m_config.m_algo1_kp = f.m_config.m_algo1_kp * m_button_algo1kp->getMultValue(x,y);
-        f.m_config.m_algo1_kd = f.m_config.m_algo1_kd * m_button_algo1kd->getMultValue(x,y);
-    } else {
-        f.m_config.m_algo2_k = f.m_config.m_algo2_k * m_button_algo2k->getMultValue(x,y);
+    if(f.m_config.m_algo == ALGO_FOLLOW_CARROT){
+        f.m_config.m_algofk_lookahead_d = f.m_config.m_algofk_lookahead_d * m_button_algofk_lookahead_d->getMultValue(x,y);
     }
+    f.m_config.m_algo_k = f.m_config.m_algo_k * m_button_algok->getMultValue(x,y);
+   
     f.initOrLoadConfig();
     
 }

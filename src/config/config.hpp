@@ -3,8 +3,8 @@
 
 #include <string>
 
-#define ALGO_PID 0
-#define ALGO_2 1
+#define ALGO_NAIF 0
+#define ALGO_FOLLOW_CARROT 1
 
 class Config  {
 public:
@@ -28,9 +28,12 @@ public:
     
     int m_algo = 0;
     
-    double m_algo1_kp = 100;
-    double m_algo1_kd = 100;
-    double m_algo2_k = 100;
+    double m_algo_k = 100;
+    
+    double m_algofk_lookahead_d = 10;
+    
+    bool m_logNMEA = true;
+    bool m_api = true;
     
     
     Config();

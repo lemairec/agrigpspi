@@ -49,6 +49,10 @@ void GpsFramework::initOrLoadConfig(){
     m_pointB.m_fix = 100;
     setAB();
     m_reloadConfig = true;
+    
+    m_algo = m_config.m_algo;
+    m_algofk_lookahead_d = m_config.m_algofk_lookahead_d;
+    
 }
 
 GpsFramework & GpsFramework::Instance(){
@@ -89,8 +93,9 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
             m_list.pop_back();
         };
         
+        calculAngleCorrection();
         if(m_volantEngaged){
-            m_pilotModule.run(m_distanceAB);
+            m_pilotModule.run(m_angle_correction);
         }
         calculDeplacement();
         
@@ -103,6 +108,8 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
     if(m_observer){
         m_observer->onNewPoint();
     }
+    
+    //std::cout << "<trkpt lon=\""<< f.m_longitude << "\" lat=\"" << f.m_latitude << "\"><ele>51.0</ele><time>2010-12-26T17:07:40.421Z</time></trkpt>" << std::endl;
 }
 
 void GpsFramework::onGGAFrame(const std::string &frame){
@@ -206,7 +213,7 @@ void GpsFramework::setAB(){
     m_sqrt_m_a_m_b = sqrt(m_a*m_a + m_b*m_b);
     
     if(m_ab_y != 0 && m_ab_x != 0){
-        m_angleAB = atan(m_ab_y/m_ab_x);
+        m_angleAB = atan(m_ab_x/m_ab_y);
     } else {
         m_angleAB = 0;
     }
@@ -497,7 +504,14 @@ void GpsFramework::calculSurface(){
 
 
 // pure pousuite
-void GpsFramework::calculPurePoursuite(){
+void GpsFramework::calculAngleCorrection(){
+    if(m_algo == ALGO_NAIF){
+        m_angle_correction = -m_distanceAB/m_config.m_largeur;
+    } else {
+        m_angle_correction = atan(-m_distanceAB/m_algofk_lookahead_d)-(m_angleAB-atan(m_deplacementX/m_deplacementY));
+        //m_angle_correction = ;
+    }
+    //m_angle_correction = -3.14/6;
     
 }
 int orientation(GGAFrame & p, GGAFrame & q, GGAFrame & r)
