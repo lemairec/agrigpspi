@@ -26,6 +26,8 @@ public:
     bool m_sensDraw = false;
     bool m_debug = false;
     
+    
+    bool m_pilot_inverse = false;
     int m_algo = 0;
     
     double m_algo_k = 100;

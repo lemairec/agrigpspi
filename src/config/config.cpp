@@ -41,6 +41,7 @@ void Config::save(){
     settings.setValue("b_lat", m_b_lat);
     settings.setValue("b_lon", m_b_lon);
     
+    settings.setValue("m_pilot_inverse", m_pilot_inverse);
     settings.setValue("m_algo", m_algo);
     settings.setValue("m_algo_k", m_algo_k);
     settings.setValue("m_algofk_lookahead_d", m_algofk_lookahead_d);
@@ -88,6 +89,9 @@ void Config::load(){
         m_b_lon = settings.value("b_lon").toDouble();
     }
     
+    if(settings.contains("m_pilot_inverse")){
+        m_pilot_inverse = settings.value("m_pilot_inverse").toBool();
+    }
     if(settings.contains("m_algo")){
         m_algo = settings.value("m_algo").toInt();
     }

@@ -66,7 +66,8 @@ OptionWidget::OptionWidget(){
     //page 5
     double dist2 = 0.08;
     
-    m_button_select_algo = new SelectButtonGui(0.35, 0.25, rayon*0.8);
+    m_button_inverse = new ButtonGui(0.35, 0.25, rayon, PETIT_RAYON);
+    m_button_select_algo = new SelectButtonGui(0.35, 0.35, PETIT_RAYON);
     m_button_select_algo->addValue("algo_naif");
     m_button_select_algo->addValue("algo_follow_karott");
     
@@ -227,6 +228,13 @@ void OptionWidget::drawPage5(){
     
     drawText("Autoguidage", 0.55*m_width, 0.15*m_height, 20, true);
     
+    if(f.m_config.m_pilot_inverse){
+        drawButtonLabel(m_button_inverse, COLOR_CHECK);
+    } else {
+        drawButtonLabel(m_button_inverse, COLOR_OTHER);
+    }
+    drawText("Inverse", 0.4, 0.25);
+    
     
     if(f.m_config.m_algo == ALGO_FOLLOW_CARROT){
         drawValueGui(m_button_algofk_lookahead_d, f.m_config.m_algofk_lookahead_d);
@@ -262,6 +270,8 @@ void OptionWidget::onMousePage5(double x, double y){
         m_button_select_algo->m_open = !m_button_select_algo->m_open;
     }
     
+    
+    
     if(m_button_p5test1->isActive(x,y)){
         f.m_pilotModule.run(-0.349066);
         return;
@@ -271,6 +281,10 @@ void OptionWidget::onMousePage5(double x, double y){
     } else if(m_button_p5test3->isActive(x,y)){
         f.m_pilotModule.run(0.349066);
         return;
+    }
+    
+    if(m_button_inverse->isActive(x,y)){
+        f.m_config.m_pilot_inverse = !f.m_config.m_pilot_inverse;
     }
     
     if(f.m_config.m_algo == ALGO_FOLLOW_CARROT){

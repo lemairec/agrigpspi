@@ -50,6 +50,7 @@ class OptionWidget : public BaseWidget {
     
     
     //page5
+    ButtonGui * m_button_inverse;
     SelectButtonGui * m_button_select_algo;
     
     ValueGui * m_button_algofk_lookahead_d;

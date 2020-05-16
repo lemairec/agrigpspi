@@ -9,28 +9,58 @@ String a;
 
 #define MOTOR_ENCODER A1
 
+#define MOTOR_ON 255
+
+int desired_value = 0;
+int value = 0;
 
 void version(){
   Serial.println("PILOT_0_0_1");
 }
 
-void turnMotor2(int pas, boolean reverse){
-  int i = 0;
-  int oldValue = 0;
+void goTo(int res){
+  desired_value = res;
+  if(res < value){
+    turnLeftMotor();
+  } else {
+    turnRightMotor();
+  }
+}
 
-  SetMotor2(255, reverse);
-  
-  while(i<pas){
-    int  read = digitalRead(MOTOR_ENCODER);
+void turnRightMotor(){
+  Serial.print("turnRightMotor");
+  Serial.print(desired_value);
+  Serial.println("");
+  SetMotor2(MOTOR_ON, 0);
+  int oldValue = 0;
+  while(value < desired_value){
+    int read = digitalRead(MOTOR_ENCODER);
     if(read!=oldValue){
       if(read==1){
-        ++i;
+        ++value;
       }
       oldValue=read;
     }
   }
-  SetMotor2(0, reverse);
-  
+  SetMotor2(0,0);
+}
+
+void turnLeftMotor(){
+  Serial.print("turnLeftMotor ");
+  Serial.print(desired_value);
+  Serial.println("");
+  SetMotor2(MOTOR_ON, 1);
+  int oldValue = 0;
+  while(value > desired_value){
+    int read = digitalRead(MOTOR_ENCODER);
+    if(read!=oldValue){
+      if(read==1){
+        --value;
+      }
+      oldValue=read;
+    }
+  }
+  SetMotor2(0,1);
 }
 
 void SetMotor2(int speed, boolean reverse)
@@ -45,7 +75,7 @@ void setup(){
   pinMode(MOTOR_PIN2, OUTPUT);
   pinMode(MOTOR_ENABLE_PIN, OUTPUT);
   
-  Serial.begin(9600);
+  Serial.begin(115200);
   version();
  
 }
@@ -77,6 +107,7 @@ void readChar(char c){
     resetBuffer();
   } else if(c == '\n'){
     parseBuffer();
+    resetBuffer();
   } else {
     m_buffer[m_bufferIndLast] = c;
     m_bufferIndLast++;
@@ -107,6 +138,12 @@ int myReadChar(char c){
   }
 }
 
+void printBuffer(){
+  for(int i=0; i<m_bufferIndLast-1; ++i){
+    Serial.print(m_buffer[i]);
+  }
+  Serial.println("");
+}
 
 void parseBuffer(){
   if(m_buffer[0] == 'H'){
@@ -134,6 +171,24 @@ void parseBuffer(){
       res = res*10+myReadChar(m_buffer[i]);
     }
     goLeft(res);
+  } else if(m_buffer[0] == 'G'){
+    printBuffer();
+    int res = 0;
+    for(int i=3; i<m_bufferIndLast-1; ++i){
+      int j = myReadChar(m_buffer[i]);
+      /*Serial.print(i);
+      Serial.print(" ");
+      Serial.print(m_buffer[i]);
+      Serial.print("=>");
+      Serial.print(j);
+      Serial.println("");*/
+      res = res*10+myReadChar(m_buffer[i]);
+    }
+    Serial.println(res);
+    if(m_buffer[2] == '-'){
+      res = -res;
+    }
+    goTo(res);
   }  else {
     Serial.println("$error");
   }
@@ -145,13 +200,13 @@ void goRight(int l){
   
   Serial.print("Right ");
   Serial.println(l);
-  turnMotor2(l,true);
+  //turnMotor2(l,true);
   Serial.println("right ok");
 }
 
 void goLeft(int l){
   Serial.print("Left ");
   Serial.println(l);
-  turnMotor2(l,false);
+  //turnMotor2(l,false);
   Serial.println("left ok");
 }

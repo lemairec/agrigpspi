@@ -14,9 +14,10 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_algo_k = config.m_algo_k;
     
     m_serial = NULL;
+    m_inverse = config.m_pilot_inverse;
     if(config.m_inputPilot != "none"){
         try {
-            m_serial = new Serial(config.m_inputPilot,9600);
+            m_serial = new Serial(config.m_inputPilot,config.m_baudratePilot);
         } catch(boost::system::system_error& e)
         {
             WARN(config.m_input << " " << config.m_baudrate);
@@ -33,22 +34,20 @@ void PilotModule::clear(){
 }
 
 void PilotModule::run(double value){
-
-    
-    double value2 = m_algo_k*value;
-    int res = value2 - m_value_volant;
-    m_value_volant += res;
-    
-    
     std::ostringstream out;
+    int res = value*m_algo_k;
+    if(m_inverse){
+        res = -res;
+    }
     if(res<0){
-        out << "$R;" << (-res) << "\n";
+        out << "$G;-" << (-res) << "\n";
         
         
     } else {
-        out << "$L;" << res << "\n";
+        out << "$G; " << res << "\n";
     }
-    INFO(value << " " << res);
+    
+    INFO(out.str());
     if(m_serial){
         m_serial->writeString(out.str());
     } else {
@@ -62,8 +61,8 @@ void PilotModule::test(int i){
     }
     INFO("$R;1000\n");
     if(i<0){
-        m_serial->writeString("$R;1000\n");
+        m_serial->writeString("$G; 1000\n");
     } else {
-        m_serial->writeString("$L;1000\n");
+        m_serial->writeString("$G;-1000\n");
     }
 }

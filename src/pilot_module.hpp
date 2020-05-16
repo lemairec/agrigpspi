@@ -9,6 +9,8 @@ class Serial;
 
 class PilotModule {
     Serial * m_serial = NULL;
+    
+    bool m_inverse = false;
     double m_last_value = 0;
     double m_algo_k;
        
