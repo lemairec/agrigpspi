@@ -31,6 +31,9 @@ void PilotModule::initOrLoadConfig(Config & config){
 
 void PilotModule::clear(){
     m_value_volant = 0;
+    if(m_serial){
+        m_serial->writeString("$C;\n");
+    }
 }
 
 void PilotModule::run(double value){

@@ -150,6 +150,8 @@ void parseBuffer(){
     Serial.println("");
     Serial.println("$R;1");
     Serial.println("$L;100");
+    Serial.println("$G;100");
+    Serial.println("$C");
     Serial.println("$V");
     Serial.println("");
   } else if(m_buffer[0] == 'V'){
@@ -171,6 +173,9 @@ void parseBuffer(){
       res = res*10+myReadChar(m_buffer[i]);
     }
     goLeft(res);
+  } else if(m_buffer[0] == 'C'){
+    desired_value = 0;
+    value = 0;
   } else if(m_buffer[0] == 'G'){
     printBuffer();
     int res = 0;
