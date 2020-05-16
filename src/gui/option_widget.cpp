@@ -75,6 +75,7 @@ OptionWidget::OptionWidget(){
     m_button_algok = new ValueGui(0.35, 0.7, PETIT_RAYON, 0, "k ");
     
     m_button_p5test1  = new ButtonGui(0.4, 0.8, rayon, 0);
+    m_button_p5test2  = new ButtonGui(0.5, 0.8, rayon, 0);
     m_button_p5test3  = new ButtonGui(0.6, 0.8, rayon, 0);
     
     
@@ -236,6 +237,7 @@ void OptionWidget::drawPage5(){
       
     
     drawButtonLabel(m_button_p5test1, COLOR_GREEN);
+    drawButtonLabel(m_button_p5test2, COLOR_OTHER);
     drawButtonLabel(m_button_p5test3, COLOR_GREEN);
     
     drawSelectButtonGuiOpen(m_button_select_algo);
@@ -261,10 +263,13 @@ void OptionWidget::onMousePage5(double x, double y){
     }
     
     if(m_button_p5test1->isActive(x,y)){
-        f.m_pilotModule.test(-200);
+        f.m_pilotModule.run(-0.349066);
+        return;
+    } else if(m_button_p5test2->isActive(x,y)){
+        f.m_pilotModule.run(0);
         return;
     } else if(m_button_p5test3->isActive(x,y)){
-        f.m_pilotModule.test(200);
+        f.m_pilotModule.run(0.349066);
         return;
     }
     

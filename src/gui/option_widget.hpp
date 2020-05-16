@@ -57,6 +57,7 @@ class OptionWidget : public BaseWidget {
     ValueGui * m_button_algok;
     
     ButtonGui * m_button_p5test1;
+    ButtonGui * m_button_p5test2;
     ButtonGui * m_button_p5test3;
     
     
