@@ -61,7 +61,7 @@ void MainWindow::setupUi(){
     this->setCentralWidget(m_view);
     
     #ifdef APPLE
-        creerMenu();
+        //creerMenu();
         showMaximized();
     #else
         showFullScreen();

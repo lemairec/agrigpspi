@@ -30,7 +30,7 @@ public:
 protected:
     void setupUi();
     void onNewPoint();
-    
+    void creerMenu();
 
 signals:
     void onValueChangeSignal();
