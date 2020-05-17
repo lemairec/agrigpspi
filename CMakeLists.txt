@@ -7,6 +7,9 @@ configure_file (
 )
 include_directories("${PROJECT_BINARY_DIR}")
 
+if(APPLE)
+    ADD_DEFINITIONS(-DAPPLE)
+endif()
 
 FIND_PACKAGE(Qt5Core)
 find_library(PTHREAD pthread)

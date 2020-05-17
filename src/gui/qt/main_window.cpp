@@ -28,6 +28,10 @@ void View::mouseReleaseEvent ( QMouseEvent * event ){
     m_gpsWidget->draw_force();
 }
 
+
+
+
+
 MainWindow * MainWindow::Instance_ptr(){
     static MainWindow gf;
     return &gf;
@@ -56,6 +60,13 @@ void MainWindow::setupUi(){
     m_view->setupUi();
     this->setCentralWidget(m_view);
     
+    #ifdef APPLE
+        creerMenu();
+        showMaximized();
+    #else
+        showFullScreen();
+    #endif
+
     //showMaximized();
     //showFullScreen();
 }
@@ -79,4 +90,16 @@ void MainWindow::onValueChangeSlot(){
     m_view->m_gpsWidget->draw();
 }
 
+void MainWindow::creerMenu()
+{
+    QMenu *menuFichier = menuBar()->addMenu(tr("&Fichier"));
+    menuFichier->addAction("open Config", this, SLOT(onValueChangeSlot()));
+      
+    //menuFichier->addAction(actionQuitter);
+    
+    /*QMenu *menuAide = menuBar()->addMenu(tr("&?"));
+
+    menuAide->addAction(actionAPropos);
+    menuAide->addAction(actionAProposQt);*/
+}
 
