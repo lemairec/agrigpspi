@@ -33,7 +33,7 @@ void turnRightMotor(){
   Serial.println("");
   SetMotor2(MOTOR_ON, 0);
   int oldValue = 0;
-  while(value < desired_value){
+  while(value < desired_value && !Serial.available()){
     int read = digitalRead(MOTOR_ENCODER);
     if(read!=oldValue){
       if(read==1){
@@ -51,7 +51,7 @@ void turnLeftMotor(){
   Serial.println("");
   SetMotor2(MOTOR_ON, 1);
   int oldValue = 0;
-  while(value > desired_value){
+  while(value > desired_value && !Serial.available()){
     int read = digitalRead(MOTOR_ENCODER);
     if(read!=oldValue){
       if(read==1){
