@@ -26,7 +26,7 @@ void PilotModule::initOrLoadConfig(Config & config){
         }
        
     }
-    
+
     //m_version_guidage = m_serial->readString(12);
     
     clear();
