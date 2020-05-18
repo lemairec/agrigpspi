@@ -28,9 +28,9 @@ void goTo(int res){
 }
 
 void turnRightMotor(){
-  Serial.print("turnRightMotor");
+  /*Serial.print("turnRightMotor");
   Serial.print(desired_value);
-  Serial.println("");
+  Serial.println("");*/
   SetMotor2(MOTOR_ON, 0);
   int oldValue = 0;
   while(value < desired_value && !Serial.available()){
@@ -46,9 +46,9 @@ void turnRightMotor(){
 }
 
 void turnLeftMotor(){
-  Serial.print("turnLeftMotor ");
+  /*Serial.print("turnLeftMotor ");
   Serial.print(desired_value);
-  Serial.println("");
+  Serial.println("");*/
   SetMotor2(MOTOR_ON, 1);
   int oldValue = 0;
   while(value > desired_value && !Serial.available()){

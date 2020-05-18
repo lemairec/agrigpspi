@@ -69,3 +69,51 @@ void PilotModule::test(int i){
         m_serial->writeString("$G;-1000\n");
     }
 }
+
+
+/*
+ qt
+ m_serial = new QSerialPort();
+ m_serial->setPortName("/dev/cu.usbserial-141240");
+ m_serial->setBaudRate(QSerialPort::Baud115200);
+ m_serial->setDataBits(QSerialPort::Data8);
+ m_serial->setParity(QSerialPort::NoParity);
+ m_serial->setStopBits(QSerialPort::OneStop);
+ m_serial->setFlowControl(QSerialPort::NoFlowControl);
+ 
+ if (m_serial->open(QIODevice::ReadWrite)) {
+
+     INFO("Connected");
+ //    QThread::msleep(1000);
+ } else {
+
+     INFO("Open error");
+ }
+ }
+ 
+ if(value>0){
+ QString str("#G;-100000\n");
+ QByteArray br = str.toUtf8();
+ m_serial->write(br);
+ } else {
+     QString str("#G; 100000\n");
+     QByteArray br = str.toUtf8();
+     m_serial->write(br);
+     
+ }
+ m_serial->flush();
+ 
+  m_serial->waitForBytesWritten(100);
+  m_serial->waitForReadyRead(100);
+ auto b = m_serial->readAll();
+ 
+ 
+ INFO(m_serial->isOpen());
+ INFO(m_serial->isWritable());
+ 
+ INFO(b.size());
+ QString myString(b);
+ 
+ 
+ INFO("toto" << myString.toUtf8().constData());
+ */
