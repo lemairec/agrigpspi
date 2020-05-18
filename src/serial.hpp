@@ -41,6 +41,13 @@ public:
         return c;
     }
     
+    std::string readString(int l)
+    {
+        char c[l];
+        asio::read(serial,asio::buffer(&c,l+1));
+        return std::string(c);
+    }
+    
     
 private:
     boost::asio::io_service io;

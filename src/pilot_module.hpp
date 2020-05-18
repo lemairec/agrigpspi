@@ -16,6 +16,8 @@ class PilotModule {
        
     int m_value_volant = 0;
 public:
+    std::string m_version_guidage;
+    
     PilotModule();
     void run(double value);
     void initOrLoadConfig(Config & config);

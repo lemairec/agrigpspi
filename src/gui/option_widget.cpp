@@ -227,6 +227,7 @@ void OptionWidget::drawPage5(){
     m_button_select_algo->selectedValue = f.m_config.m_algo;
     
     drawText("Autoguidage", 0.55*m_width, 0.15*m_height, 20, true);
+    drawText(f.m_pilotModule.m_version_guidage, 0.55*m_width, 0.20*m_height, 11, true);
     
     if(f.m_config.m_pilot_inverse){
         drawButtonLabel(m_button_inverse, COLOR_CHECK);
