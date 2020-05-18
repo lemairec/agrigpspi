@@ -180,8 +180,8 @@ void parseBuffer(){
     printBuffer();
     int res = 0;
     for(int i=3; i<m_bufferIndLast-1; ++i){
-      int j = myReadChar(m_buffer[i]);
-      /*Serial.print(i);
+      /*int j = myReadChar(m_buffer[i]);
+      Serial.print(i);
       Serial.print(" ");
       Serial.print(m_buffer[i]);
       Serial.print("=>");
