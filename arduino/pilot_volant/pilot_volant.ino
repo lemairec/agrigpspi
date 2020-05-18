@@ -15,7 +15,7 @@ int desired_value = 0;
 int value = 0;
 
 void version(){
-  Serial.println("PILOT_0_0_1");
+  Serial.println("#PILOT_0_0_2");
 }
 
 void goTo(int res){
