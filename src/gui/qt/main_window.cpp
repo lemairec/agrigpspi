@@ -62,7 +62,7 @@ void MainWindow::setupUi(){
     
     #ifdef APPLE
         //creerMenu();
-        showMaximized();
+        //showMaximized();
     #else
         showFullScreen();
     #endif
