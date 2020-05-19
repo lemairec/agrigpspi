@@ -15,7 +15,7 @@ const int COLOR_CHECK = 3;
 const int COLOR_OTHER = 4;
 
 struct ButtonGui{
-    ButtonGui(double x, double y, double rayon, int type);
+    ButtonGui(double x, double y, double rayon, int type = 0);
     
     bool isActive(double x, double y);
     double m_x = 0;
