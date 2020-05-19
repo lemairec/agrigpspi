@@ -12,7 +12,7 @@ void PilotModule::initOrLoadConfig(Config & config){
     if(m_serial){
         delete(m_serial);
     }
-    m_algo_k = config.m_algo_k;
+    //m_algo_k = config.m_algo_k;
     
     m_serial = NULL;
     m_inverse = config.m_pilot_inverse;
@@ -34,7 +34,6 @@ void PilotModule::initOrLoadConfig(Config & config){
 }
 
 void PilotModule::clear(){
-    m_value_volant = 0;
     if(m_serial){
         m_serial->writeString("$C;\n");
     }
@@ -42,17 +41,46 @@ void PilotModule::clear(){
 
 void PilotModule::run(double value){
     std::ostringstream out;
-    int res = value*m_algo_k;
-    if(m_inverse){
-        res = -res;
-    }
-    if(res<0){
-        out << "$G;-" << (-res) << "\n";
+    
+    if(m_algo2 == ALGO2_GOTO){
+        int res = value*m_algo2_goto_k;
+        if(m_inverse){
+            res = -res;
+        }
+        if(res<0){
+            out << "$G;-" << (-res) << "\n";
+            
+            
+        } else {
+            out << "$G; " << res << "\n";
+        }
+    } else if(m_algo2 == ALGO2_GOTO_REL){
+        int res = (value-m_0)*m_algo2_goto_k;
+        if(m_inverse){
+            res = -res;
+        }
+        if(res<0){
+            out << "$G;-" << (-res) << "\n";
+            
+            
+        } else {
+            out << "$G; " << res << "\n";
+        }
+        m_0 = m_0+m_algo2_goto_rel*value;
+    } else if(m_algo2 == ALGO2_PID){
+        int res = value*m_algo2_pid_p + (m_lastValue-value)*m_algo2_pid_d;
+        if(m_inverse){
+            res = -res;
+        }
+        if(res<0){
+            out << "$L;" << (-res) << "\n";
+        } else {
+            out << "$R;" << res << "\n";
+        }
+        m_lastValue = value;
         
-        
-    } else {
-        out << "$G; " << res << "\n";
     }
+    
     
     INFO(out.str());
     if(m_serial){

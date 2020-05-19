@@ -52,6 +52,7 @@ void GpsFramework::initOrLoadConfig(){
     
     m_algo = m_config.m_algo;
     m_algofk_lookahead_d = m_config.m_algofk_lookahead_d;
+    m_algo_naif_k = m_config.m_algo_naif_k;
     
 }
 
@@ -506,7 +507,7 @@ void GpsFramework::calculSurface(){
 // pure pousuite
 void GpsFramework::calculAngleCorrection(){
     if(m_algo == ALGO_NAIF){
-        m_angle_correction = -m_distanceAB/m_config.m_largeur;
+        m_angle_correction = -m_distanceAB/m_config.m_largeur*m_algo_naif_k;
     } else {
         m_angle_correction = atan(-m_distanceAB/m_algofk_lookahead_d)-(m_angleAB-atan(m_deplacementX/m_deplacementY));
         //m_angle_correction = ;

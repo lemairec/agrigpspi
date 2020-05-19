@@ -6,6 +6,10 @@
 #define ALGO_NAIF 0
 #define ALGO_FOLLOW_CARROT 1
 
+#define ALGO2_GOTO 0
+#define ALGO2_GOTO_REL 1
+#define ALGO2_PID 2
+
 class Config  {
 public:
     double m_largeur = 27;
@@ -28,11 +32,16 @@ public:
     
     
     bool m_pilot_inverse = false;
+    
     int m_algo = 0;
-    
-    double m_algo_k = 100;
-    
+    double m_algo_naif_k = 100;
     double m_algofk_lookahead_d = 10;
+    
+    int m_algo2 = 0;
+    double m_algo2_goto_k = 100;
+    double m_algo2_goto_rel = 0.01;
+    double m_algo2_pid_p = 100;
+    double m_algo2_pid_d = 100;
     
     bool m_logNMEA = true;
     bool m_api = true;

@@ -15,7 +15,7 @@ int desired_value = 0;
 int value = 0;
 
 void version(){
-  Serial.println("#PILOT_0_0_2");
+  Serial.println("#PILOT_0_0_3");
 }
 
 void goTo(int res){
@@ -61,6 +61,25 @@ void turnLeftMotorGoTo(){
     }
   }
   SetMotor2(0,1);
+}
+
+void turnMotor2(int pas, boolean reverse){
+  int i = 0;
+  int oldValue = 0;
+
+  SetMotor2(MOTOR_ON, reverse);
+  
+  while(i<pas && !Serial.available()){
+    int  read = digitalRead(MOTOR_ENCODER);
+    if(read!=oldValue){
+      if(read==1){
+        ++i;
+      }
+      oldValue=read;
+    }
+  }
+  SetMotor2(0, reverse);
+  
 }
 
 
@@ -205,15 +224,15 @@ int my_delay = 200;
 
 void goRight(int l){
   
-  Serial.print("Right ");
-  Serial.println(l);
+  //Serial.print("Right ");
+  //Serial.println(l);
   turnMotor2(l,true);
-  Serial.println("right ok");
+  //Serial.println("right ok");
 }
 
 void goLeft(int l){
-  Serial.print("Left ");
-  Serial.println(l);
+ // Serial.print("Left ");
+  //Serial.println(l);
   turnMotor2(l,false);
-  Serial.println("left ok");
+  //Serial.println("left ok");
 }

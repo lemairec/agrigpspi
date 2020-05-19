@@ -10,6 +10,8 @@
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 
+#define PETIT_RAYON2 0.025
+
 std::string execute2(std::string cmd){
     std::string file = ProjectSourceBin + "/tmp_cmd";
     std::string cmd2 = cmd + " > " + file;
@@ -59,11 +61,8 @@ OptionWidget::OptionWidget(){
 
     
     
-    //page 4
-    m_button_sens = new ButtonGui(0.35, 0.25, rayon, 0);
-    m_button_debug = new ButtonGui(0.35, 0.35, rayon, 0);
-    
-    //page 5
+    setPage3();
+    setPage4();
     setPage5();
     
     //m_button_gps = new ButtonGui(0.25, 0.3, GROS_BUTTON, 0);
@@ -160,6 +159,13 @@ void OptionWidget::drawPage2(){
     
 }
 
+/**
+PAGE 3
+*/
+
+void OptionWidget::setPage3(){
+};
+
 void OptionWidget::drawPage3(){
     GpsFramework & f = GpsFramework::Instance();
     drawText("Connection Pilot", 0.55*m_width, 0.15*m_height, 20, true);
@@ -184,7 +190,37 @@ void OptionWidget::drawPage3(){
         }
         drawText(button->m_label, button->m_x+0.04, button->m_y);
     }
+    }
+
+void OptionWidget::onMousePage3(double x, double y){
+    GpsFramework & f = GpsFramework::Instance();
+    
+    for(auto button: m_buttonp3Serials){
+        if(button->isActive(x,y)){
+            f.m_config.m_inputPilot = button->m_label;
+            f.initOrLoadConfig();
+        }
+    }
+    for(auto button: m_buttonp3Baurates){
+        if(button->isActive(x,y)){
+            GpsFramework & f = GpsFramework::Instance();
+            f.m_config.m_baudratePilot = button->m_labelInt;
+            f.initOrLoadConfig();
+        }
+    }
+
 }
+
+
+
+/**
+PAGE 4
+*/
+
+void OptionWidget::setPage4(){
+    m_button_sens = new ButtonGui(0.35, 0.25, PETIT_RAYON2, 0);
+    m_button_debug = new ButtonGui(0.35, 0.35, PETIT_RAYON2, 0);
+};
 
 void OptionWidget::drawPage4(){
     GpsFramework & f = GpsFramework::Instance();
@@ -208,6 +244,21 @@ void OptionWidget::drawPage4(){
     }
 }
 
+void OptionWidget::onMousePage4(double x, double y){
+    GpsFramework & f = GpsFramework::Instance();
+    
+    if(m_button_sens->isActive(x,y)){
+        GpsFramework & f = GpsFramework::Instance();
+        f.m_config.m_sensDraw = !f.m_config.m_sensDraw;
+    } else if(m_button_debug->isActive(x,y)){
+        GpsFramework & f = GpsFramework::Instance();
+        f.m_config.m_debug = !f.m_config.m_debug;
+    }
+    
+    f.initOrLoadConfig();
+
+}
+
 /**
  PAGE 5
  */
@@ -215,26 +266,39 @@ void OptionWidget::drawPage4(){
 void OptionWidget::setPage5(){
     double dist2 = 0.08;
 
-    m_button_inverse = new ButtonGui(0.35, 0.25, PETIT_RAYON);
-    m_button_select_algo = new SelectButtonGui(0.35, 0.35, PETIT_RAYON);
+    m_button_inverse = new ButtonGui(0.35, 0.20, PETIT_RAYON2);
+    m_button_select_algo = new SelectButtonGui(0.35, 0.30, PETIT_RAYON2);
     m_button_select_algo->addValue("algo_naif");
     m_button_select_algo->addValue("algo_follow_karott");
 
-    m_button_algofk_lookahead_d = new ValueGui(0.35, 0.5, PETIT_RAYON, 0, "fk lookahead ");
-
-    m_button_algok = new ValueGui(0.35, 0.7, PETIT_RAYON, 0, "k ");
-
-    m_button_p5test1  = new ButtonGui(0.4, 0.8, PETIT_RAYON, 0);
-    m_button_p5test2  = new ButtonGui(0.5, 0.8, PETIT_RAYON, 0);
-    m_button_p5test3  = new ButtonGui(0.6, 0.8, PETIT_RAYON, 0);
+    m_button_algo_fk_lookahead_d = new ValueGui(0.4, 0.35, PETIT_RAYON2, 0, "fk lookahead ");
+    m_button_algo_naif_k = new ValueGui(0.4, 0.35, PETIT_RAYON2, 0, "naif k");
+    
+    m_button_select_algo2 = new SelectButtonGui(0.35, 0.50, PETIT_RAYON2);
+    m_button_select_algo2->addValue("algo_goto");
+    m_button_select_algo2->addValue("algo_goto_rel");
+    m_button_select_algo2->addValue("algo_pid");
+    
+    m_button_algo2_goto_k = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "goto k ");
+    m_button_algo2_goto_rel = new ValueGui(0.4, 0.60, PETIT_RAYON2, 0, "goto rel ");
+    m_button_algo2_pid_kp = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "pid p ");
+    m_button_algo2_pid_kd = new ValueGui(0.4, 0.60, PETIT_RAYON2, 0, "pid d ");
+    
+    
+    m_button_p5test1  = new ButtonGui(0.4, 0.8, PETIT_RAYON2, 0);
+    m_button_p5test2  = new ButtonGui(0.5, 0.8, PETIT_RAYON2, 0);
+    m_button_p5test3  = new ButtonGui(0.6, 0.8, PETIT_RAYON2, 0);
 };
 
 
 void OptionWidget::drawPage5(){
     GpsFramework & f = GpsFramework::Instance();
-    m_button_select_algo->selectedValue = f.m_config.m_algo;
     
-    drawText("Autoguidage", 0.55*m_width, 0.15*m_height, 20, true);
+    drawText("Autoguidage", 0.55*m_width, 0.1*m_height, 20, true);
+    
+    m_button_select_algo->selectedValue = f.m_config.m_algo;
+    m_button_select_algo2->selectedValue = f.m_config.m_algo2;
+    
     drawText(f.m_pilotModule.m_version_guidage, 0.55*m_width, 0.20*m_height, 11, true);
     
     if(f.m_config.m_pilot_inverse){
@@ -242,15 +306,28 @@ void OptionWidget::drawPage5(){
     } else {
         drawButtonLabel(m_button_inverse, COLOR_OTHER);
     }
-    drawText("Inverse", 0.4, 0.25);
+    drawText("Inverse", 0.4, m_button_inverse->m_y);
     
-    
-    if(f.m_config.m_algo == ALGO_FOLLOW_CARROT){
-        drawValueGui(m_button_algofk_lookahead_d, f.m_config.m_algofk_lookahead_d);
-    }
-    drawValueGui(m_button_algok, f.m_config.m_algo_k);
     
     drawSelectButtonGuiClose(m_button_select_algo);
+    if(f.m_config.m_algo == ALGO_FOLLOW_CARROT){
+        drawValueGui(m_button_algo_fk_lookahead_d, f.m_config.m_algofk_lookahead_d);
+    } else {
+        drawValueGui(m_button_algo_naif_k, f.m_config.m_algo_naif_k);
+    }
+    
+    if(f.m_config.m_algo2 == ALGO2_GOTO){
+        drawValueGui(m_button_algo2_goto_k, f.m_config.m_algo2_goto_k);
+    } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
+        drawValueGui(m_button_algo2_goto_k, f.m_config.m_algo2_goto_k);
+        drawValueGui(m_button_algo2_goto_rel, f.m_config.m_algo2_goto_rel);
+    } else {
+        drawValueGui(m_button_algo2_pid_kp, f.m_config.m_algo2_pid_p);
+        drawValueGui(m_button_algo2_pid_kd, f.m_config.m_algo2_pid_d);
+    }
+    
+    drawSelectButtonGuiClose(m_button_select_algo2);
+    
       
     
     drawButtonLabel(m_button_p5test1, COLOR_GREEN);
@@ -258,6 +335,7 @@ void OptionWidget::drawPage5(){
     drawButtonLabel(m_button_p5test3, COLOR_GREEN);
     
     drawSelectButtonGuiOpen(m_button_select_algo);
+    drawSelectButtonGuiOpen(m_button_select_algo2);
 }
 
 void OptionWidget::onMousePage5(double x, double y){
@@ -279,6 +357,22 @@ void OptionWidget::onMousePage5(double x, double y){
         m_button_select_algo->m_open = !m_button_select_algo->m_open;
     }
     
+    if(m_button_select_algo2->m_open){
+        for(size_t i = 0; i < m_button_select_algo2->m_buttons.size(); ++i){
+            if(m_button_select_algo2->m_buttons[i]->isActive(x, y)){
+                m_button_select_algo2->selectedValue = i;
+                f.m_config.m_algo2 = i;
+                f.initOrLoadConfig();
+            };
+        }
+        m_button_select_algo2->m_open = false;
+        return;
+        
+    }
+    if( m_button_select_algo2->m_buttonOpen.isActive(x, y)){
+        m_button_select_algo2->m_open = !m_button_select_algo2->m_open;
+    }
+    
     
     
     if(m_button_p5test1->isActive(x,y)){
@@ -297,10 +391,21 @@ void OptionWidget::onMousePage5(double x, double y){
     }
     
     if(f.m_config.m_algo == ALGO_FOLLOW_CARROT){
-        f.m_config.m_algofk_lookahead_d = f.m_config.m_algofk_lookahead_d * m_button_algofk_lookahead_d->getMultValue(x,y);
+        f.m_config.m_algofk_lookahead_d = f.m_config.m_algofk_lookahead_d * m_button_algo_fk_lookahead_d->getMultValue(x,y);
+    } else {
+        f.m_config.m_algo_naif_k = f.m_config.m_algo_naif_k * m_button_algo_naif_k->getMultValue(x,y);
     }
-    f.m_config.m_algo_k = f.m_config.m_algo_k * m_button_algok->getMultValue(x,y);
-   
+    
+    if(f.m_config.m_algo2 == ALGO2_GOTO){
+        f.m_config.m_algo2_goto_k = f.m_config.m_algo2_goto_k * m_button_algo2_goto_k->getMultValue(x,y);
+    } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
+        f.m_config.m_algo2_goto_k = f.m_config.m_algo2_goto_k * m_button_algo2_goto_k->getMultValue(x,y);
+        f.m_config.m_algo2_goto_rel = f.m_config.m_algo2_goto_rel * m_button_algo2_goto_rel->getMultValue(x,y);
+    } else {
+        f.m_config.m_algo2_pid_p = f.m_config.m_algo2_pid_p * m_button_algo2_pid_kp->getMultValue(x,y);
+        f.m_config.m_algo2_pid_d = f.m_config.m_algo2_pid_d * m_button_algo2_pid_kd->getMultValue(x,y);
+    }
+    
     f.initOrLoadConfig();
     
 }
@@ -388,43 +493,6 @@ void OptionWidget::onMousePage2(double x, double y){
         }
     }
 }
-
-
-void OptionWidget::onMousePage3(double x, double y){
-    GpsFramework & f = GpsFramework::Instance();
-    
-    for(auto button: m_buttonp3Serials){
-        if(button->isActive(x,y)){
-            f.m_config.m_inputPilot = button->m_label;
-            f.initOrLoadConfig();
-        }
-    }
-    for(auto button: m_buttonp3Baurates){
-        if(button->isActive(x,y)){
-            GpsFramework & f = GpsFramework::Instance();
-            f.m_config.m_baudratePilot = button->m_labelInt;
-            f.initOrLoadConfig();
-        }
-    }
-
-}
-
-void OptionWidget::onMousePage4(double x, double y){
-    GpsFramework & f = GpsFramework::Instance();
-    
-    if(m_button_sens->isActive(x,y)){
-        GpsFramework & f = GpsFramework::Instance();
-        f.m_config.m_sensDraw = !f.m_config.m_sensDraw;
-    } else if(m_button_debug->isActive(x,y)){
-        GpsFramework & f = GpsFramework::Instance();
-        f.m_config.m_debug = !f.m_config.m_debug;
-    }
-    
-    f.initOrLoadConfig();
-
-}
-
-
 
 
 

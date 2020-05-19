@@ -42,9 +42,15 @@ void Config::save(){
     settings.setValue("b_lon", m_b_lon);
     
     settings.setValue("m_pilot_inverse", m_pilot_inverse);
+    
     settings.setValue("m_algo", m_algo);
-    settings.setValue("m_algo_k", m_algo_k);
+    settings.setValue("m_algo_naif_k", m_algo_naif_k);
     settings.setValue("m_algofk_lookahead_d", m_algofk_lookahead_d);
+    settings.setValue("m_algo2", m_algo2);
+    settings.setValue("m_algo2_goto_k", m_algo2_goto_k);
+    settings.setValue("m_algo2_goto_rel", m_algo2_goto_rel);
+    settings.setValue("m_algo2_pid_p", m_algo2_pid_p);
+    settings.setValue("m_algo2_pid_d", m_algo2_pid_d);
 }
 
 void Config::load(){
@@ -92,13 +98,30 @@ void Config::load(){
     if(settings.contains("m_pilot_inverse")){
         m_pilot_inverse = settings.value("m_pilot_inverse").toBool();
     }
+
     if(settings.contains("m_algo")){
         m_algo = settings.value("m_algo").toInt();
     }
-    if(settings.contains("m_algo_k")){
-        m_algo_k = settings.value("m_algo_k").toDouble();
+    if(settings.contains("m_algo_naif_k")){
+        m_algo_naif_k = settings.value("m_algo_naif_k").toDouble();
     }
     if(settings.contains("m_algofk_lookahead_d")){
         m_algofk_lookahead_d = settings.value("m_algofk_lookahead_d").toDouble();
+    }
+    
+    if(settings.contains("m_algo2")){
+        m_algo2 = settings.value("m_algo2").toInt();
+    }
+    if(settings.contains("m_algo2_goto_k")){
+        m_algo2_goto_k = settings.value("m_algo2_goto_k").toDouble();
+    }
+    if(settings.contains("m_algo2_goto_rel")){
+        m_algo2_goto_rel = settings.value("m_algo2_goto_rel").toDouble();
+    }
+    if(settings.contains("m_algo2_pid_p")){
+        m_algo2_pid_p = settings.value("m_algo2_pid_p").toDouble();
+    }
+    if(settings.contains("m_algo2_pid_d")){
+        m_algo2_pid_d = settings.value("m_algo2_pid_d").toDouble();
     }
 }

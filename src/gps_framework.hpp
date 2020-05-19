@@ -78,6 +78,7 @@ public:
     
     //algo pure poursuite
     int m_algo;
+    double m_algo_naif_k;
     double m_algofk_lookahead_d;
     double m_angle_correction;
     void calculAngleCorrection();

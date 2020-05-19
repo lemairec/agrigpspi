@@ -49,17 +49,7 @@ class OptionWidget : public BaseWidget {
     ButtonGui * m_button_debug;
     
     
-    //page5
-    ButtonGui * m_button_inverse;
-    SelectButtonGui * m_button_select_algo;
     
-    ValueGui * m_button_algofk_lookahead_d;
-    
-    ValueGui * m_button_algok;
-    
-    ButtonGui * m_button_p5test1;
-    ButtonGui * m_button_p5test2;
-    ButtonGui * m_button_p5test3;
     
     
     void addSerials();
@@ -70,14 +60,37 @@ public:
     virtual void draw();
     virtual void drawPage1();
     virtual void drawPage2();
-    virtual void drawPage3();
-    virtual void drawPage4();
     
     virtual void onMouse(double x, double y);
     virtual void onMousePage1(double x, double y);
     virtual void onMousePage2(double x, double y);
-    virtual void onMousePage3(double x, double y);
-    virtual void onMousePage4(double x, double y);
+    
+    
+    void setPage3();
+    void onMousePage3(double x, double y);
+    void drawPage3();
+    
+    void setPage4();
+    void onMousePage4(double x, double y);
+    void drawPage4();
+    
+    //page5
+    ButtonGui * m_button_inverse;
+    SelectButtonGui * m_button_select_algo;
+    
+    ValueGui * m_button_algo_fk_lookahead_d;
+    ValueGui * m_button_algo_naif_k;
+    
+    SelectButtonGui * m_button_select_algo2;
+    
+    ValueGui * m_button_algo2_goto_k;
+    ValueGui * m_button_algo2_goto_rel;
+    ValueGui * m_button_algo2_pid_kp;
+    ValueGui * m_button_algo2_pid_kd;
+    
+    ButtonGui * m_button_p5test1;
+    ButtonGui * m_button_p5test2;
+    ButtonGui * m_button_p5test3;
     
     void setPage5();
     void onMousePage5(double x, double y);
