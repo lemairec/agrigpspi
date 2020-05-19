@@ -64,21 +64,7 @@ OptionWidget::OptionWidget(){
     m_button_debug = new ButtonGui(0.35, 0.35, rayon, 0);
     
     //page 5
-    double dist2 = 0.08;
-    
-    m_button_inverse = new ButtonGui(0.35, 0.25, rayon, PETIT_RAYON);
-    m_button_select_algo = new SelectButtonGui(0.35, 0.35, PETIT_RAYON);
-    m_button_select_algo->addValue("algo_naif");
-    m_button_select_algo->addValue("algo_follow_karott");
-    
-    m_button_algofk_lookahead_d = new ValueGui(0.35, 0.5, PETIT_RAYON, 0, "fk lookahead ");
-   
-    m_button_algok = new ValueGui(0.35, 0.7, PETIT_RAYON, 0, "k ");
-    
-    m_button_p5test1  = new ButtonGui(0.4, 0.8, rayon, 0);
-    m_button_p5test2  = new ButtonGui(0.5, 0.8, rayon, 0);
-    m_button_p5test3  = new ButtonGui(0.6, 0.8, rayon, 0);
-    
+    setPage5();
     
     //m_button_gps = new ButtonGui(0.25, 0.3, GROS_BUTTON, 0);
     //m_button_line = new ButtonGui(0.5, 0.3, GROS_BUTTON, 0);
@@ -221,6 +207,28 @@ void OptionWidget::drawPage4(){
         
     }
 }
+
+/**
+ PAGE 5
+ */
+
+void OptionWidget::setPage5(){
+    double dist2 = 0.08;
+
+    m_button_inverse = new ButtonGui(0.35, 0.25, PETIT_RAYON);
+    m_button_select_algo = new SelectButtonGui(0.35, 0.35, PETIT_RAYON);
+    m_button_select_algo->addValue("algo_naif");
+    m_button_select_algo->addValue("algo_follow_karott");
+
+    m_button_algofk_lookahead_d = new ValueGui(0.35, 0.5, PETIT_RAYON, 0, "fk lookahead ");
+
+    m_button_algok = new ValueGui(0.35, 0.7, PETIT_RAYON, 0, "k ");
+
+    m_button_p5test1  = new ButtonGui(0.4, 0.8, PETIT_RAYON, 0);
+    m_button_p5test2  = new ButtonGui(0.5, 0.8, PETIT_RAYON, 0);
+    m_button_p5test3  = new ButtonGui(0.6, 0.8, PETIT_RAYON, 0);
+};
+
 
 void OptionWidget::drawPage5(){
     GpsFramework & f = GpsFramework::Instance();

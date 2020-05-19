@@ -72,14 +72,16 @@ public:
     virtual void drawPage2();
     virtual void drawPage3();
     virtual void drawPage4();
-    virtual void drawPage5();
     
     virtual void onMouse(double x, double y);
     virtual void onMousePage1(double x, double y);
     virtual void onMousePage2(double x, double y);
     virtual void onMousePage3(double x, double y);
     virtual void onMousePage4(double x, double y);
-    virtual void onMousePage5(double x, double y);
+    
+    void setPage5();
+    void onMousePage5(double x, double y);
+    void drawPage5();
     
     void open();
     
