@@ -21,13 +21,13 @@ void version(){
 void goTo(int res){
   desired_value = res;
   if(res < value){
-    turnLeftMotor();
+    turnLeftMotorGoTo();
   } else {
-    turnRightMotor();
+    turnRightMotorGoTo();
   }
 }
 
-void turnRightMotor(){
+void turnRightMotorGoTo(){
   /*Serial.print("turnRightMotor");
   Serial.print(desired_value);
   Serial.println("");*/
@@ -45,7 +45,7 @@ void turnRightMotor(){
   SetMotor2(0,0);
 }
 
-void turnLeftMotor(){
+void turnLeftMotorGoTo(){
   /*Serial.print("turnLeftMotor ");
   Serial.print(desired_value);
   Serial.println("");*/
@@ -62,6 +62,8 @@ void turnLeftMotor(){
   }
   SetMotor2(0,1);
 }
+
+
 
 void SetMotor2(int speed, boolean reverse)
 {
@@ -205,13 +207,13 @@ void goRight(int l){
   
   Serial.print("Right ");
   Serial.println(l);
-  //turnMotor2(l,true);
+  turnMotor2(l,true);
   Serial.println("right ok");
 }
 
 void goLeft(int l){
   Serial.print("Left ");
   Serial.println(l);
-  //turnMotor2(l,false);
+  turnMotor2(l,false);
   Serial.println("left ok");
 }
