@@ -66,7 +66,7 @@ void PilotModule::run(double value){
         } else {
             out << "$G; " << res << "\n";
         }
-        m_0 = m_0+m_algo2_goto_rel*value;
+        m_0 = (1-m_algo2_goto_rel)*m_0+m_algo2_goto_rel*value;
     } else if(m_algo2 == ALGO2_PID){
         int res = value*m_algo2_pid_p + (m_lastValue-value)*m_algo2_pid_d;
         if(m_inverse){
