@@ -34,6 +34,8 @@ void PilotModule::initOrLoadConfig(Config & config){
 }
 
 void PilotModule::clear(){
+    m_0 = 0;
+    m_lastValue = 0;
     if(m_serial){
         m_serial->writeString("$C;\n");
     }
