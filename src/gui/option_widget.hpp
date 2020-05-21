@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OPTION_WIDGET_H
+#define OPTION_WIDGET_H
 
 #include "base_widget.hpp"
 
@@ -99,3 +100,5 @@ public:
     void open();
     
 };
+
+#endif
