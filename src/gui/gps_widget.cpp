@@ -560,7 +560,7 @@ void GpsWidget::drawDebug(){
         
         scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
         {
-            QString s = QString::number(f.m_surface, 'f', 2) + " ha";
+            QString s = QString::number(f.m_pilotModule.m_0, 'f', 2) + " m_0";
             auto textItem = scene->addText(s);
             auto mBounds = textItem->boundingRect();
             textItem->setPos(x, y);
