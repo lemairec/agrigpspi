@@ -20,6 +20,8 @@ class PilotModule {
     double m_algo2_pid_d = 100;
     
     double m_lastValue = 0;
+    
+    std::string m_inputPilot;
 public:
     std::string m_version_guidage;
     

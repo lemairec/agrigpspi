@@ -17,12 +17,15 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_serial = NULL;
     m_inverse = config.m_pilot_inverse;
     if(config.m_inputPilot != "none"){
-        try {
-            m_serial = new Serial(config.m_inputPilot,config.m_baudratePilot);
-        } catch(boost::system::system_error& e)
-        {
-            WARN(config.m_input << " " << config.m_baudrate);
-            m_serial = NULL;
+        if(config.m_inputPilot != m_inputPilot){
+            try {
+                m_serial = new Serial(config.m_inputPilot,config.m_baudratePilot);
+                m_inputPilot = config.m_inputPilot;
+            } catch(boost::system::system_error& e)
+            {
+                WARN(config.m_input << " " << config.m_baudrate);
+                m_serial = NULL;
+            }
         }
        
     }
