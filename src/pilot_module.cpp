@@ -119,16 +119,21 @@ void print(std::vector<u_char> & l){
 }
 
 
+void runAdrienVolant(std::vector<unsigned char> & c){
+    print(l);
+    
+}
+
 void PilotModule::test(int i){
     if(m_serial == NULL){
         WARN("oh c'est nul!");
     }
     
     if(i == 0){
-        std::vector<u_char> l{0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01, 0x62, 0x53};
+        std::vector<unsigned char> l{0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01, 0x62, 0x53};
         print(l);
-        l.clear();
         if(m_serial) m_serial->writeData(l);
+        l.clear();
         l = {0x01, 0x60, 0x00, 0x6A, 0x00, 0x64, 0xA8, 0x3D};
         print(l);
         if(m_serial) m_serial->writeData(l);
@@ -136,7 +141,8 @@ void PilotModule::test(int i){
         l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04, 0x80, 0x00, 0x00, 0x00, 0x14, 0xD4};
         print(l);
         if(m_serial) m_serial->writeData(l);
-        
+        l.clear();
+    
         
         
         //run(0);

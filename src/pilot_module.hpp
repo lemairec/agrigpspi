@@ -4,6 +4,7 @@
 #include <memory>
 #include <list>
 #include "config/config.hpp"
+#include <stdint.h>
 
 class Serial;
 
@@ -32,6 +33,8 @@ public:
     
     void clear();
     void test(int i);
+    
+    void runAdrienVolant(std::vector<unsigned char> & c);
 };
 
 #endif //GPS_H

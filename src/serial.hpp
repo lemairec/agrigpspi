@@ -33,7 +33,7 @@ public:
         boost::asio::write(serial,boost::asio::buffer(s.c_str(),s.size()));
     }
     
-    void writeData(std::vector<u_char> & s)
+    void writeData(std::vector<unsigned char> & s)
     {
         boost::asio::write(serial,boost::asio::buffer(s.data(),s.size()));
     }
