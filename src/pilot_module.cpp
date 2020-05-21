@@ -26,6 +26,12 @@ void PilotModule::initOrLoadConfig(Config & config){
         }
        
     }
+    m_algo2 = config.m_algo2;
+    m_algo2_goto_k = config.m_algo2_goto_k;
+    m_algo2_goto_rel = config.m_algo2_goto_rel;
+    m_algo2_pid_p = config.m_algo2_pid_p;
+    m_algo2_pid_d = config.m_algo2_pid_d;
+    
 
     //m_version_guidage = m_serial->readString(12);
     
