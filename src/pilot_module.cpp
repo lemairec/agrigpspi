@@ -2,6 +2,7 @@
 #include "serial.hpp"
 #include <math.h>
 #include "logging.hpp"
+#include <inttypes.h>
 
 
 PilotModule::PilotModule(){
@@ -109,17 +110,40 @@ void PilotModule::run(double value){
     }
 }
 
+void print(std::vector<u_char> & l){
+    for(auto i : l){
+        printf("%02" PRIx16 " ", i);
+        
+    }
+    printf("\n");
+}
+
+
 void PilotModule::test(int i){
     if(m_serial == NULL){
-        return;
+        WARN("oh c'est nul!");
     }
     
     if(i == 0){
-        run(0);
+        std::vector<u_char> l{0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01, 0x62, 0x53};
+        print(l);
+        l.clear();
+        if(m_serial) m_serial->writeData(l);
+        l = {0x01, 0x60, 0x00, 0x6A, 0x00, 0x64, 0xA8, 0x3D};
+        print(l);
+        if(m_serial) m_serial->writeData(l);
+        l.clear();
+        l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04, 0x80, 0x00, 0x00, 0x00, 0x14, 0xD4};
+        print(l);
+        if(m_serial) m_serial->writeData(l);
+        
+        
+        
+        //run(0);
     }else if(i > 0){
-        run(0.349066);
+        //run(0.349066);
     } else {
-        run(-0.349066);
+        //run(-0.349066);
     }
 }
 

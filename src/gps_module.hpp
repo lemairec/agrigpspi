@@ -1,5 +1,5 @@
-#ifndef GPS_H
-#define GPS_H
+#ifndef GPS_MODULE_H
+#define GPS_MODULE_H
 #include <string>
 #include <memory>
 
