@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <list>
+#include <vector>
 #include "config/config.hpp"
 #include <stdint.h>
 
