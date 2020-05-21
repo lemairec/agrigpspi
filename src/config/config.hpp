@@ -39,7 +39,7 @@ public:
     
     int m_algo2 = 0;
     double m_algo2_goto_k = 100;
-    double m_algo2_goto_rel = 0.01;
+    int m_algo2_goto_rel_s = 100;
     double m_algo2_pid_p = 100;
     double m_algo2_pid_d = 100;
     

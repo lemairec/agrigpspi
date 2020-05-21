@@ -31,7 +31,7 @@ void PilotModule::initOrLoadConfig(Config & config){
     }
     m_algo2 = config.m_algo2;
     m_algo2_goto_k = config.m_algo2_goto_k;
-    m_algo2_goto_rel = config.m_algo2_goto_rel;
+    m_algo2_goto_rel_s = config.m_algo2_goto_rel_s;
     m_algo2_pid_p = config.m_algo2_pid_p;
     m_algo2_pid_d = config.m_algo2_pid_d;
     
@@ -77,10 +77,18 @@ void PilotModule::run(double value){
         } else {
             out << "$G; " << res << "\n";
         }
-        m_0 = (1-m_algo2_goto_rel)*m_0+m_algo2_goto_rel*value;
+        m_lastValues.push_back(value);
+        while(m_lastValues.size() > m_algo2_goto_rel_s){
+            m_lastValues.pop_front();
+        }
+        double moy = 0;
+        for(auto i : m_lastValues){
+            moy += i;
+        }
+        m_0 = moy/m_algo2_goto_rel_s;
     } else if(m_algo2 == ALGO2_PID){
         int res = value*m_algo2_pid_p + (m_lastValue-value)*m_algo2_pid_d;
-        if(m_inverse){
+        if(!m_inverse){
             res = -res;
         }
         if(res<0){

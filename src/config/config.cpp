@@ -48,7 +48,7 @@ void Config::save(){
     settings.setValue("m_algofk_lookahead_d", m_algofk_lookahead_d);
     settings.setValue("m_algo2", m_algo2);
     settings.setValue("m_algo2_goto_k", m_algo2_goto_k);
-    settings.setValue("m_algo2_goto_rel", m_algo2_goto_rel);
+    settings.setValue("m_algo2_goto_rel_s", m_algo2_goto_rel_s);
     settings.setValue("m_algo2_pid_p", m_algo2_pid_p);
     settings.setValue("m_algo2_pid_d", m_algo2_pid_d);
 }
@@ -115,8 +115,8 @@ void Config::load(){
     if(settings.contains("m_algo2_goto_k")){
         m_algo2_goto_k = settings.value("m_algo2_goto_k").toDouble();
     }
-    if(settings.contains("m_algo2_goto_rel")){
-        m_algo2_goto_rel = settings.value("m_algo2_goto_rel").toDouble();
+    if(settings.contains("m_algo2_goto_rel_s")){
+        m_algo2_goto_rel_s = settings.value("m_algo2_goto_rel_s").toDouble();
     }
     if(settings.contains("m_algo2_pid_p")){
         m_algo2_pid_p = settings.value("m_algo2_pid_p").toDouble();
