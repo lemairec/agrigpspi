@@ -376,13 +376,13 @@ void OptionWidget::onMousePage5(double x, double y){
     
     
     if(m_button_p5test1->isActive(x,y)){
-        f.m_pilotModule.run(-0.349066);
+        f.m_pilotModule.test(-1);
         return;
     } else if(m_button_p5test2->isActive(x,y)){
-        f.m_pilotModule.run(0);
-        return;
+       f.m_pilotModule.test(0);
+         return;
     } else if(m_button_p5test3->isActive(x,y)){
-        f.m_pilotModule.run(0.349066);
+        f.m_pilotModule.test(1);
         return;
     }
     

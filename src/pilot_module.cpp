@@ -113,11 +113,13 @@ void PilotModule::test(int i){
     if(m_serial == NULL){
         return;
     }
-    INFO("$R;1000\n");
-    if(i<0){
-        m_serial->writeString("$G; 1000\n");
+    
+    if(i == 0){
+        run(0);
+    }else if(i > 0){
+        run(0.349066);
     } else {
-        m_serial->writeString("$G;-1000\n");
+        run(-0.349066);
     }
 }
 
