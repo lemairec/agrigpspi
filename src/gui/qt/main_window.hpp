@@ -13,6 +13,7 @@ public:
 
 class MainWindow : public QMainWindow, public IGpsObserver
 {
+    QTimer *m_timer;
     Q_OBJECT
     
     QWidget *centralWidget;
@@ -37,5 +38,6 @@ signals:
 
 public slots:
     void onValueChangeSlot();
+    void onTimerSlot();
     
 };

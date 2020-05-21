@@ -30,18 +30,17 @@ printf("%X\n", (int)res);
     printf("%X\n", (int)res);
 }*/
 
-
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
     GpsFramework & framework = GpsFramework::Instance();
     //framework.test();
-    QApplication app(argc, argv);
     MainWindow * m = MainWindow::Instance_ptr();
     framework.addGpsObserver(m);
     m->show();
     INFO(QThread::currentThreadId());
-    GpsThread * gpsThread = new GpsThread(framework);
-    gpsThread->start();
+    /*GpsThread * gpsThread = new GpsThread(framework);
+    gpsThread->start();*/
     return app.exec();
 }
 

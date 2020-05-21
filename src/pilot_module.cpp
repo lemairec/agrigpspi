@@ -1,33 +1,17 @@
 #include "pilot_module.hpp"
-#include "serial.hpp"
 #include <math.h>
 #include "logging.hpp"
 #include <inttypes.h>
+#include <sstream>
 
-
+#include "gps_framework.hpp"
 PilotModule::PilotModule(){
     //setRef(LAT_REF, LON_REF);
 }
 
 void PilotModule::initOrLoadConfig(Config & config){
     m_inverse = config.m_pilot_inverse;
-    if(config.m_inputPilot != "none"){
-        if(config.m_inputPilot != m_inputPilot){
-            try {
-                m_serial = NULL;
-                if(m_serial){
-                    delete(m_serial);
-                }
-                m_serial = new Serial(config.m_inputPilot,config.m_baudratePilot);
-                m_inputPilot = config.m_inputPilot;
-            } catch(boost::system::system_error& e)
-            {
-                WARN(config.m_input << " " << config.m_baudrate);
-                m_serial = NULL;
-            }
-        }
-       
-    }
+    
     m_algo2 = config.m_algo2;
     m_algo2_goto_k = config.m_algo2_goto_k;
     m_algo2_goto_rel_s = config.m_algo2_goto_rel_s;
@@ -44,8 +28,9 @@ void PilotModule::initOrLoadConfig(Config & config){
 void PilotModule::clear(){
     m_0 = 0;
     m_lastValue = 0;
+    
     if(m_serial){
-        m_serial->writeString("$C;\n");
+        GpsFramework::Instance().m_serialModule.writePilotSerialS("$C;\n");
     }
 }
 
@@ -101,11 +86,7 @@ void PilotModule::run(double value){
     
     
     INFO(out.str());
-    if(m_serial){
-        m_serial->writeString(out.str());
-    } else {
-        WARN("###################serial");
-    }
+    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
 }
 
 void print(std::vector<u_char> & l){
@@ -146,11 +127,7 @@ void PilotModule::runAdrienVolant(std::vector<unsigned char> & l){
     l.push_back(j);
     l.push_back(i);
     print(l);
-    if(m_serial){
-        m_serial->writeData(l);
-    }else {
-        WARN("oh c'est nul!");
-    }
+    GpsFramework::Instance().m_serialModule.writePilotSerialD(l);
 }
 
 void PilotModule::run(int i){
@@ -162,7 +139,6 @@ void PilotModule::run(int i){
         l.clear();
         l = {0x01, 0x06, 0x00, 0x6A, 0x00, 0x64};
         runAdrienVolant(l);
-        if(m_serial) m_serial->writeData(l);
         l.clear();
     } else if(i ==1){
         INFO("disable");

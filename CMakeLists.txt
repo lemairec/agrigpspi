@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 project(agri_gps_pi)
 
+# The version number.
+set (PROJECT_VERSION_MAJOR 0)
+set (PROJECT_VERSION_MINOR 2)
+set (PROJECT_VERSION_PATCH 3)
+
 configure_file (
     "${PROJECT_SOURCE_DIR}/src/environnement.hpp.in"
     "${PROJECT_BINARY_DIR}/environnement.hpp"
@@ -16,6 +21,7 @@ find_library(PTHREAD pthread)
 
 set(CMAKE_AUTOMOC ON)
 
+
 find_package(Boost REQUIRED COMPONENTS system)
 include_directories( ${Boost_INCLUDE_DIR}   )
 
@@ -28,7 +34,7 @@ set(sources ${src_hpp} ${src_cpp} ${PROJECT_BINARY_DIR}/environnement.hpp src/en
 
 FIND_PACKAGE(Qt5Core)
 add_executable(agri_gps_pi ${sources})
-qt5_use_modules(agri_gps_pi Widgets)
+qt5_use_modules(agri_gps_pi Widgets SerialPort)
 
 target_link_libraries(agri_gps_pi ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${PTHREAD})
 

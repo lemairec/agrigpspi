@@ -3,6 +3,7 @@
 
 #include "gps_module.hpp"
 #include "pilot_module.hpp"
+#include "gui/qt/my_qt_serial_port.hpp"
 #include "config/config.hpp"
 #include <chrono>
 #include <QThread>
@@ -33,7 +34,6 @@ public:
     void onGGAFrame(GGAFrame & frame);
     void onGGAFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
-    void main();
     
     double distance(GpsPoint & gpsPoint);
     
@@ -105,33 +105,22 @@ public:
     
     void exportHtml();
     
-    PilotModule m_pilotModule;
-    
+     
     void changeDraw();
     bool m_pauseDraw = false;
          
     void setVolantEngaged(bool value);
     bool getVolantEngaged();
+    
+    GpsModule m_gpsModule;
+    MyQTSerialPorts m_serialModule;
+    PilotModule m_pilotModule;
+    
 private:
     bool m_volantEngaged = false;
     IGpsObserver * m_observer = NULL;
-    GpsModule m_gpsModule;
     
     void readFile();
-};
-
-class GpsThread : public QThread
-{
-    GpsFramework & m_framework;
-public:
-    GpsThread(GpsFramework & framework):
-    m_framework(framework)
-    {
-    };
-    
-    void run(){
-        m_framework.main();
-    };
 };
 
 #endif // GPS_FRAMEWORK_H

@@ -38,6 +38,7 @@ void GpsFramework::initOrLoadConfig(){
     m_config.save();
     
     m_pilotModule.initOrLoadConfig(m_config);
+    m_serialModule.initOrLoad(m_config);
      
     m_pointA.m_latitude = m_config.m_a_lat;
     m_pointA.m_longitude = m_config.m_a_lon;
@@ -305,13 +306,11 @@ void GpsFramework::calculDraw(GGAFrame_ptr p){
 }
 
 #include <iostream>
-#include "serial.hpp"
 
 using namespace std;
-using namespace boost;
 
 
-void GpsFramework::exportHtml(){
+/*void GpsFramework::exportHtml(){
     ostringstream oss;
     oss << "<html><body>" << std::endl;
 
@@ -344,7 +343,7 @@ void GpsFramework::exportHtml(){
     INFO(oss.str());
     std::ofstream infile("/Users/lemairec/fablab/agrigpspi/build/test.html");
     infile << oss.str();
-}
+}*/
 
 #define SLEEP_TIME 50
 void GpsFramework::readFile(){
@@ -383,43 +382,6 @@ void GpsFramework::readFile(){
         clearSurface();
     }
     //exportHtml();
-}
-
-
-
-void GpsFramework::main(){
-    for(;;){
-        m_reloadConfig = false;
-        if(m_observer){
-            m_observer->onNewPoint();
-        }
-        if(m_config.m_input == "file"){
-            readFile();
-        } else if (m_config.m_input == "none"){
-            
-        } else {
-            try {
-                
-                Serial serial(m_config.m_input,m_config.m_baudrate);
-                
-                //serial.writeString("Hello world\n");
-                
-                while(!m_reloadConfig){
-                    char c = serial.readChar();
-                    m_gpsModule.readChar(c);
-                }
-                
-            } catch(boost::system::system_error& e)
-            {
-                cout<<"Error: "<<e.what()<<endl;
-                INFO(m_config.m_input << " " << m_config.m_baudrate);
-                return;
-            }
-        }
-        QThread::msleep(1000);
-    }
-    
-    
 }
 
 

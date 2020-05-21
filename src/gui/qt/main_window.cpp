@@ -9,6 +9,8 @@
 #include <QMenuBar>
 #include <QResizeEvent>
 
+#include <QTimer>
+
 void View::setupUi(){
     scene = new QGraphicsScene(this);
     setScene(scene);
@@ -40,6 +42,11 @@ MainWindow * MainWindow::Instance_ptr(){
 MainWindow::MainWindow(QWidget *parent)
     :QMainWindow(parent)
 {
+    m_timer = new QTimer(this);
+    m_timer->start(1000);
+    
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimerSlot()));
+    
     connect(this, SIGNAL(onValueChangeSignal()), this, SLOT(onValueChangeSlot()));
     
     setupUi();
@@ -88,6 +95,11 @@ void MainWindow::onNewPoint(){
 
 void MainWindow::onValueChangeSlot(){
     m_view->m_gpsWidget->draw();
+}
+
+void MainWindow::onTimerSlot(){
+    m_view->m_gpsWidget->draw();
+    m_timer->start(1000);
 }
 
 void MainWindow::creerMenu()
