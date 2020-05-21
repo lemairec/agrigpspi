@@ -67,7 +67,53 @@ void SelectButtonGui::addValue(std::string s){
         m_buttons.push_back(new ButtonGui(m_x+m_rayon, m_y+m_rayon*2*(i+1), m_rayon*0.8, 0));
     }
 }
-void clear();
+
+void SelectButtonGui::addValueInt(std::string s, int i){
+    m_values.push_back(s);
+    m_values_int.push_back(i);
+    m_buttons.clear();
+    for(size_t i = 0; i < m_values.size(); ++i){
+        m_buttons.push_back(new ButtonGui(m_x+m_rayon, m_y+m_rayon*2*(i+1), m_rayon*0.8, 0));
+    }
+}
+
+void SelectButtonGui::clear(){
+    m_values.clear();
+    m_buttons.clear();
+}
+
+std::string SelectButtonGui::getStringValue(){
+     if(m_selectedValue >=0 && m_selectedValue < m_values.size()){
+         return m_values[m_selectedValue];
+     } else {
+         return "error";
+     }
+ }
+ 
+ int SelectButtonGui::getValueInt(){
+    if(m_selectedValue >=0 && m_selectedValue < m_values_int.size()){
+        return m_values_int[m_selectedValue];
+    } else {
+        return 0;
+    }
+}
+ 
+void SelectButtonGui::setValueInt(int i){
+    m_selectedValue = -1;
+    for(int j = 0; j < m_values_int.size(); ++j){
+        if(m_values_int[j] == i){
+            m_selectedValue = j;
+        }
+    }
+}
+void SelectButtonGui::setValueString(std::string s){
+    m_selectedValue = -1;
+    for(int j = 0; j < m_values.size(); ++j){
+        if(m_values[j] == s){
+            m_selectedValue = j;
+        }
+    }
+}
 
 
 
@@ -176,7 +222,7 @@ void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
     if(select->m_open){
         scene->addRect(select->m_x*m_width, select->m_y*m_height, m_width*0.4, (select->m_buttons.size()+1)*select->m_rayon*2*m_height, m_penBlack, m_brushLightGrayDebug);
         for(size_t i = 0; i < select->m_buttons.size(); ++i){
-            if(select->selectedValue == i){
+            if(select->m_selectedValue == i){
                 drawButtonLabel(select->m_buttons[i], COLOR_CHECK);
             } else {
                 drawButtonLabel(select->m_buttons[i], COLOR_OTHER);
@@ -191,6 +237,23 @@ void BaseWidget::drawSelectButtonGuiClose(SelectButtonGui *select){
         drawButtonLabel(&(select->m_buttonOpen));
         drawText(select->getStringValue(), 0.4, select->m_buttonOpen.m_y);
     }
+}
+
+int BaseWidget::onMouseSelectButton(SelectButtonGui *select, double x, double y){
+    int res = 0;
+    if(select->m_open){
+        for(size_t i = 0; i < select->m_buttons.size(); ++i){
+            if(select->m_buttons[i]->isActive(x, y)){
+                select->m_selectedValue = i;
+                res = 1;
+            };
+        }
+        select->m_open = false;
+    }
+    if( select->m_buttonOpen.isActive(x, y)){
+        select->m_open = !select->m_open;
+    }
+    return res;
 }
 
 void BaseWidget::drawText(const std::string & text, int x, int y, int size, bool center){

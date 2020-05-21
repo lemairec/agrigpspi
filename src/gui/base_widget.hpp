@@ -55,22 +55,22 @@ struct SelectButtonGui{
     
     std::string m_label;
     std::vector<std::string> m_values;
-    int selectedValue = 0;
+    std::vector<int> m_values_int;
+    int m_selectedValue = 0;
     ButtonGui m_buttonOpen;
     bool m_open = false;
     
     std::vector<ButtonGui *> m_buttons;
     
     void addValue(std::string s);
+    void addValueInt(std::string s, int i);
     void clear();
     
-    std::string getStringValue(){
-        if(selectedValue < m_values.size()){
-            return m_values[selectedValue];
-        } else {
-            return "error";
-        }
-    }
+    std::string getStringValue();
+    int getValueInt();
+    
+    void setValueInt(int i);
+    void setValueString(std::string s);
     
     int m_type = 0;
 };
@@ -116,6 +116,8 @@ public:
 
     void drawSelectButtonGuiOpen(SelectButtonGui * select);
     void drawSelectButtonGuiClose(SelectButtonGui * select);
+    int onMouseSelectButton(SelectButtonGui *select, double x, double y);
+    
     
     void drawLabel(std::string s, double x, double y);
     void drawLabel2(std::string s, double x, double y);

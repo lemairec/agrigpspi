@@ -42,8 +42,9 @@ class OptionWidget : public BaseWidget {
     ButtonGui * m_button_p3minus1;
     
     //page3
-    std::list<ButtonGui *> m_buttonp3Serials;
-    std::list<ButtonGui *> m_buttonp3Baurates;
+    SelectButtonGui * m_select_pilot_serial;
+    SelectButtonGui * m_select_pilot_baudrates;
+    SelectButtonGui * m_select_pilot_langage;
     
     //page 4
     ButtonGui * m_button_sens;

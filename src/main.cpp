@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     GpsFramework & framework = GpsFramework::Instance();
+    framework.initOrLoadConfig();
     //framework.test();
     MainWindow * m = MainWindow::Instance_ptr();
     framework.addGpsObserver(m);

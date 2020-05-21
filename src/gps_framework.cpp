@@ -7,6 +7,7 @@
 #include <math.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 std::ofstream gpslogFile;
 
 
@@ -23,7 +24,13 @@ GpsFramework::GpsFramework(){
     INFO(file);
     gpslogFile.open(file, std::ios::out);
     m_config.load();
-    initOrLoadConfig();
+}
+
+void GpsFramework::addError(std::string s){
+    WARN(s);
+    std::ostringstream oss;
+    oss << m_messages_errors << "\n" << s;
+    m_messages_errors = oss.str();
 }
 
 void GpsFramework::addGpsObserver(IGpsObserver * o){

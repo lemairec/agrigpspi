@@ -19,9 +19,12 @@ class MyQTSerialPorts : public QObject{
     QSerialPort m_serialPortGps;
     QSerialPort m_serialPortPilot;
 
+    std::vector<std::string> m_serials;
     
 public:
     MyQTSerialPorts();
+    
+    
     
     void initOrLoad(Config & config);
     void open();

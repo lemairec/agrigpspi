@@ -164,49 +164,45 @@ PAGE 3
 */
 
 void OptionWidget::setPage3(){
+    m_select_pilot_serial = new SelectButtonGui(0.35,0.3, PETIT_RAYON2);
+    
+    m_select_pilot_baudrates = new SelectButtonGui(0.35,0.4, PETIT_RAYON2);
+    m_select_pilot_baudrates->addValueInt("9600", 9600);
+    m_select_pilot_baudrates->addValueInt("115200", 115200);
+    
+    m_select_pilot_langage = new SelectButtonGui(0.35,0.5, PETIT_RAYON2);
+    m_select_pilot_langage->addValue("arduino");
+    m_select_pilot_langage->addValue("hadrien");
 };
 
 void OptionWidget::drawPage3(){
     GpsFramework & f = GpsFramework::Instance();
     drawText("Connection Pilot", 0.55*m_width, 0.15*m_height, 20, true);
     
-    drawText("Port :", 0.3*m_width, y_port_title*m_height, 20, false);
-    for(auto button: m_buttonp3Serials){
-        if(button->m_label == f.m_config.m_inputPilot){
-            drawButton(button, COLOR_CHECK);
-        } else {
-            drawButton(button, COLOR_OTHER);
-        }
-        drawText(button->m_label, button->m_x+0.04, button->m_y);
-        
-    }
     
-    drawText("Baudrate :", 0.3*m_width, y_baurates_title*m_height, 20, false);
-    for(auto button: m_buttonp3Baurates){
-        if(button->m_labelInt == f.m_config.m_baudratePilot){
-            drawButton(button, COLOR_CHECK);
-        } else {
-            drawButton(button, COLOR_OTHER);
-        }
-        drawText(button->m_label, button->m_x+0.04, button->m_y);
-    }
-    }
+    m_select_pilot_baudrates->setValueInt(f.m_config.m_baudratePilot);
+    
+    drawSelectButtonGuiClose(m_select_pilot_langage);
+    drawSelectButtonGuiClose(m_select_pilot_baudrates);
+    drawSelectButtonGuiClose(m_select_pilot_serial);
+    
+    drawSelectButtonGuiOpen(m_select_pilot_serial);
+    drawSelectButtonGuiOpen(m_select_pilot_langage);
+    drawSelectButtonGuiOpen(m_select_pilot_baudrates);
+}
 
 void OptionWidget::onMousePage3(double x, double y){
     GpsFramework & f = GpsFramework::Instance();
     
-    for(auto button: m_buttonp3Serials){
-        if(button->isActive(x,y)){
-            f.m_config.m_inputPilot = button->m_label;
-            f.initOrLoadConfig();
-        }
+    onMouseSelectButton(m_select_pilot_serial, x, y);
+
+    if(onMouseSelectButton(m_select_pilot_baudrates, x, y)){
+        f.m_config.m_baudratePilot = m_select_pilot_baudrates->getValueInt();
+        f.initOrLoadConfig();
     }
-    for(auto button: m_buttonp3Baurates){
-        if(button->isActive(x,y)){
-            GpsFramework & f = GpsFramework::Instance();
-            f.m_config.m_baudratePilot = button->m_labelInt;
-            f.initOrLoadConfig();
-        }
+    
+    if(onMouseSelectButton(m_select_pilot_langage, x, y)){
+        f.initOrLoadConfig();
     }
 
 }
@@ -300,8 +296,8 @@ void OptionWidget::drawPage5(){
     
     drawText("Autoguidage", 0.55*m_width, 0.1*m_height, 20, true);
     
-    m_button_select_algo->selectedValue = f.m_config.m_algo;
-    m_button_select_algo2->selectedValue = f.m_config.m_algo2;
+    m_button_select_algo->m_selectedValue = f.m_config.m_algo;
+    m_button_select_algo2->m_selectedValue = f.m_config.m_algo2;
     
     drawText(f.m_pilotModule.m_version_guidage, 0.55*m_width, 0.20*m_height, 11, true);
     
@@ -352,7 +348,7 @@ void OptionWidget::onMousePage5(double x, double y){
     if(m_button_select_algo->m_open){
         for(size_t i = 0; i < m_button_select_algo->m_buttons.size(); ++i){
             if(m_button_select_algo->m_buttons[i]->isActive(x, y)){
-                m_button_select_algo->selectedValue = i;
+                m_button_select_algo->m_selectedValue = i;
                 f.m_config.m_algo = i;
                 f.initOrLoadConfig();
             };
@@ -368,7 +364,7 @@ void OptionWidget::onMousePage5(double x, double y){
     if(m_button_select_algo2->m_open){
         for(size_t i = 0; i < m_button_select_algo2->m_buttons.size(); ++i){
             if(m_button_select_algo2->m_buttons[i]->isActive(x, y)){
-                m_button_select_algo2->selectedValue = i;
+                m_button_select_algo2->m_selectedValue = i;
                 f.m_config.m_algo2 = i;
                 f.initOrLoadConfig();
             };
@@ -557,7 +553,7 @@ void OptionWidget::addSerials(){
     }
     
     m_buttonp2Serials.clear();
-    m_buttonp3Serials.clear();
+    m_select_pilot_serial->clear();
     int i=2;
     y_port_title = 0.2;
     for(auto serial: m_serials){
@@ -566,9 +562,7 @@ void OptionWidget::addSerials(){
         m_buttonp2Serials.push_back(button);
         
         if(serial != "file"){
-            auto button2 = new ButtonGui(0.3, y_port_title+i*0.05, 0.02, 0);
-            button2->m_label = serial;
-            m_buttonp3Serials.push_back(button2);
+            m_select_pilot_serial->addValue(serial);
         }
         
         ++i;
@@ -585,7 +579,6 @@ void OptionWidget::addSerials(){
         auto button = new ButtonGui(0.3, y_port_title+i*0.05, 0.02, 0);
         button->m_label = std::to_string(baurate);
         button->m_labelInt = baurate;
-        m_buttonp3Baurates.push_back(button);
         m_buttonp2Baurates.push_back(button);
         ++i;
     }

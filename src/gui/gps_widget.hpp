@@ -31,6 +31,7 @@ public:
     QPixmap * m_imgChampVert;
     QPixmap * m_imgVolantGris;
     QPixmap * m_imgVolantVert;
+    QPixmap * m_imgOk;
     
     ButtonGui * m_buttonClose;
     ButtonGui * m_buttonPlus;
@@ -38,6 +39,7 @@ public:
     ButtonGui * m_buttonA;
     ButtonGui * m_buttonB;
     ButtonGui * m_buttonOption;
+    ButtonGui * m_buttonErrorOk;
     
     ButtonGui * m_buttonChamp;
     ButtonGui * m_buttonVolant;
@@ -49,6 +51,7 @@ public:
     void drawBottom();
     void drawDebug();
     void drawContour();
+    void drawError();
     
     void draw();
     void draw_force();

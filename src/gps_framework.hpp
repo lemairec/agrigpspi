@@ -28,6 +28,9 @@ class GpsFramework {
 public:
     static GpsFramework & Instance();
     void initOrLoadConfig();
+
+    std::string m_messages_errors;
+    void addError(std::string s);
     
     void addGpsObserver(IGpsObserver *);
     void removeObserver();

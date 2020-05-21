@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     :QMainWindow(parent)
 {
     m_timer = new QTimer(this);
-    m_timer->start(1000);
+    m_timer->start(100);
     
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimerSlot()));
     

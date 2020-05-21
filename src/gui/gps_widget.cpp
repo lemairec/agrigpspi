@@ -42,6 +42,9 @@ GpsWidget::GpsWidget()
     m_buttonChamp  = new ButtonGui(temp, 0.3, GROS_BUTTON, 0);
     m_buttonVolant  = new ButtonGui(temp, 0.65, GROS_BUTTON, 0);
     
+    m_buttonErrorOk  = new ButtonGui(0.5, 0.8, GROS_BUTTON, 0);
+    
+    m_imgOk = loadImage("/images/ok.png");
     m_imgClose = loadImage("/images/close.png");
     m_imgPlus = loadImage("/images/plus.png");
     m_imgMinus = loadImage("/images/minus.png");
@@ -382,6 +385,8 @@ void GpsWidget::draw_force(){
         drawDebug();
     }
     
+    drawError();
+    
     last_update = end;
     if(!m_optionsWidget.m_close){
         m_optionsWidget.draw();
@@ -638,6 +643,17 @@ void GpsWidget::drawDebug(){
     }
 }
 
+void GpsWidget::drawError(){
+    GpsFramework & f = GpsFramework::Instance();
+    if(!f.m_messages_errors.empty()){
+        scene->addRect(50, 50, m_width-100, m_height-100, m_penBlack, m_brushLightGrayDebug);
+        drawText("Erreurs", 0.5*m_width, 80, 20, true);
+        drawText(f.m_messages_errors, 0.1, 0.3);
+        drawButtonImage(m_buttonErrorOk, *m_imgOk);
+       // m_pilot_serial_input
+    }
+}
+
 void GpsWidget::addButtons(){
     drawButtonImage(m_buttonPlus, *m_imgPlus);
     drawButtonImage(m_buttonMinus, *m_imgMinus);
@@ -664,6 +680,13 @@ void GpsWidget::addButtons(){
 void GpsWidget::onMouse(int x, int y){
     double x2 = x/m_width;
     double y2 = y/m_height;
+    
+    GpsFramework & f = GpsFramework::Instance();
+    if(!f.m_messages_errors.empty()){
+        if(m_buttonErrorOk->isActive(x2, y2)){
+            f.m_messages_errors = "";
+        }
+    }
     if(m_buttonClose->isActive(x2, y2)){
         exit(0);
     } else if(m_buttonPlus->isActive(x2, y2)){
