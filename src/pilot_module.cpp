@@ -132,7 +132,7 @@ uint16_t calculcrc16Modbus(std::vector<unsigned char> & l){
     return crc;
 }
 
-void PilotModule::runAdrienVolant(std::vector<unsigned char> & l){
+void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
     uint16_t res = calculcrc16Modbus(l);
     int i = res/256;
     int j = res%256;
