@@ -129,8 +129,9 @@ void PilotModule::test(int i){
         WARN("oh c'est nul!");
     }
     
+    std::vector<unsigned char> l;
     if(i == 0){
-        std::vector<unsigned char> l{0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01, 0x62, 0x53};
+        l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01, 0x62, 0x53};
         print(l);
         if(m_serial) m_serial->writeData(l);
         l.clear();
@@ -138,17 +139,22 @@ void PilotModule::test(int i){
         print(l);
         if(m_serial) m_serial->writeData(l);
         l.clear();
-        l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04, 0x80, 0x00, 0x00, 0x00, 0x14, 0xD4};
-        print(l);
-        if(m_serial) m_serial->writeData(l);
-        l.clear();
+        
     
         
         
         //run(0);
     }else if(i > 0){
+        l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04, 0x80, 0x00, 0x00, 0x00, 0x14, 0xD4};
+        print(l);
+        if(m_serial) m_serial->writeData(l);
+        l.clear();
         //run(0.349066);
     } else {
+        l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04, 0x80, 0x00, 0xFF, 0xFF, 0x14, 0xD4};
+        print(l);
+        if(m_serial) m_serial->writeData(l);
+        l.clear();
         //run(-0.349066);
     }
 }
