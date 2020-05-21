@@ -118,35 +118,66 @@ void print(std::vector<u_char> & l){
     printf("\n");
 }
 
+uint16_t crc16_update(uint16_t crc, uint8_t a) {
+    int i;
 
-void runAdrienVolant(std::vector<unsigned char> & c){
-    //print(l);
-    
+    crc ^= (uint16_t)a;
+    for (i = 0; i < 8; ++i) {
+        if (crc & 1)
+            crc = (crc >> 1) ^ 0xA001;
+        else
+            crc = (crc >> 1);
+    }
+
+    return crc;
+}
+
+uint16_t calculcrc16Modbus(std::vector<unsigned char> & l){
+    uint16_t crc;
+    crc = 0xFFFF;
+    for(int i = 0; i < l.size(); i++){
+        crc = crc16_update(crc, l[i]);
+    }
+    return crc;
+}
+
+void PilotModule::runAdrienVolant(std::vector<unsigned char> & l){
+    uint16_t res = calculcrc16Modbus(l);
+    int i = res/256;
+    int j = res%256;
+    l.push_back(j);
+    l.push_back(i);
+    print(l);
+    if(m_serial){
+        m_serial->writeData(l);
+    }else {
+        WARN("oh c'est nul!");
+    }
 }
 
 void PilotModule::run(int i){
     std::vector<unsigned char> l;
     if(i == 0){
         INFO("connect");
-        l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01, 0x62, 0x53};
-        print(l);
-        if(m_serial) m_serial->writeData(l);
+        l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
+        runAdrienVolant(l);
         l.clear();
-        l = {0x01, 0x60, 0x00, 0x6A, 0x00, 0x64, 0xA8, 0x3D};
-        print(l);
+        l = {0x01, 0x06, 0x00, 0x6A, 0x00, 0x64};
+        runAdrienVolant(l);
         if(m_serial) m_serial->writeData(l);
         l.clear();
     } else if(i ==1){
         INFO("disable");
-        l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01, 0x62, 0x53};
-        print(l);
+        l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x00};
+        runAdrienVolant(l);
+        l.clear();
         
     } else if(i ==2){
-       INFO("clean");
-       l = {0x01, 0x10, 0x01, 0x31, 0x00, 0x01, 0x02, 0x00, 0x2E, 0x32, 0xAD};
-       print(l);
-           
-       }
+        INFO("clean");
+        l = {0x01, 0x10, 0x01, 0x31, 0x00, 0x01, 0x02, 0x00, 0x2E};
+        runAdrienVolant(l);
+        l.clear();
+   }
 }
 
 void PilotModule::test(int i){
@@ -156,24 +187,13 @@ void PilotModule::test(int i){
     
     std::vector<unsigned char> l;
     if(i == 0){
-        
-        
-    
-        
-        
         //run(0);
     }else if(i > 0){
-        l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04, 0x80, 0x00, 0x00, 0x00, 0x14, 0xD4};
-        print(l);
-        if(m_serial) m_serial->writeData(l);
-        l.clear();
-        //run(0.349066);
+        l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04, 0x80, 0x00, 0x00, 0x00};
+        runAdrienVolant(l);
     } else {
-        l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04, 0x80, 0x00, 0xFF, 0xFF, 0x55, 0x71};
-        print(l);
-        if(m_serial) m_serial->writeData(l);
-        l.clear();
-        //run(-0.349066);
+        l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04, 0x80, 0x00, 0xFF, 0xFF};
+        runAdrienVolant(l);
     }
 }
 
