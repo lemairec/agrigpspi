@@ -5,28 +5,7 @@
 #include <inttypes.h>
 
 /* Function to calculate MODBUS CRC. */
-/*uint16_t crc16_update(uint16_t crc, uint8_t a) {
-    int i;
-
-    crc ^= (uint16_t)a;
-    for (i = 0; i < 8; ++i) {
-        if (crc & 1)
-            crc = (crc >> 1) ^ 0xA001;
-        else
-            crc = (crc >> 1);
-    }
-
-    return crc;
-}
-
-uint16_t calculcrc16Modbus(std::vector<char> & l){
-    uint16_t crc;
-    crc = 0xFFFF;
-    for(int i = 0; i < l.size(); i++){
-        crc = crc16_update(crc, l[i]);
-    }
-    return crc;
-}
+/*
 
 std::vector<char> l{0x01, 0x06, 0x00, 0x6A, 0x00, 0x64};
 uint16_t res = calculcrc16Modbus(l);;

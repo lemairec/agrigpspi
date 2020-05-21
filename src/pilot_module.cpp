@@ -10,16 +10,14 @@ PilotModule::PilotModule(){
 }
 
 void PilotModule::initOrLoadConfig(Config & config){
-    if(m_serial){
-        delete(m_serial);
-    }
-    //m_algo_k = config.m_algo_k;
-    
-    m_serial = NULL;
     m_inverse = config.m_pilot_inverse;
     if(config.m_inputPilot != "none"){
         if(config.m_inputPilot != m_inputPilot){
             try {
+                m_serial = NULL;
+                if(m_serial){
+                    delete(m_serial);
+                }
                 m_serial = new Serial(config.m_inputPilot,config.m_baudratePilot);
                 m_inputPilot = config.m_inputPilot;
             } catch(boost::system::system_error& e)
