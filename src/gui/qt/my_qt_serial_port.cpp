@@ -37,7 +37,7 @@ void MyQTSerialPorts::initOrLoad(Config & config){
         m_pilot_serial_input = config.m_inputPilot;
         m_serialPortPilot.setPortName(QString::fromStdString(m_pilot_serial_input));
         m_serialPortPilot.setBaudRate(config.m_baudrate);
-        if (!m_serialPortPilot.open(QIODevice::ReadOnly)) {
+        if (!m_serialPortPilot.open(QIODevice::ReadWrite)) {
             std::ostringstream oss;
             oss << "Failed to open pilot port " << m_pilot_serial_input << ", error:" << m_serialPortGps.errorString().toUtf8().constData();
             GpsFramework::Instance().addError(oss.str());
@@ -82,6 +82,9 @@ void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
     
 }
 void MyQTSerialPorts::writePilotSerialS(const std::string & l){
+    QByteArray b;
+    b.append(l.c_str());
+    m_serialPortPilot.write(b);
 }
 
 

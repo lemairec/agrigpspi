@@ -18,7 +18,7 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_algo2_pid_p = config.m_algo2_pid_p;
     m_algo2_pid_d = config.m_algo2_pid_d;
     
-
+    m_pilot_langage = config.m_pilot_langage;
     //m_version_guidage = m_serial->readString(12);
     
     clear();
@@ -29,10 +29,22 @@ void PilotModule::clear(){
     m_0 = 0;
     m_lastValue = 0;
     
-    if(m_serial){
-        GpsFramework::Instance().m_serialModule.writePilotSerialS("$C;\n");
+    //todo GpsFramework::Instance().m_serialModule.writePilotSerialS("$C;\n");
+}
+
+void PilotModule::engage(){
+    if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
+        clearHadrien();
+        engageHadrien();
     }
 }
+void PilotModule::desengage(){
+    if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
+        clearHadrien();
+        desengageHadrien();
+    }
+}
+
 
 void PilotModule::run(double value){
     std::ostringstream out;
@@ -131,90 +143,122 @@ void PilotModule::runAdrienVolant(std::vector<unsigned char> & l){
 }
 
 void PilotModule::run(int i){
-    std::vector<unsigned char> l;
-    if(i == 0){
-        INFO("connect");
-        l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
-        runAdrienVolant(l);
-        l.clear();
-        l = {0x01, 0x06, 0x00, 0x6A, 0x00, 0x64};
-        runAdrienVolant(l);
-        l.clear();
-    } else if(i ==1){
-        INFO("disable");
-        l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x00};
-        runAdrienVolant(l);
-        l.clear();
-        
-    } else if(i ==2){
-        INFO("clean");
-        l = {0x01, 0x10, 0x01, 0x31, 0x00, 0x01, 0x02, 0x00, 0x2E};
-        runAdrienVolant(l);
-        l.clear();
-   }
+    if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
+        if(i == 0){
+            engageHadrien();
+        } else if(i ==1){
+            desengageHadrien();
+        } else if(i ==2){
+            clearHadrien();
+        }
+    }
 }
 
 void PilotModule::test(int i){
-    if(m_serial == NULL){
-        WARN("oh c'est nul!");
-    }
-    
-    std::vector<unsigned char> l;
-    if(i == 0){
-        //run(0);
-    }else if(i > 0){
-        l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04, 0x80, 0x00, 0x00, 0x00};
-        runAdrienVolant(l);
+    if(m_algo2 == ALGO2_PID){
+        if(i > 0){
+            myLeftRight(32768);
+        } else {
+            myLeftRight(-32768);
+        }
     } else {
-        l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04, 0x80, 0x00, 0xFF, 0xFF};
-        runAdrienVolant(l);
+        if(i == 0){
+            myGoto(0);
+        }else if(i > 0){
+            myGoto(32768);
+        } else {
+            myGoto(-32768);
+        }
+    }
+}
+
+void PilotModule::engageHadrien(){
+    INFO("engageHadrien");
+    std::vector<unsigned char> l;
+    l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
+    runHadrienVolant(l);
+    l.clear();
+    l = {0x01, 0x06, 0x00, 0x6A, 0x00, 0x64};
+    runHadrienVolant(l);
+}
+void PilotModule::desengageHadrien(){
+    INFO("desengageHadrien");
+    std::vector<unsigned char> l;
+    l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x00};
+    runHadrienVolant(l);
+    l.clear();
+}
+void PilotModule::clearHadrien(){
+    INFO("clearHadrien");
+    std::vector<unsigned char> l;
+    l = {0x01, 0x10, 0x01, 0x31, 0x00, 0x01, 0x02, 0x00, 0x2E};
+    runHadrienVolant(l);
+    l.clear();
+}
+
+
+void PilotModule::myGoto(int res){
+    if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
+        std::ostringstream out;
+        if(res<0){
+            out << "$G;-" << (-res) << "\n";
+        } else {
+            out << "$G; " << res << "\n";
+        }
+        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+    } else {
+        int res_a = std::abs(res);
+        unsigned char res1 = (res_a/256)%256;
+        unsigned char res2 = res_a%256;
+        std::vector<unsigned char> l;
+        if(res>0){
+            l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
+            l.push_back(res2);
+            l.push_back(res1);
+            l.push_back(0x00);
+            l.push_back(0x00);
+        } else {
+            l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
+            l.push_back(res2);
+            l.push_back(res1);
+            l.push_back(0xFF);
+            l.push_back(0xFF);
+            
+        }
+        runHadrienVolant(l);
+    }
+}
+
+void PilotModule::myLeftRight(int res){
+    if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
+        std::ostringstream out;
+        if(res<0){
+            out << "$L;" << (-res) << "\n";
+        } else {
+            out << "$R; " << res << "\n";
+        }
+        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+    } else {
+        int res_a = std::abs(res);
+        unsigned char res1 = (res_a/256)%256;
+        unsigned char res2 = res_a%256;
+        std::vector<unsigned char> l;
+        if(res>0){
+            l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
+            l.push_back(res2);
+            l.push_back(res1);
+            l.push_back(0x00);
+            l.push_back(0x00);
+        } else {
+            l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
+            l.push_back(res2);
+            l.push_back(res1);
+            l.push_back(0xFF);
+            l.push_back(0xFF);
+            
+        }
+        runHadrienVolant(l);
     }
 }
 
 
-/*
- qt
- m_serial = new QSerialPort();
- m_serial->setPortName("/dev/cu.usbserial-141240");
- m_serial->setBaudRate(QSerialPort::Baud115200);
- m_serial->setDataBits(QSerialPort::Data8);
- m_serial->setParity(QSerialPort::NoParity);
- m_serial->setStopBits(QSerialPort::OneStop);
- m_serial->setFlowControl(QSerialPort::NoFlowControl);
- 
- if (m_serial->open(QIODevice::ReadWrite)) {
-
-     INFO("Connected");
- //    QThread::msleep(1000);
- } else {
-
-     INFO("Open error");
- }
- }
- 
- if(value>0){
- QString str("#G;-100000\n");
- QByteArray br = str.toUtf8();
- m_serial->write(br);
- } else {
-     QString str("#G; 100000\n");
-     QByteArray br = str.toUtf8();
-     m_serial->write(br);
-     
- }
- m_serial->flush();
- 
-  m_serial->waitForBytesWritten(100);
-  m_serial->waitForReadyRead(100);
- auto b = m_serial->readAll();
- 
- 
- INFO(m_serial->isOpen());
- INFO(m_serial->isWritable());
- 
- INFO(b.size());
- QString myString(b);
- 
- 
- INFO("toto" << myString.toUtf8().constData());
- */

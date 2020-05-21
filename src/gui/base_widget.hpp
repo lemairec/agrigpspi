@@ -66,7 +66,7 @@ struct SelectButtonGui{
     void addValueInt(std::string s, int i);
     void clear();
     
-    std::string getStringValue();
+    std::string getValueString();
     int getValueInt();
     
     void setValueInt(int i);

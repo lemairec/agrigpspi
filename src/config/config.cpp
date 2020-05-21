@@ -42,6 +42,7 @@ void Config::save(){
     settings.setValue("b_lon", m_b_lon);
     
     settings.setValue("m_pilot_inverse", m_pilot_inverse);
+    settings.setValue("m_pilot_langage", m_pilot_langage);
     
     settings.setValue("m_algo", m_algo);
     settings.setValue("m_algo_naif_k", m_algo_naif_k);
@@ -98,6 +99,10 @@ void Config::load(){
     if(settings.contains("m_pilot_inverse")){
         m_pilot_inverse = settings.value("m_pilot_inverse").toBool();
     }
+    if(settings.contains("m_pilot_langage")){
+        m_pilot_langage = settings.value("m_pilot_langage").toInt();
+    }
+    
 
     if(settings.contains("m_algo")){
         m_algo = settings.value("m_algo").toInt();

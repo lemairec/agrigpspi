@@ -82,7 +82,7 @@ void SelectButtonGui::clear(){
     m_buttons.clear();
 }
 
-std::string SelectButtonGui::getStringValue(){
+std::string SelectButtonGui::getValueString(){
      if(m_selectedValue >=0 && m_selectedValue < m_values.size()){
          return m_values[m_selectedValue];
      } else {
@@ -235,7 +235,7 @@ void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
 void BaseWidget::drawSelectButtonGuiClose(SelectButtonGui *select){
     if(!select->m_open){
         drawButtonLabel(&(select->m_buttonOpen));
-        drawText(select->getStringValue(), 0.4, select->m_buttonOpen.m_y);
+        drawText(select->getValueString(), 0.4, select->m_buttonOpen.m_y);
     }
 }
 

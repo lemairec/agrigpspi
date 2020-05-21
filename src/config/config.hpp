@@ -10,6 +10,9 @@
 #define ALGO2_GOTO_REL 1
 #define ALGO2_PID 2
 
+#define PILOT_LANGAGE_ARDUINO 0
+#define PILOT_LANGAGE_HADRIEN 1
+
 class Config  {
 public:
     double m_largeur = 27;
@@ -31,6 +34,7 @@ public:
     bool m_debug = false;
     
     
+    int m_pilot_langage = 0;
     bool m_pilot_inverse = false;
     
     int m_algo = 0;

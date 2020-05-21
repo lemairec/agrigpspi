@@ -7,12 +7,11 @@
 #include "config/config.hpp"
 #include <stdint.h>
 
-class Serial;
 
 class PilotModule {
-    Serial * m_serial = NULL;
-    
     bool m_inverse = false;
+    
+    int m_pilot_langage = 0;
     
     int m_algo2 = 0;
     double m_algo2_goto_k = 100;
@@ -26,17 +25,26 @@ class PilotModule {
     std::string m_inputPilot;
 public:
     double m_0 = 0;
-      std::string m_version_guidage;
+    std::string m_version_guidage;
     
     PilotModule();
     void run(double value);
     void initOrLoadConfig(Config & config);
-    
+
     void clear();
+    void engage();
+    void desengage();
+    
     void run(int i);
     void test(int i);
     
-    void runAdrienVolant(std::vector<unsigned char> & c);
+    void myGoto(int i);
+    void myLeftRight(int i);
+    
+    void engageHadrien();
+    void desengageHadrien();
+    void clearHadrien();
+    void runHadrienVolant(std::vector<unsigned char> & c);
 };
 
 #endif //GPS_H

@@ -181,6 +181,8 @@ void OptionWidget::drawPage3(){
     
     
     m_select_pilot_baudrates->setValueInt(f.m_config.m_baudratePilot);
+    m_select_pilot_serial->setValueString(f.m_config.m_inputPilot);
+    m_select_pilot_langage->m_selectedValue = f.m_config.m_pilot_langage;
     
     drawSelectButtonGuiClose(m_select_pilot_langage);
     drawSelectButtonGuiClose(m_select_pilot_baudrates);
@@ -194,7 +196,10 @@ void OptionWidget::drawPage3(){
 void OptionWidget::onMousePage3(double x, double y){
     GpsFramework & f = GpsFramework::Instance();
     
-    onMouseSelectButton(m_select_pilot_serial, x, y);
+    if(onMouseSelectButton(m_select_pilot_serial, x, y)){
+        f.m_config.m_inputPilot = m_select_pilot_serial->getValueString();
+        f.initOrLoadConfig();
+    };
 
     if(onMouseSelectButton(m_select_pilot_baudrates, x, y)){
         f.m_config.m_baudratePilot = m_select_pilot_baudrates->getValueInt();
@@ -202,6 +207,7 @@ void OptionWidget::onMousePage3(double x, double y){
     }
     
     if(onMouseSelectButton(m_select_pilot_langage, x, y)){
+        f.m_config.m_pilot_langage = m_select_pilot_langage->m_selectedValue;
         f.initOrLoadConfig();
     }
 
