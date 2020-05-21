@@ -563,6 +563,11 @@ void GpsFramework::calculContourExterieur(){
 void GpsFramework::setVolantEngaged(bool value){
     m_volantEngaged = value;
     m_pilotModule.clear();
+    if(value){
+        m_pilotModule.engage();
+    } else {
+        m_pilotModule.desengage();
+    }
 }
 
 bool GpsFramework::getVolantEngaged(){
