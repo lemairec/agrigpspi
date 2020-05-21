@@ -288,6 +288,10 @@ void OptionWidget::setPage5(){
     m_button_p5test1  = new ButtonGui(0.4, 0.8, PETIT_RAYON2, 0);
     m_button_p5test2  = new ButtonGui(0.5, 0.8, PETIT_RAYON2, 0);
     m_button_p5test3  = new ButtonGui(0.6, 0.8, PETIT_RAYON2, 0);
+    
+    m_button_p5connect  = new ButtonGui(0.4, 0.7, PETIT_RAYON2, 0);
+    m_button_p5disable  = new ButtonGui(0.5, 0.7, PETIT_RAYON2, 0);
+    m_button_p5clearError  = new ButtonGui(0.6, 0.7, PETIT_RAYON2, 0);
 };
 
 
@@ -329,6 +333,10 @@ void OptionWidget::drawPage5(){
     drawSelectButtonGuiClose(m_button_select_algo2);
     
       
+    
+    drawButtonLabel(m_button_p5connect, COLOR_OTHER);
+    drawButtonLabel(m_button_p5clearError, COLOR_OTHER);
+    drawButtonLabel(m_button_p5disable, COLOR_OTHER);
     
     drawButtonLabel(m_button_p5test1, COLOR_GREEN);
     drawButtonLabel(m_button_p5test2, COLOR_OTHER);
@@ -383,6 +391,15 @@ void OptionWidget::onMousePage5(double x, double y){
          return;
     } else if(m_button_p5test3->isActive(x,y)){
         f.m_pilotModule.test(1);
+        return;
+    } else if(m_button_p5connect->isActive(x,y)){
+        f.m_pilotModule.run(0);
+        return;
+    } else if(m_button_p5disable->isActive(x,y)){
+        f.m_pilotModule.run(1);
+        return;
+    } else if(m_button_p5clearError->isActive(x,y)){
+        f.m_pilotModule.test(2);
         return;
     }
     

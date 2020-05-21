@@ -33,6 +33,7 @@ public:
     void initOrLoadConfig(Config & config);
     
     void clear();
+    void run(int i);
     void test(int i);
     
     void runAdrienVolant(std::vector<unsigned char> & c);

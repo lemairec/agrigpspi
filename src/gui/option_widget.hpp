@@ -89,6 +89,9 @@ public:
     ValueGui * m_button_algo2_pid_kp;
     ValueGui * m_button_algo2_pid_kd;
     
+    ButtonGui * m_button_p5connect;
+    ButtonGui * m_button_p5disable;
+    ButtonGui * m_button_p5clearError;
     ButtonGui * m_button_p5test1;
     ButtonGui * m_button_p5test2;
     ButtonGui * m_button_p5test3;

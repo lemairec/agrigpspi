@@ -124,13 +124,10 @@ void runAdrienVolant(std::vector<unsigned char> & c){
     
 }
 
-void PilotModule::test(int i){
-    if(m_serial == NULL){
-        WARN("oh c'est nul!");
-    }
-    
+void PilotModule::run(int i){
     std::vector<unsigned char> l;
     if(i == 0){
+        INFO("connect");
         l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01, 0x62, 0x53};
         print(l);
         if(m_serial) m_serial->writeData(l);
@@ -139,6 +136,27 @@ void PilotModule::test(int i){
         print(l);
         if(m_serial) m_serial->writeData(l);
         l.clear();
+    } else if(i ==1){
+        INFO("disable");
+        l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01, 0x62, 0x53};
+        print(l);
+        
+    } else if(i ==2){
+       INFO("clean");
+       l = {0x01, 0x10, 0x01, 0x31, 0x00, 0x01, 0x02, 0x00, 0x2E, 0x32, 0xAD};
+       print(l);
+           
+       }
+}
+
+void PilotModule::test(int i){
+    if(m_serial == NULL){
+        WARN("oh c'est nul!");
+    }
+    
+    std::vector<unsigned char> l;
+    if(i == 0){
+        
         
     
         
