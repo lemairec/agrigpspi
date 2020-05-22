@@ -198,6 +198,25 @@ void PilotModule::clearHadrien(){
 }
 
 
+void add4hex( std::vector<unsigned char> & l, int i){
+    u_int u_i = i;
+    
+    unsigned char i0 = u_i%256;
+    u_i = u_i/256;
+    unsigned char i1 = u_i%256;
+    u_i = u_i/256;
+    unsigned char i2 = u_i%256;
+    u_i = u_i/256;
+    unsigned char i3 = u_i%256;
+    u_i = u_i/256;
+    
+    l.push_back(i1);
+    l.push_back(i0);
+    l.push_back(i3);
+    l.push_back(i2);
+    
+}
+
 void PilotModule::myGoto(int res){
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         std::ostringstream out;
@@ -223,24 +242,6 @@ void PilotModule::myGoto(int res){
     }
 }
 
-void add4hex( std::vector<unsigned char> & l, int i){
-    u_int u_i = i;
-    
-    unsigned char i0 = u_i%256;
-    u_i = u_i/256;
-    unsigned char i1 = u_i%256;
-    u_i = u_i/256;
-    unsigned char i2 = u_i%256;
-    u_i = u_i/256;
-    unsigned char i3 = u_i%256;
-    u_i = u_i/256;
-    
-    l.push_back(i1);
-    l.push_back(i0);
-    l.push_back(i3);
-    l.push_back(i2);
-    
-}
 
 
 void PilotModule::myLeftRight(int res){
