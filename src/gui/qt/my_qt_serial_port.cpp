@@ -63,10 +63,9 @@ void MyQTSerialPorts::handleErrorGps(QSerialPort::SerialPortError error){
 }
 
 void MyQTSerialPorts::handleReadyReadPilot(){
-    QByteArray a = m_serialPortPilot.readAll();
-    for(size_t i = 0; i < a.size(); ++i){
-        INFO(a.data()[i]);
-    }
+    QByteArray b = m_serialPortPilot.readAll();
+    QString hex(b.toHex());
+    INFO(hex.toUtf8().constData());
 }
 void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
     if(error != 0){
