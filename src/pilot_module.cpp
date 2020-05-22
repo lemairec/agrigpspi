@@ -106,6 +106,7 @@ void print(std::vector<u_char> & l){
         printf("%02" PRIx16 " ", i);
         
     }
+    
     printf("\n");
 }
 
@@ -157,9 +158,9 @@ void PilotModule::run(int i){
 void PilotModule::test(int i){
     if(m_algo2 == ALGO2_PID){
         if(i > 0){
-            myLeftRight(m_algo2_pid_d);
+            myLeftRight(m_algo2_pid_p);
         } else {
-            myLeftRight(-m_algo2_pid_d);
+            myLeftRight(-m_algo2_pid_p);
         }
     } else {
         if(i == 0){
@@ -229,6 +230,26 @@ void PilotModule::myGoto(int res){
     }
 }
 
+void add4hex( std::vector<unsigned char> & l, int i){
+    u_int u_i = i;
+    
+    unsigned char i0 = u_i%256;
+    u_i = u_i/256;
+    unsigned char i1 = u_i%256;
+    u_i = u_i/256;
+    unsigned char i2 = u_i%256;
+    u_i = u_i/256;
+    unsigned char i3 = u_i%256;
+    u_i = u_i/256;
+    
+    
+    l.push_back(i3);
+    l.push_back(i2);
+    l.push_back(i1);
+    l.push_back(i0);
+}
+
+
 void PilotModule::myLeftRight(int res){
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         std::ostringstream out;
@@ -245,17 +266,10 @@ void PilotModule::myLeftRight(int res){
         std::vector<unsigned char> l;
         if(res>0){
             l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
-            l.push_back(res1);
-            l.push_back(res2);
-            l.push_back(0x00);
-            l.push_back(0x00);
+            add4hex(l, res);
         } else {
             l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
-            l.push_back(res1);
-            l.push_back(res2);
-            l.push_back(0xFF);
-            l.push_back(0xFF);
-            
+            add4hex(l, res);
         }
         runHadrienVolant(l);
     }
