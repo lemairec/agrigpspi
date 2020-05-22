@@ -242,11 +242,11 @@ void add4hex( std::vector<unsigned char> & l, int i){
     unsigned char i3 = u_i%256;
     u_i = u_i/256;
     
-    
-    l.push_back(i3);
-    l.push_back(i2);
     l.push_back(i1);
     l.push_back(i0);
+    l.push_back(i3);
+    l.push_back(i2);
+    
 }
 
 
