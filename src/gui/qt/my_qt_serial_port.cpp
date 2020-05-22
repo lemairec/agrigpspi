@@ -79,7 +79,11 @@ void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
 }
 
 void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
-    
+    QByteArray b;
+    for(auto i : l){
+        b.append(i);
+    }
+    m_serialPortPilot.write(b);
 }
 void MyQTSerialPorts::writePilotSerialS(const std::string & l){
     QByteArray b;
