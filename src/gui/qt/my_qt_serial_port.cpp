@@ -84,9 +84,9 @@ void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
     }
     m_serialPortPilot.write(b);
     QString hex(b.toHex());
-    INFO("toto");
-    INFO(hex.toUtf8().constData());
-    INFO("toto");
+    //INFO("toto");
+    //INFO(hex.toUtf8().constData());
+    //INFO("toto");
     
 }
 void MyQTSerialPorts::writePilotSerialS(const std::string & l){

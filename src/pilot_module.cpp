@@ -245,14 +245,14 @@ void PilotModule::myLeftRight(int res){
         std::vector<unsigned char> l;
         if(res>0){
             l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
-            l.push_back(res2);
             l.push_back(res1);
+            l.push_back(res2);
             l.push_back(0x00);
             l.push_back(0x00);
         } else {
             l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
-            l.push_back(res2);
             l.push_back(res1);
+            l.push_back(res2);
             l.push_back(0xFF);
             l.push_back(0xFF);
             
