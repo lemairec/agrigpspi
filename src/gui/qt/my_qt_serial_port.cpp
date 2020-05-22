@@ -80,10 +80,15 @@ void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
 
 void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
     QByteArray b;
-    for(int i = l.size()-1; i >=0; --i){
+    for(int i = 0; i < l.size(); ++i){
         b.append(l[i]);
     }
     m_serialPortPilot.write(b);
+    QString hex(b.toHex());
+    INFO("toto");
+    INFO(hex.toUtf8().constData());
+    INFO("toto");
+    
 }
 void MyQTSerialPorts::writePilotSerialS(const std::string & l){
     QByteArray b;
