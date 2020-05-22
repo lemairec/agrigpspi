@@ -35,12 +35,12 @@ GpsWidget::GpsWidget()
     m_buttonA  = new ButtonGui(1-temp, 0.3, GROS_BUTTON, 0);
     m_buttonB  = new ButtonGui(1-temp, 0.4, GROS_BUTTON, 0);
     
-    m_buttonPlus  = new ButtonGui(1-temp, 0.6, GROS_BUTTON, 0);
-    m_buttonMinus  = new ButtonGui(1-temp, 0.7, GROS_BUTTON, 0);
+    m_buttonPlus  = new ButtonGui(temp, 0.6, GROS_BUTTON, 0);
+    m_buttonMinus  = new ButtonGui(temp, 0.7, GROS_BUTTON, 0);
     
     m_buttonOption  = new ButtonGui(temp, temp, GROS_BUTTON, 0);
     m_buttonChamp  = new ButtonGui(temp, 0.3, GROS_BUTTON, 0);
-    m_buttonVolant  = new ButtonGui(temp, 0.65, GROS_BUTTON, 0);
+    m_buttonVolant  = new ButtonGui(1-temp, 0.65, GROS_BUTTON, 0);
     
     m_buttonErrorOk  = new ButtonGui(0.5, 0.8, GROS_BUTTON, 0);
     
@@ -596,7 +596,7 @@ void GpsWidget::drawDebug(){
     
     //zoom
     {
-        int x =  m_width-100;
+        int x =  100;
         int y = m_height*0.6;
         std::ostringstream out;
         out << "x " << m_zoom;
@@ -645,12 +645,14 @@ void GpsWidget::drawDebug(){
 
 void GpsWidget::drawError(){
     GpsFramework & f = GpsFramework::Instance();
-    if(!f.m_messages_errors.empty()){
-        scene->addRect(50, 50, m_width-100, m_height-100, m_penBlack, m_brushLightGrayDebug);
-        drawText("Erreurs", 0.5*m_width, 80, 20, true);
-        drawText(f.m_messages_errors, 0.1, 0.3);
-        drawButtonImage(m_buttonErrorOk, *m_imgOk);
-       // m_pilot_serial_input
+    if(f.m_config.m_debug){
+        if(!f.m_messages_errors.empty()){
+            scene->addRect(50, 50, m_width-100, m_height-100, m_penBlack, m_brushLightGrayDebug);
+            drawText("Erreurs", 0.5*m_width, 80, 20, true);
+            drawText(f.m_messages_errors, 0.1, 0.3);
+            drawButtonImage(m_buttonErrorOk, *m_imgOk);
+           // m_pilot_serial_input
+        }
     }
 }
 
