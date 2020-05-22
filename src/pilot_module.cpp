@@ -51,28 +51,10 @@ void PilotModule::run(double value){
     
     if(m_algo2 == ALGO2_GOTO){
         int res = value*m_algo2_goto_k;
-        if(m_inverse){
-            res = -res;
-        }
-        if(res<0){
-            out << "$G;-" << (-res) << "\n";
-            
-            
-        } else {
-            out << "$G; " << res << "\n";
-        }
+        myGoto(res);
     } else if(m_algo2 == ALGO2_GOTO_REL){
         int res = (value-m_0)*m_algo2_goto_k;
-        if(m_inverse){
-            res = -res;
-        }
-        if(res<0){
-            out << "$G;-" << (-res) << "\n";
-            
-            
-        } else {
-            out << "$G; " << res << "\n";
-        }
+        myGoto(res);
         m_lastValues.push_back(value);
         while(m_lastValues.size() > m_algo2_goto_rel_s){
             m_lastValues.pop_front();
@@ -84,14 +66,7 @@ void PilotModule::run(double value){
         m_0 = moy/m_algo2_goto_rel_s;
     } else if(m_algo2 == ALGO2_PID){
         int res = value*m_algo2_pid_p + (m_lastValue-value)*m_algo2_pid_d;
-        if(!m_inverse){
-            res = -res;
-        }
-        if(res<0){
-            out << "$L;" << (-res) << "\n";
-        } else {
-            out << "$R;" << res << "\n";
-        }
+        myLeftRight(res);
         m_lastValue = value;
         
     }
