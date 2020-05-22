@@ -166,9 +166,9 @@ void PilotModule::test(int i){
         if(i == 0){
             myGoto(0);
         }else if(i > 0){
-            myGoto(32768);
+            myGoto(m_algo2_goto_k);
         } else {
-            myGoto(-32768);
+            myGoto(-m_algo2_goto_k);
         }
     }
 }
