@@ -202,17 +202,9 @@ void PilotModule::myGoto(int res){
         }
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
-        int res_a = std::abs(res);
-        unsigned char res1 = (res_a/256)%256;
-        unsigned char res2 = res_a%256;
         std::vector<unsigned char> l;
-        if(res>0){
-            l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
-            add4hex(l, res);
-        } else {
-            l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
-            add4hex(l, res);
-        }
+        l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
+        add4hex(l, res);
         runHadrienVolant(l);
     }
 }
