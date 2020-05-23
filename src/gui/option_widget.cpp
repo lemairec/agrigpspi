@@ -547,6 +547,17 @@ void OptionWidget::addSerials(){
         }
     }
     {
+        std::string res = execute2("ls /dev/ttymxc*");
+        std::vector<std::string> strs;
+        boost::split(strs, res, boost::is_any_of("\n"));
+        for(auto s : strs){
+            if(!s.empty()){
+                INFO(s);
+                m_serials.push_back(s);
+            }
+        }
+    }
+    {
         std::string res = execute2("ls /dev/ttyUSB*");
         std::vector<std::string> strs;
         boost::split(strs, res, boost::is_any_of("\n"));
