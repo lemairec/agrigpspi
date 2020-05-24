@@ -88,6 +88,7 @@ public:
     ValueGui * m_button_algo2_goto_k;
     ValueGui * m_button_algo2_goto_rel_s;
     ValueGui * m_button_algo2_pid_kp;
+    ValueGui * m_button_algo2_pid_ki;
     ValueGui * m_button_algo2_pid_kd;
     
     ButtonGui * m_button_p5connect;

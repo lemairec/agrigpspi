@@ -34,6 +34,7 @@ struct ValueGui{
     int isActive(double x, double y);
     
     double getMultValue(double x, double y);
+    double getMultValue2(double x, double y, double value);
     double getIntValue(double x, double y);
     
     double m_x = 0;

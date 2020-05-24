@@ -34,14 +34,18 @@ int ValueGui::isActive(double x, double y){
     return 0;
 }
 
-double ValueGui::getMultValue(double x, double y){
+double ValueGui::getMultValue2(double x, double y, double value){
     if(m_buttonAdd.isActive(x, y)){
-        return 1.1;
+        return value;
     }
     if(m_buttonMinus.isActive(x, y)){
-        return 1.0/1.1;
+        return 1.0/value;
     }
     return 1.0;
+}
+
+double ValueGui::getMultValue(double x, double y){
+    return getMultValue2(x, y, 1.1);
 }
 
 double ValueGui::getIntValue(double x, double y){

@@ -45,6 +45,7 @@ public:
     double m_algo2_goto_k = 100;
     int m_algo2_goto_rel_s = 100;
     double m_algo2_pid_p = 100;
+    double m_algo2_pid_i = 100;
     double m_algo2_pid_d = 100;
     
     bool m_logNMEA = true;
