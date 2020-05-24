@@ -9,6 +9,7 @@
 #define ALGO2_GOTO 0
 #define ALGO2_GOTO_REL 1
 #define ALGO2_PID 2
+#define ALGO2_MY 3
 
 #define PILOT_LANGAGE_ARDUINO 0
 #define PILOT_LANGAGE_HADRIEN 1
@@ -47,6 +48,9 @@ public:
     double m_algo2_pid_p = 100;
     double m_algo2_pid_i = 100;
     double m_algo2_pid_d = 100;
+    
+    double m_algo2_my_k = 100;
+    double m_algo2_my_p = 100;
     
     bool m_logNMEA = true;
     bool m_api = true;

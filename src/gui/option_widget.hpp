@@ -90,6 +90,8 @@ public:
     ValueGui * m_button_algo2_pid_kp;
     ValueGui * m_button_algo2_pid_ki;
     ValueGui * m_button_algo2_pid_kd;
+    ValueGui * m_button_algo2_my_k;
+    ValueGui * m_button_algo2_my_p;
     
     ButtonGui * m_button_p5connect;
     ButtonGui * m_button_p5disable;

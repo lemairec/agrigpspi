@@ -264,13 +264,15 @@ void OptionWidget::setPage5(){
     m_button_select_algo2->addValue("algo_goto");
     m_button_select_algo2->addValue("algo_goto_rel");
     m_button_select_algo2->addValue("algo_pid");
+    m_button_select_algo2->addValue("algo_my");
     
     m_button_algo2_goto_k = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "goto k ");
     m_button_algo2_goto_rel_s = new ValueGui(0.4, 0.60, PETIT_RAYON2, 0, "goto rel ");
     m_button_algo2_pid_kp = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "pid p ");
     m_button_algo2_pid_ki = new ValueGui(0.4, 0.60, PETIT_RAYON2, 0, "pid i ");
     m_button_algo2_pid_kd = new ValueGui(0.4, 0.65, PETIT_RAYON2, 0, "pid d ");
-    
+    m_button_algo2_my_p = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "my p ");
+    m_button_algo2_my_k = new ValueGui(0.4, 0.60, PETIT_RAYON2, 0, "my k ");
     
     m_button_p5test1  = new ButtonGui(0.4, 0.8, PETIT_RAYON2, 0);
     m_button_p5test2  = new ButtonGui(0.5, 0.8, PETIT_RAYON2, 0);
@@ -312,10 +314,13 @@ void OptionWidget::drawPage5(){
     } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
         drawValueGui(m_button_algo2_goto_k, f.m_config.m_algo2_goto_k);
         drawValueGui(m_button_algo2_goto_rel_s, f.m_config.m_algo2_goto_rel_s);
-    } else {
+    } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
         drawValueGui(m_button_algo2_pid_kp, f.m_config.m_algo2_pid_p);
         drawValueGui(m_button_algo2_pid_ki, f.m_config.m_algo2_pid_i);
         drawValueGui(m_button_algo2_pid_kd, f.m_config.m_algo2_pid_d);
+    } else {
+        drawValueGui(m_button_algo2_my_k, f.m_config.m_algo2_my_k);
+        drawValueGui(m_button_algo2_my_p, f.m_config.m_algo2_my_p);
     }
     
     drawSelectButtonGuiClose(m_button_select_algo2);
@@ -406,10 +411,13 @@ void OptionWidget::onMousePage5(double x, double y){
     } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
         f.m_config.m_algo2_goto_k = f.m_config.m_algo2_goto_k * m_button_algo2_goto_k->getMultValue(x,y);
         f.m_config.m_algo2_goto_rel_s = f.m_config.m_algo2_goto_rel_s + 10*m_button_algo2_goto_rel_s->isActive(x,y);
-    } else {
+    } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
         f.m_config.m_algo2_pid_p = f.m_config.m_algo2_pid_p * m_button_algo2_pid_kp->getMultValue2(x,y, 1.2);
         f.m_config.m_algo2_pid_i = f.m_config.m_algo2_pid_i * m_button_algo2_pid_ki->getMultValue2(x,y, 1.2);
         f.m_config.m_algo2_pid_d = f.m_config.m_algo2_pid_d * m_button_algo2_pid_kd->getMultValue2(x,y, 1.2);
+    } else {
+        f.m_config.m_algo2_my_p = f.m_config.m_algo2_my_p * m_button_algo2_my_p->getMultValue2(x,y, 1.2);
+        f.m_config.m_algo2_my_k = f.m_config.m_algo2_my_k * m_button_algo2_my_k->getMultValue2(x,y, 1.2);
     }
     
     f.initOrLoadConfig();

@@ -19,6 +19,9 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_algo2_pid_i = config.m_algo2_pid_i;
     m_algo2_pid_d = config.m_algo2_pid_d;
     
+    m_algo2_my_k = config.m_algo2_my_k;
+    m_algo2_my_p = config.m_algo2_my_p;
+    
     m_pilot_langage = config.m_pilot_langage;
     //m_version_guidage = m_serial->readString(12);
     
@@ -30,6 +33,7 @@ void PilotModule::clear(){
     m_0 = 0;
     m_lastValue = 0;
     m_integral = 0;
+    m_sum_value = 0;
     
     //todo GpsFramework::Instance().m_serialModule.writePilotSerialS("$C;\n");
 }
@@ -84,6 +88,14 @@ void PilotModule::run(double value, double time){
         int res = Pout + Iout + Dout;
         
         m_lastValue = value;
+        myLeftRight(res);
+    } else if(m_algo2 == ALGO2_MY){
+        int kvalue = m_algo2_my_k * value - m_sum_value;
+        int pvalue = m_algo2_my_p * value;
+        
+        int res = pvalue+kvalue;
+        m_sum_value += res;
+        
         myLeftRight(res);
     }
     

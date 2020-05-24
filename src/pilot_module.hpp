@@ -13,16 +13,22 @@ class PilotModule {
     
     int m_pilot_langage = 0;
     
+    //algo k
     int m_algo2 = 0;
     double m_algo2_goto_k = 100;
     int m_algo2_goto_rel_s = 100;
     
-    //pid
+    //algo pid
     double m_integral = 0;
     double m_lastValue = 0;
     double m_algo2_pid_p = 100;
     double m_algo2_pid_i = 100;
     double m_algo2_pid_d = 100;
+    
+    //algo my
+    double m_sum_value = 0;
+    double m_algo2_my_k = 100;
+    double m_algo2_my_p = 100;
     
     std::list<double> m_lastValues;
     

@@ -53,6 +53,8 @@ void Config::save(){
     settings.setValue("m_algo2_pid_p", m_algo2_pid_p);
     settings.setValue("m_algo2_pid_i", m_algo2_pid_i);
     settings.setValue("m_algo2_pid_d", m_algo2_pid_d);
+    settings.setValue("m_algo2_my_k", m_algo2_my_k);
+    settings.setValue("m_algo2_my_p", m_algo2_my_p);
 }
 
 void Config::load(){
@@ -133,4 +135,12 @@ void Config::load(){
     if(settings.contains("m_algo2_pid_d")){
         m_algo2_pid_d = settings.value("m_algo2_pid_d").toDouble();
     }
+    if(settings.contains("m_algo2_my_k")){
+        m_algo2_my_k = settings.value("m_algo2_my_k").toDouble();
+    }
+    if(settings.contains("m_algo2_my_p")){
+        m_algo2_my_p = settings.value("m_algo2_my_p").toDouble();
+    }
+    
+    
 }
