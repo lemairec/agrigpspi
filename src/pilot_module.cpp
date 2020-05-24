@@ -16,6 +16,7 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_algo2_goto_k = config.m_algo2_goto_k;
     m_algo2_goto_rel_s = config.m_algo2_goto_rel_s;
     m_algo2_pid_p = config.m_algo2_pid_p;
+    m_algo2_pid_i = config.m_algo2_pid_i;
     m_algo2_pid_d = config.m_algo2_pid_d;
     
     m_pilot_langage = config.m_pilot_langage;
