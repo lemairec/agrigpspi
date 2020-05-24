@@ -46,7 +46,7 @@ void PilotModule::desengage(){
 }
 
 
-void PilotModule::run(double value){
+void PilotModule::run(double value, double time){
     std::ostringstream out;
     
     if(m_algo2 == ALGO2_GOTO){
@@ -65,10 +65,24 @@ void PilotModule::run(double value){
         }
         m_0 = moy/m_algo2_goto_rel_s;
     } else if(m_algo2 == ALGO2_PID){
-        int res = value*m_algo2_pid_p + (m_lastValue-value)*m_algo2_pid_d;
-        myLeftRight(res);
-        m_lastValue = value;
+        double _dt = 0.1;
         
+        // Proportional term
+        double Pout = m_algo2_pid_p * value;
+
+        // Integral term
+        m_integral += value * _dt;
+        double Iout = m_algo2_pid_i * m_integral;
+
+        // Derivative term
+        double derivative = (value - m_lastValue) / _dt;
+        double Dout = m_algo2_pid_d * derivative;
+
+        // Calculate total output
+        int res = Pout + Iout + Dout;
+        
+        m_lastValue = value;
+        myLeftRight(res);
     }
     
     

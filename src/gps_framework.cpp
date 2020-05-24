@@ -104,7 +104,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
         
         calculAngleCorrection();
         if(m_volantEngaged){
-            m_pilotModule.run(m_angle_correction);
+            m_pilotModule.run(m_angle_correction, m_time_last_point);
         }
         calculDeplacement();
         

@@ -16,10 +16,14 @@ class PilotModule {
     int m_algo2 = 0;
     double m_algo2_goto_k = 100;
     int m_algo2_goto_rel_s = 100;
+    
+    //pid
+    double m_integral = 0;
+    double m_lastValue = 0;
     double m_algo2_pid_p = 100;
+    double m_algo2_pid_i = 100;
     double m_algo2_pid_d = 100;
     
-    double m_lastValue = 0;
     std::list<double> m_lastValues;
     
     std::string m_inputPilot;
@@ -28,7 +32,7 @@ public:
     std::string m_version_guidage;
     
     PilotModule();
-    void run(double value);
+    void run(double value, double time);
     void initOrLoadConfig(Config & config);
 
     void clear();
