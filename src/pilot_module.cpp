@@ -28,6 +28,7 @@ void PilotModule::initOrLoadConfig(Config & config){
 void PilotModule::clear(){
     m_0 = 0;
     m_lastValue = 0;
+    m_integral = 0;
     
     //todo GpsFramework::Instance().m_serialModule.writePilotSerialS("$C;\n");
 }
