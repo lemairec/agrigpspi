@@ -3,6 +3,10 @@
 #include "../../gps_framework.hpp"
 #include <sstream>
 #include <QMetaEnum>
+#include <QSerialPortInfo>
+
+#include "environnement.hpp"
+
 MyQTSerialPorts::MyQTSerialPorts(){
     connect(&m_serialPortGps, SIGNAL(readyRead()), this, SLOT(handleReadyReadGps()));
     connect(&m_serialPortGps, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
@@ -94,5 +98,44 @@ void MyQTSerialPorts::writePilotSerialS(const std::string & l){
     b.append(l.c_str());
     m_serialPortPilot.write(b);
 }
+
+
+#include <boost/algorithm/string.hpp>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+std::string execute3(std::string cmd){
+    std::string file = ProjectSourceBin + "/tmp_cmd";
+    std::string cmd2 = cmd + " > " + file;
+    system(cmd2.c_str());
+    std::ifstream infile(file);
+    std::stringstream strStream;
+    strStream << infile.rdbuf();//read the file
+    std::string res = strStream.str();
+    return res;
+}
+
+void MyQTSerialPorts::addSerialPorts(std::string s){
+    std::string res = execute3(s);
+    std::vector<std::string> strs;
+    boost::split(strs, res, boost::is_any_of("\n"));
+    for(auto s : strs){
+        if(!s.empty()){
+            INFO(s);
+            m_serials.push_back(s);
+        }
+    }
+}
+
+std::vector<std::string> & MyQTSerialPorts::getAvailablePorts(){
+    m_serials.clear();
+    addSerialPorts("ls /dev/cu.*");
+    addSerialPorts("ls /dev/ttyACM*");
+    addSerialPorts("ls /dev/ttymxc*");
+    addSerialPorts("ls /dev/ttyUSB*");
+    return m_serials;
+}
+
 
 

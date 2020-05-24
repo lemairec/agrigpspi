@@ -24,14 +24,14 @@ class MyQTSerialPorts : public QObject{
 public:
     MyQTSerialPorts();
     
-    
-    
     void initOrLoad(Config & config);
     void open();
     
     void writePilotSerialD(std::vector<unsigned char> & l);
     void writePilotSerialS(const std::string & l);
     
+    void addSerialPorts(std::string s);
+    std::vector<std::string> & getAvailablePorts();
 private slots:
     void handleReadyReadGps();
     void handleErrorGps(QSerialPort::SerialPortError error);

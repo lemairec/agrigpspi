@@ -5,23 +5,7 @@
 #include "environnement.hpp"
 #include "qt/main_window.hpp"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <boost/algorithm/string.hpp>
-
 #define PETIT_RAYON2 0.025
-
-std::string execute2(std::string cmd){
-    std::string file = ProjectSourceBin + "/tmp_cmd";
-    std::string cmd2 = cmd + " > " + file;
-    system(cmd2.c_str());
-    std::ifstream infile(file);
-    std::stringstream strStream;
-    strStream << infile.rdbuf();//read the file
-    std::string res = strStream.str();
-    return res;
-}
 
 OptionWidget::OptionWidget(){
     
@@ -523,60 +507,24 @@ void OptionWidget::open(){
 }
 
 void OptionWidget::addSerials(){
-    std::list<std::string> m_serials;
-    m_serials.clear();
-    m_serials.push_back("file");
-    m_serials.push_back("none");
+    GpsFramework & f = GpsFramework::Instance();
     
-    {
-        std::string res = execute2("ls /dev/cu.*");
-        std::vector<std::string> strs;
-        boost::split(strs, res, boost::is_any_of("\n"));
-        for(auto s : strs){
-            if(!s.empty()){
-                m_serials.push_back(s);
-            }
-        }
+    std::vector<std::string> serials;
+    serials.push_back("none");
+    serials.push_back("file");
+    std::vector<std::string> & s2 = f.m_serialModule.getAvailablePorts();
+    for(auto s : s2){
+        serials.push_back(s);
     }
-    {
-        std::string res = execute2("ls /dev/ttyACM*");
-        std::vector<std::string> strs;
-        boost::split(strs, res, boost::is_any_of("\n"));
-        for(auto s : strs){
-            if(!s.empty()){
-                INFO(s);
-                m_serials.push_back(s);
-            }
-        }
-    }
-    {
-        std::string res = execute2("ls /dev/ttymxc*");
-        std::vector<std::string> strs;
-        boost::split(strs, res, boost::is_any_of("\n"));
-        for(auto s : strs){
-            if(!s.empty()){
-                INFO(s);
-                m_serials.push_back(s);
-            }
-        }
-    }
-    {
-        std::string res = execute2("ls /dev/ttyUSB*");
-        std::vector<std::string> strs;
-        boost::split(strs, res, boost::is_any_of("\n"));
-        for(auto s : strs){
-            if(!s.empty()){
-                INFO(s);
-                m_serials.push_back(s);
-            }
-        }
-    }
+
+    
+    
     
     m_buttonp2Serials.clear();
     m_select_pilot_serial->clear();
     int i=2;
     y_port_title = 0.2;
-    for(auto serial: m_serials){
+    for(auto serial: serials){
         auto button = new ButtonGui(0.3, y_port_title+i*0.05, 0.02, 0);
         button->m_label = serial;
         m_buttonp2Serials.push_back(button);
