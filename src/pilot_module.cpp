@@ -59,7 +59,8 @@ void PilotModule::run(double value, double time){
         int res = value*m_algo2_goto_k;
         myGoto(res);
     } else if(m_algo2 == ALGO2_GOTO_REL){
-        int res = (value-m_0)*m_algo2_goto_k;
+        //int res = (value-m_0)*m_algo2_goto_k; test1
+        int res = (value+m_0)*m_algo2_goto_k;
         myGoto(res);
         m_lastValues.push_back(value);
         while(m_lastValues.size() > m_algo2_goto_rel_s){
