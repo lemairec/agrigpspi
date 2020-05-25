@@ -221,6 +221,9 @@ void add4hex( std::vector<unsigned char> & l, int i){
 }
 
 void PilotModule::myGoto(int res){
+    if(m_inverse){
+        res = -res;
+    }
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         std::ostringstream out;
         if(res<0){
@@ -240,6 +243,9 @@ void PilotModule::myGoto(int res){
 
 
 void PilotModule::myLeftRight(int res){
+    if(m_inverse){
+        res = -res;
+    }
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         std::ostringstream out;
         if(res<0){
