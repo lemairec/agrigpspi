@@ -104,6 +104,7 @@ class AgriGpsPi(object):
             call('sudo apt-get install -y git')
             call('sudo apt-get install -y build-essential')
             call('sudo apt-get install -y cmake')
+            call('sudo apt-get install -y libqt5serialport5-dev')
             #call('sudo apt-get install -y gdb')
             #call('sudo apt-get install -y valgrind')
 
