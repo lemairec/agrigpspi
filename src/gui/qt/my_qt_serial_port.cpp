@@ -35,7 +35,6 @@ void MyQTSerialPorts::initOrLoad(Config & config){
         }
     }
     
-    72 20 14 78 85
     if(config.m_inputPilot != "none"){
         if(m_pilot_serial_input == config.m_inputPilot && m_serialPortPilot.isOpen()){
             INFO("pilot port already open");
