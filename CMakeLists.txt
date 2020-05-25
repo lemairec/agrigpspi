@@ -4,7 +4,7 @@ project(agri_gps_pi)
 # The version number.
 set (PROJECT_VERSION_MAJOR 0)
 set (PROJECT_VERSION_MINOR 2)
-set (PROJECT_VERSION_PATCH 3)
+set (PROJECT_VERSION_PATCH 5)
 
 configure_file (
     "${PROJECT_SOURCE_DIR}/src/environnement.hpp.in"
@@ -22,7 +22,7 @@ find_library(PTHREAD pthread)
 set(CMAKE_AUTOMOC ON)
 
 
-find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system thread)
 include_directories( ${Boost_INCLUDE_DIR}   )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
