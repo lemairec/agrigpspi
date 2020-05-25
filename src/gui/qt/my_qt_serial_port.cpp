@@ -17,6 +17,7 @@ MyQTSerialPorts::MyQTSerialPorts(){
 }
 void MyQTSerialPorts::initOrLoad(Config & config){
     INFO(m_gps_serial_input << " " << config.m_input);
+    m_pilot_langage = config.m_pilot_langage;
     if(config.m_input != "none"){
         if(m_gps_serial_input == config.m_input && m_serialPortGps.isOpen()){
             INFO("gps port already open");
@@ -56,11 +57,13 @@ void MyQTSerialPorts::initOrLoad(Config & config){
         }
     }
     
+    
 };
 
 void MyQTSerialPorts::handleReadyReadGps(){
     QByteArray a = m_serialPortGps.readAll();
     for(size_t i = 0; i < a.size(); ++i){
+        
         GpsFramework::Instance().m_gpsModule.readChar(a.data()[i]);
     }
 }
@@ -75,8 +78,13 @@ void MyQTSerialPorts::handleErrorGps(QSerialPort::SerialPortError error){
 
 void MyQTSerialPorts::handleReadyReadPilot(){
     QByteArray b = m_serialPortPilot.readAll();
-    QString hex(b.toHex());
-    INFO(hex.toUtf8().constData());
+    if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
+        QString hex(b.toHex());
+        INFO(hex.toUtf8().constData());
+    } else {
+        QString hex(b);
+        INFO(hex.toUtf8().constData());
+    }
 }
 void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
     if(error != 0){

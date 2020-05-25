@@ -457,19 +457,21 @@ void GpsWidget::drawBottom(){
     scene->addRect(0, m_height-40, m_width, 40, m_penBlack, m_brushDarkGray);
     
     auto last_frame = f.m_lastGGAFrame;
-    QPixmap * img;
-    if(last_frame.m_fix == 1){
-       img = m_imgSatOrange;
-    } else if(last_frame.m_fix > 1){
-       img = m_imgSatVert;
-    } else {
-       img = m_imgSatRouge;
-    }
+    if(f.isGpsConnected()){
+        QPixmap * img;
+        if(last_frame.m_fix == 1){
+           img = m_imgSatOrange;
+        } else if(last_frame.m_fix > 1){
+           img = m_imgSatVert;
+        } else {
+           img = m_imgSatRouge;
+        }
 
-    auto item = new QGraphicsPixmapItem(*img);
-    item->setScale(0.4);
-    item->setPos(5, m_height-45);
-    scene->addItem(item);
+        auto item = new QGraphicsPixmapItem(*img);
+        item->setScale(0.4);
+        item->setPos(5, m_height-45);
+        scene->addItem(item);
+    }
     
     
     //scene->addRect(0, m_height-40, 80, 40, m_penBlack, m_brushLightGrayDebug);

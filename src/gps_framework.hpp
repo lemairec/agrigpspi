@@ -7,6 +7,7 @@
 #include "config/config.hpp"
 #include <chrono>
 #include <QThread>
+#include <time.h>
 
 class IGpsObserver {
 public:
@@ -105,7 +106,9 @@ public:
     std::list<GGAFrame_ptr> m_list;
     std::list<SurfaceToDraw_ptr> m_listSurfaceToDraw;
     GGAFrame m_lastGGAFrame;
+    time_t m_last_gga_received;
     
+    bool isGpsConnected();
     void exportHtml();
     
      

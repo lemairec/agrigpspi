@@ -117,8 +117,22 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
     if(m_observer){
         m_observer->onNewPoint();
     }
+    time_t timer;
+    time(&m_last_gga_received);
     
     //std::cout << "<trkpt lon=\""<< f.m_longitude << "\" lat=\"" << f.m_latitude << "\"><ele>51.0</ele><time>2010-12-26T17:07:40.421Z</time></trkpt>" << std::endl;
+}
+
+bool GpsFramework::isGpsConnected(){
+    time_t timer;
+    time(&timer);
+    
+    double seconds = difftime(timer,m_last_gga_received);
+    if(seconds < 2){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void GpsFramework::onGGAFrame(const std::string &frame){

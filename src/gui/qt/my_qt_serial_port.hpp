@@ -21,6 +21,7 @@ class MyQTSerialPorts : public QObject{
 
     std::vector<std::string> m_serials;
     
+    int m_pilot_langage = 0;
 public:
     MyQTSerialPorts();
     
