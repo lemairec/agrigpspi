@@ -114,6 +114,7 @@ class AgriGpsPi(object):
             call('sudo apt-get install -y qtmultimedia5-dev')
             call('sudo apt-get install -y libboost-dev')
             call('sudo apt-get install -y libboost-system-dev')
+            call('sudo apt-get install -y libboost-thread-dev')
             #call('sudo apt-get install -y exuberant-ctags')
             #call('sudo apt-get install -y gitg gitk')
             #call('sudo apt-get install -y cmake-gui')
