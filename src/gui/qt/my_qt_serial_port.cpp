@@ -17,35 +17,43 @@ MyQTSerialPorts::MyQTSerialPorts(){
 }
 void MyQTSerialPorts::initOrLoad(Config & config){
     INFO(m_gps_serial_input << " " << config.m_input);
-    if(m_gps_serial_input != config.m_input && config.m_input != "none"){
-        //INFO("ici");
-        if(m_serialPortGps.isOpen()){
-            m_serialPortGps.close();
-        }
-        m_gps_serial_input = config.m_input;
-        m_serialPortGps.setPortName(QString::fromStdString(m_gps_serial_input));
-        m_serialPortGps.setBaudRate(config.m_baudrate);
-        if (!m_serialPortGps.open(QIODevice::ReadOnly)) {
-            std::ostringstream oss;
-            oss << "Failed to open gps port " << m_gps_serial_input << ", error:" << m_serialPortGps.errorString().toUtf8().constData();
-            GpsFramework::Instance().addError(oss.str());//standardOutput << QObject::tr("Failed to open port %1, error: %2").arg(serialPortName).arg(serialPort.errorString()) << endl;//
+    if(config.m_input != "none"){
+        if(m_gps_serial_input == config.m_input && m_serialPortGps.isOpen()){
+            INFO("gps port already open");
+        } else {
+            if(m_serialPortGps.isOpen()){
+                m_serialPortGps.close();
+            }
+            m_gps_serial_input = config.m_input;
+            m_serialPortGps.setPortName(QString::fromStdString(m_gps_serial_input));
+            m_serialPortGps.setBaudRate(config.m_baudrate);
+            if (!m_serialPortGps.open(QIODevice::ReadOnly)) {
+                std::ostringstream oss;
+                oss << "Failed to open gps port " << m_gps_serial_input << ", error:" << m_serialPortGps.errorString().toUtf8().constData();
+                GpsFramework::Instance().addError(oss.str());//standardOutput << QObject::tr("Failed to open port %1, error: %2").arg(serialPortName).arg(serialPort.errorString()) << endl;//
+            }
         }
     }
     
-    if(m_pilot_serial_input != config.m_inputPilot && config.m_inputPilot != "none"){
-        //INFO("ici");
-        if(m_serialPortPilot.isOpen()){
+    72 20 14 78 85
+    if(config.m_inputPilot != "none"){
+        if(m_pilot_serial_input == config.m_inputPilot && m_serialPortPilot.isOpen()){
+            INFO("pilot port already open");
+        } else {
+            //INFO("ici");
+            if(m_serialPortPilot.isOpen()){
+                m_serialPortPilot.close();
+            }
             m_serialPortPilot.close();
-        }
-        m_serialPortPilot.close();
-        m_pilot_serial_input = config.m_inputPilot;
-        m_serialPortPilot.setPortName(QString::fromStdString(m_pilot_serial_input));
-        m_serialPortPilot.setBaudRate(config.m_baudrate);
-        if (!m_serialPortPilot.open(QIODevice::ReadWrite)) {
-            std::ostringstream oss;
-            oss << "Failed to open pilot port " << m_pilot_serial_input << ", error:" << m_serialPortGps.errorString().toUtf8().constData();
-            GpsFramework::Instance().addError(oss.str());
-            //standardOutput << QObject::tr("Failed to open port %1, error: %2").arg(serialPortName).arg(serialPort.errorString()) << endl;//
+            m_pilot_serial_input = config.m_inputPilot;
+            m_serialPortPilot.setPortName(QString::fromStdString(m_pilot_serial_input));
+            m_serialPortPilot.setBaudRate(config.m_baudrate);
+            if (!m_serialPortPilot.open(QIODevice::ReadWrite)) {
+                std::ostringstream oss;
+                oss << "Failed to open pilot port " << m_pilot_serial_input << ", error:" << m_serialPortPilot.errorString().toUtf8().constData();
+                GpsFramework::Instance().addError(oss.str());
+                //standardOutput << QObject::tr("Failed to open port %1, error: %2").arg(serialPortName).arg(serialPort.errorString()) << endl;//
+            }
         }
     }
     
@@ -74,6 +82,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
 void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
     if(error != 0){
         std::ostringstream oss;
+        //auto error_s = std::string(QMetaEnum::fromType<QSerialPort::SerialPortError>().valueToKey(error));
         auto error_s = "fix";
         oss << "handleErrorPilot " << error << " " << error_s << ", error:" << m_serialPortGps.errorString().toUtf8().constData();
         GpsFramework::Instance().addError(oss.str());
