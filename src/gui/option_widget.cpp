@@ -411,7 +411,7 @@ void OptionWidget::onMousePage5(double x, double y){
     } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
         f.m_config.m_algo2_goto_k = f.m_config.m_algo2_goto_k * m_button_algo2_goto_k->getMultValue(x,y);
         f.m_config.m_algo2_goto_rel_s = f.m_config.m_algo2_goto_rel_s + 10*m_button_algo2_goto_rel_s->isActive(x,y);
-    } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
+    } else if(f.m_config.m_algo2 == ALGO2_PID){
         f.m_config.m_algo2_pid_p = f.m_config.m_algo2_pid_p * m_button_algo2_pid_kp->getMultValue2(x,y, 1.2);
         f.m_config.m_algo2_pid_i = f.m_config.m_algo2_pid_i * m_button_algo2_pid_ki->getMultValue2(x,y, 1.2);
         f.m_config.m_algo2_pid_d = f.m_config.m_algo2_pid_d * m_button_algo2_pid_kd->getMultValue2(x,y, 1.2);
