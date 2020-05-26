@@ -91,7 +91,7 @@ void PilotModule::run(double value, double time){
         m_lastValue = value;
         myLeftRight(res);
     } else if(m_algo2 == ALGO2_MY){
-        int kvalue = m_algo2_my_k * (value - m_sum_value);
+        int kvalue = m_algo2_my_k * (m_sum_value - value);
         int pvalue = 0;
         
         int res = pvalue+kvalue;

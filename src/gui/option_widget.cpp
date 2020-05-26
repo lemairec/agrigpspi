@@ -314,7 +314,7 @@ void OptionWidget::drawPage5(){
     } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
         drawValueGui(m_button_algo2_goto_k, f.m_config.m_algo2_goto_k);
         drawValueGui(m_button_algo2_goto_rel_s, f.m_config.m_algo2_goto_rel_s);
-    } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
+    } else if(f.m_config.m_algo2 == ALGO2_PID){
         drawValueGui(m_button_algo2_pid_kp, f.m_config.m_algo2_pid_p);
         drawValueGui(m_button_algo2_pid_ki, f.m_config.m_algo2_pid_i);
         drawValueGui(m_button_algo2_pid_kd, f.m_config.m_algo2_pid_d);
