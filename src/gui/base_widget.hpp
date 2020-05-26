@@ -126,6 +126,7 @@ public:
     void drawText(const std::string & text, double x, double y);
      
     void drawValueGui(ValueGui * valueGui, double value);
+    void drawValueGui2(ValueGui * valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s);
     
     void drawText(const std::string & text, int x, int y, int size, bool center);
 

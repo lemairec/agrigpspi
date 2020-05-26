@@ -273,6 +273,13 @@ void BaseWidget::drawText(const std::string & text, int x, int y, int size, bool
     
 }
 
+void BaseWidget::drawValueGui2(ValueGui * valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s){
+    
+    drawButtonImage(&(valueGui->m_buttonAdd), *pixmap1);
+    drawButtonImage(&(valueGui->m_buttonMinus), *pixmap2);
+    drawText(s, valueGui->m_x+valueGui->m_rayon*3, valueGui->m_y);
+
+}
 QPixmap * BaseWidget::loadImage(const std::string & s){
     std::string s2 = ProjectSourceDir+s;
     QImage image2(QString::fromStdString(s2));
