@@ -125,11 +125,25 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         
         char * data = b.data();
         int i0 = data[0];
-        INFO(i0 << " totot " << data[1]);
+        int i1 = data[0];
+        int i2 = data[0];
+        
         
         
         INFO(s);
-        if (s.rfind("010304", 0) == 0) {
+        if (i0 == 1 && i1 ==3 && i2 == 4) {
+            
+            int r1 = data[0];
+            int r2 = data[0];
+            int r3 = data[0];
+            int r4 = data[0];
+            
+            {
+                std::ostringstream strs;
+                strs << "toto" << r1 << " " << r2 << " " << r3 << " " << r4;
+                GpsFramework::Instance().addError(strs.str());
+            }
+            //u_int16_t res =
             INFO("c'est cool");
             
         } else {
