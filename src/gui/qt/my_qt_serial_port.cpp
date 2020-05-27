@@ -122,7 +122,9 @@ void MyQTSerialPorts::handleReadyReadPilot(){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         QString hex(b.toHex());
         std::string s = hex.toUtf8().constData();
-        INFO(b[0] << " " << b[1]);
+        
+        char * data = b.data();
+        INFO(data[0] << " " << data[1]);
         
         
         INFO(s);
