@@ -150,6 +150,9 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
 void PilotModule::run(int i){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         if(i == 0){
+            std::vector<unsigned char> l;
+            l = {0x01, 0x03, 0x40, 0x0D, 0x00, 0x02};
+            runHadrienVolant(l);
             engageHadrien();
         } else if(i ==1){
             desengageHadrien();
