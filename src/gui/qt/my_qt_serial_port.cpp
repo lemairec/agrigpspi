@@ -124,7 +124,8 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         std::string s = hex.toUtf8().constData();
         
         char * data = b.data();
-        INFO(data[0] << " " << data[1]);
+        int i0 = data[0];
+        INFO(i0 << " totot " << data[1]);
         
         
         INFO(s);
