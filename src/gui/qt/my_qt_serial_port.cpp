@@ -47,7 +47,7 @@ void MyQTSerialPorts::initOrLoad(Config & config){
             m_serialPortPilot.close();
             m_pilot_serial_input = config.m_inputPilot;
             m_serialPortPilot.setPortName(QString::fromStdString(m_pilot_serial_input));
-            m_serialPortPilot.setBaudRate(config.m_baudrate);
+            m_serialPortPilot.setBaudRate(config.m_baudratePilot);
             if (!m_serialPortPilot.open(QIODevice::ReadWrite)) {
                 std::ostringstream oss;
                 oss << "Failed to open pilot port " << m_pilot_serial_input << ", error:" << m_serialPortPilot.errorString().toUtf8().constData();
