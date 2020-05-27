@@ -114,7 +114,7 @@ int chartoint(char c){
 }
 
 int Twochartoint(char c1, char c2){
-    return c1*16+c2;
+    return chartoint(c1)*16+chartoint(c2);
 }
 
 void MyQTSerialPorts::handleReadyReadPilot(){
