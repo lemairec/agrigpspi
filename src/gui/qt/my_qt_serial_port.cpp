@@ -126,10 +126,10 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         if (s.rfind("010304", 0) == 0) {
             INFO("c'est cool");
             GpsFramework::Instance().addError("c'est cool");
-            int i0 = Twochartoint(s[7], s[8]);
-            int i1 = Twochartoint(s[9], s[10]);
+            int i0 = Twochartoint(s[6], s[7]);
+            int i1 = Twochartoint(s[8], s[9]);
             int i2 = Twochartoint(s[10], s[11]);
-            int i3 = Twochartoint(s[11], s[12]);
+            int i3 = Twochartoint(s[12], s[13]);
             
             {
                 std::ostringstream oss;
