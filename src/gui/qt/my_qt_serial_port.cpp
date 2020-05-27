@@ -138,11 +138,14 @@ void MyQTSerialPorts::handleReadyReadPilot(){
             int r3 = data[5];
             int r4 = data[6];
             
-            uint16_t r = (r3*256+r4)*65536 + (r1*256+r2);
+            int temp1 = r3*256+r4;
+            int temp2 = r1*256+r2;
+            uint16_t r = temp1*65536 + temp2;
             int16_t res = r;
             
             {
                 std::ostringstream strs;
+                INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
                 strs << res;
                 GpsFramework::Instance().addError(strs.str());
             }
