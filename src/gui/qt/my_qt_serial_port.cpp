@@ -76,13 +76,66 @@ void MyQTSerialPorts::handleErrorGps(QSerialPort::SerialPortError error){
     }
 }
 
+int chartoint(char c){
+    if(c=='0'){
+        return 0;
+    } else if(c=='1'){
+        return 1;
+    } else if(c=='2'){
+    return 2;
+    } else if(c=='3'){
+    return 3;
+    } else if(c=='4'){
+    return 4;
+    } else if(c=='5'){
+    return 5;
+    } else if(c=='6'){
+    return 6;
+    } else if(c=='7'){
+    return 7;
+    } else if(c=='8'){
+    return 8;
+    } else if(c=='9'){
+    return 9;
+    } else if(c=='a'){
+    return 10;
+    } else if(c=='b'){
+    return 11;
+    } else if(c=='c'){
+    return 12;
+    } else if(c=='d'){
+    return 13;
+    } else if(c=='e'){
+    return 14;
+    }else if(c=='f'){
+    return 15;
+    }
+}
+
+int Twochartoint(char c1, char c2){
+    return c1*16+c2;
+}
+
 void MyQTSerialPorts::handleReadyReadPilot(){
     QByteArray b = m_serialPortPilot.readAll();
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         QString hex(b.toHex());
         std::string s = hex.toUtf8().constData();
+        INFO(s);
         if (s.rfind("010304", 0) == 0) {
             INFO("c'est cool");
+            GpsFramework::Instance().addError("c'est cool");
+            int i0 = Twochartoint(s[7], s[8]);
+            int i1 = Twochartoint(s[9], s[10]);
+            int i2 = Twochartoint(s[10], s[11]);
+            int i3 = Twochartoint(s[11], s[12]);
+            
+            {
+                std::ostringstream oss;
+                oss << i0 << " " << i1 << " "<< i2 << " " << i3 << " ";
+                GpsFramework::Instance().addError(oss.str());
+            }
+            
         } else {
             INFO("c'est moin cool");
         }
