@@ -110,6 +110,7 @@ int chartoint(char c){
     }else if(c=='f'){
     return 15;
     }
+    return 0;
 }
 
 int Twochartoint(char c1, char c2){
