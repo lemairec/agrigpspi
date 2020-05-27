@@ -122,21 +122,12 @@ void MyQTSerialPorts::handleReadyReadPilot(){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         QString hex(b.toHex());
         std::string s = hex.toUtf8().constData();
+        INFO(b[0] << " " << b[1]);
+        
+        
         INFO(s);
         if (s.rfind("010304", 0) == 0) {
             INFO("c'est cool");
-            GpsFramework::Instance().addError("c'est cool");
-            int i0 = Twochartoint(s[6], s[7]);
-            INFO(i0 << " " << s[6] << " " << s[7]);
-            int i1 = Twochartoint(s[8], s[9]);
-            int i2 = Twochartoint(s[10], s[11]);
-            int i3 = Twochartoint(s[12], s[13]);
-            
-            {
-                std::ostringstream oss;
-                oss << i0 << " " << i1 << " "<< i2 << " " << i3 << " ";
-                GpsFramework::Instance().addError(oss.str());
-            }
             
         } else {
             INFO("c'est moin cool");
