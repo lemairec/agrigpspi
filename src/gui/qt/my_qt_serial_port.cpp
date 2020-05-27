@@ -80,7 +80,13 @@ void MyQTSerialPorts::handleReadyReadPilot(){
     QByteArray b = m_serialPortPilot.readAll();
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         QString hex(b.toHex());
-        INFO(hex.toUtf8().constData());
+        std::string s = hex.toUtf8().constData();
+        if (s.rfind("010304", 0) == 0) {
+            INFO("c'est cool");
+        } else {
+            INFO("c'est moin cool");
+        }
+        
     } else {
         QString hex(b);
         INFO(hex.toUtf8().constData());
