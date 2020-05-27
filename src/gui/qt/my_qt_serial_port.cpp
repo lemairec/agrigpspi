@@ -125,8 +125,8 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         
         char * data = b.data();
         int i0 = data[0];
-        int i1 = data[0];
-        int i2 = data[0];
+        int i1 = data[1];
+        int i2 = data[2];
         
         
         
@@ -147,7 +147,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
             INFO("c'est cool");
             
         } else {
-            INFO("c'est moin cool");
+            INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
         }
         
     } else {
