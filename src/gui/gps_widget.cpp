@@ -651,7 +651,7 @@ void GpsWidget::drawError(){
         if(!f.m_messages_errors.empty()){
             scene->addRect(50, 50, m_width-100, m_height-100, m_penBlack, m_brushLightGrayDebug);
             drawText("Erreurs", 0.5*m_width, 80, 20, true);
-            drawText(f.m_messages_errors, 0.1, 0.3);
+            drawText(f.m_messages_errors, 0.1*m_width, 0.3*m_height, 10, false);
             drawButtonImage(m_buttonErrorOk, *m_imgOk);
            // m_pilot_serial_input
         }
