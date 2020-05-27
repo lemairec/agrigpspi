@@ -133,10 +133,10 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         INFO(s);
         if (i0 == 1 && i1 ==3 && i2 == 4) {
             
-            int r1 = data[0];
-            int r2 = data[0];
-            int r3 = data[0];
-            int r4 = data[0];
+            int r1 = data[3];
+            int r2 = data[4];
+            int r3 = data[5];
+            int r4 = data[6];
             
             {
                 std::ostringstream strs;
