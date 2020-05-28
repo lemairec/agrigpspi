@@ -99,10 +99,6 @@ void PilotModule::run(double value, double time){
         
         myLeftRight(res);
     }
-    
-    
-    INFO(out.str());
-    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
 }
 
 void print(std::vector<u_char> & l){
