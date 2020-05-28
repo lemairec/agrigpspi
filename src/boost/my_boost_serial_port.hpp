@@ -2,14 +2,13 @@
 #define SERIAL_QT_H
 
 #include "../config/config.hpp"
+#include "serial_port.hpp"
 
 #include <vector>
 
 class MyBoostSerialPorts {
-    std::string m_gps_serial_input;
-    std::string m_pilot_serial_input;
-    
-    std::vector<std::string> m_serials;
+    SerialPort * serialPilot;
+    SerialPort * serialGps;
     
 public:
     MyBoostSerialPorts();

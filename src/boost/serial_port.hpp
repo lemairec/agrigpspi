@@ -32,10 +32,6 @@ protected:
     
     int m_type = SERIAL_PORT_OTHER;
 
-private:
-    SerialPort(const SerialPort &p);
-    SerialPort &operator=(const SerialPort &p);
-
 public:
     SerialPort(void);
     virtual ~SerialPort(void);
@@ -43,7 +39,7 @@ public:
     char end_of_line_char() const;
     void end_of_line_char(const char &c);
 
-    virtual bool start(const char *com_port_name, int baud_rate=9600);
+    virtual bool start(const char *com_port_name, int baud_rate=115200);
     virtual void stop();
 
     int write_some(const std::string &buf);
