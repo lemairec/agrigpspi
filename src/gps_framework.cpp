@@ -490,9 +490,9 @@ void GpsFramework::calculSurface(){
 // pure pousuite
 void GpsFramework::calculAngleCorrection(){
     if(m_algo == ALGO_NAIF){
-        m_angle_correction = -m_distanceAB/m_config.m_largeur*m_algo_naif_k;
+        m_angle_correction = m_distanceAB/m_config.m_largeur*m_algo_naif_k/100;
     } else {
-        m_angle_correction = atan(-m_distanceAB/m_algofk_lookahead_d)-(m_angleAB-atan(m_deplacementX/m_deplacementY));
+        m_angle_correction = -atan(-m_distanceAB/m_algofk_lookahead_d)+(m_angleAB-atan(m_deplacementX/m_deplacementY));
         //m_angle_correction = ;
     }
     //m_angle_correction = -3.14/6;

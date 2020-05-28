@@ -444,7 +444,7 @@ void GpsWidget::drawTracteur(){
     
     if(f.m_config.m_debug){
         my_projete(m_xref, m_yref, x, y);
-        double a = f.m_angle_correction;
+        double a = -f.m_angle_correction;
         my_projete(m_xref+dx*cos(a)-dy*sin(a), m_yref+dx*sin(a)+dy*cos(a), x2, y2);
         scene->addLine(w/2+x, h/2-y, w/2 + x2, h/2 - y2, m_penBlue);
     }
