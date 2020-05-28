@@ -256,7 +256,7 @@ void GpsFramework::calculDeplacement(){
             double y = point1->m_y - point2->m_y;
             
             double d = x*x+y*y;
-            if(d>(3*3)){
+            if(d>(1*1)){
                 break;
             }
             point2 = NULL;
