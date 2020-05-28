@@ -610,7 +610,13 @@ void GpsWidget::drawDebug(){
         int x = 0;
         int y = m_height-140;
         
-        auto last_frame = f.m_lastGGAFrame;
+        scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
+        QString s = QString::number(f.m_pilotModule.m_last_value/3.14*180) + " deg";
+        auto textItem = scene->addText(s);
+        textItem->setPos(x, y);
+        
+        y+=15;
+        /*auto last_frame = f.m_lastGGAFrame;
         scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
         QString s = QString::number(last_frame.m_nbrSat) + " satellites";
         auto textItem = scene->addText(s);
@@ -641,7 +647,7 @@ void GpsWidget::drawDebug(){
         textItem = scene->addText(s);
         textItem->setPos(x, y+65);
 
-        int time = last_frame.m_time;
+        int time = last_frame.m_time;*/
     }
 }
 

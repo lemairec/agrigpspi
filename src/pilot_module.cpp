@@ -31,7 +31,7 @@ void PilotModule::initOrLoadConfig(Config & config){
 
 void PilotModule::clear(){
     m_0 = 0;
-    m_lastValue = 0;
+    m_last_value = 0;
     m_integral = 0;
     m_sum_value = 0;
     
@@ -82,20 +82,18 @@ void PilotModule::run(double value, double time){
         double Iout = m_algo2_pid_i * m_integral;
 
         // Derivative term
-        double derivative = (value - m_lastValue) / _dt;
+        double derivative = (value - m_last_value) / _dt;
         double Dout = m_algo2_pid_d * derivative;
 
         // Calculate total output
         int res = Pout + Iout + Dout;
         
-        m_lastValue = value;
+        m_last_value = value;
         myLeftRight(res);
     } else if(m_algo2 == ALGO2_MY){
-        int kvalue = m_algo2_my_k * (value - m_lastValue);
-        int pvalue = 0;
         
-        int res = pvalue+kvalue;
-        m_lastValue = value;
+        int res = m_algo2_my_k * (value - m_last_value);
+        m_last_value = value;
         
         myLeftRight(res);
     }

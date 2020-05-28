@@ -20,7 +20,7 @@ class PilotModule {
     
     //algo pid
     double m_integral = 0;
-    double m_lastValue = 0;
+    //double m_lastValue = 0;
     double m_algo2_pid_p = 100;
     double m_algo2_pid_i = 100;
     double m_algo2_pid_d = 100;
@@ -34,6 +34,7 @@ class PilotModule {
     
     std::string m_inputPilot;
 public:
+    double m_last_value = 0;
     double m_0 = 0;
     std::string m_version_guidage;
     
