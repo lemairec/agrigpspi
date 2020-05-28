@@ -10,6 +10,8 @@
 #include <QResizeEvent>
 
 #include <QTimer>
+#include <QFileDialog>
+#include "environnement.hpp"
 
 void View::setupUi(){
     scene = new QGraphicsScene(this);
@@ -68,7 +70,7 @@ void MainWindow::setupUi(){
     this->setCentralWidget(m_view);
     
     #ifdef APPLE
-        //creerMenu();
+        creerMenu();
         //showMaximized();
     #else
         showFullScreen();
@@ -104,14 +106,18 @@ void MainWindow::onTimerSlot(){
 
 void MainWindow::creerMenu()
 {
-    QMenu *menuFichier = menuBar()->addMenu(tr("&Fichier"));
-    menuFichier->addAction("open Config", this, SLOT(onValueChangeSlot()));
-      
-    //menuFichier->addAction(actionQuitter);
-    
-    /*QMenu *menuAide = menuBar()->addMenu(tr("&?"));
+   QMenu *menuFichier = menuBar()->addMenu(tr("&Fichier"));
+    menuFichier->addAction("open File", this, SLOT(openFile()));
+}
 
-    menuAide->addAction(actionAPropos);
-    menuAide->addAction(actionAProposQt);*/
+void MainWindow::openFile(){
+    QString fileName = QFileDialog::getOpenFileName(this,
+    tr("Open Address Book"), QString::fromStdString(ProjectSourceDir)+QString("/gps_samples"),
+    tr("Gps files (*.ubx)"));
+    
+    GpsFramework & f = GpsFramework::Instance();
+    f.m_config.m_file = fileName.toUtf8().constData();
+    f.m_config.m_input = "file";
+    f.initOrLoadConfig();
 }
 

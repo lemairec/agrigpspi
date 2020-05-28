@@ -30,6 +30,7 @@ void Config::save(){
     QString input2 = QString::fromStdString(m_input);
     settings.setValue("input", input2);
     settings.setValue("baudrate", m_baudrate);
+    settings.setValue("file", QString::fromStdString(m_file));
     
     QString inputPilot = QString::fromStdString(m_inputPilot);
     settings.setValue("inputPilot", inputPilot);
@@ -77,6 +78,9 @@ void Config::load(){
     }
     if(settings.contains("baudrate")){
         m_baudrate = settings.value("baudrate").toInt();
+    }
+    if(settings.contains("file")){
+        m_file = settings.value("file").toString().toUtf8().constData();
     }
     
     if(settings.contains("inputPilot")){

@@ -40,4 +40,6 @@ public slots:
     void onValueChangeSlot();
     void onTimerSlot();
     
+    void openFile();
+
 };

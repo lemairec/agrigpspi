@@ -30,18 +30,40 @@ printf("%X\n", (int)res);
     printf("%X\n", (int)res);
 }*/
 
+#include "boost/serial_port.hpp"
 int main(int argc, char *argv[])
 {
+    /*SerialPort::print_devices();
+    std::string name = SerialPort::get_port_name(0);
+
+    SerialPort serial;
+    bool rv = serial.start("/dev/tty.usbserial-141240", 115200);
+    if (rv == false) {
+        return -1;
+    }
+
+    // initialize
+    serial.end_of_line_char(0x0d);
+    //serial.write_some("BI010\r\n");
+    //serial.write_some("PE011\r\n");
+    //serial.write_some("RA01000\r\n");
+
+    // wait
+    sleep(10000 * 1000);
+
+    serial.stop();
+
+    return 0;*/
     QApplication app(argc, argv);
     GpsFramework & framework = GpsFramework::Instance();
-    framework.initOrLoadConfig();
     //framework.test();
     MainWindow * m = MainWindow::Instance_ptr();
     framework.addGpsObserver(m);
+    framework.initOrLoadConfig();
     m->show();
     INFO(QThread::currentThreadId());
-    /*GpsThread * gpsThread = new GpsThread(framework);
-    gpsThread->start();*/
+    //GpsThread * gpsThread = new GpsThread(framework);
+    //gpsThread->start();
     return app.exec();
 }
 
