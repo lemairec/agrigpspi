@@ -35,6 +35,8 @@ class PilotModule {
     std::string m_inputPilot;
 public:
     double m_last_value = 0;
+    std::string m_last_order_send;
+    
     double m_0 = 0;
     std::string m_version_guidage;
     

@@ -222,13 +222,15 @@ void PilotModule::myGoto(int res){
     if(m_inverse){
         res = -res;
     }
+    std::ostringstream out;
+    if(res<0){
+        out << "$G;-" << (-res) << "\n";
+    } else {
+        out << "$G; " << res << "\n";
+    }
+    m_last_order_send = out.str();
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
-        std::ostringstream out;
-        if(res<0){
-            out << "$G;-" << (-res) << "\n";
-        } else {
-            out << "$G; " << res << "\n";
-        }
+        
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
         std::vector<unsigned char> l;
@@ -244,13 +246,14 @@ void PilotModule::myLeftRight(int res){
     if(m_inverse){
         res = -res;
     }
+    std::ostringstream out;
+    if(res<0){
+        out << "$L;" << (-res) << "\n";
+    } else {
+        out << "$R; " << res << "\n";
+    }
+    m_last_order_send = out.str();
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
-        std::ostringstream out;
-        if(res<0){
-            out << "$L;" << (-res) << "\n";
-        } else {
-            out << "$R; " << res << "\n";
-        }
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
         int res_a = std::abs(res);
