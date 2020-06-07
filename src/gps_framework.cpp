@@ -137,6 +137,7 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
         //calculDeplacement();
         m_distance = distance(*f);
         
+        
         calculAngleCorrection();
         if(m_volantEngaged){
             m_pilotModule.run(m_angle_correction, m_time_last_point);
@@ -181,6 +182,9 @@ double GpsFramework::distance(GpsPoint & gpsPoint){
         
         double dist = (m_a * gpsPoint.m_x + m_b * gpsPoint.m_y + m_c)/m_sqrt_m_a_m_b;
         //INFO(dist);
+        if(std::abs(m_deplacementAngle - m_angleAB)>1){
+            m_sensAB = false;
+        }
         if(!m_sensAB){
             dist = -dist;
         }
@@ -532,7 +536,16 @@ void GpsFramework::calculAngleCorrection(){
     if(m_algo == ALGO_NAIF){
         m_angle_correction = m_distanceAB/m_config.m_largeur*m_algo_naif_k/100;
     } else {
-        m_angle_correction = -atan(-m_distanceAB/m_algofk_lookahead_d)+(m_angleAB-m_deplacementAngle);
+        //m_angle_correction = -atan(-m_distanceAB/m_algofk_lookahead_d)+(m_angleAB-m_deplacementAngle);
+        if(m_deplacementAngle > 3.14/2){
+            INFO("r" << (m_deplacementAngle-3.14) << " " << m_angleAB << " " << atan(m_distanceAB/m_algofk_lookahead_d));
+            m_angle_correction = -(m_deplacementAngle-3.14)-m_angleAB+atan(m_distanceAB/m_algofk_lookahead_d);
+        } else {
+            INFO((m_deplacementAngle) << " " << m_angleAB << " " << atan(m_distanceAB/m_algofk_lookahead_d));
+            m_angle_correction = -m_deplacementAngle-m_angleAB+atan(m_distanceAB/m_algofk_lookahead_d);
+        }
+        m_angle_correction = atan(m_distanceAB/m_algofk_lookahead_d);
+        INFO(m_angle_correction);
         //m_angle_correction = ;
     }
     //m_angle_correction = -3.14/6;
