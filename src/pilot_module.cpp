@@ -60,9 +60,10 @@ void PilotModule::run(double value, double time){
         myGoto(res);
     } else if(m_algo2 == ALGO2_GOTO_REL){
         //int res = (value-m_0)*m_algo2_goto_k; test1
-        int res = (value+m_0)*m_algo2_goto_k;
+        double correction = value+m_0;
+        int res = correction*m_algo2_goto_k;
         myGoto(res);
-        m_lastValues.push_back(value);
+        m_lastValues.push_back(correction);
         while(m_lastValues.size() > m_algo2_goto_rel_s){
             m_lastValues.pop_front();
         }
@@ -88,15 +89,15 @@ void PilotModule::run(double value, double time){
         // Calculate total output
         int res = Pout + Iout + Dout;
         
-        m_last_value = value;
         myLeftRight(res);
     } else if(m_algo2 == ALGO2_MY){
         
         int res = m_algo2_my_k * (value - m_last_value);
-        m_last_value = value;
         
         myLeftRight(res);
     }
+    m_last_value = value;
+    
 }
 
 void print(std::vector<u_char> & l){
