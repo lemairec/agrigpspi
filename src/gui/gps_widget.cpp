@@ -338,17 +338,17 @@ void GpsWidget::draw_force(){
     drawLines();
     
     
-    if(f.m_pointA.isOk()){
+    if(f.m_pointA.m_isOk){
         double xA, yA;
         my_projete(f.m_pointA.m_x, f.m_pointA.m_y, xA, yA);
-        scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
+        scene->addEllipse(w/2 + xA, h/2 - yA, 5, 5, m_penRed, m_brushNo);
     }
-    if(f.m_pointB.isOk()){
+    if(f.m_pointB.m_isOk){
         double xB, yB;
         my_projete(f.m_pointB.m_x, f.m_pointB.m_y, xB, yB);
-        scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
+        scene->addEllipse(w/2 + xB, h/2 - yB, 5, 5, m_penRed, m_brushNo);
     }
-    if(f.m_pointA.isOk() && f.m_pointB.isOk()){
+    if(f.m_pointA.m_isOk && f.m_pointB.m_isOk){
         double xA, yA;
         my_projete(f.m_pointA.m_x, f.m_pointA.m_y, xA, yA);
         double xB, yB;
@@ -399,8 +399,8 @@ void GpsWidget::drawTracteur(){
     double w = m_width;
     GpsFramework & f = GpsFramework::Instance();
     
-    double dx = f.m_deplacementX;
-    double dy = f.m_deplacementY;
+    double dx = f.m_vitesse*sin(f.m_deplacementAngle);
+    double dy = f.m_vitesse*cos(f.m_deplacementAngle);
     
     double l2 = 5;
     double res = sqrt(dx*dx+dy*dy);
@@ -565,7 +565,7 @@ void GpsWidget::drawDebug(){
         int x = 0;
         int y = m_height-300;
         
-        scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
+        /*scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
         {
             QString s = QString::number(f.m_pilotModule.m_0, 'f', 2) + " m_0";
             auto textItem = scene->addText(s);
@@ -593,6 +593,28 @@ void GpsWidget::drawDebug(){
             auto textItem = scene->addText(s);
             auto mBounds = textItem->boundingRect();
             textItem->setPos(x, y+70);
+        }*/
+        
+        scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
+        
+        {
+            QString s = QString::number(f.m_pilotModule.m_last_value/3.14*180) + " deg";
+            auto textItem = scene->addText(s);
+            textItem->setPos(x, y);
+        }
+        
+        y+=15;
+        {
+            QString s = QString::fromStdString(f.m_pilotModule.m_last_order_send);
+            auto textItem = scene->addText(s);
+            textItem->setPos(x, y);
+        }
+        
+        y+=25;
+        {
+            QString s = "m_0 " + QString::number(f.m_pilotModule.m_0/3.14*180);
+            auto textItem = scene->addText(s);
+            textItem->setPos(x, y);
         }
     }
     
@@ -610,22 +632,7 @@ void GpsWidget::drawDebug(){
         int x = 0;
         int y = m_height-140;
         
-        scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
-        
-        {
-            QString s = QString::number(f.m_pilotModule.m_last_value/3.14*180) + " deg";
-            auto textItem = scene->addText(s);
-            textItem->setPos(x, y);
-        }
-        
-        y+=15;
-        {
-            QString s = QString::fromStdString(f.m_pilotModule.m_last_order_send);
-            auto textItem = scene->addText(s);
-            textItem->setPos(x, y);
-        }
-        
-        /*auto last_frame = f.m_lastGGAFrame;
+        auto last_frame = f.m_lastGGAFrame;
         scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
         QString s = QString::number(last_frame.m_nbrSat) + " satellites";
         auto textItem = scene->addText(s);
@@ -656,7 +663,7 @@ void GpsWidget::drawDebug(){
         textItem = scene->addText(s);
         textItem->setPos(x, y+65);
 
-        int time = last_frame.m_time;*/
+        int time = last_frame.m_time;
     }
 }
 

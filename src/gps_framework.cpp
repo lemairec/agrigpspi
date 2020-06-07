@@ -49,12 +49,8 @@ void GpsFramework::initOrLoadConfig(){
      
     m_pointA.m_latitude = m_config.m_a_lat;
     m_pointA.m_longitude = m_config.m_a_lon;
-    m_pointA.m_nbrSat = 100;
-    m_pointA.m_fix = 100;
     m_pointB.m_latitude = m_config.m_b_lat;
     m_pointB.m_longitude = m_config.m_b_lon;
-    m_pointB.m_nbrSat = 100;
-    m_pointB.m_fix = 100;
     setAB();
     m_reloadConfig = true;
     
@@ -81,17 +77,15 @@ void GpsFramework::setRef(double latitude, double longitude){
            m_gpsModule.setXY(*l2);
        }
     }
-    if(m_pointA.isOk()){
-        m_gpsModule.setXY(m_pointA);
-    }
-    if(m_pointB.isOk()){
-        m_gpsModule.setXY(m_pointB);
-    }
+    m_gpsModule.setXY(m_pointA);
+    m_gpsModule.setXY(m_pointB);
 }
 
 void GpsFramework::onGGAFrame(GGAFrame & f){
     m_lastGGAFrame = GGAFrame(f);
-    if(f.isOk()){
+    
+    return;
+    /*if(f.isOk()){
         if(m_gpsModule.m_latitudeRef == 0){
             setRef(f.m_latitude, f.m_longitude);
             return;
@@ -102,16 +96,55 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
             m_list.pop_back();
         };
         
+        
+        calculDeplacement();
+        m_distance = distance(*frame);
+        
         calculAngleCorrection();
         if(m_volantEngaged){
             m_pilotModule.run(m_angle_correction, m_time_last_point);
         }
-        calculDeplacement();
         
         calculSurface();
-        m_distance = distance(*frame);
         
         calculDraw(frame);
+    }
+   
+    if(m_observer){
+        m_observer->onNewPoint();
+    }
+    time_t timer;
+    time(&m_last_gga_received);*/
+    //std::cout << "<trkpt lon=\""<< f.m_longitude << "\" lat=\"" << f.m_latitude << "\"><ele>51.0</ele><time>2010-12-26T17:07:40.421Z</time></trkpt>" << std::endl;
+}
+
+void GpsFramework::onRMCFrame(RMCFrame_ptr f){
+    m_lastRMCFrame = f;
+    if(true){
+        if(m_gpsModule.m_latitudeRef == 0){
+            setRef(f->m_latitude, f->m_longitude);
+            return;
+        }
+        
+        m_list.push_front(f);
+        if(m_list.size()>100){
+            m_list.pop_back();
+        };
+        
+        m_deplacementAngle = f->m_cap_rad;
+        m_vitesse = f->m_vitesse_kmh;
+                       
+        //calculDeplacement();
+        m_distance = distance(*f);
+        
+        calculAngleCorrection();
+        if(m_volantEngaged){
+            m_pilotModule.run(m_angle_correction, m_time_last_point);
+        }
+        
+        calculSurface();
+        
+        calculDraw(f);
     }
    
     if(m_observer){
@@ -135,7 +168,7 @@ bool GpsFramework::isGpsConnected(){
     }
 }
 
-void GpsFramework::onGGAFrame(const std::string &frame){
+void GpsFramework::onFrame(const std::string &frame){
     gpslogFile << frame << "\n";
 }
 
@@ -208,7 +241,7 @@ void GpsFramework::savePointB(){
     }
     
     INFO(m_pointB.m_time << " " << m_pointB.m_latitude << " " << m_pointB.m_longitude);
-    if(m_pointA.m_time!=0 && m_pointB.m_time!=0){
+    if(m_pointA.m_isOk!=0 && m_pointB.m_isOk!=0){
         setAB();
     }
     if(m_observer){
@@ -246,8 +279,8 @@ void GpsFramework::setAB(){
 
 void GpsFramework::calculDeplacement(){
     if(m_list.size() > 2){
-        GGAFrame_ptr point1 = m_list.front();
-        GGAFrame_ptr point2 = NULL;
+        GpsPoint_ptr point1 = m_list.front();
+        GpsPoint_ptr point2 = NULL;
         int i = 0;
         for(auto point : m_list){
             point2 = point;
@@ -302,7 +335,7 @@ void GpsFramework::changeDraw(){
     }
 }
 
-void GpsFramework::calculDraw(GGAFrame_ptr p){
+void GpsFramework::calculDraw(GpsPoint_ptr p){
     if(m_listSurfaceToDraw.size()==0){
         SurfaceToDraw_ptr p(new SurfaceToDraw());
         m_listSurfaceToDraw.push_front(p);
@@ -408,7 +441,7 @@ void GpsFramework::readFile(){
 
 void GpsFramework::test(){
     m_gpsModule.readFrame("$GNGGA,110138.80,4902.71554,N,00324.04388,E,1,07,1.94,46.6,M,46.3,M,,*71");
-    GGAFrame_ptr f = m_list.front();
+    GpsPoint_ptr f = m_list.front();
     INFO(f->m_latitude << " " << f->m_longitude);
     savePointA();
     GGAFrame f2;
@@ -492,13 +525,13 @@ void GpsFramework::calculAngleCorrection(){
     if(m_algo == ALGO_NAIF){
         m_angle_correction = m_distanceAB/m_config.m_largeur*m_algo_naif_k/100;
     } else {
-        m_angle_correction = -atan(-m_distanceAB/m_algofk_lookahead_d)+(m_angleAB-atan(m_deplacementX/m_deplacementY));
+        m_angle_correction = -atan(-m_distanceAB/m_algofk_lookahead_d)+(m_angleAB-m_deplacementAngle);
         //m_angle_correction = ;
     }
     //m_angle_correction = -3.14/6;
     
 }
-int orientation(GGAFrame & p, GGAFrame & q, GGAFrame & r)
+int orientation(GpsPoint & p, GpsPoint & q, GpsPoint & r)
 {
     double val = (q.m_y - p.m_y) * (r.m_x - q.m_x) -
     (q.m_x - p.m_x) * (r.m_y - q.m_y);
@@ -507,11 +540,11 @@ int orientation(GGAFrame & p, GGAFrame & q, GGAFrame & r)
     return (val > 0)? 1: 2; // clock or counterclock wise
 }
 
-double cp(GGAFrame & a, GGAFrame &  b){ //returns cross product
+double cp(GpsPoint & a, GpsPoint &  b){ //returns cross product
     return a.m_x*b.m_y-a.m_y*b.m_x;
 }
 
-double polygonArea(std::vector<GGAFrame_ptr> tab)
+double polygonArea(std::vector<GpsPoint_ptr> tab)
 {
     double area = 0;
     int n = tab.size();
@@ -527,7 +560,7 @@ void GpsFramework::calculContourExterieur(){
     if(m_list.size()>10){
         m_contour.clear();
         // Find the leftmost point
-        std::vector<GGAFrame_ptr> points;
+        std::vector<GpsPoint_ptr> points;
         for(auto p: m_list){
             points.push_back(p);
         }

@@ -17,9 +17,9 @@ public:
 class SurfaceToDraw{
 public:
     bool m_isClose = false;
-    std::list<GGAFrame_ptr> m_points;
-    GGAFrame_ptr m_lastPointOk = nullptr;
-    GGAFrame_ptr m_lastPoint = nullptr;
+    std::list<GpsPoint_ptr> m_points;
+    GpsPoint_ptr m_lastPointOk = nullptr;
+    GpsPoint_ptr m_lastPoint = nullptr;
 };
 
 typedef std::shared_ptr<SurfaceToDraw> SurfaceToDraw_ptr;
@@ -36,7 +36,8 @@ public:
     void addGpsObserver(IGpsObserver *);
     void removeObserver();
     void onGGAFrame(GGAFrame & frame);
-    void onGGAFrame(const std::string & frame);
+    void onRMCFrame(RMCFrame_ptr frame);
+    void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
     double distance(GpsPoint & gpsPoint);
@@ -46,8 +47,8 @@ public:
     
     void test();
     
-    GGAFrame m_pointA;
-    GGAFrame m_pointB;
+    GpsPoint m_pointA;
+    GpsPoint m_pointB;
     
     double m_distance;
     
@@ -94,18 +95,19 @@ public:
     //contour_exterieur;
     double m_surface_exterieur = 0;
     double m_surface_exterieur_h = 0;
-    std::vector<GGAFrame_ptr> m_contour;
+    std::vector<GpsPoint_ptr> m_contour;
     void calculContourExterieur();
     
     void clearSurface();
     void calculSurface();
     
-    void calculDraw(GGAFrame_ptr);
+    void calculDraw(GpsPoint_ptr);
     
     
-    std::list<GGAFrame_ptr> m_list;
+    std::list<GpsPoint_ptr> m_list;
     std::list<SurfaceToDraw_ptr> m_listSurfaceToDraw;
     GGAFrame m_lastGGAFrame;
+    RMCFrame_ptr m_lastRMCFrame;
     time_t m_last_gga_received;
     
     bool isGpsConnected();

@@ -14,6 +14,8 @@ struct GpsPoint {
     
     double m_time = 0.0;
     double m_timeHour;
+    
+    bool m_isOk = false;
 };
 
 struct GGAFrame : public GpsPoint {
@@ -26,15 +28,26 @@ struct GGAFrame : public GpsPoint {
     }
 };
 
+struct RMCFrame : public GpsPoint {
+    double m_vitesse_noeud;
+    double m_cap_deg;
+    
+    double m_vitesse_kmh;
+    double m_cap_rad;
+};
+
 typedef std::shared_ptr<GGAFrame> GGAFrame_ptr;
+typedef std::shared_ptr<RMCFrame> RMCFrame_ptr;
+typedef std::shared_ptr<GpsPoint> GpsPoint_ptr;
 
 class GpsModule {
 public:
     GpsModule();
     void init();
     
+    void printBuffer();
     void onGGAFrame(GGAFrame * ggaFrame);
-    void onGGAFrame(const std::string & s);
+    void onFrame(const std::string & s);
     
     void readFrame(const std::string & frame);
     void readChar(char c);
@@ -43,6 +56,7 @@ public:
     void setRef(double latitude, double longitude);
     
     GGAFrame m_lastGGAEvent;
+    RMCFrame_ptr m_lastRMCEvent;
     double m_latitudeRef = 0;
 private:
     int m_bufferIndLast = 0;

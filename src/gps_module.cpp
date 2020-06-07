@@ -19,8 +19,8 @@ void GpsModule::onGGAFrame(GGAFrame * ggaFrame){
     
 }
 
-void GpsModule::onGGAFrame(const std::string & s){
-    GpsFramework::Instance().onGGAFrame(s);
+void GpsModule::onFrame(const std::string & s){
+    GpsFramework::Instance().onFrame(s);
     //INFO(s);
 }
 
@@ -75,6 +75,13 @@ void GpsModule::debug(){
 }
 
 
+void GpsModule::printBuffer(){
+    std::string s = "";
+    for(size_t i =0; i < m_bufferIndLast; ++i){
+        s += m_buffer[i];
+    }
+    INFO(s);
+}
 
 void GpsModule::parseBuffer(){
     m_tempInd = 0;
@@ -86,6 +93,8 @@ void GpsModule::parseBuffer(){
         if(m_buffer[1] == 'N' || m_buffer[1] == 'P'){
             if(m_buffer[2] == 'G' && m_buffer[3] == 'G' && m_buffer[4] == 'A'){
                 return parseGGA();
+            } else if(m_buffer[2] == 'R' && m_buffer[3] == 'M' && m_buffer[4] == 'C'){
+                return parseRMC();
             }
         }
     } else if (m_buffer[0] == 'S' && m_buffer[1] == 'P'){
@@ -97,13 +106,47 @@ void GpsModule::parseBuffer(){
     }
 }
 
+//GNRMC,124450.80,A,4925.15859,N,00400.48455,E,0.006,,070620,,,A*63
+
+void GpsModule::parseRMC(){
+    std::string s = "";
+    for(size_t i =0; i < m_bufferIndLast; ++i){
+        s += m_buffer[i];
+    }
+    INFO(s);
+    onFrame(s);
+    
+    m_lastRMCEvent = RMCFrame_ptr(new RMCFrame());
+    readUntilCommat();
+    m_lastRMCEvent->m_time = readDouble();
+    readUntilCommat();
+    m_lastRMCEvent->m_latitude = readDeg();
+    readUntilCommat();
+    m_lastRMCEvent->m_longitude = readDeg();
+    readUntilCommat();
+    m_lastRMCEvent->m_vitesse_noeud = readDouble();
+    m_lastRMCEvent->m_vitesse_kmh = m_lastRMCEvent->m_vitesse_noeud * 1.852;
+    m_lastRMCEvent->m_cap_deg = readDouble();
+    m_lastRMCEvent->m_cap_rad = m_lastRMCEvent->m_cap_deg/180*3.14;
+    
+    if(m_buffer[16] == 'A'){
+        m_lastRMCEvent->m_isOk = true;
+    } else {
+        m_lastRMCEvent->m_isOk = false;
+    };
+    
+    setXY(*m_lastRMCEvent);
+    GpsFramework::Instance().onRMCFrame(m_lastRMCEvent);
+    
+}
+
 //$GNGGA,110138.80,4902.71554,N,00324.04388,E,1,07,1.94,46.6,M,46.3,M,,*71
 void GpsModule::parseGGA(){
     std::string s = "";
     for(size_t i =0; i < m_bufferIndLast; ++i){
         s += m_buffer[i];
     }
-    onGGAFrame(s);
+    onFrame(s);
     
     readUntilCommat();
     m_lastGGAEvent.m_time = readDouble();
