@@ -302,8 +302,10 @@ void GpsFramework::calculDeplacement(){
             m_deplacementX = x;
             m_deplacementY = y;
             
-            if(m_deplacementX != 0){
-                m_deplacementAngle = atan(m_deplacementY/m_deplacementX);
+            if(m_deplacementY != 0){
+                double temp = atan(m_deplacementX/m_deplacementY);
+                //int perc = temp/m_deplacementAngle*100;
+                //INFO(perc << " " << temp/3.14*180 << " " << m_deplacementAngle/3.14*180);
             }
             
             if(m_ab_x != 0 || m_ab_y != 0){
