@@ -108,7 +108,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         
         
         
-        INFO(s);
+        //INFO(s);
         if (i0 == 1 && i1 ==3 && i2 == 4) {
             
             int r1 = data[3];
@@ -123,9 +123,9 @@ void MyQTSerialPorts::handleReadyReadPilot(){
             
             GpsFramework::Instance().m_pilotModule.setHadrienVolant(res/4000.0);
             
-            INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
+            //INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
             //u_int16_t res =
-            INFO("c'est cool");
+            //INFO("c'est cool");
             
         } else {
             INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
@@ -234,8 +234,8 @@ void MyQTSerialPorts::openFile(Config & config){
 void MyQTSerialPorts::handleHadrien(){
     //INFO("coucou je suis ici");
     
-    //std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
-    //writePilotSerialD(l);
+    std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
+    writePilotSerialD(l);
     
     m_timer.start(HADRIEN_TIME_VOLANT);
     
