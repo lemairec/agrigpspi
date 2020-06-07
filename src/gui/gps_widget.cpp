@@ -450,9 +450,9 @@ void GpsWidget::drawBottom(){
     auto last_frame = f.m_lastGGAFrame;
     if(f.isGpsConnected()){
         QPixmap * img;
-        if(last_frame.m_fix == 1){
+        if(last_frame.m_fix == 1 || last_frame.m_fix == 5){
            img = m_imgSatOrange;
-        } else if(last_frame.m_fix > 1){
+        } else if(last_frame.m_fix == 2 || last_frame.m_fix == 4){
            img = m_imgSatVert;
         } else {
            img = m_imgSatRouge;
@@ -500,6 +500,12 @@ void GpsWidget::drawBottom(){
             s = "GPS";
         } else if(last_frame.m_fix == 2){
             s = "DGPS";
+        } else if(last_frame.m_fix == 3){
+            s = "PPSFIX";
+        } else if(last_frame.m_fix == 4){
+            s = "RTK";
+        } else if(last_frame.m_fix == 5){
+            s = "FRTK";
         } else {
             s = "invalid";
         }
@@ -643,9 +649,15 @@ void GpsWidget::drawDebug(){
         textItem->setPos(x, y);
 
         if(last_frame.m_fix == 1){
-         s = "GPS";
+            s = "GPS";
         } else if(last_frame.m_fix == 2){
-         s = "DGPS";
+            s = "DGPS";
+        } else if(last_frame.m_fix == 3){
+            s = "PPSFIX";
+        } else if(last_frame.m_fix == 4){
+            s = "RTK";
+        } else if(last_frame.m_fix == 5){
+            s = "FRTK";
         } else {
          s = "invalid";
         }
