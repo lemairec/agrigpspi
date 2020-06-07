@@ -230,13 +230,7 @@ void GpsWidget::draw_force(){
     m_lb = f.m_b;
     m_lc = f.m_c;
     
-    m_a = f.m_deplacementAngle;
-    
-    if(f.m_deplacementX>0){
-        m_a = m_a-1.57;
-    } else {
-        m_a = m_a+1.57;
-    }
+    m_a = -f.m_deplacementAngle; //TODO etonnant!
     if(!f.m_config.m_sensDraw){
         m_a = 0;
     }
