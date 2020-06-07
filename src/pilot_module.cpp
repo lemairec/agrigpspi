@@ -276,17 +276,17 @@ void PilotModule::setHadrienVolant(double val){
     INFO(val);
     m_lastHadrienValue = val;
     m_hadrienVolant = val;
-    /*if(val - m_lastHadrienValue > 0.5){
+    if(m_lastHadrienValue - val > 0.5){
         m_nbrTourHadrien += 1;
     }
     
-    if(val - m_lastHadrienValue < 0.5){
+    if(m_lastHadrienValue - val < 0.5){
         m_nbrTourHadrien -= 1;
     }
     
     m_lastHadrienValue = val;
     
-    m_hadrienVolant = m_nbrTourHadrien + val;*/
+    m_hadrienVolant = m_nbrTourHadrien + val;
     
     
 }
