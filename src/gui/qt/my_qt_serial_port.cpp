@@ -232,6 +232,11 @@ void MyQTSerialPorts::openFile(Config & config){
 }
 
 void MyQTSerialPorts::handleHadrien(){
+    INFO("coucou je suis ici");
+    
+    std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
+    writePilotSerialD(l);
+    
     m_timer.start(HADRIEN_TIME_VOLANT);
     
 }
