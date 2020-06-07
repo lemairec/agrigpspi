@@ -113,7 +113,7 @@ void GpsModule::parseRMC(){
     for(size_t i =0; i < m_bufferIndLast; ++i){
         s += m_buffer[i];
     }
-    INFO(s);
+    //INFO(s);
     onFrame(s);
     
     m_lastRMCEvent = RMCFrame_ptr(new RMCFrame());
