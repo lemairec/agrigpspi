@@ -7,6 +7,9 @@
 
 #include "environnement.hpp"
 
+#define HADRIEN_TIME_VOLANT 100
+#define FILE_TIME 200
+
 MyQTSerialPorts::MyQTSerialPorts(){
     connect(&m_serialPortGps, SIGNAL(readyRead()), this, SLOT(handleReadyReadGps()));
     connect(&m_serialPortGps, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
@@ -14,10 +17,20 @@ MyQTSerialPorts::MyQTSerialPorts(){
     connect(&m_serialPortPilot, SIGNAL(readyRead()), this, SLOT(handleReadyReadPilot()));
     connect(&m_serialPortPilot, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
             this, &MyQTSerialPorts::handleErrorPilot);
+    
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(handleLineFile()));
+    connect(&m_timerHadrien, SIGNAL(timeout()), this, SLOT(handleHadrien()));
+      
 }
 void MyQTSerialPorts::initOrLoad(Config & config){
     INFO(m_gps_serial_input << " " << config.m_input);
     m_pilot_langage = config.m_pilot_langage;
+    
+    if(config.m_input == "file"){
+        INFO("file " << config.m_file);
+        openFile(config);
+    }
+    
     if(config.m_input != "none"){
         if(m_gps_serial_input == config.m_input && m_serialPortGps.isOpen()){
             INFO("gps port already open");
@@ -54,9 +67,15 @@ void MyQTSerialPorts::initOrLoad(Config & config){
                 GpsFramework::Instance().addError(oss.str());
                 //standardOutput << QObject::tr("Failed to open port %1, error: %2").arg(serialPortName).arg(serialPort.errorString()) << endl;//
             }
+            
+            if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
+                
+            }
         }
     }
-    
+    if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
+        m_timerHadrien.start(HADRIEN_TIME_VOLANT);
+    }
     
 };
 
@@ -74,47 +93,6 @@ void MyQTSerialPorts::handleErrorGps(QSerialPort::SerialPortError error){
         GpsFramework::Instance().addError(oss.str());
         WARN(error);
     }
-}
-
-int chartoint(char c){
-    if(c=='0'){
-        return 0;
-    } else if(c=='1'){
-        return 1;
-    } else if(c=='2'){
-    return 2;
-    } else if(c=='3'){
-    return 3;
-    } else if(c=='4'){
-    return 4;
-    } else if(c=='5'){
-    return 5;
-    } else if(c=='6'){
-    return 6;
-    } else if(c=='7'){
-    return 7;
-    } else if(c=='8'){
-    return 8;
-    } else if(c=='9'){
-    return 9;
-    } else if(c=='a'){
-    return 10;
-    } else if(c=='b'){
-    return 11;
-    } else if(c=='c'){
-    return 12;
-    } else if(c=='d'){
-    return 13;
-    } else if(c=='e'){
-    return 14;
-    }else if(c=='f'){
-    return 15;
-    }
-    return 0;
-}
-
-int Twochartoint(char c1, char c2){
-    return chartoint(c1)*16+chartoint(c2);
 }
 
 void MyQTSerialPorts::handleReadyReadPilot(){
@@ -143,12 +121,9 @@ void MyQTSerialPorts::handleReadyReadPilot(){
             uint16_t r = temp1*65536 + temp2;
             int16_t res = r;
             
-            {
-                std::ostringstream strs;
-                INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
-                strs << res;
-                GpsFramework::Instance().addError(strs.str());
-            }
+            GpsFramework::Instance().m_pilotModule.setHadrienVolant(res/4096.0);
+            
+            INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
             //u_int16_t res =
             INFO("c'est cool");
             
@@ -228,5 +203,56 @@ std::vector<std::string> & MyQTSerialPorts::getAvailablePorts(){
     return m_serials;
 }
 
+void MyQTSerialPorts::handleLineFile(){
+    
+    QString line = m_text_stream->readLine();
+    if(!line.isNull()){
+       std::string line_s = line.toUtf8().constData();
+       for(size_t i = 0; i < line_s.size(); ++i){
+           
+           GpsFramework::Instance().m_gpsModule.readChar(line_s[i]);
+       }
+       GpsFramework::Instance().m_gpsModule.readChar('\n');
+       //line = m_text_stream->readLine();
+    }
+    m_timer.start(FILE_TIME);
+    
+}
 
 
+void MyQTSerialPorts::openFile(Config & config){
+    QFile * file = new QFile(QString::fromStdString(config.m_file));
+    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)){
+        WARN("can not open file");
+        return;
+    }
+
+    m_text_stream = new QTextStream(file);
+    m_timer.start(FILE_TIME);
+}
+
+void MyQTSerialPorts::handleHadrien(){
+    m_timer.start(HADRIEN_TIME_VOLANT);
+    
+}
+/*void MyQTSerialPorts::
+QFile file(QString::fromStdString(config.m_file));
+ if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+     WARN("can not open file");
+     return;
+ }
+
+ m_text_stream(&file);
+ QString line = in.readLine();
+ while (!line.isNull()) {
+     std::string line_s = line.toUtf8().constData();
+     for(size_t i = 0; i < line_s.size(); ++i){
+         
+         GpsFramework::Instance().m_gpsModule.readChar(line_s[i]);
+     }
+     GpsFramework::Instance().m_gpsModule.readChar('\n');
+     //QThread::msleep(100);
+     line = in.readLine();
+ }
+ return;
+*/

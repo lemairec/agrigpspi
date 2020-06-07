@@ -7,6 +7,7 @@
 #include <QTextStream>
 #include <QByteArray>
 #include <QObject>
+#include <QTimer>
 
 QT_USE_NAMESPACE
 
@@ -40,7 +41,19 @@ private slots:
     void handleReadyReadPilot();
     void handleErrorPilot(QSerialPort::SerialPortError error);
 
+//file
+    void openFile(Config & config);
+
+private:
+    QTimer m_timerHadrien;
+private slots:
+    void handleHadrien();
     
+private:
+    QTimer m_timer;
+    QTextStream * m_text_stream;
+private slots:
+    void handleLineFile();
 };
 
 
