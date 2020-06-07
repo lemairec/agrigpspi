@@ -339,8 +339,13 @@ void GpsFramework::changeDraw(){
 
 void GpsFramework::calculDraw(GpsPoint_ptr p){
     if(m_listSurfaceToDraw.size()==0){
-        SurfaceToDraw_ptr p(new SurfaceToDraw());
-        m_listSurfaceToDraw.push_front(p);
+        SurfaceToDraw_ptr s(new SurfaceToDraw());
+        m_listSurfaceToDraw.push_front(s);
+        s->m_points.push_front(p);
+        s->m_points.push_front(p);
+        s->m_lastPoint = p;
+        s->m_lastPointOk = p;
+        return;
     }
     if(m_pauseDraw){
         return;
@@ -348,17 +353,17 @@ void GpsFramework::calculDraw(GpsPoint_ptr p){
     
     auto s = m_listSurfaceToDraw.front();
     
-    s->m_lastPoint = p;
-    if(s->m_lastPointOk == NULL){
-        s->m_lastPointOk = p;
+    if(s->m_lastPoint != s->m_lastPointOk){
+        s->m_points.pop_front();
     }
+    s->m_lastPoint = p;
     double x = s->m_lastPointOk->m_x - s->m_lastPoint->m_x;
     double y = s->m_lastPointOk->m_y - s->m_lastPoint->m_y;
     double dist = x*x + y*y;
-    if(dist > 1){
+    if(dist > 3*3){
         s->m_lastPointOk = p;
-        s->m_points.push_front(p);
     }
+    s->m_points.push_front(p);
 }
 
 #include <iostream>
