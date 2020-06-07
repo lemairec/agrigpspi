@@ -292,6 +292,7 @@ void PilotModule::setHadrienVolant(double val){
     m_lastHadrienValue = val;
     
     m_hadrienVolant = m_nbrTourHadrien + val;
+    INFO("   " << m_hadrienVolant);
     
     
 }
