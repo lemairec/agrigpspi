@@ -274,16 +274,15 @@ void PilotModule::myLeftRight(int res){
 
 void PilotModule::setHadrienVolant(double val){
     INFO("val : " << val);
-    INFO("   " << (m_lastHadrienValue - val));
+    double temp = m_lastHadrienValue - val;
+    INFO("   " << temp);
      
-    m_lastHadrienValue = val;
-    m_hadrienVolant = val;
-    if((m_lastHadrienValue - val) > 0.5){
+    if(temp > 0.5){
         INFO("+1");
         m_nbrTourHadrien += 1;
     }
     
-    if((m_lastHadrienValue - val) < -0.5){
+    if(temp < -0.5){
         INFO("-1");
         
         m_nbrTourHadrien -= 1;
