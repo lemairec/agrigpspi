@@ -108,7 +108,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         
         
         
-        //INFO(s);
+        INFO(s);
         if (i0 == 1 && i1 ==3 && i2 == 4) {
             
             int r1 = data[3];
