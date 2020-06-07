@@ -148,6 +148,9 @@ void PilotModule::run(int i){
             std::vector<unsigned char> l;
             l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02};
             runHadrienVolant(l);
+            l.clear();
+            l = {0x01, 0x03, 0x40, 0x09, 0x00, 0x02};
+            runHadrienVolant(l);
             //engageHadrien();
         } else if(i ==1){
             desengageHadrien();
