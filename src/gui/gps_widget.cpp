@@ -277,9 +277,6 @@ void GpsWidget::draw_force(){
                         continue;
                     }
                     double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
-                    if(dist < l*l*0.2){
-                        continue;
-                    }
                     if(y1 != y0){
                         double res = (x1-x0)/(y1-y0);
                         double i = 1.0;
@@ -614,6 +611,12 @@ void GpsWidget::drawDebug(){
         y+=25;
         {
             QString s = "m_0 " + QString::number(f.m_pilotModule.m_0/3.14*180);
+            auto textItem = scene->addText(s);
+            textItem->setPos(x, y);
+        }
+        y+=25;
+        {
+            QString s = "H " + QString::number(f.m_pilotModule.m_hadrienVolant);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
