@@ -121,11 +121,11 @@ void MyQTSerialPorts::handleReadyReadPilot(){
             uint16_t r = temp1*65536 + temp2;
             int16_t res = r;
             
-            GpsFramework::Instance().m_pilotModule.setHadrienVolant(res/4096.0);
+            GpsFramework::Instance().m_pilotModule.setHadrienVolant(res/4000.0);
             
-            INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
+            //INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
             //u_int16_t res =
-            INFO("c'est cool");
+            //INFO("c'est cool");
             
         } else {
             INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
