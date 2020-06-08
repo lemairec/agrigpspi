@@ -80,7 +80,9 @@ void GpsFramework::setRef(double latitude, double longitude){
 }
 
 void GpsFramework::onGGAFrame(GGAFrame & f){
+    DEBUG("begin");
     m_lastGGAFrame = GGAFrame(f);
+    DEBUG("end");
     
     return;
     /*if(f.isOk()){
@@ -117,6 +119,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
 }
 
 void GpsFramework::onRMCFrame(RMCFrame_ptr f){
+    DEBUG("begin");
     m_lastRMCFrame = f;
     if(true){
         if(m_gpsModule.m_latitudeRef == 0){
@@ -143,6 +146,7 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
         
         calculSurface();
         
+        DEBUG("draw");
         calculDraw(f);
     }
    
@@ -151,6 +155,7 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     }
     time_t timer;
     time(&m_last_gga_received);
+    DEBUG("end");
     
     //std::cout << "<trkpt lon=\""<< f.m_longitude << "\" lat=\"" << f.m_latitude << "\"><ele>51.0</ele><time>2010-12-26T17:07:40.421Z</time></trkpt>" << std::endl;
 }

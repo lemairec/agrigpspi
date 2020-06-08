@@ -78,22 +78,28 @@ void MyQTSerialPorts::initOrLoad(Config & config){
 };
 
 void MyQTSerialPorts::handleReadyReadGps(){
+    DEBUG("begin");
+    
     QByteArray a = m_serialPortGps.readAll();
     for(size_t i = 0; i < a.size(); ++i){
         
         GpsFramework::Instance().m_gpsModule.readChar(a.data()[i]);
     }
+    DEBUG("end");
 }
 void MyQTSerialPorts::handleErrorGps(QSerialPort::SerialPortError error){
+    DEBUG("begin");
     if(error != 0){
         std::ostringstream oss;
         oss << "handleErrorGps " << error << ", error:" << m_serialPortGps.errorString().toUtf8().constData();
         GpsFramework::Instance().addError(oss.str());
         WARN(error);
     }
+    DEBUG("end");
 }
 
 void MyQTSerialPorts::handleReadyReadPilot(){
+    DEBUG("begin");
     QByteArray b = m_serialPortPilot.readAll();
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         QString hex(b.toHex());
@@ -133,8 +139,10 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         QString hex(b);
         INFO(hex.toUtf8().constData());
     }
+    DEBUG("end");
 }
 void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
+    DEBUG("begin");
     if(error != 0){
         std::ostringstream oss;
         //auto error_s = std::string(QMetaEnum::fromType<QSerialPort::SerialPortError>().valueToKey(error));
@@ -143,9 +151,11 @@ void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
         GpsFramework::Instance().addError(oss.str());
         WARN(error);
     }
+    DEBUG("end");
 }
 
 void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
+    DEBUG("begin");
     QByteArray b;
     for(int i = 0; i < l.size(); ++i){
         b.append(l[i]);
@@ -156,11 +166,15 @@ void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
     //INFO(hex.toUtf8().constData());
     //INFO("toto");
     
+    DEBUG("end");
 }
+
 void MyQTSerialPorts::writePilotSerialS(const std::string & l){
+    DEBUG("begin");
     QByteArray b;
     b.append(l.c_str());
     m_serialPortPilot.write(b);
+    DEBUG("end");
 }
 
 

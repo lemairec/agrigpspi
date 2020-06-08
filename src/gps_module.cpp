@@ -80,14 +80,12 @@ void GpsModule::printBuffer(){
     for(size_t i =0; i < m_bufferIndLast; ++i){
         s += m_buffer[i];
     }
-    INFO(s);
+    DEBUG(s);
 }
 
 void GpsModule::parseBuffer(){
     m_tempInd = 0;
-#ifdef GPS_DEBUG
     printBuffer();
-#endif
     //return true;
     if(m_buffer[0] == 'G'){
         if(m_buffer[1] == 'N' || m_buffer[1] == 'P'){
