@@ -40,7 +40,7 @@ void GpsModule::readChar(char c){
         parseBuffer();
         resetBuffer();
     } else {
-        if(m_bufferIndLast > 199){
+        if(m_bufferIndLast > 190){
             resetBuffer();
         }
         this->m_buffer[m_bufferIndLast] = c;
