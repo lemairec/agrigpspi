@@ -7,5 +7,5 @@ ser = serial.Serial(
 
 while True:
     response = ser.readline()
-    print("read data: " + response)
+    print(response)
 

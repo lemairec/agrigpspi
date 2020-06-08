@@ -465,22 +465,22 @@ void GpsWidget::drawBottom(){
     }
     
     {
-        QString s_vitesse = "cap : " + QString::number(f.m_deplacementAngle/3.14*180, 'f', 2);
+        QString s_vitesse = "cap : " + QString::number(f.m_deplacementAngle/3.14*180, 'f', 1);
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(m_width-130 - mBounds.width()/2, m_height-35);
+        textItems_vitesse->setPos(m_width-135 - mBounds.width()/2, m_height-35);
     }
     
     //scene->addRect(0, m_height-40, 80, 40, m_penBlack, m_brushLightGrayDebug);
-    QString s_vitesse = QString::number(f.m_vitesse, 'f', 2) + " km/h";
+    QString s_vitesse = QString::number(f.m_vitesse, 'f', 1) + " km/h";
     auto textItems_vitesse = scene->addText(s_vitesse);
     auto mBounds = textItems_vitesse->boundingRect();
     textItems_vitesse->setDefaultTextColor(Qt::white);
     textItems_vitesse->setPos(m_width-50 - mBounds.width()/2, m_height-35);
     
     {
-        QString s_vitesse = "hdop : " + QString::number(last_frame.m_hdop, 'f', 2);
+        QString s_vitesse = "hdop : " + QString::number(last_frame.m_hdop, 'f', 1);
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
@@ -509,7 +509,7 @@ void GpsWidget::drawBottom(){
         } else {
             s = "invalid";
         }
-        QString s_vitesse = QString::number(last_frame.m_fix)+ " " +QString::fromStdString(s);
+        QString s_vitesse = QString::fromStdString(s);
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
@@ -602,40 +602,40 @@ void GpsWidget::drawDebug(){
         scene->addRect(x, y, 100, 120, m_penBlack, lightGrayBrush);
         
         {
-            QString s = QString::number(qRound(f.m_angle_correction/3.14*180*10)/10.0) + " deg";
+            QString s = QString::number(f.m_angle_correction/3.14*180, 'f', 1) + " deg";
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
         
         y+=20;
         {
-            QString s = "m_0 " + QString::number(f.m_pilotModule.m_0/3.14*180);
+            QString s = "m_0 " + QString::number(f.m_pilotModule.m_0/3.14*180, 'f', 1);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
         
         y+=15;
         {
-            QString s = "goto " + QString::number(qRound(f.m_pilotModule.m_last_goto*100)/100.0);
+            QString s = "goto " + QString::number(f.m_pilotModule.m_last_goto*100, 'f', 1);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
         
         y+=20;
         {
-            QString s = "H0 " + QString::number(qRound(f.m_pilotModule.m_hadrien0*100)/100.0);
+            QString s = "H0 " + QString::number(f.m_pilotModule.m_hadrien0, 'f', 1);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
         y+=15;
         {
-            QString s = "H " + QString::number(qRound(f.m_pilotModule.m_hadrienVolant*100)/100.0);
+            QString s = "H " + QString::number(f.m_pilotModule.m_hadrienVolant, 'f', 1);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
         y+=20;
        {
-           QString s = "LR " + QString::number(qRound(f.m_pilotModule.m_last_leftright*100)/100.0);
+           QString s = "LR " + QString::number(f.m_pilotModule.m_last_leftright, 'f', 1);
            auto textItem = scene->addText(s);
            textItem->setPos(x, y);
        }
@@ -662,18 +662,19 @@ void GpsWidget::drawDebug(){
         auto textItem = scene->addText(s);
         textItem->setPos(x, y);
 
+        s = QString::number(last_frame.m_fix)+ " ";
         if(last_frame.m_fix == 1){
-            s = "GPS";
+            s += "GPS";
         } else if(last_frame.m_fix == 2){
-            s = "DGPS";
+            s += "DGPS";
         } else if(last_frame.m_fix == 3){
-            s = "PPSFIX";
+            s += "PPSFIX";
         } else if(last_frame.m_fix == 4){
-            s = "RTK";
+            s += "RTK";
         } else if(last_frame.m_fix == 5){
-            s = "FRTK";
+            s += "FRTK";
         } else {
-         s = "invalid";
+            s += "invalid";
         }
         textItem = scene->addText(s);
         textItem->setPos(x, y+15);

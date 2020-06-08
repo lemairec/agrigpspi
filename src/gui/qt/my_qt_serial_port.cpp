@@ -29,9 +29,7 @@ void MyQTSerialPorts::initOrLoad(Config & config){
     if(config.m_input == "file"){
         INFO("file " << config.m_file);
         openFile(config);
-    }
-    
-    if(config.m_input != "none"){
+    } else if(config.m_input != "none"){
         if(m_gps_serial_input == config.m_input && m_serialPortGps.isOpen()){
             INFO("gps port already open");
         } else {
