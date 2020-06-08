@@ -509,7 +509,7 @@ void GpsWidget::drawBottom(){
         } else {
             s = "invalid";
         }
-        QString s_vitesse = QString::fromStdString(s);
+        QString s_vitesse = QString::number(last_frame.m_fix)+ " " +QString::fromStdString(s);
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
