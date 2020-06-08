@@ -19,11 +19,11 @@ public:
     double m_largeur = 27;
     
     std::string m_input;
-    int m_baudrate = 9600;
+    int m_baudrate = 115200;
     std::string m_file;
     
     std::string m_inputPilot = "none";
-    int m_baudratePilot = 9600;
+    int m_baudratePilot = 115200;
     
     double m_a_lat = 0;
     double m_a_lon = 0;
