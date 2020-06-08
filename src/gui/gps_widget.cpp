@@ -567,7 +567,7 @@ void GpsWidget::drawDebug(){
     //surface
     {
         int x = 0;
-        int y = m_height-300;
+        int y = m_height-320;
         
         /*scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
         {
@@ -599,33 +599,47 @@ void GpsWidget::drawDebug(){
             textItem->setPos(x, y+70);
         }*/
         
-        scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
+        scene->addRect(x, y, 100, 120, m_penBlack, lightGrayBrush);
         
         {
-            QString s = QString::number(f.m_pilotModule.m_last_value/3.14*180) + " deg";
+            QString s = QString::number(qRound(f.m_angle_correction/3.14*180*10)/10.0) + " deg";
+            auto textItem = scene->addText(s);
+            textItem->setPos(x, y);
+        }
+        
+        y+=20;
+        {
+            QString s = "m_0 " + QString::number(f.m_pilotModule.m_0/3.14*180);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
         
         y+=15;
         {
-            QString s = QString::fromStdString(f.m_pilotModule.m_last_order_send);
+            QString s = "goto " + QString::number(qRound(f.m_pilotModule.m_last_goto*100)/100.0);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
         
-        y+=25;
+        y+=20;
         {
-            QString s = "m_0 " + QString::number(f.m_pilotModule.m_0/3.14*180);
+            QString s = "H0 " + QString::number(qRound(f.m_pilotModule.m_hadrien0*100)/100.0);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
-        y+=25;
+        y+=15;
         {
-            QString s = "H " + QString::number(f.m_pilotModule.m_hadrienVolant);
+            QString s = "H " + QString::number(qRound(f.m_pilotModule.m_hadrienVolant*100)/100.0);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
+        y+=20;
+       {
+           QString s = "LR " + QString::number(qRound(f.m_pilotModule.m_last_leftright*100)/100.0);
+           auto textItem = scene->addText(s);
+           textItem->setPos(x, y);
+       }
+        
     }
     
     //zoom

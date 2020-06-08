@@ -329,6 +329,10 @@ void OptionWidget::drawPage5(){
     drawButtonLabel(m_button_p5test1, COLOR_GREEN);
     drawButtonLabel(m_button_p5test2, COLOR_OTHER);
     drawButtonLabel(m_button_p5test3, COLOR_GREEN);
+    if(f.m_config.m_algo2 == ALGO2_GOTO){
+        drawText("-20", m_button_p5test1->m_x, m_button_p5test3->m_y);
+         drawText("+20", m_button_p5test3->m_x, m_button_p5test3->m_y);
+    }
     
     drawSelectButtonGuiOpen(m_button_select_algo);
     drawSelectButtonGuiOpen(m_button_select_algo2);

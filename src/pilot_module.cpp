@@ -56,12 +56,12 @@ void PilotModule::run(double value, double time){
     std::ostringstream out;
     
     if(m_algo2 == ALGO2_GOTO){
-        int res = value*m_algo2_goto_k;
+        double res = value*m_algo2_goto_k;
         myGoto(res);
     } else if(m_algo2 == ALGO2_GOTO_REL){
         //int res = (value-m_0)*m_algo2_goto_k; test1
         double correction = value+m_0;
-        int res = correction*m_algo2_goto_k;
+        double res = correction*m_algo2_goto_k;
         myGoto(res);
         m_lastValues.push_back(correction);
         while(m_lastValues.size() > m_algo2_goto_rel_s){
@@ -171,14 +171,15 @@ void PilotModule::test(int i){
         if(i == 0){
             myGoto(0);
         }else if(i > 0){
-            myGoto(m_algo2_goto_k);
+            run(20.0/180.0*3.14, 0);
         } else {
-            myGoto(-m_algo2_goto_k);
+            run(-20.0/180.0*3.14, 0);
         }
     }
 }
 
 void PilotModule::engageHadrien(){
+    m_hadrien0 = m_hadrienVolant;
     INFO("engageHadrien");
     std::vector<unsigned char> l;
     l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
@@ -222,10 +223,12 @@ void add4hex( std::vector<unsigned char> & l, int i){
     
 }
 
-void PilotModule::myGoto(int res){
+void PilotModule::myGoto(double res){
     if(m_inverse){
         res = -res;
     }
+    m_last_goto = res;
+    
     std::ostringstream out;
     if(res<0){
         out << "$G;-" << (-res) << "\n";
@@ -237,19 +240,27 @@ void PilotModule::myGoto(int res){
         
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
-        std::vector<unsigned char> l;
+        double gotoRel = res-m_hadrien0;
+        double leftRight = gotoRel-m_hadrienVolant;
+        myLeftRight(leftRight);
+        //m_tour_volant = res/4000.0
+        
+        
+        /*std::vector<unsigned char> l;
         l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
         add4hex(l, res);
-        runHadrienVolant(l);
+        runHadrienVolant(l);*/
     }
 }
 
 
 
-void PilotModule::myLeftRight(int res){
+void PilotModule::myLeftRight(double res){
     if(m_inverse){
-        res = -res;
+        //res = -res;
     }
+    m_last_leftright = res;
+    
     std::ostringstream out;
     if(res<0){
         out << "$L;" << (-res) << "\n";
@@ -260,7 +271,7 @@ void PilotModule::myLeftRight(int res){
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
-        int res_a = std::abs(res);
+        int res_a = std::abs(res*32000);
         unsigned char res1 = (res_a/256)%256;
         unsigned char res2 = res_a%256;
         std::vector<unsigned char> l;

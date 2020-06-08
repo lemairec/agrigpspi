@@ -38,6 +38,8 @@ public:
     std::string m_last_order_send;
     
     double m_0 = 0;
+    double m_last_goto = 0;
+    double m_last_leftright = 0;
     std::string m_version_guidage;
     
     PilotModule();
@@ -51,14 +53,15 @@ public:
     void run(int i);
     void test(int i);
     
-    void myGoto(int i);
-    void myLeftRight(int i);
+    void myGoto(double i);
+    void myLeftRight(double i);
     
     void engageHadrien();
     void desengageHadrien();
     void clearHadrien();
     void runHadrienVolant(std::vector<unsigned char> & c);
     
+    double m_hadrien0 = 0.0;
     double m_hadrienVolant = 0.0;
     int m_nbrTourHadrien = 0;
     double m_lastHadrienValue = 0;
