@@ -85,7 +85,7 @@ void MyQTSerialPorts::handleReadyReadGps(){
     for(size_t i = 0; i < a.size(); ++i){
         
         GpsFramework::Instance().m_gpsModule.readChar(a.data()[i]);
-        s += a.data()[i];
+        s += ((char)(a.data()[i]));
     }
     DEBUG(s);
     DEBUG("end");
