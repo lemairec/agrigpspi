@@ -204,7 +204,9 @@ std::vector<std::string> & MyQTSerialPorts::getAvailablePorts(){
 }
 
 void MyQTSerialPorts::handleLineFile(){
-    
+    if(m_text_stream == NULL){
+        WARN("null");
+    }
     QString line = m_text_stream->readLine();
     if(!line.isNull()){
        std::string line_s = line.toUtf8().constData();
@@ -237,7 +239,7 @@ void MyQTSerialPorts::handleHadrien(){
     std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
     writePilotSerialD(l);
     
-    m_timer.start(HADRIEN_TIME_VOLANT);
+    m_timerHadrien.start(HADRIEN_TIME_VOLANT);
     
 }
 /*void MyQTSerialPorts::
