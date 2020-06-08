@@ -80,12 +80,14 @@ void MyQTSerialPorts::initOrLoad(Config & config){
 
 void MyQTSerialPorts::handleReadyReadGps(){
     DEBUG("begin");
-    
+    std::string s = "";
     QByteArray a = m_serialPortGps.readAll();
     for(size_t i = 0; i < a.size(); ++i){
         
         GpsFramework::Instance().m_gpsModule.readChar(a.data()[i]);
+        s += a.data()[i];
     }
+    DEBUG(s);
     DEBUG("end");
 }
 void MyQTSerialPorts::handleErrorGps(QSerialPort::SerialPortError error){
