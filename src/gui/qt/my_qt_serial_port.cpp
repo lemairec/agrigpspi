@@ -23,6 +23,7 @@ MyQTSerialPorts::MyQTSerialPorts(){
       
 }
 void MyQTSerialPorts::initOrLoad(Config & config){
+    DEBUG("begin");
     INFO(m_gps_serial_input << " " << config.m_input);
     m_pilot_langage = config.m_pilot_langage;
     
@@ -74,7 +75,7 @@ void MyQTSerialPorts::initOrLoad(Config & config){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         m_timerHadrien.start(HADRIEN_TIME_VOLANT);
     }
-    
+    DEBUG("end");
 };
 
 void MyQTSerialPorts::handleReadyReadGps(){
@@ -216,6 +217,7 @@ std::vector<std::string> & MyQTSerialPorts::getAvailablePorts(){
 }
 
 void MyQTSerialPorts::handleLineFile(){
+    DEBUG("begin");
     if(m_text_stream == NULL){
         WARN("null");
         return;
@@ -231,11 +233,12 @@ void MyQTSerialPorts::handleLineFile(){
        //line = m_text_stream->readLine();
     }
     m_timer.start(FILE_TIME);
-    
+    DEBUG("end");
 }
 
 
 void MyQTSerialPorts::openFile(Config & config){
+    DEBUG("begin");
     QFile * file = new QFile(QString::fromStdString(config.m_file));
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text)){
         WARN("can not open file");
@@ -244,15 +247,18 @@ void MyQTSerialPorts::openFile(Config & config){
 
     m_text_stream = new QTextStream(file);
     m_timer.start(FILE_TIME);
+    DEBUG("end");
 }
 
 void MyQTSerialPorts::handleHadrien(){
+    DEBUG("begin");
     //INFO("coucou je suis ici");
     
     std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
     writePilotSerialD(l);
     
     m_timerHadrien.start(HADRIEN_TIME_VOLANT);
+    DEBUG("end");
     
 }
 /*void MyQTSerialPorts::
