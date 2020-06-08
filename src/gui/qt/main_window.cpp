@@ -102,7 +102,7 @@ void MainWindow::resizeEvent(QResizeEvent *event){
 
 void MainWindow::onNewPoint(){
     DEBUG("begin");
-    emit onValueChangeSignal();
+    onValueChangeSlot();
     DEBUG("end");
 }
 
