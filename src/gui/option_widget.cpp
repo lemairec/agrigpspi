@@ -257,8 +257,7 @@ void OptionWidget::setPage5(){
     m_button_select_algo->addValue("algo_naif");
     m_button_select_algo->addValue("algo_follow_karott");
 
-    m_button_algo_fk_lookahead_d = new ValueGui(0.4, 0.35, PETIT_RAYON2, 0, "fk lookahead ");
-    m_button_algo_naif_k = new ValueGui(0.4, 0.35, PETIT_RAYON2, 0, "naif k");
+    m_button_algo_lookahead_d = new ValueGui(0.4, 0.35, PETIT_RAYON2, 0, "lookahead ");
     
     m_button_select_algo2 = new SelectButtonGui(0.35, 0.50, PETIT_RAYON2);
     m_button_select_algo2->addValue("algo_goto");
@@ -303,11 +302,7 @@ void OptionWidget::drawPage5(){
     
     
     drawSelectButtonGuiClose(m_button_select_algo);
-    if(f.m_config.m_algo == ALGO_FOLLOW_CARROT){
-        drawValueGui(m_button_algo_fk_lookahead_d, f.m_config.m_algofk_lookahead_d);
-    } else {
-        drawValueGui(m_button_algo_naif_k, f.m_config.m_algo_naif_k);
-    }
+    drawValueGui(m_button_algo_lookahead_d, f.m_config.m_algo_lookahead_d);
     
     if(f.m_config.m_algo2 == ALGO2_GOTO){
         drawValueGui(m_button_algo2_goto_k, f.m_config.m_algo2_goto_k);
@@ -400,11 +395,7 @@ void OptionWidget::onMousePage5(double x, double y){
         f.m_config.m_pilot_inverse = !f.m_config.m_pilot_inverse;
     }
     
-    if(f.m_config.m_algo == ALGO_FOLLOW_CARROT){
-        f.m_config.m_algofk_lookahead_d = f.m_config.m_algofk_lookahead_d * m_button_algo_fk_lookahead_d->getMultValue(x,y);
-    } else {
-        f.m_config.m_algo_naif_k = f.m_config.m_algo_naif_k * m_button_algo_naif_k->getMultValue(x,y);
-    }
+    f.m_config.m_algo_lookahead_d = f.m_config.m_algo_lookahead_d * m_button_algo_lookahead_d->getMultValue(x,y);
     
     if(f.m_config.m_algo2 == ALGO2_GOTO){
         f.m_config.m_algo2_goto_k = f.m_config.m_algo2_goto_k * m_button_algo2_goto_k->getMultValue(x,y);

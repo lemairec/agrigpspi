@@ -55,9 +55,7 @@ void GpsFramework::initOrLoadConfig(){
     m_reloadConfig = true;
     
     m_algo = m_config.m_algo;
-    m_algofk_lookahead_d = m_config.m_algofk_lookahead_d;
-    m_algo_naif_k = m_config.m_algo_naif_k;
-    
+    m_algo_lookahead_d = m_config.m_algo_lookahead_d;
 }
 
 GpsFramework & GpsFramework::Instance(){
@@ -534,17 +532,17 @@ void GpsFramework::calculSurface(){
 // pure pousuite
 void GpsFramework::calculAngleCorrection(){
     if(m_algo == ALGO_NAIF){
-        m_angle_correction = m_distanceAB/m_config.m_largeur*m_algo_naif_k/100;
+        m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
     } else {
         //m_angle_correction = -atan(-m_distanceAB/m_algofk_lookahead_d)+(m_angleAB-m_deplacementAngle);
         if(m_deplacementAngle > 3.14/2){
-            INFO("r" << (m_deplacementAngle-3.14) << " " << m_angleAB << " " << atan(m_distanceAB/m_algofk_lookahead_d));
-            m_angle_correction = -(m_deplacementAngle-3.14)-m_angleAB+atan(m_distanceAB/m_algofk_lookahead_d);
+            INFO("r" << (m_deplacementAngle-3.14) << " " << m_angleAB << " " << atan(m_distanceAB/m_algo_lookahead_d));
+            m_angle_correction = -(m_deplacementAngle-3.14)-m_angleAB+atan(m_distanceAB/m_algo_lookahead_d);
         } else {
-            INFO((m_deplacementAngle) << " " << m_angleAB << " " << atan(m_distanceAB/m_algofk_lookahead_d));
-            m_angle_correction = -m_deplacementAngle-m_angleAB+atan(m_distanceAB/m_algofk_lookahead_d);
+            INFO((m_deplacementAngle) << " " << m_angleAB << " " << atan(m_distanceAB/m_algo_lookahead_d));
+            m_angle_correction = -m_deplacementAngle-m_angleAB+atan(m_distanceAB/m_algo_lookahead_d);
         }
-        m_angle_correction = atan(m_distanceAB/m_algofk_lookahead_d);
+        m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
         INFO(m_angle_correction);
         //m_angle_correction = ;
     }

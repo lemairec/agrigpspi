@@ -80,8 +80,7 @@ public:
     ButtonGui * m_button_inverse;
     SelectButtonGui * m_button_select_algo;
     
-    ValueGui * m_button_algo_fk_lookahead_d;
-    ValueGui * m_button_algo_naif_k;
+    ValueGui * m_button_algo_lookahead_d;
     
     SelectButtonGui * m_button_select_algo2;
     

@@ -39,8 +39,7 @@ public:
     bool m_pilot_inverse = false;
     
     int m_algo = 0;
-    double m_algo_naif_k = 100;
-    double m_algofk_lookahead_d = 10;
+    double m_algo_lookahead_d = 10;
     
     int m_algo2 = 0;
     double m_algo2_goto_k = 100;

@@ -46,8 +46,7 @@ void Config::save(){
     settings.setValue("m_pilot_langage", m_pilot_langage);
     
     settings.setValue("m_algo", m_algo);
-    settings.setValue("m_algo_naif_k", m_algo_naif_k);
-    settings.setValue("m_algofk_lookahead_d", m_algofk_lookahead_d);
+    settings.setValue("m_algo_lookahead_d", m_algo_lookahead_d);
     settings.setValue("m_algo2", m_algo2);
     settings.setValue("m_algo2_goto_k", m_algo2_goto_k);
     settings.setValue("m_algo2_goto_rel_s", m_algo2_goto_rel_s);
@@ -114,11 +113,8 @@ void Config::load(){
     if(settings.contains("m_algo")){
         m_algo = settings.value("m_algo").toInt();
     }
-    if(settings.contains("m_algo_naif_k")){
-        m_algo_naif_k = settings.value("m_algo_naif_k").toDouble();
-    }
-    if(settings.contains("m_algofk_lookahead_d")){
-        m_algofk_lookahead_d = settings.value("m_algofk_lookahead_d").toDouble();
+    if(settings.contains("m_algo_lookahead_d")){
+        m_algo_lookahead_d = settings.value("m_algo_lookahead_d").toDouble();
     }
     
     if(settings.contains("m_algo2")){
