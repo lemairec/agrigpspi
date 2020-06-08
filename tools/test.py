@@ -1,8 +1,8 @@
 import serial
 
 ser = serial.Serial(
-    port='/dev/cu.wchusbserial1420',
-    baudrate=9600
+    port='/dev/ttyUSB0',
+    baudrate=115200
 )
 
 while True:
