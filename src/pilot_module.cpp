@@ -163,9 +163,9 @@ void PilotModule::run(int i){
 void PilotModule::test(int i){
     if(m_algo2 == ALGO2_PID){
         if(i > 0){
-            myLeftRight(10000);
+            myLeftRight(1);
         } else {
-            myLeftRight(-10000);
+            myLeftRight(-1);
         }
     } else {
         if(i == 0){
@@ -271,9 +271,7 @@ void PilotModule::myLeftRight(double res){
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
-        int res_a = std::abs(res*32000);
-        unsigned char res1 = (res_a/256)%256;
-        unsigned char res2 = res_a%256;
+        int res = res*32000;
         std::vector<unsigned char> l;
         if(res>0){
             l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
