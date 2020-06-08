@@ -207,6 +207,7 @@ void GpsWidget::drawContour(){
 
 void GpsWidget::draw(){
     //scene = s;
+    DEBUG("BEGIN");
     bool force = false;
     auto begin = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = begin - last_update;
@@ -216,11 +217,13 @@ void GpsWidget::draw(){
     }
     //INFO(diff.count());
     draw_force();
+    DEBUG("END");
 }
 
 
 
 void GpsWidget::draw_force(){
+    DEBUG("BEGIN");
     auto begin = std::chrono::system_clock::now();
     GpsFramework & f = GpsFramework::Instance();
     m_widthMax = m_width/2+f.m_config.m_largeur*m_zoom/2;
@@ -382,6 +385,7 @@ void GpsWidget::draw_force(){
     if(!m_optionsWidget.m_close){
         m_optionsWidget.draw();
     }
+    DEBUG("END");
     
 }
 

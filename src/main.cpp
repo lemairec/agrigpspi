@@ -59,9 +59,12 @@ int main(int argc, char *argv[])
     //framework.test();
     MainWindow * m = MainWindow::Instance_ptr();
     framework.addGpsObserver(m);
+    DEBUG("init");
     framework.initOrLoadConfig();
+    DEBUG("fin init");
     m->show();
-    INFO(QThread::currentThreadId());
+    DEBUG("exec");
+    //INFO(QThread::currentThreadId());
     //GpsThread * gpsThread = new GpsThread(framework);
     //gpsThread->start();
     return app.exec();
