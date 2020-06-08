@@ -32,6 +32,7 @@ void GpsModule::readFrame(const std::string & frame){
 }
 
 void GpsModule::readChar(char c){
+    DEBUG(c);
     //std::cout << c;
     if(c == '$'){
         //INFO("readChar");
