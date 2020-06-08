@@ -14,6 +14,7 @@
 #include "environnement.hpp"
 
 void View::setupUi(){
+    DEBUG("begin");
     scene = new QGraphicsScene(this);
     setScene(scene);
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
@@ -21,6 +22,7 @@ void View::setupUi(){
     m_gpsWidget = new GpsWidget();
     m_gpsWidget->setScene(scene);
     m_gpsWidget->m_optionsWidget.setScene(scene);
+    DEBUG("end");
     
 };
 
@@ -44,6 +46,7 @@ MainWindow * MainWindow::Instance_ptr(){
 MainWindow::MainWindow(QWidget *parent)
     :QMainWindow(parent)
 {
+    DEBUG("begin");
     m_timer = new QTimer(this);
     m_timer->start(100);
     
@@ -52,6 +55,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(onValueChangeSignal()), this, SLOT(onValueChangeSlot()));
     
     setupUi();
+    DEBUG("end");
+    
 }
 
 MainWindow::~MainWindow()
@@ -60,6 +65,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::setupUi(){
+    DEBUG("begin");
     if (this->objectName().isEmpty()){
         this->setObjectName(QString::fromUtf8("MainWindow"));
     }
@@ -78,39 +84,51 @@ void MainWindow::setupUi(){
 
     //showMaximized();
     //showFullScreen();
+    DEBUG("end");
 }
 
 //debug
 //m_view->scene->setSceneRect(0, 0, width-10, height-10);
 void MainWindow::resizeEvent(QResizeEvent *event){
+    DEBUG("begin");
     int width = event->size().width();
     int height = event->size().height();
     m_view->scene->setSceneRect(0, 0, width-10, height-10);
     
     m_view->m_gpsWidget->setSize(width, height);
     //m_gpsWidget->resizeEvent(event);
+    DEBUG("end");
 }
 
 void MainWindow::onNewPoint(){
+    DEBUG("begin");
     emit onValueChangeSignal();
+    DEBUG("end");
 }
 
 void MainWindow::onValueChangeSlot(){
+    DEBUG("begin");
     m_view->m_gpsWidget->draw();
+    DEBUG("end");
 }
 
 void MainWindow::onTimerSlot(){
+    DEBUG("begin");
     m_view->m_gpsWidget->draw();
     m_timer->start(1000);
+    DEBUG("end");
 }
 
 void MainWindow::creerMenu()
 {
+   DEBUG("begin");
    QMenu *menuFichier = menuBar()->addMenu(tr("&Fichier"));
     menuFichier->addAction("open File", this, SLOT(openFile()));
+    DEBUG("end");
 }
 
 void MainWindow::openFile(){
+    DEBUG("begin");
     QString fileName = QFileDialog::getOpenFileName(this,
     tr("Open Address Book"), QString::fromStdString(ProjectSourceDir)+QString("/gps_samples"),
     tr("Gps files (*.ubx)"));
@@ -119,5 +137,6 @@ void MainWindow::openFile(){
     f.m_config.m_file = fileName.toUtf8().constData();
     f.m_config.m_input = "file";
     f.initOrLoadConfig();
+    DEBUG("end");
 }
 
