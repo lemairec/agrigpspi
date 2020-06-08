@@ -163,9 +163,9 @@ void PilotModule::run(int i){
 void PilotModule::test(int i){
     if(m_algo2 == ALGO2_PID){
         if(i > 0){
-            myLeftRight(1);
+            myLeftRight(10000);
         } else {
-            myLeftRight(-1);
+            myLeftRight(-10000);
         }
     } else {
         if(i == 0){
