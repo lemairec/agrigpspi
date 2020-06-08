@@ -206,6 +206,7 @@ std::vector<std::string> & MyQTSerialPorts::getAvailablePorts(){
 void MyQTSerialPorts::handleLineFile(){
     if(m_text_stream == NULL){
         WARN("null");
+        return;
     }
     QString line = m_text_stream->readLine();
     if(!line.isNull()){
