@@ -163,6 +163,12 @@ void GpsModule::parseGGA(){
     
     m_lastGGAEvent.m_timeHour = getTimeHour(m_lastGGAEvent.m_time);
     setXY(m_lastGGAEvent);
+    
+    if(m_lastGGAEvent.m_fix > 0){
+        m_lastGGAEvent.m_isOk = true;
+    } else {
+        m_lastGGAEvent.m_isOk = false;
+    };
     //INFO("******** GGA");
     GpsFramework::Instance().onGGAFrame(m_lastGGAEvent);
 }

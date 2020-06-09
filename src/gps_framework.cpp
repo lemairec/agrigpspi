@@ -84,8 +84,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
     m_lastGGAFrame = GGAFrame(f);
     DEBUG("end");
     
-    return;
-    /*if(f.isOk()){
+    if(f.isOk()){
         if(m_gpsModule.m_latitudeRef == 0){
             setRef(f.m_latitude, f.m_longitude);
             return;
@@ -114,11 +113,12 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
         m_observer->onNewPoint();
     }
     time_t timer;
-    time(&m_last_gga_received);*/
+    time(&m_last_gga_received);
     //std::cout << "<trkpt lon=\""<< f.m_longitude << "\" lat=\"" << f.m_latitude << "\"><ele>51.0</ele><time>2010-12-26T17:07:40.421Z</time></trkpt>" << std::endl;
 }
 
 void GpsFramework::onRMCFrame(RMCFrame_ptr f){
+    return;
     DEBUG("begin");
     m_lastRMCFrame = f;
     if(true){
@@ -135,7 +135,7 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
         m_deplacementAngle = f->m_cap_rad;
         m_vitesse = f->m_vitesse_kmh;
                        
-        //calculDeplacement();
+        calculDeplacement();
         m_distance = distance(*f);
         
         
@@ -185,9 +185,6 @@ double GpsFramework::distance(GpsPoint & gpsPoint){
         
         double dist = (m_a * gpsPoint.m_x + m_b * gpsPoint.m_y + m_c)/m_sqrt_m_a_m_b;
         //INFO(dist);
-        if(std::abs(m_deplacementAngle - m_angleAB)>1){
-            m_sensAB = false;
-        }
         if(!m_sensAB){
             dist = -dist;
         }
@@ -284,6 +281,7 @@ void GpsFramework::setAB(){
     INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
 }
 
+#DEFINE DISTANCE 1
 void GpsFramework::calculDeplacement(){
     if(m_list.size() > 2){
         GpsPoint_ptr point1 = m_list.front();
@@ -296,10 +294,10 @@ void GpsFramework::calculDeplacement(){
             double y = point1->m_y - point2->m_y;
             
             double d = x*x+y*y;
-            if(d>(3*3)){
+            if(d>(DISTANCE*DISTANCE)){
                 break;
             }
-            point2 = NULL;
+            //point2 = NULL;
             ++i;
         }
         if(point2!=NULL){
@@ -311,14 +309,21 @@ void GpsFramework::calculDeplacement(){
             
             if(m_deplacementY != 0){
                 double temp = atan(m_deplacementX/m_deplacementY);
+                if(m_deplacementY>0){
+                    m_deplacementAngle = temp;
+                } else {
+                    m_deplacementAngle = temp+3.14;
+                }
                 //int perc = temp/m_deplacementAngle*100;
                 //INFO(perc << " " << temp/3.14*180 << " " << m_deplacementAngle/3.14*180);
             }
             
             if(m_ab_x != 0 || m_ab_y != 0){
                 double det = m_a*m_deplacementY - m_b*m_deplacementX;
+                //m_deplacementAngle = m_deplacementAngle+3.14;
                 m_sensAB = (det < 0);
             }
+            
             
             m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
@@ -539,17 +544,26 @@ void GpsFramework::calculAngleCorrection(){
     if(m_algo == ALGO_NAIF){
         m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
     } else {
-        //m_angle_correction = -atan(-m_distanceAB/m_algofk_lookahead_d)+(m_angleAB-m_deplacementAngle);
-        if(m_deplacementAngle > 3.14/2){
-            INFO("r" << (m_deplacementAngle-3.14) << " " << m_angleAB << " " << atan(m_distanceAB/m_algo_lookahead_d));
-            m_angle_correction = -(m_deplacementAngle-3.14)-m_angleAB+atan(m_distanceAB/m_algo_lookahead_d);
-        } else {
-            INFO((m_deplacementAngle) << " " << m_angleAB << " " << atan(m_distanceAB/m_algo_lookahead_d));
-            m_angle_correction = -m_deplacementAngle-m_angleAB+atan(m_distanceAB/m_algo_lookahead_d);
+        double angleABDeplacement = m_angleAB - m_deplacementAngle;
+        if(angleABDeplacement>3.14/2){
+            angleABDeplacement = angleABDeplacement-3.14;
         }
-        m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
-        INFO(m_angle_correction);
+        if(angleABDeplacement < -3.14/2){
+            angleABDeplacement = angleABDeplacement+3.14;
+        }
+        //INFO(angleABDeplacement/3.14*180);
+        
+        m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d)+angleABDeplacement;
+        //INFO(m_angle_correction);
         //m_angle_correction = ;
+    }
+    
+    double angle_max = 0.5;
+    if(m_angle_correction < -angle_max){
+        m_angle_correction = -angle_max;
+    }
+    if(m_angle_correction > angle_max){
+        m_angle_correction = angle_max;
     }
     //m_angle_correction = -3.14/6;
     

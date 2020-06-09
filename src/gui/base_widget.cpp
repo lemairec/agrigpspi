@@ -126,7 +126,7 @@ BaseWidget::BaseWidget(){
     m_penBlack = QPen(Qt::black);
     m_penRed = QPen(Qt::red);
     m_penBlue = QPen(Qt::blue);
-    m_penBlue2 = QPen(Qt::blue, 3);
+    m_penBlue2 = QPen(Qt::blue, 5);
     
     m_grayBrush = QBrush (QColor(160,160,160));
     

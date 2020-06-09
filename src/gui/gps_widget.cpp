@@ -568,6 +568,22 @@ void GpsWidget::drawDebug(){
     GpsFramework & f = GpsFramework::Instance();
     QBrush lightGrayBrush(Qt::lightGray);
     
+    int l=100;
+    int y = 80;
+    
+    {
+        scene->addLine(m_width/2-l/2, y, m_width/2 + l/2, y, m_penBlue2);
+    }
+    
+    for(int i = -1; i<=1; i+=2){
+        int x=m_width/2+i*l/2;
+            int dx = -20*sin(f.m_angle_correction);
+        int dy = 20*cos(f.m_angle_correction);
+        scene->addLine(x-dx, y-dy, x+dx, y+dy, m_penBlue2);
+    }
+    
+    
+    
     //surface
     {
         int x = 0;
