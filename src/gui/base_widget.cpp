@@ -131,10 +131,19 @@ BaseWidget::BaseWidget(){
     m_grayBrush = QBrush (QColor(160,160,160));
     
     m_brushDarkGray = QBrush (QColor(60,60,60));
-    m_brushLightGrayDebug = QBrush (QColor(120,120,120));
+    
+    QColor gray = QColor(120,120,120);
+    gray.setAlphaF(0.95);
+    m_brushLightGrayDebug = QBrush (gray);
+    
+    
     m_greenBrush = QBrush (Qt::green);
     
     m_brushWhite = QBrush(QColor(255,255,255));
+    
+    QColor white = QColor(255,255,255);
+    white.setAlphaF(0.9);
+    m_brushWhiteAlpha =QBrush(white);
     m_brushGreen = QBrush(QColor(0, 150, 0, 100));
     m_brushGreenTractor = QBrush(QColor(0, 150, 0));
     m_penNo.setColor(QColor(0, 250, 0, 0));

@@ -86,6 +86,8 @@ protected:
     QPen m_penNo;
     QBrush m_brushNo;
     QBrush m_brushWhite;
+    QBrush m_brushWhiteAlpha;
+    
     QBrush m_brushGreen;
     QBrush m_brushGreenTractor;
     QBrush m_grayBrush;

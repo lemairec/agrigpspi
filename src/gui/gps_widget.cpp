@@ -566,7 +566,6 @@ void GpsWidget::drawBottom(){
 
 void GpsWidget::drawDebug(){
     GpsFramework & f = GpsFramework::Instance();
-    QBrush lightGrayBrush(Qt::lightGray);
     
     int l=100;
     int y = 80;
@@ -619,7 +618,7 @@ void GpsWidget::drawDebug(){
             textItem->setPos(x, y+70);
         }*/
         
-        scene->addRect(x, y, 100, 120, m_penBlack, lightGrayBrush);
+        scene->addRect(x, y, 100, 120, m_penBlack, m_brushLightGrayDebug);
         
         {
             QString s = QString::number(f.m_angle_correction/3.14*180, 'f', 1) + " deg";
@@ -677,7 +676,7 @@ void GpsWidget::drawDebug(){
         int y = m_height-140;
         
         auto last_frame = f.m_lastGGAFrame;
-        scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
+        scene->addRect(x, y, 100, 100, m_penBlack, m_brushLightGrayDebug);
         QString s = QString::number(last_frame.m_nbrSat) + " satellites";
         auto textItem = scene->addText(s);
         textItem->setPos(x, y);
