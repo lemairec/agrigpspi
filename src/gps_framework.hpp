@@ -4,6 +4,7 @@
 #include "gps_module.hpp"
 #include "pilot_module.hpp"
 #include "gui/qt/my_qt_serial_port.hpp"
+#include "gui/qt/my_qt_file.hpp"
 #include "config/config.hpp"
 #include <chrono>
 #include <QThread>
@@ -121,6 +122,7 @@ public:
     
     GpsModule m_gpsModule;
     MyQTSerialPorts m_serialModule;
+    MyQTFile m_fileModule;
     PilotModule m_pilotModule;
     
 private:

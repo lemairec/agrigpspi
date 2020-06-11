@@ -46,6 +46,7 @@ void GpsFramework::initOrLoadConfig(){
     
     m_pilotModule.initOrLoadConfig(m_config);
     m_serialModule.initOrLoad(m_config);
+    m_fileModule.initOrLoad(m_config);
      
     m_pointA.m_latitude = m_config.m_a_lat;
     m_pointA.m_longitude = m_config.m_a_lon;
@@ -281,7 +282,7 @@ void GpsFramework::setAB(){
     INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
 }
 
-#DEFINE DISTANCE 1
+#define DISTANCE 1
 void GpsFramework::calculDeplacement(){
     if(m_list.size() > 2){
         GpsPoint_ptr point1 = m_list.front();

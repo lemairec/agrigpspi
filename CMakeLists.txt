@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 project(agri_gps_pi)
 
 # The version number.
-set (PROJECT_VERSION_MAJOR 0)
-set (PROJECT_VERSION_MINOR 2)
+set (PROJECT_VERSION_MAJOR 20)
+set (PROJECT_VERSION_MINOR 05)
 set (PROJECT_VERSION_PATCH 4)
 
 configure_file (

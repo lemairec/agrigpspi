@@ -18,7 +18,6 @@ MyQTSerialPorts::MyQTSerialPorts(){
     connect(&m_serialPortPilot, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
             this, &MyQTSerialPorts::handleErrorPilot);
     
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(handleLineFile()));
     connect(&m_timerHadrien, SIGNAL(timeout()), this, SLOT(handleHadrien()));
       
 }
@@ -27,10 +26,7 @@ void MyQTSerialPorts::initOrLoad(Config & config){
     INFO(m_gps_serial_input << " " << config.m_input);
     m_pilot_langage = config.m_pilot_langage;
     
-    if(config.m_input == "file"){
-        INFO("file " << config.m_file);
-        openFile(config);
-    } else if(config.m_input != "none"){
+    if(config.m_input != "none" && config.m_input != "file"){
         if(m_gps_serial_input == config.m_input && m_serialPortGps.isOpen()){
             INFO("gps port already open");
         } else {
@@ -218,39 +214,6 @@ std::vector<std::string> & MyQTSerialPorts::getAvailablePorts(){
     return m_serials;
 }
 
-void MyQTSerialPorts::handleLineFile(){
-    DEBUG("begin");
-    if(m_text_stream == NULL){
-        WARN("null");
-        return;
-    }
-    QString line = m_text_stream->readLine();
-    if(!line.isNull()){
-       std::string line_s = line.toUtf8().constData();
-       for(size_t i = 0; i < line_s.size(); ++i){
-           
-           GpsFramework::Instance().m_gpsModule.readChar(line_s[i]);
-       }
-       GpsFramework::Instance().m_gpsModule.readChar('\n');
-       //line = m_text_stream->readLine();
-    }
-    m_timer.start(FILE_TIME);
-    DEBUG("end");
-}
-
-
-void MyQTSerialPorts::openFile(Config & config){
-    DEBUG("begin");
-    QFile * file = new QFile(QString::fromStdString(config.m_file));
-    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)){
-        WARN("can not open file");
-        return;
-    }
-
-    m_text_stream = new QTextStream(file);
-    m_timer.start(FILE_TIME);
-    DEBUG("end");
-}
 
 void MyQTSerialPorts::handleHadrien(){
     DEBUG("begin");
@@ -263,24 +226,3 @@ void MyQTSerialPorts::handleHadrien(){
     DEBUG("end");
     
 }
-/*void MyQTSerialPorts::
-QFile file(QString::fromStdString(config.m_file));
- if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-     WARN("can not open file");
-     return;
- }
-
- m_text_stream(&file);
- QString line = in.readLine();
- while (!line.isNull()) {
-     std::string line_s = line.toUtf8().constData();
-     for(size_t i = 0; i < line_s.size(); ++i){
-         
-         GpsFramework::Instance().m_gpsModule.readChar(line_s[i]);
-     }
-     GpsFramework::Instance().m_gpsModule.readChar('\n');
-     //QThread::msleep(100);
-     line = in.readLine();
- }
- return;
-*/
