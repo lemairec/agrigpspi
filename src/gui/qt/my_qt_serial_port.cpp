@@ -222,7 +222,7 @@ void MyQTSerialPorts::handleHadrien(){
     std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
     writePilotSerialD(l);
     
-    m_timerHadrien.start(HADRIEN_TIME_VOLANT);
+    //m_timerHadrien.start(HADRIEN_TIME_VOLANT);
     DEBUG("end");
     
 }
