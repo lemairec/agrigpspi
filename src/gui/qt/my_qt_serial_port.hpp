@@ -44,9 +44,9 @@ private slots:
 
 private:
     QTimer m_timerHadrien;
+    bool m_waitOrder = false;
 private slots:
     
-    bool m_waitOrder = false;
     void handleHadrien();
 };
 
