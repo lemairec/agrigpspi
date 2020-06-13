@@ -241,8 +241,16 @@ void PilotModule::myGotoVolant(double res){
         
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
+        INFO("goto " << res);
+        INFO("m_hadrien0 " << m_hadrien0);
+        
         double gotoRel = res-m_hadrien0;
+        
+        INFO("gotoRel " << m_hadrien0);
+        INFO("hadrienVolant " << m_hadrienVolant);
+        
         double leftRight = gotoRel-m_hadrienVolant;
+        INFO("leftRight " << leftRight);
         myLeftRight(leftRight);
         //m_tour_volant = res/4000.0
         
