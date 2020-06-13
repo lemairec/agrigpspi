@@ -272,6 +272,7 @@ void PilotModule::myLeftRight(double res){
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
         int res = res*32000;
+        INFO(out.str() << " " << res);
         std::vector<unsigned char> l;
         if(res>0){
             l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
