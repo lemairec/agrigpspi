@@ -271,15 +271,15 @@ void PilotModule::myLeftRight(double res){
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
-        int res = res*32000;
-        INFO(out.str() << " " << res);
+        int res2 = res*32000;
+        INFO(out.str() << " " << res2);
         std::vector<unsigned char> l;
         if(res>0){
             l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
-            add4hex(l, res);
+            add4hex(l, res2);
         } else {
             l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
-            add4hex(l, res);
+            add4hex(l, res2);
         }
         runHadrienVolant(l);
     }
