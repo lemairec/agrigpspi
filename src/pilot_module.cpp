@@ -139,7 +139,7 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
     l.push_back(j);
     l.push_back(i);
     print(l);
-    GpsFramework::Instance().m_serialModule.writePilotSerialD(l);
+    GpsFramework::Instance().m_serialModule.writePilotSerialDAndWait(l);
 }
 
 void PilotModule::run(int i){
@@ -169,7 +169,7 @@ void PilotModule::test(int i){
         }
     } else {
         if(i == 0){
-            myGoto(0);
+            myGotoVolant(0);
         }else if(i > 0){
             run(20.0/180.0*3.14, 0);
         } else {
@@ -223,7 +223,7 @@ void add4hex( std::vector<unsigned char> & l, int i){
     
 }
 
-void PilotModule::myGoto(double res){
+void PilotModule::myGotoVolant(double res){
     if(m_inverse){
         res = -res;
     }

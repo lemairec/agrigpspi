@@ -53,7 +53,7 @@ public:
     void run(int i);
     void test(int i);
     
-    void myGoto(double i);
+    void myGotoVolant(double i);
     void myLeftRight(double i);
     
     void engageHadrien();

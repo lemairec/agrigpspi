@@ -7,7 +7,7 @@
 
 #include "environnement.hpp"
 
-#define HADRIEN_TIME_VOLANT 100
+#define HADRIEN_TIME_VOLANT 50
 #define FILE_TIME 200
 
 MyQTSerialPorts::MyQTSerialPorts(){
@@ -131,6 +131,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
             //INFO("c'est cool");
             
         } else {
+            m_waitOrder = false;
             INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
         }
         
@@ -164,6 +165,14 @@ void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
     //INFO("toto");
     //INFO(hex.toUtf8().constData());
     //INFO("toto");
+    
+    DEBUG("end");
+}
+
+void MyQTSerialPorts::writePilotSerialDAndWait(std::vector<unsigned char> & l){
+    DEBUG("begin");
+    m_waitOrder = true;
+    writePilotSerialD(l);
     
     DEBUG("end");
 }
@@ -219,10 +228,12 @@ void MyQTSerialPorts::handleHadrien(){
     DEBUG("begin");
     //INFO("coucou je suis ici");
     
-    std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
-    writePilotSerialD(l);
-    
-    //m_timerHadrien.start(HADRIEN_TIME_VOLANT);
+    if(!m_waitOrder){
+        std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
+        writePilotSerialD(l);
+    }
+
+    m_timerHadrien.start(HADRIEN_TIME_VOLANT);
     DEBUG("end");
     
 }

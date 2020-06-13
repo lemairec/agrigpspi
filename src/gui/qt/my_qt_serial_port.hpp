@@ -30,6 +30,7 @@ public:
     void open();
     
     void writePilotSerialD(std::vector<unsigned char> & l);
+    void writePilotSerialDAndWait(std::vector<unsigned char> & l);
     void writePilotSerialS(const std::string & l);
     
     void addSerialPorts(std::string s);
@@ -44,6 +45,8 @@ private slots:
 private:
     QTimer m_timerHadrien;
 private slots:
+    
+    bool m_waitOrder = false;
     void handleHadrien();
 };
 
