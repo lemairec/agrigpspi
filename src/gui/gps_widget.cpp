@@ -635,7 +635,7 @@ void GpsWidget::drawDebug(){
         
         y+=15;
         {
-            QString s = "goto " + QString::number(f.m_pilotModule.m_last_goto*100, 'f', 1);
+            QString s = "goto " + QString::number(f.m_pilotModule.m_last_goto, 'f', 1);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
