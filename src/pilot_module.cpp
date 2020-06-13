@@ -236,6 +236,7 @@ void PilotModule::myGotoVolant(double res){
         out << "$G; " << res << "\n";
     }
     m_last_order_send = out.str();
+    INFO(m_last_order_send);
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());

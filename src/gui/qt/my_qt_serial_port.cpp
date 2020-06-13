@@ -132,7 +132,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
             
         } else {
             m_waitOrder = false;
-            INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
+            //INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
         }
         
     } else {
