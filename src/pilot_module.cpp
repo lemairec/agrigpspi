@@ -249,7 +249,7 @@ void PilotModule::myGotoVolant(double res){
         INFO("gotoRel " << m_hadrien0);
         INFO("hadrienVolant " << m_hadrienVolant);
         
-        double leftRight = gotoRel-m_hadrienVolant;
+        double leftRight = m_hadrienVolant-gotoRel;
         INFO("leftRight " << leftRight);
         myLeftRight(leftRight);
         //m_tour_volant = res/4000.0
