@@ -274,7 +274,7 @@ void PilotModule::myLeftRight(double res){
         int res2 = res*32000;
         INFO(out.str() << " " << res2);
         std::vector<unsigned char> l;
-        if(res>0){
+        if(res2>0){
             l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
             add4hex(l, res2);
         } else {
