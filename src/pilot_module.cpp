@@ -57,12 +57,12 @@ void PilotModule::run(double value, double time){
     
     if(m_algo2 == ALGO2_GOTO){
         double res = value*m_algo2_goto_k;
-        myGoto(res);
+        myGotoVolant(res);
     } else if(m_algo2 == ALGO2_GOTO_REL){
         //int res = (value-m_0)*m_algo2_goto_k; test1
         double correction = value+m_0;
         double res = correction*m_algo2_goto_k;
-        myGoto(res);
+        myGotoVolant(res);
         m_lastValues.push_back(correction);
         while(m_lastValues.size() > m_algo2_goto_rel_s){
             m_lastValues.pop_front();
