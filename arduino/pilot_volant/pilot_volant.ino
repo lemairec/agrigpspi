@@ -2,45 +2,62 @@
 
 String a;
 
+#define MOTOR_ON 255
 
 #define MOTOR_ENABLE_PIN 10 //pwm
 #define MOTOR_PIN1 8
 #define MOTOR_PIN2 7
 
-#define MOTOR_ENCODER A1
+#define ENCODER_A 2
+#define ENCODER_B 3
 
-#define MOTOR_ON 255
+int position = 0;
+int desired_position = 0;
 
-int desired_value = 0;
-int value = 0;
+int encoder_last_state_A;
+int state_A;
+int state_B;
 
 void version(){
   Serial.println("#PILOT_0_0_3");
 }
 
+void updatePosition(){
+  state_A = digitalRead(ENCODER_A); // Reads the "current" state of the outputA
+  state_B = digitalRead(ENCODER_B); // Reads the "current" state of the outputA
+  // If the previous and the current state of the outputA are different, that means a Pulse has occured
+  if (state_A != encoder_last_state_A){     
+    // If the outputB state is different to the outputA state, that means the encoder is rotating clockwise
+    if (state_B != state_A) { 
+      position ++;
+    } else {
+      position --;
+    }
+    Serial.print("$P;");
+    Serial.println(position);
+  } 
+  encoder_last_state_A = state_A; // Updates the previous state of the outputA with the current state
+}
+
 void goTo(int res){
-  desired_value = res;
-  if(res < value){
+  desired_position = res;
+  if(position < desired_position){
     turnLeftMotorGoTo();
   } else {
     turnRightMotorGoTo();
   }
 }
 
+
+
 void turnRightMotorGoTo(){
   /*Serial.print("turnRightMotor");
   Serial.print(desired_value);
   Serial.println("");*/
   SetMotor2(MOTOR_ON, 0);
-  int oldValue = 0;
-  while(value < desired_value && !Serial.available()){
-    int read = digitalRead(MOTOR_ENCODER);
-    if(read!=oldValue){
-      if(read==1){
-        ++value;
-      }
-      oldValue=read;
-    }
+  //int oldValue = 0;
+  while(position < desired_position && !Serial.available()){
+    updatePosition();
   }
   SetMotor2(0,0);
 }
@@ -50,20 +67,14 @@ void turnLeftMotorGoTo(){
   Serial.print(desired_value);
   Serial.println("");*/
   SetMotor2(MOTOR_ON, 1);
-  int oldValue = 0;
-  while(value > desired_value && !Serial.available()){
-    int read = digitalRead(MOTOR_ENCODER);
-    if(read!=oldValue){
-      if(read==1){
-        --value;
-      }
-      oldValue=read;
-    }
+  //int oldValue = 0;
+  while(position > desired_position && !Serial.available()){
+    updatePosition();
   }
   SetMotor2(0,1);
 }
 
-void turnMotor2(int pas, boolean reverse){
+/*void turnMotor2(int pas, boolean reverse){
   int i = 0;
   int oldValue = 0;
 
@@ -80,7 +91,7 @@ void turnMotor2(int pas, boolean reverse){
   }
   SetMotor2(0, reverse);
   
-}
+}*/
 
 
 
@@ -90,34 +101,21 @@ void SetMotor2(int speed, boolean reverse)
   digitalWrite(MOTOR_PIN1, ! reverse);
   digitalWrite(MOTOR_PIN2, reverse);
 }
-void setup(){
-  pinMode(MOTOR_ENCODER, INPUT);
-  pinMode(MOTOR_PIN1, OUTPUT);
-  pinMode(MOTOR_PIN2, OUTPUT);
-  pinMode(MOTOR_ENABLE_PIN, OUTPUT);
-  
-  Serial.begin(115200);
-  version();
- 
-}
 
-
-
-
-void loop(){
-  readNextFrame();
-}
+/**
+ * PARSEUR
+ **/
 
 int m_bufferIndLast = 0;
 char m_buffer[200];
 
 void resetBuffer(){
-  m_bufferIndLast = 0;
+m_bufferIndLast = 0;
 }
 
 
 void readNextFrame(){
-    while ( Serial.available()){
+    if ( Serial.available()){
         char c = Serial.read();
         readChar(c);
     }
@@ -167,9 +165,10 @@ void printBuffer(){
 }
 
 void parseBuffer(){
+  printBuffer();
   if(m_buffer[0] == 'H'){
     Serial.println("");
-    Serial.println("$R;1");
+    Serial.println("$R;100");
     Serial.println("$L;100");
     Serial.println("$G;100");
     Serial.println("$C");
@@ -195,10 +194,9 @@ void parseBuffer(){
     }
     goLeft(res);
   } else if(m_buffer[0] == 'C'){
-    desired_value = 0;
-    value = 0;
+    desired_position = 0;
+    position = 0;
   } else if(m_buffer[0] == 'G'){
-    printBuffer();
     int res = 0;
     for(int i=3; i<m_bufferIndLast-1; ++i){
       /*int j = myReadChar(m_buffer[i]);
@@ -226,13 +224,34 @@ void goRight(int l){
   
   //Serial.print("Right ");
   //Serial.println(l);
-  turnMotor2(l,true);
+  //turnMotor2(l,true);
   //Serial.println("right ok");
 }
 
 void goLeft(int l){
  // Serial.print("Left ");
   //Serial.println(l);
-  turnMotor2(l,false);
+  //turnMotor2(l,false);
   //Serial.println("left ok");
+}
+
+void setup(){
+  pinMode (ENCODER_A,INPUT);
+  pinMode (ENCODER_B,INPUT);
+  pinMode(MOTOR_PIN1, OUTPUT);
+  pinMode(MOTOR_PIN2, OUTPUT);
+  pinMode(MOTOR_ENABLE_PIN, OUTPUT);
+  
+  encoder_last_state_A = digitalRead(ENCODER_A); 
+  Serial.begin(115200);
+  version();
+ 
+}
+
+
+
+
+void loop(){
+  readNextFrame();
+  updatePosition();
 }
