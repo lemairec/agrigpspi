@@ -24,6 +24,7 @@ class OptionWidget : public BaseWidget {
     ButtonGui * m_button_p3 = NULL;
     ButtonGui * m_button_p4 = NULL;
     ButtonGui * m_button_p5 = NULL;
+    ButtonGui * m_button_p6 = NULL;
     
     int m_page = 1;
     double y_baurates_title, y_port_title;
@@ -92,16 +93,28 @@ public:
     ValueGui * m_button_algo2_my_k;
     ValueGui * m_button_algo2_my_p;
     
-    ButtonGui * m_button_p5connect;
-    ButtonGui * m_button_p5disable;
-    ButtonGui * m_button_p5clearError;
-    ButtonGui * m_button_p5test1;
-    ButtonGui * m_button_p5test2;
-    ButtonGui * m_button_p5test3;
-    
     void setPage5();
     void onMousePage5(double x, double y);
     void drawPage5();
+    
+    ButtonGui * m_button_p6connect;
+    ButtonGui * m_button_p6disable;
+    ButtonGui * m_button_p6clearError;
+    
+    ButtonGui * m_button_p6testLeft;
+    ButtonGui * m_button_p6testRight;
+    
+    ButtonGui * m_button_p6testGoToVLeft;
+    ButtonGui * m_button_p6testGoToV0;
+    ButtonGui * m_button_p6testGoToVRight;
+    
+    ButtonGui * m_button_p6testGoToDLeft;
+    ButtonGui * m_button_p6testGoToD0;
+    ButtonGui * m_button_p6testGoToDRight;
+    
+    void setPage6();
+    void onMousePage6(double x, double y);
+    void drawPage6();
     
     void open();
     

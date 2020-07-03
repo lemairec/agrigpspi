@@ -50,7 +50,7 @@ public:
     void engage();
     void desengage();
     
-    void run(int i);
+    void run_test(int i);
     void test(int i);
     
     void myGotoVolant(double i);

@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 std::ofstream gpslogFile;
+std::ofstream logFile;
 
 
 GpsFramework::GpsFramework(){
@@ -23,6 +24,10 @@ GpsFramework::GpsFramework(){
     std::string file = ProjectSourceBin + "/gps_" + s.toUtf8().constData() + ".ubx";
     INFO(file);
     gpslogFile.open(file, std::ios::out);
+    
+    std::string file2 = ProjectSourceBin + "/alog_framework.ubx";
+    INFO(file2);
+    logFile.open(file2, std::ios::out);
     m_config.load();
 }
 
@@ -657,4 +662,30 @@ void GpsFramework::setVolantEngaged(bool value){
 
 bool GpsFramework::getVolantEngaged(){
     return m_volantEngaged;
+}
+
+void GpsFramework::addLog(const std::string &s, bool time2){
+    if(time2){
+        time_t     now = time(0);
+        struct tm  tstruct;
+        char       buf[80];
+        tstruct = *localtime(&now);
+        // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+        // for more information about date/time format
+        strftime(buf, sizeof(buf), "%M:%S ", &tstruct);
+
+        std::ostringstream strs3;
+        strs3 << buf << s;
+        
+        m_listLog.push_front(strs3.str());
+        logFile << '\n' <<  strs3.str();
+    } else {
+        std::ostringstream strs3;
+        strs3 << "  " << s;
+        m_listLog.push_front(strs3.str());
+        logFile << '\n' << strs3.str();
+    }
+    while(s.size()>100){
+        m_listLog.pop_back();
+    }
 }

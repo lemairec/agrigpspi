@@ -28,6 +28,7 @@ OptionWidget::OptionWidget(){
     m_button_p3  = new ButtonGui(0.24, 0.40, GROS_BUTTON, 0);
     m_button_p4  = new ButtonGui(0.24, 0.50, GROS_BUTTON, 0);
     m_button_p5  = new ButtonGui(0.24, 0.60, GROS_BUTTON, 0);
+    m_button_p6  = new ButtonGui(0.24, 0.70, GROS_BUTTON, 0);
     
     
     //page 1
@@ -48,6 +49,7 @@ OptionWidget::OptionWidget(){
     setPage3();
     setPage4();
     setPage5();
+    setPage6();
     
     //m_button_gps = new ButtonGui(0.25, 0.3, GROS_BUTTON, 0);
     //m_button_line = new ButtonGui(0.5, 0.3, GROS_BUTTON, 0);
@@ -103,6 +105,13 @@ void OptionWidget::draw(){
             drawPage5();
         } else {
             drawButtonImage(m_button_p5, *m_imgOptionGris);
+        }
+        
+        if(m_page == 6){
+            drawButtonImage(m_button_p6, *m_imgOptionBlanc);
+            drawPage6();
+        } else {
+            drawButtonImage(m_button_p6, *m_imgOptionGris);
         }
     }
 }
@@ -272,14 +281,6 @@ void OptionWidget::setPage5(){
     m_button_algo2_pid_kd = new ValueGui(0.4, 0.65, PETIT_RAYON2, 0, "pid d ");
     m_button_algo2_my_p = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "my p ");
     m_button_algo2_my_k = new ValueGui(0.4, 0.60, PETIT_RAYON2, 0, "my k ");
-    
-    m_button_p5test1  = new ButtonGui(0.4, 0.8, PETIT_RAYON2, 0);
-    m_button_p5test2  = new ButtonGui(0.5, 0.8, PETIT_RAYON2, 0);
-    m_button_p5test3  = new ButtonGui(0.6, 0.8, PETIT_RAYON2, 0);
-    
-    m_button_p5connect  = new ButtonGui(0.4, 0.7, PETIT_RAYON2, 0);
-    m_button_p5disable  = new ButtonGui(0.5, 0.7, PETIT_RAYON2, 0);
-    m_button_p5clearError  = new ButtonGui(0.6, 0.7, PETIT_RAYON2, 0);
 };
 
 
@@ -320,26 +321,6 @@ void OptionWidget::drawPage5(){
     
     drawSelectButtonGuiClose(m_button_select_algo2);
     
-      
-    
-    drawButtonLabel(m_button_p5connect, COLOR_OTHER);
-    drawButtonLabel(m_button_p5clearError, COLOR_OTHER);
-    drawButtonLabel(m_button_p5disable, COLOR_OTHER);
-    
-    drawButtonLabel(m_button_p5test1, COLOR_GREEN);
-    drawButtonLabel(m_button_p5test2, COLOR_OTHER);
-    drawButtonLabel(m_button_p5test3, COLOR_GREEN);
-    if(f.m_config.m_algo2 == ALGO2_GOTO){
-        drawText("roue", m_button_p5test1->m_x-0.1, m_button_p5test3->m_y);
-        drawText("-20 °", m_button_p5test1->m_x, m_button_p5test3->m_y);
-        drawText("+20 °", m_button_p5test3->m_x, m_button_p5test3->m_y);
-    } else if(f.m_config.m_algo2 == ALGO2_PID){
-        drawText("volant", m_button_p5test1->m_x-0.1, m_button_p5test3->m_y);
-        drawText("-1", m_button_p5test1->m_x, m_button_p5test3->m_y);
-        drawText("+1", m_button_p5test3->m_x, m_button_p5test3->m_y);
-        drawText("tour", m_button_p5test3->m_x+0.05, m_button_p5test3->m_y);
-    }
-    
     drawSelectButtonGuiOpen(m_button_select_algo);
     drawSelectButtonGuiOpen(m_button_select_algo2);
 }
@@ -379,28 +360,6 @@ void OptionWidget::onMousePage5(double x, double y){
         m_button_select_algo2->m_open = !m_button_select_algo2->m_open;
     }
     
-    
-    
-    if(m_button_p5test1->isActive(x,y)){
-        f.m_pilotModule.test(-1);
-        return;
-    } else if(m_button_p5test2->isActive(x,y)){
-       f.m_pilotModule.test(0);
-         return;
-    } else if(m_button_p5test3->isActive(x,y)){
-        f.m_pilotModule.test(1);
-        return;
-    } else if(m_button_p5connect->isActive(x,y)){
-        f.m_pilotModule.run(0);
-        return;
-    } else if(m_button_p5disable->isActive(x,y)){
-        f.m_pilotModule.run(1);
-        return;
-    } else if(m_button_p5clearError->isActive(x,y)){
-        f.m_pilotModule.test(2);
-        return;
-    }
-    
     if(m_button_inverse->isActive(x,y)){
         f.m_config.m_pilot_inverse = !f.m_config.m_pilot_inverse;
     }
@@ -426,6 +385,96 @@ void OptionWidget::onMousePage5(double x, double y){
 }
 
 
+/**
+PAGE 6
+*/
+
+void OptionWidget::setPage6(){
+    m_button_p6connect = new ButtonGui(0.40, 0.25, PETIT_RAYON2, 0);
+    m_button_p6disable = new ButtonGui(0.55, 0.25, PETIT_RAYON2, 0);
+    m_button_p6clearError = new ButtonGui(0.70, 0.25, PETIT_RAYON2, 0);
+
+    m_button_p6testLeft = new ButtonGui(0.40, 0.40, PETIT_RAYON2, 0);
+    m_button_p6testRight = new ButtonGui(0.70, 0.40, PETIT_RAYON2, 0);
+    
+    m_button_p6testGoToVLeft = new ButtonGui(0.40, 0.55, PETIT_RAYON2, 0);
+    m_button_p6testGoToV0 = new ButtonGui(0.55, 0.55, PETIT_RAYON2, 0);
+    m_button_p6testGoToVRight = new ButtonGui(0.70, 0.55, PETIT_RAYON2, 0);
+    
+    m_button_p6testGoToDLeft = new ButtonGui(0.40, 0.7, PETIT_RAYON2, 0);
+    m_button_p6testGoToD0 = new ButtonGui(0.55, 0.7, PETIT_RAYON2, 0);
+    m_button_p6testGoToDRight = new ButtonGui(0.70, 0.7, PETIT_RAYON2, 0);
+    
+/*    ;
+    m_button_p6testGoToV0;
+    m_button_p6testGoToVRight;*/
+};
+
+void OptionWidget::drawPage6(){
+    GpsFramework & f = GpsFramework::Instance();
+    drawText("Volant Hadrien!", 0.55*m_width, 0.1*m_height, 20, true);
+    
+    drawButtonLabel(m_button_p6connect, COLOR_OTHER);
+    drawText("connect", m_button_p6connect->m_x*m_width, m_button_p6connect->m_y*m_height, 12, true);
+    
+    drawButtonLabel(m_button_p6disable, COLOR_OTHER);
+    drawText("disconnect", m_button_p6disable->m_x*m_width, m_button_p6disable->m_y*m_height, 12, true);
+    
+    drawText("Left Right", 0.55*m_width, 0.35*m_height, 12, true);
+    drawButtonLabel(m_button_p6testLeft, COLOR_OTHER);
+    drawText("-1 volant", m_button_p6testLeft->m_x*m_width, m_button_p6testLeft->m_y*m_height, 12, true);
+    
+    drawButtonLabel(m_button_p6testRight, COLOR_OTHER);
+    drawText("+1 volant", m_button_p6testRight->m_x*m_width, m_button_p6testRight->m_y*m_height, 12, true);
+    
+    drawText("Goto Volant", 0.55*m_width, 0.50*m_height, 12, true);
+    drawButtonLabel(m_button_p6testGoToVLeft, COLOR_OTHER);
+    drawText("-1 volant", m_button_p6testGoToVLeft->m_x*m_width, m_button_p6testGoToVLeft->m_y*m_height, 12, true);
+
+    drawButtonLabel(m_button_p6testGoToV0, COLOR_OTHER);
+    drawText("0", m_button_p6testGoToV0->m_x*m_width, m_button_p6testGoToV0->m_y*m_height, 12, true);
+    
+    drawButtonLabel(m_button_p6testGoToVRight, COLOR_OTHER);
+    drawText("+1 volant", m_button_p6testGoToVRight->m_x*m_width, m_button_p6testGoToVRight->m_y*m_height, 12, true);
+     
+    drawText("Goto Degree", 0.55*m_width, 0.65*m_height, 12, true);
+    drawButtonLabel(m_button_p6testGoToDLeft, COLOR_OTHER);
+    drawText("-20°", m_button_p6testGoToDLeft->m_x*m_width, m_button_p6testGoToDLeft->m_y*m_height, 12, true);
+
+    drawButtonLabel(m_button_p6testGoToD0, COLOR_OTHER);
+    drawText("0", m_button_p6testGoToD0->m_x*m_width, m_button_p6testGoToD0->m_y*m_height, 12, true);
+    
+    drawButtonLabel(m_button_p6testGoToDRight, COLOR_OTHER);
+    drawText("+20°", m_button_p6testGoToDRight->m_x*m_width, m_button_p6testGoToDRight->m_y*m_height, 12, true);
+}
+
+void OptionWidget::onMousePage6(double x, double y){
+    GpsFramework & f = GpsFramework::Instance();
+    
+    
+    m_button_p6testGoToVLeft = new ButtonGui(0.40, 0.55, PETIT_RAYON2, 0);
+    m_button_p6testGoToV0 = new ButtonGui(0.55, 0.55, PETIT_RAYON2, 0);
+    m_button_p6testGoToVRight = new ButtonGui(0.70, 0.55, PETIT_RAYON2, 0);
+    
+    m_button_p6testGoToDLeft = new ButtonGui(0.40, 0.7, PETIT_RAYON2, 0);
+    m_button_p6testGoToD0 = new ButtonGui(0.55, 0.7, PETIT_RAYON2, 0);
+    m_button_p6testGoToDRight = new ButtonGui(0.70, 0.7, PETIT_RAYON2, 0);
+    
+    if(m_button_p6connect->isActive(x,y)){
+        f.m_pilotModule.engage();
+    } else if(m_button_p6disable->isActive(x,y)){
+        f.m_pilotModule.desengage();
+    } else if(m_button_p6testLeft->isActive(x,y)){
+       f.m_pilotModule.myLeftRight(-1);
+    }else if(m_button_p6testRight->isActive(x,y)){
+       f.m_pilotModule.myLeftRight(1);
+    }
+    
+    f.initOrLoadConfig();
+
+}
+
+
 void OptionWidget::onMouse(double x, double y){
     
     if(m_button_close->isActive(x,y)){
@@ -440,6 +489,8 @@ void OptionWidget::onMouse(double x, double y){
         m_page = 4;
     } else if(m_button_p5->isActive(x,y)){
         m_page = 5;
+    } else if(m_button_p6->isActive(x,y)){
+        m_page = 6;
     } else {
         if(m_page == 1){
             onMousePage1(x, y);
@@ -449,23 +500,12 @@ void OptionWidget::onMouse(double x, double y){
             onMousePage3(x, y);
         } else if(m_page == 4){
             onMousePage4(x, y);
-        } else {
-           onMousePage5(x, y);
-       }
+        } else if(m_page == 5){
+            onMousePage5(x, y);
+        } else if(m_page == 6){
+            onMousePage6(x, y);
+        }
     }
-    
-   
-    /*if(id == 100){
-        MainWindow::Instance_ptr()->showMinimized();
-        std::string cmd = "cd " + ProjectSourceDir + "; git pull";
-        run(cmd);
-    }
-    
-    if(id == 101){
-        MainWindow::Instance_ptr()->showMinimized();
-        std::string cmd = "rm -rf " + ProjectSourceBin + ";";
-        run(cmd);
-    }*/
 }
 
 void OptionWidget::onMousePage1(double x, double y){
@@ -562,3 +602,26 @@ void OptionWidget::addSerials(){
 }
 
 
+/*
+ 
+ 
+ if(m_button_p5test1->isActive(x,y)){
+     f.m_pilotModule.test(-1);
+     return;
+ } else if(m_button_p5test2->isActive(x,y)){
+    f.m_pilotModule.test(0);
+      return;
+ } else if(m_button_p5test3->isActive(x,y)){
+     f.m_pilotModule.test(1);
+     return;
+ } else if(m_button_p5connect->isActive(x,y)){
+     f.m_pilotModule.run_test(0);
+     return;
+ } else if(m_button_p5disable->isActive(x,y)){
+     f.m_pilotModule.run_test(1);
+     return;
+ } else if(m_button_p5clearError->isActive(x,y)){
+     f.m_pilotModule.run_test(2);
+     return;
+ }
+ */

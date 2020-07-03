@@ -142,7 +142,7 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
     GpsFramework::Instance().m_serialModule.writePilotSerialDAndWait(l);
 }
 
-void PilotModule::run(int i){
+void PilotModule::run_test(int i){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         if(i == 0){
             std::vector<unsigned char> l;
@@ -291,6 +291,7 @@ void PilotModule::myLeftRight(double res){
             add4hex(l, res2);
         }
         runHadrienVolant(l);
+        GpsFramework::Instance().addLog(out.str(), false);
     }
 }
 
@@ -308,6 +309,10 @@ void PilotModule::setHadrienVolant(double val){
     m_lastHadrienValue = val;
     
     m_hadrienVolant = m_nbrTourHadrien + val;
+    
+    std::ostringstream out;
+    out << "set H " << m_hadrienVolant;
+    GpsFramework::Instance().addLog(out.str(), false);
 }
 
 

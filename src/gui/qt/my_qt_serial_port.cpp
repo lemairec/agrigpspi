@@ -103,6 +103,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         QString hex(b.toHex());
         std::string s = hex.toUtf8().constData();
+        GpsFramework::Instance().addLog(s);
         
         char * data = b.data();
         int i0 = data[0];
@@ -129,7 +130,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
             //INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
             //u_int16_t res =
             //INFO("c'est cool");
-            
+            //01 10 01 36 00 02 A0 3A //acquittement sur le registre 36 peut etre 35
         } else {
             m_waitOrder = false;
             //INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
@@ -162,6 +163,7 @@ void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
     }
     m_serialPortPilot.write(b);
     QString hex(b.toHex());
+    GpsFramework::Instance().addLog(hex.toUtf8().constData());
     //INFO("toto");
     //INFO(hex.toUtf8().constData());
     //INFO("toto");
@@ -231,6 +233,11 @@ void MyQTSerialPorts::handleHadrien(){
     if(!m_waitOrder){
         std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
         writePilotSerialD(l);
+        GpsFramework::Instance().addLog("demand angle", false);
+        
+    } else {
+        GpsFramework::Instance().addLog("ignore");
+        
     }
 
     m_timerHadrien.start(HADRIEN_TIME_VOLANT);
