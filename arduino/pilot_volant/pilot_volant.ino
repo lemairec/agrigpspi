@@ -2,14 +2,14 @@
 
 String a;
 
-#define MOTOR_ON 255
+#define MOTOR_ON 200
 
-#define MOTOR_ENABLE_PIN 10 //pwm
-#define MOTOR_PIN1 8
-#define MOTOR_PIN2 7
+#define MOTOR_ENABLE_PIN 4 //pwm
+#define MOTOR_PIN1 3
+#define MOTOR_PIN2 2
 
-#define ENCODER_A 2
-#define ENCODER_B 3
+#define ENCODER_A 10
+#define ENCODER_B 11
 
 int position = 0;
 int desired_position = 0;
@@ -36,12 +36,16 @@ void updatePosition(){
     Serial.print("$P;");
     Serial.println(position);
   } 
+  /*Serial.print("$P;");
+  Serial.print(state_A);
+  Serial.print(" ");
+    Serial.println(state_B);*/
   encoder_last_state_A = state_A; // Updates the previous state of the outputA with the current state
 }
 
 void goTo(int res){
   desired_position = res;
-  if(position < desired_position){
+  if(position > desired_position){
     turnLeftMotorGoTo();
   } else {
     turnRightMotorGoTo();
@@ -51,9 +55,7 @@ void goTo(int res){
 
 
 void turnRightMotorGoTo(){
-  /*Serial.print("turnRightMotor");
-  Serial.print(desired_value);
-  Serial.println("");*/
+  //Serial.print("turnRightMotor desired ");Serial.print(desired_position);Serial.print(" p ");Serial.print(position);Serial.println("");
   SetMotor2(MOTOR_ON, 0);
   //int oldValue = 0;
   while(position < desired_position && !Serial.available()){
@@ -63,9 +65,7 @@ void turnRightMotorGoTo(){
 }
 
 void turnLeftMotorGoTo(){
-  /*Serial.print("turnLeftMotor ");
-  Serial.print(desired_value);
-  Serial.println("");*/
+  //Serial.print("turnLeftMotor desired ");Serial.print(desired_position);Serial.print(" p ");Serial.print(position);Serial.println("");
   SetMotor2(MOTOR_ON, 1);
   //int oldValue = 0;
   while(position > desired_position && !Serial.available()){
@@ -97,6 +97,7 @@ void turnLeftMotorGoTo(){
 
 void SetMotor2(int speed, boolean reverse)
 {
+  Serial.print("SetMotor2 speed ");Serial.println(speed);
   analogWrite(MOTOR_ENABLE_PIN, speed);
   digitalWrite(MOTOR_PIN1, ! reverse);
   digitalWrite(MOTOR_PIN2, reverse);
@@ -208,11 +209,14 @@ void parseBuffer(){
       Serial.println("");*/
       res = res*10+myReadChar(m_buffer[i]);
     }
-    Serial.println(res);
     if(m_buffer[2] == '-'){
       res = -res;
     }
+    Serial.print("#G;");Serial.println(res);
     goTo(res);
+  } else if(m_buffer[0] == 'P'){
+    Serial.print("$P;");
+    Serial.println(position);
   }  else {
     Serial.println("$error");
   }
