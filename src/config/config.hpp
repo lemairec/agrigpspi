@@ -35,14 +35,15 @@ public:
     bool m_debug = false;
     
     
-    int m_pilot_langage = 0;
+    int m_pilot_langage = PILOT_LANGAGE_ARDUINO;
     bool m_pilot_inverse = false;
     
     int m_algo = 0;
     double m_algo_lookahead_d = 10;
     
     int m_algo2 = 0;
-    double m_algo2_goto_k = 100;
+    double m_algo2_goto_pas_by_tour = 36000;
+    double m_algo2_goto_angle_by_tour = 10;
     int m_algo2_goto_rel_s = 100;
     double m_algo2_pid_p = 100;
     double m_algo2_pid_i = 100;

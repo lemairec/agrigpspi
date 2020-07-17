@@ -48,8 +48,8 @@ void Config::save(){
     settings.setValue("m_algo", m_algo);
     settings.setValue("m_algo_lookahead_d", m_algo_lookahead_d);
     settings.setValue("m_algo2", m_algo2);
-    settings.setValue("m_algo2_goto_k", m_algo2_goto_k);
-    settings.setValue("m_algo2_goto_rel_s", m_algo2_goto_rel_s);
+    settings.setValue("m_algo2_goto_pas_by_tour", m_algo2_goto_pas_by_tour);
+    settings.setValue("m_algo2_goto_angle_by_tour", m_algo2_goto_angle_by_tour);
     settings.setValue("m_algo2_pid_p", m_algo2_pid_p);
     settings.setValue("m_algo2_pid_i", m_algo2_pid_i);
     settings.setValue("m_algo2_pid_d", m_algo2_pid_d);
@@ -121,10 +121,10 @@ void Config::load(){
         m_algo2 = settings.value("m_algo2").toInt();
     }
     if(settings.contains("m_algo2_goto_k")){
-        m_algo2_goto_k = settings.value("m_algo2_goto_k").toDouble();
+        m_algo2_goto_pas_by_tour = settings.value("m_algo2_goto_pas_by_tour").toDouble();
     }
     if(settings.contains("m_algo2_goto_rel_s")){
-        m_algo2_goto_rel_s = settings.value("m_algo2_goto_rel_s").toDouble();
+        m_algo2_goto_angle_by_tour = settings.value("m_algo2_goto_angle_by_tour").toDouble();
     }
     if(settings.contains("m_algo2_pid_p")){
         m_algo2_pid_p = settings.value("m_algo2_pid_p").toDouble();

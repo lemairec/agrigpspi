@@ -629,14 +629,14 @@ void GpsWidget::drawDebug(){
         
         y+=20;
         {
-            QString s = "m_0 " + QString::number(f.m_pilotModule.m_0/3.14*180, 'f', 1);
+            QString s = "goto " + QString::number(f.m_pilotModule.m_last_goto_tour, 'f', 1) + " tour";
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
         
         y+=15;
         {
-            QString s = "goto " + QString::number(f.m_pilotModule.m_last_goto, 'f', 1);
+            QString s = "m_0 " + QString::number(f.m_pilotModule.m_0/3.14*180, 'f', 1);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
@@ -649,7 +649,7 @@ void GpsWidget::drawDebug(){
         }
         y+=15;
         {
-            QString s = "H " + QString::number(f.m_pilotModule.m_hadrienVolant, 'f', 1);
+            QString s = "V " + QString::number(f.m_pilotModule.m_volant, 'f', 1);
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
@@ -717,18 +717,20 @@ void GpsWidget::drawDebug(){
         int time = last_frame.m_time;
     }
     
-    int l2 = 160;
-    {
-        int x = m_width-l2;
-        int y = 50;
-        
-        auto last_frame = f.m_lastGGAFrame;
-        scene->addRect(x, y, l2, m_height-50, m_penBlack, m_brushLightGrayDebug);
-        
-        int y_temp = m_height - 50;
-        for(auto s:f.m_listLog){
-            drawText(s,x+10, y_temp, 10, false);
-            y_temp-=15;
+    if(f.m_config.m_pilot_langage == PILOT_LANGAGE_HADRIEN){
+        int l2 = 160;
+        {
+            int x = m_width-l2;
+            int y = 50;
+            
+            auto last_frame = f.m_lastGGAFrame;
+            scene->addRect(x, y, l2, m_height-50, m_penBlack, m_brushLightGrayDebug);
+            
+            int y_temp = m_height - 50;
+            for(auto s:f.m_listLog){
+                drawText(s,x+10, y_temp, 10, false);
+                y_temp-=15;
+            }
         }
     }
 }

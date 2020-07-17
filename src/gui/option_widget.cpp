@@ -274,8 +274,9 @@ void OptionWidget::setPage5(){
     m_button_select_algo2->addValue("algo_pid");
     m_button_select_algo2->addValue("algo_my");
     
-    m_button_algo2_goto_k = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "goto k ");
-    m_button_algo2_goto_rel_s = new ValueGui(0.4, 0.60, PETIT_RAYON2, 0, "goto rel ");
+    m_button_algo2_goto_pas_by_tour = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "goto pas by tour ");
+    m_button_algo2_goto_angle_by_tour = new ValueGui(0.4, 0.6, PETIT_RAYON2, 0, "goto angle by tour ");
+    m_button_algo2_goto_rel_s = new ValueGui(0.4, 0.65, PETIT_RAYON2, 0, "goto rel ");
     m_button_algo2_pid_kp = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "pid p ");
     m_button_algo2_pid_ki = new ValueGui(0.4, 0.60, PETIT_RAYON2, 0, "pid i ");
     m_button_algo2_pid_kd = new ValueGui(0.4, 0.65, PETIT_RAYON2, 0, "pid d ");
@@ -306,9 +307,11 @@ void OptionWidget::drawPage5(){
     drawValueGui(m_button_algo_lookahead_d, f.m_config.m_algo_lookahead_d);
     
     if(f.m_config.m_algo2 == ALGO2_GOTO){
-        drawValueGui(m_button_algo2_goto_k, f.m_config.m_algo2_goto_k);
+        drawValueGui(m_button_algo2_goto_pas_by_tour, f.m_config.m_algo2_goto_pas_by_tour);
+        drawValueGui(m_button_algo2_goto_angle_by_tour, f.m_config.m_algo2_goto_angle_by_tour);
     } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
-        drawValueGui(m_button_algo2_goto_k, f.m_config.m_algo2_goto_k);
+        drawValueGui(m_button_algo2_goto_pas_by_tour, f.m_config.m_algo2_goto_pas_by_tour);
+        drawValueGui(m_button_algo2_goto_angle_by_tour, f.m_config.m_algo2_goto_angle_by_tour);
         drawValueGui(m_button_algo2_goto_rel_s, f.m_config.m_algo2_goto_rel_s);
     } else if(f.m_config.m_algo2 == ALGO2_PID){
         drawValueGui(m_button_algo2_pid_kp, f.m_config.m_algo2_pid_p);
@@ -367,9 +370,15 @@ void OptionWidget::onMousePage5(double x, double y){
     f.m_config.m_algo_lookahead_d = f.m_config.m_algo_lookahead_d * m_button_algo_lookahead_d->getMultValue(x,y);
     
     if(f.m_config.m_algo2 == ALGO2_GOTO){
-        f.m_config.m_algo2_goto_k = f.m_config.m_algo2_goto_k * m_button_algo2_goto_k->getMultValue(x,y);
+        f.m_config.m_algo2_goto_pas_by_tour
+            = f.m_config.m_algo2_goto_pas_by_tour * m_button_algo2_goto_pas_by_tour->getMultValue(x,y);
+        f.m_config.m_algo2_goto_angle_by_tour
+            = f.m_config.m_algo2_goto_angle_by_tour * m_button_algo2_goto_angle_by_tour->getMultValue(x,y);
     } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
-        f.m_config.m_algo2_goto_k = f.m_config.m_algo2_goto_k * m_button_algo2_goto_k->getMultValue(x,y);
+        f.m_config.m_algo2_goto_pas_by_tour
+            = f.m_config.m_algo2_goto_pas_by_tour * m_button_algo2_goto_pas_by_tour->getMultValue(x,y);
+        f.m_config.m_algo2_goto_angle_by_tour
+            = f.m_config.m_algo2_goto_angle_by_tour * m_button_algo2_goto_angle_by_tour->getMultValue(x,y);
         f.m_config.m_algo2_goto_rel_s = f.m_config.m_algo2_goto_rel_s + 10*m_button_algo2_goto_rel_s->isActive(x,y);
     } else if(f.m_config.m_algo2 == ALGO2_PID){
         f.m_config.m_algo2_pid_p = f.m_config.m_algo2_pid_p * m_button_algo2_pid_kp->getMultValue2(x,y, 1.2);

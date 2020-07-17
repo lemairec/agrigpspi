@@ -22,7 +22,7 @@ class MyQTSerialPorts : public QObject{
 
     std::vector<std::string> m_serials;
     
-    int m_pilot_langage = 0;
+    int m_pilot_langage = PILOT_LANGAGE_ARDUINO;
 public:
     MyQTSerialPorts();
     

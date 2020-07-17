@@ -85,7 +85,8 @@ public:
     
     SelectButtonGui * m_button_select_algo2;
     
-    ValueGui * m_button_algo2_goto_k;
+    ValueGui * m_button_algo2_goto_pas_by_tour;
+    ValueGui * m_button_algo2_goto_angle_by_tour;
     ValueGui * m_button_algo2_goto_rel_s;
     ValueGui * m_button_algo2_pid_kp;
     ValueGui * m_button_algo2_pid_ki;
