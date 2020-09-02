@@ -289,19 +289,32 @@ void GpsFramework::setAB(){
 
 #define DISTANCE 1
 void GpsFramework::calculDeplacement(){
-    if(m_list.size() > 2){
+    if(m_list.size() > 3){
         GpsPoint_ptr point1 = m_list.front();
         GpsPoint_ptr point2 = NULL;
+        GpsPoint_ptr point3 = NULL;
         int i = 0;
         for(auto point : m_list){
-            point2 = point;
-            
-            double x = point1->m_x - point2->m_x;
-            double y = point1->m_y - point2->m_y;
-            
-            double d = x*x+y*y;
-            if(d>(DISTANCE*DISTANCE)){
-                break;
+            if(point3 == NULL){
+                point2 = point;
+                
+                double x = point1->m_x - point2->m_x;
+                double y = point1->m_y - point2->m_y;
+                
+                double d = x*x+y*y;
+                if(d>(DISTANCE*DISTANCE)){
+                    point3 = point;
+                }
+            } else {
+                point3 = point;
+                
+                double x = point2->m_x - point3->m_x;
+                double y = point2->m_y - point3->m_y;
+                
+                double d = x*x+y*y;
+                if(d>(DISTANCE*DISTANCE)){
+                    break;
+                }
             }
             //point2 = NULL;
             ++i;
@@ -339,6 +352,24 @@ void GpsFramework::calculDeplacement(){
                     INFO("erreur");
                 }
             }
+        }
+        
+        
+        int i2 = 0;
+        GpsPoint_ptr poin1 = point1 ,poin2 = point2,poin3 = point3;
+        
+        if(point3){
+        
+            double num = (poin1->m_x - poin3->m_x)*(poin2->m_x - poin3->m_x) + (poin1->m_y - poin3->m_y)*(poin2->m_y - poin3->m_y);
+            
+            double den1 = std::sqrt((poin1->m_x - poin3->m_x)*(poin1->m_x - poin3->m_x)+(poin1->m_y - poin3->m_y)*(poin1->m_y - poin3->m_y));
+            double den2 = std::sqrt((poin2->m_x - poin3->m_x)*(poin2->m_x - poin3->m_x)+(poin2->m_y - poin3->m_y)*(poin2->m_y - poin3->m_y));
+            
+            double cosa = num/(den1*den2);
+            double a = acos(cosa);
+            double a2 = a/3.14*180;
+            
+            INFO(a2);
         }
         //INFO(deplacementTime << " " << vitesse);
     }

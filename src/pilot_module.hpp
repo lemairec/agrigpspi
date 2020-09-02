@@ -15,7 +15,8 @@ class PilotModule {
     
     //algo k
     int m_algo2 = 0;
-    double m_algo2_goto_k = 100;
+    double m_algo2_goto_pas_by_tour = 100;
+    double m_algo2_goto_angle_by_tour = 100;
     int m_algo2_goto_rel_s = 100;
     
     //algo pid
@@ -38,7 +39,8 @@ public:
     std::string m_last_order_send;
     
     double m_0 = 0;
-    double m_last_goto = 0;
+    double m_last_goto_tour = 0;
+    double m_last_goto_pas = 0;
     double m_last_leftright = 0;
     std::string m_version_guidage;
     
@@ -62,10 +64,13 @@ public:
     void runHadrienVolant(std::vector<unsigned char> & c);
     
     double m_hadrien0 = 0.0;
-    double m_hadrienVolant = 0.0;
     int m_nbrTourHadrien = 0;
     double m_lastHadrienValue = 0;
     void setHadrienVolant(double val);
+    
+    double m_volant = 0.0;
+    void setPasMotorVolant(int pas);
+    void setVolant(double vol);
 };
 
 #endif //GPS_H

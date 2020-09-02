@@ -13,7 +13,8 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_inverse = config.m_pilot_inverse;
     
     m_algo2 = config.m_algo2;
-    m_algo2_goto_k = config.m_algo2_goto_k;
+    m_algo2_goto_pas_by_tour = config.m_algo2_goto_pas_by_tour;
+    m_algo2_goto_angle_by_tour = config.m_algo2_goto_angle_by_tour/180.0*3.14;
     m_algo2_goto_rel_s = config.m_algo2_goto_rel_s;
     m_algo2_pid_p = config.m_algo2_pid_p;
     m_algo2_pid_i = config.m_algo2_pid_i;
@@ -56,12 +57,13 @@ void PilotModule::run(double value, double time){
     std::ostringstream out;
     
     if(m_algo2 == ALGO2_GOTO){
-        double res = value*m_algo2_goto_k;
+        double res = value/m_algo2_goto_angle_by_tour;
+        
         myGotoVolant(res);
     } else if(m_algo2 == ALGO2_GOTO_REL){
         //int res = (value-m_0)*m_algo2_goto_k; test1
         double correction = value+m_0;
-        double res = correction*m_algo2_goto_k;
+        double res = correction/m_algo2_goto_angle_by_tour;
         myGotoVolant(res);
         m_lastValues.push_back(correction);
         while(m_lastValues.size() > m_algo2_goto_rel_s){
@@ -179,7 +181,7 @@ void PilotModule::test(int i){
 }
 
 void PilotModule::engageHadrien(){
-    m_hadrien0 = m_hadrienVolant;
+    m_hadrien0 = m_volant;
     INFO("engageHadrien");
     std::vector<unsigned char> l;
     l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
@@ -227,13 +229,15 @@ void PilotModule::myGotoVolant(double res){
     if(m_inverse){
         res = -res;
     }
-    m_last_goto = res;
+    m_last_goto_tour = res;
+    m_last_goto_pas = res*m_algo2_goto_pas_by_tour;
     
+    res = m_last_goto_pas;
     std::ostringstream out;
     if(res<0){
         out << "$G;-" << (-res) << "\n";
     } else {
-        out << "$G; " << res << "\n";
+        out << "$G;" << res << "\n";
     }
     m_last_order_send = out.str();
     INFO(m_last_order_send);
@@ -247,9 +251,9 @@ void PilotModule::myGotoVolant(double res){
         double gotoRel = res-m_hadrien0;
         
         INFO("gotoRel " << m_hadrien0);
-        INFO("hadrienVolant " << m_hadrienVolant);
+        INFO("hadrienVolant " << m_volant);
         
-        double leftRight = m_hadrienVolant-gotoRel;
+        double leftRight = m_volant-gotoRel;
         INFO("leftRight " << leftRight);
         myLeftRight(leftRight);
         //m_tour_volant = res/4000.0
@@ -308,11 +312,19 @@ void PilotModule::setHadrienVolant(double val){
     
     m_lastHadrienValue = val;
     
-    m_hadrienVolant = m_nbrTourHadrien + val;
+    m_volant = m_nbrTourHadrien + val;
     
     std::ostringstream out;
-    out << "set H " << m_hadrienVolant;
+    out << "set H " << m_volant;
     GpsFramework::Instance().addLog(out.str(), false);
+}
+
+void PilotModule::setPasMotorVolant(int pas){
+    
+}
+
+void PilotModule::setVolant(double vol){
+    m_volant = vol;
 }
 
 

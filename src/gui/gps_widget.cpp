@@ -574,12 +574,13 @@ void GpsWidget::drawDebug(){
         scene->addLine(m_width/2-l/2, y, m_width/2 + l/2, y, m_penBlue2);
     }
     
-    for(int i = -1; i<=1; i+=2){
+    //draw direction
+    /*for(int i = -1; i<=1; i+=2){
         int x=m_width/2+i*l/2;
             int dx = -20*sin(f.m_angle_correction);
         int dy = 20*cos(f.m_angle_correction);
         scene->addLine(x-dx, y-dy, x+dx, y+dy, m_penBlue2);
-    }
+    }*/
     
     
     

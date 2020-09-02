@@ -163,6 +163,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
     } else {
         QString hex(b);
         std::string s = (hex.toUtf8().constData());
+
         int i = 2;
         if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == ';'){
             int res = 0;
