@@ -369,7 +369,7 @@ void GpsFramework::calculDeplacement(){
             double a = acos(cosa);
             double a2 = a/3.14*180;
             
-            INFO(a2);
+            //INFO(a2);
         }
         //INFO(deplacementTime << " " << vitesse);
     }

@@ -58,14 +58,14 @@ void PilotModule::run(double value, double time){
     
     if(m_algo2 == ALGO2_GOTO){
         double res = value/m_algo2_goto_angle_by_tour;
+        m_volant = res;
         
-        myGotoVolant(res);
+        myGotoVolant(m_volant);
     } else if(m_algo2 == ALGO2_GOTO_REL){
-        //int res = (value-m_0)*m_algo2_goto_k; test1
-        double correction = value+m_0;
-        double res = correction/m_algo2_goto_angle_by_tour;
-        myGotoVolant(res);
-        m_lastValues.push_back(correction);
+        double res = value/m_algo2_goto_angle_by_tour;
+        m_volant = res;
+        
+        m_lastValues.push_back(m_volant);
         while(m_lastValues.size() > m_algo2_goto_rel_s){
             m_lastValues.pop_front();
         }
@@ -73,7 +73,11 @@ void PilotModule::run(double value, double time){
         for(auto i : m_lastValues){
             moy += i;
         }
-        m_0 = moy/m_algo2_goto_rel_s;
+        m_volant0 = moy/m_algo2_goto_rel_s;
+        
+        myGotoVolant(m_volant0+m_volant);
+        
+        
     } else if(m_algo2 == ALGO2_PID){
         double _dt = 0.1;
         
@@ -229,7 +233,7 @@ void PilotModule::myGotoVolant(double res){
     if(m_inverse){
         res = -res;
     }
-    m_last_goto_tour = res;
+    
     m_last_goto_pas = res*m_algo2_goto_pas_by_tour;
     
     res = m_last_goto_pas;
@@ -240,7 +244,7 @@ void PilotModule::myGotoVolant(double res){
         out << "$G;" << res << "\n";
     }
     m_last_order_send = out.str();
-    INFO(m_last_order_send);
+    //INFO(m_last_order_send);
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
@@ -312,7 +316,7 @@ void PilotModule::setHadrienVolant(double val){
     
     m_lastHadrienValue = val;
     
-    m_volant = m_nbrTourHadrien + val;
+    m_volantMesured = m_nbrTourHadrien + val;
     
     std::ostringstream out;
     out << "set H " << m_volant;
@@ -320,11 +324,11 @@ void PilotModule::setHadrienVolant(double val){
 }
 
 void PilotModule::setPasMotorVolant(int pas){
-    
+    m_volantMesured = pas/m_algo2_goto_pas_by_tour;
 }
 
 void PilotModule::setVolant(double vol){
-    m_volant = vol;
+    m_volantMesured = vol;
 }
 
 

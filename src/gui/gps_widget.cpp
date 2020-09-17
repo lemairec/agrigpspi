@@ -112,8 +112,13 @@ void GpsWidget::my_projete(double x, double y, double & x_res, double & y_res){
     double x1_temp = (x - m_xref)*m_zoom;
     double y1_temp = (y - m_yref)*m_zoom;
     
-    x_res = x1_temp*m_cosA +y1_temp*m_sinA;
-    y_res  = -x1_temp*m_sinA +y1_temp*m_cosA;
+    double h00 = m_cosA, h01 = m_sinA, h02 = 1;
+    double h10 = -m_sinA, h11 = m_cosA, h12 = 1;
+    double h20 = -m_sinA, h21 = m_cosA, h22 = 1;
+    
+    
+    x_res = x1_temp*h00 +y1_temp*h01;
+    y_res  = x1_temp*h10 +y1_temp*h11;
 }
 
 bool GpsWidget::addligne(double l, int i){
@@ -564,24 +569,72 @@ void GpsWidget::drawBottom(){
     }
 }
 
-void GpsWidget::drawDebug(){
+
+void GpsWidget::drawDirection(){
     GpsFramework & f = GpsFramework::Instance();
-    
-    int l=100;
+
+    int l=200;
     int y = 80;
     
-    {
-        scene->addLine(m_width/2-l/2, y, m_width/2 + l/2, y, m_penBlue2);
-    }
+    scene->addLine(m_width/2-l/2, y, m_width/2 + l/2, y, m_penBlue2);
     
-    //draw direction
-    /*for(int i = -1; i<=1; i+=2){
+    for(int i = -1; i<=1; i+=2){
         int x=m_width/2+i*l/2;
             int dx = -20*sin(f.m_angle_correction);
         int dy = 20*cos(f.m_angle_correction);
         scene->addLine(x-dx, y-dy, x+dx, y+dy, m_penBlue2);
-    }*/
+    }
+}
+
+void GpsWidget::drawVolant(){
+    GpsFramework & f = GpsFramework::Instance();
+
+    int r=30;
+    int y = 80;
     
+    double angle = f.m_pilotModule.m_volant;
+    double j = 1.2;
+    scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penBlack, m_brushWhite);
+      
+   
+    QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
+    item->setBrush(m_grayBrush);
+    item->setPen(m_penNo);
+    item->setStartAngle(90*16-f.m_pilotModule.m_volant0*360*16);
+    item->setSpanAngle(-angle*360*16);
+    scene->addItem(item);
+    
+    j=0.8;
+    scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
+    
+    {
+        int r=20;
+
+        double angle = f.m_pilotModule.m_volantMesured;
+        double j = 1.1;
+
+        QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
+        item->setBrush(m_grayBrush);
+        item->setPen(m_penNo);
+        item->setStartAngle(90*16);
+        item->setSpanAngle(-angle*360*16);
+        scene->addItem(item);
+
+        j=0.9;
+        scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
+        }
+    
+    //double x1 = cos(i*2*3.14)*r;
+    //double y1 = sin(i*2*3.14)*r;
+    //scene->addRect(m_width/2+x1, y+y1, 2, 2);
+    
+}
+
+void GpsWidget::drawDebug(){
+    GpsFramework & f = GpsFramework::Instance();
+
+    drawDirection();
+    drawVolant();
     
     
     //surface

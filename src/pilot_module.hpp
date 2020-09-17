@@ -69,6 +69,10 @@ public:
     void setHadrienVolant(double val);
     
     double m_volant = 0.0;
+    double m_volant0 = 0.0;
+    
+    double m_volantMesured = 0.0;
+    
     void setPasMotorVolant(int pas);
     void setVolant(double vol);
 };

@@ -184,7 +184,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
                 res = -res;
             }
             INFO(s << " => " << res);
-            GpsFramework::Instance().m_pilotModule.setHadrienVolant(res/4000.0);
+            GpsFramework::Instance().m_pilotModule.setPasMotorVolant(res);
             //GpsFramework::Instance().m_pilotModule.setPasVolant(res);
             
         }

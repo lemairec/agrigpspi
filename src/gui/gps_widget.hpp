@@ -49,9 +49,12 @@ public:
     void drawLines();
     void drawTracteur();
     void drawBottom();
-    void drawDebug();
     void drawContour();
     void drawError();
+    
+    void drawDebug();
+    void drawDirection();
+    void drawVolant();
     
     void draw();
     void draw_force();
