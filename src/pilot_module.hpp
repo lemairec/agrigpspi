@@ -20,12 +20,6 @@ class PilotModule {
     double m_algo2_goto_angle_by_tour = 100;
     int m_algo2_goto_rel_s = 100;
     
-    //algo pid
-    double m_integral = 0;
-    //double m_lastValue = 0;
-    double m_algo2_pid_p = 100;
-    double m_algo2_pid_i = 100;
-    double m_algo2_pid_d = 100;
     
     //algo my
     double m_sum_value = 0;
@@ -53,9 +47,6 @@ public:
     void engage();
     void setVitesse();
     void desengage();
-    
-    void run_test(int i);
-    void test(int i);
     
     void myGotoVolant(double i);
     void myGotoVolant2(double i);

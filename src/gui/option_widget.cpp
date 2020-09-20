@@ -208,11 +208,12 @@ void OptionWidget::drawPage3(){
     drawSelectButtonGuiClose(m_select_pilot_baudrates);
     drawSelectButtonGuiClose(m_select_pilot_serial);
     
+     
+    drawValueGui(m_vitesse_motor, f.m_config.m_vitesse_motor);
+    
     drawSelectButtonGuiOpen(m_select_pilot_serial);
     drawSelectButtonGuiOpen(m_select_pilot_langage);
     drawSelectButtonGuiOpen(m_select_pilot_baudrates);
-    
-    drawValueGui(m_vitesse_motor, f.m_config.m_vitesse_motor);
     
 }
 
@@ -352,10 +353,6 @@ void OptionWidget::drawPage5(){
         drawValueGui(m_button_algo2_goto_pas_by_tour, f.m_config.m_algo2_goto_pas_by_tour);
         drawValueGui(m_button_algo2_goto_angle_by_tour, f.m_config.m_algo2_goto_angle_by_tour);
         drawValueGui(m_button_algo2_goto_rel_s, f.m_config.m_algo2_goto_rel_s);
-    } else if(f.m_config.m_algo2 == ALGO2_PID){
-        drawValueGui(m_button_algo2_pid_kp, f.m_config.m_algo2_pid_p);
-        drawValueGui(m_button_algo2_pid_ki, f.m_config.m_algo2_pid_i);
-        drawValueGui(m_button_algo2_pid_kd, f.m_config.m_algo2_pid_d);
     } else {
         drawValueGui(m_button_algo2_my_k, f.m_config.m_algo2_my_k);
         drawValueGui(m_button_algo2_my_p, f.m_config.m_algo2_my_p);
@@ -419,10 +416,6 @@ void OptionWidget::onMousePage5(double x, double y){
         f.m_config.m_algo2_goto_angle_by_tour
             = f.m_config.m_algo2_goto_angle_by_tour * m_button_algo2_goto_angle_by_tour->getMultValue(x,y);
         f.m_config.m_algo2_goto_rel_s = f.m_config.m_algo2_goto_rel_s + 10*m_button_algo2_goto_rel_s->isActive(x,y);
-    } else if(f.m_config.m_algo2 == ALGO2_PID){
-        f.m_config.m_algo2_pid_p = f.m_config.m_algo2_pid_p * m_button_algo2_pid_kp->getMultValue2(x,y, 1.2);
-        f.m_config.m_algo2_pid_i = f.m_config.m_algo2_pid_i * m_button_algo2_pid_ki->getMultValue2(x,y, 1.2);
-        f.m_config.m_algo2_pid_d = f.m_config.m_algo2_pid_d * m_button_algo2_pid_kd->getMultValue2(x,y, 1.2);
     } else {
         f.m_config.m_algo2_my_p = f.m_config.m_algo2_my_p * m_button_algo2_my_p->getMultValue2(x,y, 1.2);
         f.m_config.m_algo2_my_k = f.m_config.m_algo2_my_k * m_button_algo2_my_k->getMultValue2(x,y, 1.2);

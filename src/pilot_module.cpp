@@ -17,10 +17,7 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_algo2_goto_pas_by_tour = config.m_algo2_goto_pas_by_tour;
     m_algo2_goto_angle_by_tour = config.m_algo2_goto_angle_by_tour/180.0*3.14;
     m_algo2_goto_rel_s = config.m_algo2_goto_rel_s;
-    m_algo2_pid_p = config.m_algo2_pid_p;
-    m_algo2_pid_i = config.m_algo2_pid_i;
-    m_algo2_pid_d = config.m_algo2_pid_d;
-    
+   
     m_algo2_my_k = config.m_algo2_my_k;
     m_algo2_my_p = config.m_algo2_my_p;
     
@@ -34,7 +31,6 @@ void PilotModule::initOrLoadConfig(Config & config){
 void PilotModule::clear(){
     m_0 = 0;
     m_last_value = 0;
-    m_integral = 0;
     m_sum_value = 0;
     
     //todo GpsFramework::Instance().m_serialModule.writePilotSerialS("$C;\n");
@@ -90,24 +86,6 @@ void PilotModule::run(double value, double time){
         myGotoVolant(m_volant0+m_volant);
         
         
-    } else if(m_algo2 == ALGO2_PID){
-        double _dt = 0.1;
-        
-        // Proportional term
-        double Pout = m_algo2_pid_p * value;
-
-        // Integral term
-        m_integral += value * _dt;
-        double Iout = m_algo2_pid_i * m_integral;
-
-        // Derivative term
-        double derivative = (value - m_last_value) / _dt;
-        double Dout = m_algo2_pid_d * derivative;
-
-        // Calculate total output
-        int res = Pout + Iout + Dout;
-        
-        myLeftRight(res);
     } else if(m_algo2 == ALGO2_MY){
         
         int res = m_algo2_my_k * (value - m_last_value);
@@ -158,42 +136,6 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
     l.push_back(i);
     print(l);
     GpsFramework::Instance().m_serialModule.writePilotSerialDAndWait(l);
-}
-
-void PilotModule::run_test(int i){
-    if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
-        if(i == 0){
-            std::vector<unsigned char> l;
-            /*l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02};
-            runHadrienVolant(l);
-            l.clear();
-            l = {0x01, 0x03, 0x40, 0x09, 0x00, 0x02};
-            runHadrienVolant(l);*/
-            engageHadrien();
-        } else if(i ==1){
-            desengageHadrien();
-        } else if(i ==2){
-            clearHadrien();
-        }
-    }
-}
-
-void PilotModule::test(int i){
-    if(m_algo2 == ALGO2_PID){
-        if(i > 0){
-            myLeftRight(1);
-        } else {
-            myLeftRight(-1);
-        }
-    } else {
-        if(i == 0){
-            myGotoVolant(0);
-        }else if(i > 0){
-            run(20.0/180.0*3.14, 0);
-        } else {
-            run(-20.0/180.0*3.14, 0);
-        }
-    }
 }
 
 void PilotModule::engageHadrien(){

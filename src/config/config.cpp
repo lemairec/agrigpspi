@@ -13,7 +13,7 @@ Config::Config(){
     m_input_gps = "none";
     m_file_gps = GPS_TEST_FILE;
     m_input_gps= "file";
-    m_file_gps = ProjectSourceDir + "/gps_travail_3m.ubx";
+    m_file_gps = ProjectSourceDir + "/gps_samples/gps_travail_3m.ubx";
 }
 
 void Config::save(){
@@ -50,9 +50,6 @@ void Config::save(){
     settings.setValue("m_algo2", m_algo2);
     settings.setValue("m_algo2_goto_pas_by_tour", m_algo2_goto_pas_by_tour);
     settings.setValue("m_algo2_goto_angle_by_tour", m_algo2_goto_angle_by_tour);
-    settings.setValue("m_algo2_pid_p", m_algo2_pid_p);
-    settings.setValue("m_algo2_pid_i", m_algo2_pid_i);
-    settings.setValue("m_algo2_pid_d", m_algo2_pid_d);
     settings.setValue("m_algo2_my_k", m_algo2_my_k);
     settings.setValue("m_algo2_my_p", m_algo2_my_p);
 }
@@ -128,15 +125,6 @@ void Config::load(){
     }
     if(settings.contains("m_algo2_goto_rel_s")){
         m_algo2_goto_angle_by_tour = settings.value("m_algo2_goto_angle_by_tour").toDouble();
-    }
-    if(settings.contains("m_algo2_pid_p")){
-        m_algo2_pid_p = settings.value("m_algo2_pid_p").toDouble();
-    }
-    if(settings.contains("m_algo2_pid_i")){
-        m_algo2_pid_i = settings.value("m_algo2_pid_i").toDouble();
-    }
-    if(settings.contains("m_algo2_pid_d")){
-        m_algo2_pid_d = settings.value("m_algo2_pid_d").toDouble();
     }
     if(settings.contains("m_algo2_my_k")){
         m_algo2_my_k = settings.value("m_algo2_my_k").toDouble();

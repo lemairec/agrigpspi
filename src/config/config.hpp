@@ -8,7 +8,6 @@
 
 #define ALGO2_GOTO 0
 #define ALGO2_GOTO_REL 1
-#define ALGO2_PID 2
 #define ALGO2_MY 3
 
 #define PILOT_LANGAGE_ARDUINO 0
@@ -39,16 +38,13 @@ public:
     bool m_pilot_inverse = false;
     int m_vitesse_motor = 75;
     
-    int m_algo = 0;
+    int m_algo = ALGO_FOLLOW_CARROT;
     double m_algo_lookahead_d = 10;
     
-    int m_algo2 = 0;
+    int m_algo2 = ALGO2_GOTO_REL;
     double m_algo2_goto_pas_by_tour = 4500;
     double m_algo2_goto_angle_by_tour = 10;
     int m_algo2_goto_rel_s = 100;
-    double m_algo2_pid_p = 100;
-    double m_algo2_pid_i = 100;
-    double m_algo2_pid_d = 100;
     
     double m_algo2_my_k = 100;
     double m_algo2_my_p = 100;
