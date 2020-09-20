@@ -36,7 +36,9 @@ public:
     
     int m_pilot_langage = PILOT_LANGAGE_ARDUINO;
     bool m_pilot_inverse = false;
-    int m_vitesse_motor = 75;
+    double m_motor_vitesse_max = 100;
+    double m_motor_vitesse_min = 40;
+    double m_motor_vitesse_agressivite = 3;
     
     int m_algo = ALGO_FOLLOW_CARROT;
     double m_algo_lookahead_d = 10;

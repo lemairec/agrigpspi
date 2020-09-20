@@ -41,7 +41,7 @@ void updatePosition(){
       position --;
     }
     ++i;
-    if(i>10){
+    if(i>5){
       i = 0;
       printPosition();
     }
@@ -111,8 +111,8 @@ void updateMotor(){
 void SetMotor2(int speed, boolean reverse)
 {
   //Serial.print("SetMotor2 speed ");Serial.println(speed);
-  if(speed > motor_max){
-    analogWrite(MOTOR_ENABLE_PIN, motor_max);
+  if(speed > 255){
+    analogWrite(MOTOR_ENABLE_PIN, 255);
       
   } else {
     analogWrite(MOTOR_ENABLE_PIN, speed);
@@ -216,18 +216,29 @@ void parseBuffer(){
   if(m_buffer[0] == 'H'){
     Serial.println("");
     Serial.println("$G;100  //goto 100");
-    Serial.println("$R      //reset buffer 0");
     Serial.println("$D      //disable");
     Serial.println("$V      //give version");
     Serial.println("$P      //print position");
     Serial.println("$C;100  //config; motor max");
+    Serial.println("$L;255  //left; motor 255");
+    Serial.println("$R;255  //right; motor 255");
+    Serial.println("$S;     //stop");
     
     Serial.println("");
   } else if(m_buffer[0] == 'V'){
     version();
   } else if(m_buffer[0] == 'R'){
-    desired_position = 0;
-    position = 0;
+    int speed = myReadInt();
+    m_tempInd = 2;
+    //Serial.print("#R;");Serial.println(speed);
+    SetMotor2(speed, false);
+  } else if(m_buffer[0] == 'L'){
+    int speed = myReadInt();
+    m_tempInd = 2;
+    //Serial.print("#L;");Serial.println(speed);
+    SetMotor2(speed, true);
+  } else if(m_buffer[0] == 'S'){
+    SetMotor2(0, true);
   } else if(m_buffer[0] == 'C'){
     m_tempInd = 2;
     motor_max = myReadInt();
@@ -242,7 +253,9 @@ void parseBuffer(){
   } else if(m_buffer[0] == 'P'){
     printPosition();
   }  else {
+    printBuffer();
     Serial.println("$error");
+    
   }
 }
 

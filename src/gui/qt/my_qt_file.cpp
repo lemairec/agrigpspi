@@ -7,7 +7,7 @@
 
 #include "environnement.hpp"
 
-#define FILE_TIME 500
+#define FILE_TIME 100
 
 MyQTFile::MyQTFile(){
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(handleLineFile()));
@@ -37,7 +37,6 @@ void MyQTFile::handleLineFile(){
        GpsFramework::Instance().m_gpsModule.readChar('\n');
        //line = m_text_stream->readLine();
     }
-    m_timer.start(FILE_TIME);
     DEBUG("end");
 }
 

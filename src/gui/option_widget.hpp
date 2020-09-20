@@ -69,7 +69,9 @@ public:
     SelectButtonGui * m_select_pilot_serial;
     SelectButtonGui * m_select_pilot_baudrates;
     SelectButtonGui * m_select_pilot_langage;
-    ValueGui * m_vitesse_motor;
+    ValueGui * m_motor_vitesse_min;
+    ValueGui * m_motor_vitesse_max;
+    ValueGui * m_motor_vitesse_agressivite;
     
     void setPage3();
     void onMousePage3(double x, double y);

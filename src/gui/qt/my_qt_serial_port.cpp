@@ -7,7 +7,7 @@
 
 #include "environnement.hpp"
 
-#define HADRIEN_TIME_VOLANT 50
+#define HADRIEN_TIME_VOLANT 20
 #define FILE_TIME 200
 
 MyQTSerialPorts::MyQTSerialPorts(){
@@ -280,7 +280,6 @@ std::vector<std::string> & MyQTSerialPorts::getAvailablePorts(){
 void MyQTSerialPorts::handleHadrien(){
     DEBUG("begin");
     //INFO("coucou je suis ici");
-    m_timerHadrien.start(HADRIEN_TIME_VOLANT);
     
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         if(!m_waitOrder){
@@ -294,7 +293,7 @@ void MyQTSerialPorts::handleHadrien(){
         }
 
     } else {
-        //writePilotSerialS("$P\n");
+        GpsFramework::Instance().m_pilotModule.update();
     }
     DEBUG("end");
     

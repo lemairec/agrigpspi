@@ -12,7 +12,9 @@ class PilotModule {
     bool m_inverse = false;
     
     int m_pilot_langage = 0;
-    int m_vitesse_motor = 0;
+    int m_motor_vitesse_max = 0;
+    int m_motor_vitesse_min = 0;
+    double m_motor_vitesse_agressivite = 1;
     
     //algo k
     int m_algo2 = 0;
@@ -69,6 +71,7 @@ public:
     
     void setPasMotorVolant(int pas);
     void setVolant(double vol);
+    void update();
 };
 
 #endif //GPS_H

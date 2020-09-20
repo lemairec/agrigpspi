@@ -191,8 +191,10 @@ void OptionWidget::setPage3(){
     m_select_pilot_langage->addValue("arduino");
     m_select_pilot_langage->addValue("hadrien");
     
-    m_vitesse_motor = new ValueGui(0.35, 0.6, PETIT_RAYON2, 0, "vitesse moteur ");
-      
+    m_motor_vitesse_min = new ValueGui(0.35, 0.6, PETIT_RAYON2, 0, "vitesse moteur min ");
+    m_motor_vitesse_max = new ValueGui(0.35, 0.65, PETIT_RAYON2, 0, "vitesse moteur max ");
+    m_motor_vitesse_agressivite = new ValueGui(0.35, 0.7, PETIT_RAYON2, 0, "vitesse moteur agressivite ");
+    
 };
 
 void OptionWidget::drawPage3(){
@@ -209,7 +211,9 @@ void OptionWidget::drawPage3(){
     drawSelectButtonGuiClose(m_select_pilot_serial);
     
      
-    drawValueGui(m_vitesse_motor, f.m_config.m_vitesse_motor);
+    drawValueGui(m_motor_vitesse_min, f.m_config.m_motor_vitesse_min);
+    drawValueGui(m_motor_vitesse_max, f.m_config.m_motor_vitesse_max);
+    drawValueGui(m_motor_vitesse_agressivite, f.m_config.m_motor_vitesse_agressivite);
     
     drawSelectButtonGuiOpen(m_select_pilot_serial);
     drawSelectButtonGuiOpen(m_select_pilot_langage);
@@ -235,14 +239,23 @@ void OptionWidget::onMousePage3(double x, double y){
         f.initOrLoadConfig();
     }
     
-    f.m_config.m_vitesse_motor += 5*m_vitesse_motor->getIntValue(x,y);
-    if(f.m_config.m_vitesse_motor > 100){
-        f.m_config.m_vitesse_motor = 100;
+    f.m_config.m_motor_vitesse_min += 5*m_motor_vitesse_min->getIntValue(x,y);
+    if(f.m_config.m_motor_vitesse_min > 70){
+        f.m_config.m_motor_vitesse_min = 70;
     }
-    if(f.m_config.m_vitesse_motor < 10){
-        f.m_config.m_vitesse_motor = 10;
+    if(f.m_config.m_motor_vitesse_min < 10){
+        f.m_config.m_motor_vitesse_min = 10;
     }
     
+    f.m_config.m_motor_vitesse_max += 5*m_motor_vitesse_max->getIntValue(x,y);
+    if(f.m_config.m_motor_vitesse_max > 100){
+        f.m_config.m_motor_vitesse_max = 100;
+    }
+    if(f.m_config.m_motor_vitesse_max < 50){
+        f.m_config.m_motor_vitesse_max = 50;
+    }
+    f.m_config.m_motor_vitesse_agressivite = f.m_config.m_motor_vitesse_agressivite * m_motor_vitesse_agressivite->getMultValue(x,y);
+      
 
 }
 
@@ -311,8 +324,6 @@ void OptionWidget::setPage5(){
     m_button_select_algo2 = new SelectButtonGui(0.35, 0.50, PETIT_RAYON2);
     m_button_select_algo2->addValue("algo_goto");
     m_button_select_algo2->addValue("algo_goto_rel");
-    m_button_select_algo2->addValue("algo_pid");
-    m_button_select_algo2->addValue("algo_my");
     
     m_button_algo2_goto_pas_by_tour = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "goto pas by tour ");
     m_button_algo2_goto_angle_by_tour = new ValueGui(0.4, 0.6, PETIT_RAYON2, 0, "goto angle by tour ");

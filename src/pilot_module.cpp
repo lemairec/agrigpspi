@@ -11,7 +11,9 @@ PilotModule::PilotModule(){
 
 void PilotModule::initOrLoadConfig(Config & config){
     m_inverse = config.m_pilot_inverse;
-    m_vitesse_motor = config.m_vitesse_motor;
+    m_motor_vitesse_max = config.m_motor_vitesse_max*255.0/100.0;
+    m_motor_vitesse_min = config.m_motor_vitesse_min*255.0/100.0;
+    m_motor_vitesse_agressivite = config.m_motor_vitesse_agressivite;
     
     m_algo2 = config.m_algo2;
     m_algo2_goto_pas_by_tour = config.m_algo2_goto_pas_by_tour;
@@ -34,10 +36,10 @@ void PilotModule::clear(){
 }
 
 void PilotModule::setVitesse(){
-    int vitesse = m_vitesse_motor*250/100;
+    /*int vitesse = m_vitesse_motor*250/100;
     std::ostringstream out;
     out << "$C;" << vitesse << "\n";
-    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());*/
 }
 
 void PilotModule::engage(){
@@ -182,7 +184,7 @@ void add4hex( std::vector<unsigned char> & l, int i){
 
 void PilotModule::myGotoVolant2(double res){
     m_volant = res;
-    myGotoVolant(res);
+    update();
 }
 
 void PilotModule::myGotoVolant(double res){
@@ -285,10 +287,40 @@ void PilotModule::setPasMotorVolant(int pas){
         res = -res;
     }
     m_volantMesured = res;
+    update();
 }
 
 void PilotModule::setVolant(double vol){
     m_volantMesured = vol;
+}
+
+void PilotModule::update(){
+    int res = 100+m_motor_vitesse_agressivite*(m_volant - m_volantMesured)*m_algo2_goto_pas_by_tour;
+    std::ostringstream out;
+    
+    if(res > m_motor_vitesse_max){
+        res = m_motor_vitesse_max;
+    }
+    if(res < -m_motor_vitesse_max){
+        res = -m_motor_vitesse_max;
+    }
+    
+    if(res > 0 && res < m_motor_vitesse_min){
+        res = 0;
+    }
+    if(res < 0 && res > -m_motor_vitesse_min){
+        res = -0;
+    }
+    
+    if(res<0){
+        out << "$L;" << -res << ";\n";
+    } else {
+        out << "$R;" << res << ";\n";
+    }
+    m_last_order_send = out.str();
+    //INFO(m_last_order_send);
+    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+    
 }
 
 
