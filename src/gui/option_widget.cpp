@@ -166,6 +166,9 @@ void OptionWidget::setPage3(){
     m_select_pilot_langage = new SelectButtonGui(0.35,0.5, PETIT_RAYON2);
     m_select_pilot_langage->addValue("arduino");
     m_select_pilot_langage->addValue("hadrien");
+    
+    m_vitesse_motor = new ValueGui(0.35, 0.6, PETIT_RAYON2, 0, "vitesse moteur ");
+      
 };
 
 void OptionWidget::drawPage3(){
@@ -184,6 +187,9 @@ void OptionWidget::drawPage3(){
     drawSelectButtonGuiOpen(m_select_pilot_serial);
     drawSelectButtonGuiOpen(m_select_pilot_langage);
     drawSelectButtonGuiOpen(m_select_pilot_baudrates);
+    
+    drawValueGui(m_vitesse_motor, f.m_config.m_vitesse_motor);
+    
 }
 
 void OptionWidget::onMousePage3(double x, double y){
@@ -203,6 +209,15 @@ void OptionWidget::onMousePage3(double x, double y){
         f.m_config.m_pilot_langage = m_select_pilot_langage->m_selectedValue;
         f.initOrLoadConfig();
     }
+    
+    f.m_config.m_vitesse_motor += m_vitesse_motor->getIntValue(x,y);
+    if(f.m_config.m_vitesse_motor > 100){
+        f.m_config.m_vitesse_motor = 100;
+    }
+    if(f.m_config.m_vitesse_motor < 10){
+        f.m_config.m_vitesse_motor = 10;
+    }
+    
 
 }
 

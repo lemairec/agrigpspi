@@ -11,6 +11,7 @@ PilotModule::PilotModule(){
 
 void PilotModule::initOrLoadConfig(Config & config){
     m_inverse = config.m_pilot_inverse;
+    m_vitesse_motor = config.m_vitesse_motor;
     
     m_algo2 = config.m_algo2;
     m_algo2_goto_pas_by_tour = config.m_algo2_goto_pas_by_tour;
@@ -44,8 +45,9 @@ void PilotModule::engage(){
         clearHadrien();
         engageHadrien();
     } else {
+        int vitesse = m_vitesse_motor*250/100;
         std::ostringstream out;
-        out << "$C;" << 150 << "\n";
+        out << "$C;" << vitesse << "\n";
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     }
 }

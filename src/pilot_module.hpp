@@ -12,6 +12,7 @@ class PilotModule {
     bool m_inverse = false;
     
     int m_pilot_langage = 0;
+    int m_vitesse_motor = 0;
     
     //algo k
     int m_algo2 = 0;

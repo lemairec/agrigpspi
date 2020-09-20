@@ -37,6 +37,7 @@ public:
     
     int m_pilot_langage = PILOT_LANGAGE_ARDUINO;
     bool m_pilot_inverse = false;
+    int m_vitesse_motor = 75;
     
     int m_algo = 0;
     double m_algo_lookahead_d = 10;

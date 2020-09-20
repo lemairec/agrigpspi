@@ -35,7 +35,7 @@ void Config::save(){
     QString inputPilot = QString::fromStdString(m_inputPilot);
     settings.setValue("inputPilot", inputPilot);
     settings.setValue("baudratePilot", m_baudratePilot);
-    
+    settings.setValue("vitesse_motor", m_vitesse_motor);
     
     settings.setValue("a_lat", m_a_lat);
     settings.setValue("a_lon", m_a_lon);
@@ -87,6 +87,9 @@ void Config::load(){
     }
     if(settings.contains("baudratePilot")){
         m_baudratePilot = settings.value("baudratePilot").toInt();
+    }
+    if(settings.contains("vitesse_motor")){
+        m_vitesse_motor = settings.value("vitesse_motor").toInt();
     }
     
     if(settings.contains("a_lat")){

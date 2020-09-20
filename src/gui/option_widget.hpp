@@ -42,10 +42,7 @@ class OptionWidget : public BaseWidget {
     ButtonGui * m_button_p3add1;
     ButtonGui * m_button_p3minus1;
     
-    //page3
-    SelectButtonGui * m_select_pilot_serial;
-    SelectButtonGui * m_select_pilot_baudrates;
-    SelectButtonGui * m_select_pilot_langage;
+    
     
     //page 4
     ButtonGui * m_button_sens;
@@ -68,6 +65,11 @@ public:
     virtual void onMousePage1(double x, double y);
     virtual void onMousePage2(double x, double y);
     
+    //page3
+    SelectButtonGui * m_select_pilot_serial;
+    SelectButtonGui * m_select_pilot_baudrates;
+    SelectButtonGui * m_select_pilot_langage;
+    ValueGui * m_vitesse_motor;
     
     void setPage3();
     void onMousePage3(double x, double y);
