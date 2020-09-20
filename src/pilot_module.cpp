@@ -341,7 +341,11 @@ void PilotModule::setHadrienVolant(double val){
 }
 
 void PilotModule::setPasMotorVolant(int pas){
-    m_volantMesured = pas/m_algo2_goto_pas_by_tour;
+    double res = pas/m_algo2_goto_pas_by_tour;
+    if(m_inverse){
+        res = -res;
+    }
+    m_volantMesured = res;
 }
 
 void PilotModule::setVolant(double vol){
