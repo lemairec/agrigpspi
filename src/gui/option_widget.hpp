@@ -90,11 +90,6 @@ public:
     ValueGui * m_button_algo2_goto_pas_by_tour;
     ValueGui * m_button_algo2_goto_angle_by_tour;
     ValueGui * m_button_algo2_goto_rel_s;
-    ValueGui * m_button_algo2_pid_kp;
-    ValueGui * m_button_algo2_pid_ki;
-    ValueGui * m_button_algo2_pid_kd;
-    ValueGui * m_button_algo2_my_k;
-    ValueGui * m_button_algo2_my_p;
     
     void setPage5();
     void onMousePage5(double x, double y);

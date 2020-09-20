@@ -18,9 +18,6 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_algo2_goto_angle_by_tour = config.m_algo2_goto_angle_by_tour/180.0*3.14;
     m_algo2_goto_rel_s = config.m_algo2_goto_rel_s;
    
-    m_algo2_my_k = config.m_algo2_my_k;
-    m_algo2_my_p = config.m_algo2_my_p;
-    
     m_pilot_langage = config.m_pilot_langage;
     //m_version_guidage = m_serial->readString(12);
     

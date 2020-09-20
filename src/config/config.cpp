@@ -50,8 +50,6 @@ void Config::save(){
     settings.setValue("m_algo2", m_algo2);
     settings.setValue("m_algo2_goto_pas_by_tour", m_algo2_goto_pas_by_tour);
     settings.setValue("m_algo2_goto_angle_by_tour", m_algo2_goto_angle_by_tour);
-    settings.setValue("m_algo2_my_k", m_algo2_my_k);
-    settings.setValue("m_algo2_my_p", m_algo2_my_p);
 }
 
 void Config::load(){
@@ -126,12 +124,5 @@ void Config::load(){
     if(settings.contains("m_algo2_goto_rel_s")){
         m_algo2_goto_angle_by_tour = settings.value("m_algo2_goto_angle_by_tour").toDouble();
     }
-    if(settings.contains("m_algo2_my_k")){
-        m_algo2_my_k = settings.value("m_algo2_my_k").toDouble();
-    }
-    if(settings.contains("m_algo2_my_p")){
-        m_algo2_my_p = settings.value("m_algo2_my_p").toDouble();
-    }
-    
     
 }

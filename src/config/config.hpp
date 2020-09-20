@@ -46,9 +46,6 @@ public:
     double m_algo2_goto_angle_by_tour = 10;
     int m_algo2_goto_rel_s = 100;
     
-    double m_algo2_my_k = 100;
-    double m_algo2_my_p = 100;
-    
     bool m_logNMEA = true;
     bool m_api = true;
     
