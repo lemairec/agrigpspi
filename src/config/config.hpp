@@ -43,7 +43,7 @@ public:
     double m_algo_lookahead_d = 10;
     
     int m_algo2 = 0;
-    double m_algo2_goto_pas_by_tour = 36000;
+    double m_algo2_goto_pas_by_tour = 4500;
     double m_algo2_goto_angle_by_tour = 10;
     int m_algo2_goto_rel_s = 100;
     double m_algo2_pid_p = 100;

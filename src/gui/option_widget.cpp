@@ -210,7 +210,7 @@ void OptionWidget::onMousePage3(double x, double y){
         f.initOrLoadConfig();
     }
     
-    f.m_config.m_vitesse_motor += m_vitesse_motor->getIntValue(x,y);
+    f.m_config.m_vitesse_motor += 5*m_vitesse_motor->getIntValue(x,y);
     if(f.m_config.m_vitesse_motor > 100){
         f.m_config.m_vitesse_motor = 100;
     }
@@ -489,14 +489,19 @@ void OptionWidget::onMousePage6(double x, double y){
     } else if(m_button_p6disable->isActive(x,y)){
         f.m_pilotModule.desengage();
     } else if(m_button_p6testLeft->isActive(x,y)){
+       f.m_pilotModule.setVitesse();
        f.m_pilotModule.myLeftRight(-0.5);
     } else if(m_button_p6testRight->isActive(x,y)){
+       f.m_pilotModule.setVitesse();
        f.m_pilotModule.myLeftRight(0.5);
     } else if(m_button_p6testGoToVLeft->isActive(x,y)){
+        f.m_pilotModule.setVitesse();
         f.m_pilotModule.myGotoVolant2(-0.5);
     } else if(m_button_p6testGoToV0->isActive(x,y)){
+       f.m_pilotModule.setVitesse();
        f.m_pilotModule.myGotoVolant2(0);
     } else if(m_button_p6testGoToVRight->isActive(x,y)){
+        f.m_pilotModule.setVitesse();
         f.m_pilotModule.myGotoVolant2(0.5);
     }
     

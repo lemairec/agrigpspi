@@ -51,6 +51,7 @@ public:
 
     void clear();
     void engage();
+    void setVitesse();
     void desengage();
     
     void run_test(int i);

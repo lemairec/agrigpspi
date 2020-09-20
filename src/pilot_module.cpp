@@ -40,15 +40,19 @@ void PilotModule::clear(){
     //todo GpsFramework::Instance().m_serialModule.writePilotSerialS("$C;\n");
 }
 
+void PilotModule::setVitesse(){
+    int vitesse = m_vitesse_motor*250/100;
+    std::ostringstream out;
+    out << "$C;" << vitesse << "\n";
+    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+}
+
 void PilotModule::engage(){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         clearHadrien();
         engageHadrien();
     } else {
-        int vitesse = m_vitesse_motor*250/100;
-        std::ostringstream out;
-        out << "$C;" << vitesse << "\n";
-        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+        setVitesse();
     }
 }
 void PilotModule::desengage(){
