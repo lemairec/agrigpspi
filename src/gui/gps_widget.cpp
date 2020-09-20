@@ -586,11 +586,44 @@ void GpsWidget::drawDirection(){
     }
 }
 
+void GpsWidget::drawVolant_(double a, double r, double start_angle){
+    int y = 80;
+    double angle = a;
+    int nbr_tour = 0;
+    while(angle > 1.0){
+        angle = angle - 1.0;
+        nbr_tour++;
+    }
+    while(angle < -1.0){
+        angle = angle + 1.0;
+        nbr_tour--;
+    }
+    double j = 1.1;
+
+    QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
+    item->setBrush(m_grayBrush);
+    item->setPen(m_penNo);
+    item->setStartAngle(90*16 - start_angle*360*16);
+    
+    item->setSpanAngle(-angle*360*16);
+    scene->addItem(item);
+
+    j=0.9;
+    scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
+    
+    if(nbr_tour !=0){
+        QString s = "t " + QString::number(nbr_tour, 'f', 1);
+        auto textItem = scene->addText(s);
+        textItem->setPos(m_width/2-15, y-r);
+    }
+}
+
 void GpsWidget::drawVolant(){
     GpsFramework & f = GpsFramework::Instance();
 
     int r=30;
     int y = 80;
+    
     
     double angle = f.m_pilotModule.m_volant;
     double j = 1.2;
@@ -608,21 +641,9 @@ void GpsWidget::drawVolant(){
     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
     
     {
-        int r=20;
-
-        double angle = f.m_pilotModule.m_volantMesured;
-        double j = 1.1;
-
-        QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
-        item->setBrush(m_grayBrush);
-        item->setPen(m_penNo);
-        item->setStartAngle(90*16);
-        item->setSpanAngle(-angle*360*16);
-        scene->addItem(item);
-
-        j=0.9;
-        scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
-        }
+        drawVolant_(f.m_pilotModule.m_volantMesured, 20, 0);
+        
+    }
     
     //double x1 = cos(i*2*3.14)*r;
     //double y1 = sin(i*2*3.14)*r;

@@ -2,10 +2,9 @@
 
 String a;
 
-#define MOTOR_MAX 150
 
-#define MOTOR_ENABLE_PIN 4 //pwm
-#define MOTOR_PIN1 3
+#define MOTOR_ENABLE_PIN 3 //pwm
+#define MOTOR_PIN1 4
 #define MOTOR_PIN2 2
 
 #define ENCODER_A 10
@@ -18,12 +17,14 @@ int encoder_last_state_A;
 int state_A;
 int state_B;
 
+int motor_max = 150;
+
 void version(){
-    Serial.println("#PILOT_0_0_3");
+    Serial.println("$PILOT_0_0_3");
 }
 
 void printPosition(){
-    Serial.print("#P;");
+    Serial.print("$P;");
     Serial.println(position);
 }
 
@@ -110,8 +111,8 @@ void updateMotor(){
 void SetMotor2(int speed, boolean reverse)
 {
   //Serial.print("SetMotor2 speed ");Serial.println(speed);
-  if(speed > MOTOR_MAX){
-    analogWrite(MOTOR_ENABLE_PIN, MOTOR_MAX);
+  if(speed > motor_max){
+    analogWrite(MOTOR_ENABLE_PIN, motor_max);
       
   } else {
     analogWrite(MOTOR_ENABLE_PIN, speed);
@@ -182,7 +183,7 @@ long myReadInt(){
         inv = true;
         m_tempInd++;
     }
-    while(m_tempInd < m_bufferIndLast-1){
+    while(m_tempInd < m_bufferIndLast){
         char c = m_buffer[m_tempInd];
         if(c == ',' || c == ';'){
             ++m_tempInd;
@@ -210,21 +211,29 @@ void printBuffer(){
 }
 
 void parseBuffer(){
-  printBuffer();
+  //printBuffer();
   updatePosition();
   if(m_buffer[0] == 'H'){
     Serial.println("");
     Serial.println("$G;100  //goto 100");
-    Serial.println("$C      //reset buffer 0");
+    Serial.println("$R      //reset buffer 0");
+    Serial.println("$D      //disable");
     Serial.println("$V      //give version");
     Serial.println("$P      //print position");
+    Serial.println("$C;100  //config; motor max");
     
     Serial.println("");
   } else if(m_buffer[0] == 'V'){
     version();
-  } else if(m_buffer[0] == 'C'){
+  } else if(m_buffer[0] == 'R'){
     desired_position = 0;
     position = 0;
+  } else if(m_buffer[0] == 'C'){
+    m_tempInd = 2;
+    motor_max = myReadInt();
+    Serial.print("#C;");Serial.println(motor_max);
+  } else if(m_buffer[0] == 'D'){
+    
   } else if(m_buffer[0] == 'G'){
     m_tempInd = 2;
     long res = myReadInt();

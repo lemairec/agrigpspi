@@ -43,12 +43,18 @@ void PilotModule::engage(){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         clearHadrien();
         engageHadrien();
+    } else {
+        std::ostringstream out;
+        out << "$C;" << 150 << "\n";
+        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     }
 }
 void PilotModule::desengage(){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         clearHadrien();
         desengageHadrien();
+    } else {
+        GpsFramework::Instance().m_serialModule.writePilotSerialS("$D;");
     }
 }
 
@@ -60,12 +66,12 @@ void PilotModule::run(double value, double time){
         double res = value/m_algo2_goto_angle_by_tour;
         m_volant = res;
         
-        myGotoVolant(m_volant);
+        myGotoVolant(res);
     } else if(m_algo2 == ALGO2_GOTO_REL){
         double res = value/m_algo2_goto_angle_by_tour;
         m_volant = res;
         
-        m_lastValues.push_back(m_volant);
+        m_lastValues.push_back(res);
         while(m_lastValues.size() > m_algo2_goto_rel_s){
             m_lastValues.pop_front();
         }
@@ -229,6 +235,11 @@ void add4hex( std::vector<unsigned char> & l, int i){
     
 }
 
+void PilotModule::myGotoVolant2(double res){
+    m_volant = res;
+    myGotoVolant(res);
+}
+
 void PilotModule::myGotoVolant(double res){
     if(m_inverse){
         res = -res;
@@ -236,15 +247,15 @@ void PilotModule::myGotoVolant(double res){
     
     m_last_goto_pas = res*m_algo2_goto_pas_by_tour;
     
-    res = m_last_goto_pas;
+    int res2 = m_last_goto_pas;
     std::ostringstream out;
     if(res<0){
-        out << "$G;-" << (-res) << "\n";
+        out << "$G;-" << (-res2) << "\n";
     } else {
-        out << "$G;" << res << "\n";
+        out << "$G;" << res2 << "\n";
     }
     m_last_order_send = out.str();
-    //INFO(m_last_order_send);
+    INFO(m_last_order_send);
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());

@@ -55,6 +55,7 @@ public:
     void drawDebug();
     void drawDirection();
     void drawVolant();
+    void drawVolant_(double a, double r, double start_angle);
     
     void draw();
     void draw_force();

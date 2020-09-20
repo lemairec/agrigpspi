@@ -431,20 +431,20 @@ void OptionWidget::drawPage6(){
     
     drawText("Left Right", 0.55*m_width, 0.35*m_height, 12, true);
     drawButtonLabel(m_button_p6testLeft, COLOR_OTHER);
-    drawText("-1 volant", m_button_p6testLeft->m_x*m_width, m_button_p6testLeft->m_y*m_height, 12, true);
+    drawText("-0.5 volant", m_button_p6testLeft->m_x*m_width, m_button_p6testLeft->m_y*m_height, 12, true);
     
     drawButtonLabel(m_button_p6testRight, COLOR_OTHER);
-    drawText("+1 volant", m_button_p6testRight->m_x*m_width, m_button_p6testRight->m_y*m_height, 12, true);
+    drawText("+0.5 volant", m_button_p6testRight->m_x*m_width, m_button_p6testRight->m_y*m_height, 12, true);
     
     drawText("Goto Volant", 0.55*m_width, 0.50*m_height, 12, true);
     drawButtonLabel(m_button_p6testGoToVLeft, COLOR_OTHER);
-    drawText("-1 volant", m_button_p6testGoToVLeft->m_x*m_width, m_button_p6testGoToVLeft->m_y*m_height, 12, true);
+    drawText("-0.5 volant", m_button_p6testGoToVLeft->m_x*m_width, m_button_p6testGoToVLeft->m_y*m_height, 12, true);
 
     drawButtonLabel(m_button_p6testGoToV0, COLOR_OTHER);
     drawText("0", m_button_p6testGoToV0->m_x*m_width, m_button_p6testGoToV0->m_y*m_height, 12, true);
     
     drawButtonLabel(m_button_p6testGoToVRight, COLOR_OTHER);
-    drawText("+1 volant", m_button_p6testGoToVRight->m_x*m_width, m_button_p6testGoToVRight->m_y*m_height, 12, true);
+    drawText("+0.5 volant", m_button_p6testGoToVRight->m_x*m_width, m_button_p6testGoToVRight->m_y*m_height, 12, true);
      
     drawText("Goto Degree", 0.55*m_width, 0.65*m_height, 12, true);
     drawButtonLabel(m_button_p6testGoToDLeft, COLOR_OTHER);
@@ -474,9 +474,15 @@ void OptionWidget::onMousePage6(double x, double y){
     } else if(m_button_p6disable->isActive(x,y)){
         f.m_pilotModule.desengage();
     } else if(m_button_p6testLeft->isActive(x,y)){
-       f.m_pilotModule.myLeftRight(-1);
-    }else if(m_button_p6testRight->isActive(x,y)){
-       f.m_pilotModule.myLeftRight(1);
+       f.m_pilotModule.myLeftRight(-0.5);
+    } else if(m_button_p6testRight->isActive(x,y)){
+       f.m_pilotModule.myLeftRight(0.5);
+    } else if(m_button_p6testGoToVLeft->isActive(x,y)){
+        f.m_pilotModule.myGotoVolant2(-0.5);
+    } else if(m_button_p6testGoToV0->isActive(x,y)){
+       f.m_pilotModule.myGotoVolant2(0);
+    } else if(m_button_p6testGoToVRight->isActive(x,y)){
+        f.m_pilotModule.myGotoVolant2(0.5);
     }
     
     f.initOrLoadConfig();
