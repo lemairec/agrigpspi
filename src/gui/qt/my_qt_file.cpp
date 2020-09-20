@@ -14,8 +14,8 @@ MyQTFile::MyQTFile(){
 }
 void MyQTFile::initOrLoad(Config & config){
     DEBUG("begin");
-    if(config.m_input == "file"){
-        INFO("file " << config.m_file);
+    if(config.m_input_gps == "file"){
+        INFO("file " << config.m_file_gps);
         openFile(config);
     }
     DEBUG("end");
@@ -45,7 +45,7 @@ void MyQTFile::handleLineFile(){
 void MyQTFile::openFile(Config & config){
     DEBUG("begin");
     if(m_text_stream == NULL){
-        QFile * file = new QFile(QString::fromStdString(config.m_file));
+        QFile * file = new QFile(QString::fromStdString(config.m_file_gps));
         if (!file->open(QIODevice::ReadOnly | QIODevice::Text)){
             WARN("can not open file");
             return;

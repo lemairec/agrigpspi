@@ -457,9 +457,9 @@ using namespace std;
 
 #define SLEEP_TIME 50
 void GpsFramework::readFile(){
-    std::ifstream infile(m_config.m_file);
+    std::ifstream infile(m_config.m_file_gps);
     if(!infile.is_open()){
-        INFO("can not open " << m_config.m_file);
+        INFO("can not open " << m_config.m_file_gps);
         return;
     }
     std::string line;
@@ -485,7 +485,7 @@ void GpsFramework::readFile(){
     std::chrono::time_point<std::chrono::system_clock> end_time = std::chrono::system_clock::now();
     INFO("Wall time passed: " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count());
     if(!m_reloadConfig){
-        m_config.m_input = "none";
+        m_config.m_input_gps = "none";
     } else {
         m_list.clear();
         m_listSurfaceToDraw.clear();

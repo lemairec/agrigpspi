@@ -134,8 +134,8 @@ void MainWindow::openFile(){
     tr("Gps files (*.ubx)"));
     
     GpsFramework & f = GpsFramework::Instance();
-    f.m_config.m_file = fileName.toUtf8().constData();
-    f.m_config.m_input = "file";
+    f.m_config.m_file_gps = fileName.toUtf8().constData();
+    f.m_config.m_input_gps = "file";
     f.initOrLoadConfig();
     DEBUG("end");
 }

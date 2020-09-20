@@ -5,15 +5,15 @@
 #include "../logging.hpp"
 
 Config::Config(){
-    m_input = "none";
-    m_file = GPS_TEST_FILE;
+    m_input_gps = "none";
+    m_file_gps = GPS_TEST_FILE;
     //m_input= "file";
     //m_file = ProjectSourceDir + "/gps_warmo.ubx";
     
-    m_input = "none";
-    m_file = GPS_TEST_FILE;
-    m_input= "file";
-    m_file = ProjectSourceDir + "/gps_travail_3m.ubx";
+    m_input_gps = "none";
+    m_file_gps = GPS_TEST_FILE;
+    m_input_gps= "file";
+    m_file_gps = ProjectSourceDir + "/gps_travail_3m.ubx";
 }
 
 void Config::save(){
@@ -27,10 +27,10 @@ void Config::save(){
     settings.setValue("sensDraw", m_sensDraw);
     settings.setValue("debug", m_debug);
     
-    QString input2 = QString::fromStdString(m_input);
-    settings.setValue("input", input2);
-    settings.setValue("baudrate", m_baudrate);
-    settings.setValue("file", QString::fromStdString(m_file));
+    QString input_gps = QString::fromStdString(m_input_gps);
+    settings.setValue("input_gps", input_gps);
+    settings.setValue("baudrate_gps", m_baudrate_gps);
+    settings.setValue("file_gps", QString::fromStdString(m_file_gps));
     
     QString inputPilot = QString::fromStdString(m_inputPilot);
     settings.setValue("inputPilot", inputPilot);
@@ -72,14 +72,14 @@ void Config::load(){
         m_debug = settings.value("debug").toBool();
     }
     
-    if(settings.contains("input")){
-        m_input = settings.value("input").toString().toUtf8().constData();
+    if(settings.contains("input_gps")){
+        m_input_gps = settings.value("input_gps").toString().toUtf8().constData();
     }
-    if(settings.contains("baudrate")){
-        m_baudrate = settings.value("baudrate").toInt();
+    if(settings.contains("baudrate_gps")){
+        m_baudrate_gps = settings.value("baudrate_gps").toInt();
     }
-    if(settings.contains("file")){
-        m_file = settings.value("file").toString().toUtf8().constData();
+    if(settings.contains("file_gps")){
+        m_file_gps = settings.value("file_gps").toString().toUtf8().constData();
     }
     
     if(settings.contains("inputPilot")){

@@ -18,9 +18,9 @@ class Config  {
 public:
     double m_largeur = 27;
     
-    std::string m_input;
-    int m_baudrate = 115200;
-    std::string m_file;
+    std::string m_input_gps;
+    int m_baudrate_gps = 115200;
+    std::string m_file_gps;
     
     std::string m_inputPilot = "none";
     int m_baudratePilot = 115200;

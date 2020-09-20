@@ -23,19 +23,19 @@ MyQTSerialPorts::MyQTSerialPorts(){
 }
 void MyQTSerialPorts::initOrLoad(Config & config){
     DEBUG("begin");
-    INFO(m_gps_serial_input << " " << config.m_input);
+    INFO(m_gps_serial_input << " " << config.m_input_gps);
     m_pilot_langage = config.m_pilot_langage;
     
-    if(config.m_input != "none" && config.m_input != "file"){
-        if(m_gps_serial_input == config.m_input && m_serialPortGps.isOpen()){
+    if(config.m_input_gps != "none" && config.m_input_gps != "file"){
+        if(m_gps_serial_input == config.m_input_gps && m_serialPortGps.isOpen()){
             INFO("gps port already open");
         } else {
             if(m_serialPortGps.isOpen()){
                 m_serialPortGps.close();
             }
-            m_gps_serial_input = config.m_input;
+            m_gps_serial_input = config.m_input_gps;
             m_serialPortGps.setPortName(QString::fromStdString(m_gps_serial_input));
-            m_serialPortGps.setBaudRate(config.m_baudrate);
+            m_serialPortGps.setBaudRate(config.m_baudrate_gps);
             if (!m_serialPortGps.open(QIODevice::ReadOnly)) {
                 std::ostringstream oss;
                 oss << "Failed to open gps port " << m_gps_serial_input << ", error:" << m_serialPortGps.errorString().toUtf8().constData();

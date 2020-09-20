@@ -127,13 +127,17 @@ void OptionWidget::drawPage1(){
     drawButtonImage(m_button_p1minus2, *m_imgMinus);
 }
 
+/**
+PAGE 2
+*/
+
 void OptionWidget::drawPage2(){
     drawText("Connection GPS", 0.55*m_width, 0.15*m_height, 20, true);
     
     GpsFramework & f = GpsFramework::Instance();
     drawText("Port :", 0.3*m_width, y_port_title*m_height, 20, false);
     for(auto button: m_buttonp2Serials){
-        if(button->m_label == f.m_config.m_input){
+        if(button->m_label == f.m_config.m_input_gps){
             drawButton(button, COLOR_CHECK);
         } else {
             drawButton(button, COLOR_OTHER);
@@ -142,7 +146,7 @@ void OptionWidget::drawPage2(){
     }
     
     for(auto button: m_buttonp2Baurates){
-        if(button->m_labelInt == f.m_config.m_baudrate){
+        if(button->m_labelInt == f.m_config.m_baudrate_gps){
             drawButton(button, COLOR_CHECK);
         } else {
             drawButton(button, COLOR_OTHER);
@@ -151,6 +155,26 @@ void OptionWidget::drawPage2(){
     }
     
 }
+
+void OptionWidget::onMousePage2(double x, double y){
+
+    for(auto button: m_buttonp2Serials){
+        if(button->isActive(x,y)){
+            GpsFramework & f = GpsFramework::Instance();
+            f.m_config.m_input_gps = button->m_label;
+            f.initOrLoadConfig();
+        }
+    }
+    
+    for(auto button: m_buttonp2Baurates){
+        if(button->isActive(x,y)){
+            GpsFramework & f = GpsFramework::Instance();
+            f.m_config.m_baudrate_gps = button->m_labelInt;
+            f.initOrLoadConfig();
+        }
+    }
+}
+
 
 /**
 PAGE 3
@@ -564,26 +588,6 @@ void OptionWidget::onMousePage1(double x, double y){
         f.initOrLoadConfig();
     }
 }
-
-void OptionWidget::onMousePage2(double x, double y){
-
-    for(auto button: m_buttonp2Serials){
-        if(button->isActive(x,y)){
-            GpsFramework & f = GpsFramework::Instance();
-            f.m_config.m_input = button->m_label;
-            f.initOrLoadConfig();
-        }
-    }
-    
-    for(auto button: m_buttonp2Baurates){
-        if(button->isActive(x,y)){
-            GpsFramework & f = GpsFramework::Instance();
-            f.m_config.m_baudrate = button->m_labelInt;
-            f.initOrLoadConfig();
-        }
-    }
-}
-
 
 
 void OptionWidget::open(){
