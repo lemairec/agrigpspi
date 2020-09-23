@@ -195,7 +195,7 @@ void PilotModule::myGotoVolant2(double res){
 }
 
 void PilotModule::myGotoVolant(double res){
-    if(m_inverse){
+    /*if(m_inverse){
         res = -res;
     }
     
@@ -225,20 +225,20 @@ void PilotModule::myGotoVolant(double res){
         double leftRight = m_volant-gotoRel;
         INFO("leftRight " << leftRight);
         myLeftRight(leftRight);
-        //m_tour_volant = res/4000.0
+        //m_tour_volant = res/4000.0*/
         
         
         /*std::vector<unsigned char> l;
         l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
         add4hex(l, res);
         runHadrienVolant(l);*/
-    }
+    //}
 }
 
 
 
 void PilotModule::myLeftRight(double res){
-    if(m_inverse){
+    /*if(m_inverse){
         //res = -res;
     }
     m_last_leftright = res;
@@ -265,7 +265,7 @@ void PilotModule::myLeftRight(double res){
         }
         runHadrienVolant(l);
         GpsFramework::Instance().addLog(out.str(), false);
-    }
+    }*/
 }
 
 void PilotModule::setHadrienVolant(double val){
@@ -290,9 +290,6 @@ void PilotModule::setHadrienVolant(double val){
 
 void PilotModule::setPasMotorVolant(int pas){
     double res = pas/m_algo2_goto_pas_by_tour;
-    if(m_inverse){
-        res = -res;
-    }
     m_volantMesured = res;
     update();
 }
