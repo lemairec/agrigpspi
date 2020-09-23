@@ -43,6 +43,7 @@ void PilotModule::setVitesse(){
 }
 
 void PilotModule::engage(){
+    m_engage = true;
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         clearHadrien();
         engageHadrien();
@@ -51,6 +52,7 @@ void PilotModule::engage(){
     }
 }
 void PilotModule::desengage(){
+    m_engage = false;
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         clearHadrien();
         desengageHadrien();
@@ -82,7 +84,8 @@ void PilotModule::run(double value, double time){
         }
         m_volant0 = moy/m_algo2_goto_rel_s;
         
-        myGotoVolant(m_volant0+m_volant);
+        m_volant = m_volant0+m_volant;
+        myGotoVolant(m_volant);
         
         
     } else if(m_algo2 == ALGO2_MY){
@@ -319,7 +322,9 @@ void PilotModule::update(){
     }
     m_last_order_send = out.str();
     //INFO(m_last_order_send);
-    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+    if(m_engage){
+        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+    }
     
 }
 

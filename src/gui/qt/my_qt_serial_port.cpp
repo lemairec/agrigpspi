@@ -189,6 +189,9 @@ void MyQTSerialPorts::handleReadyReadPilot(){
             //GpsFramework::Instance().m_pilotModule.setPasVolant(res);
             
         }
+        if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == 'I'){
+            GpsFramework::Instance().m_pilotModule.m_version_guidage = s;
+        }
         
     }
     DEBUG("end");

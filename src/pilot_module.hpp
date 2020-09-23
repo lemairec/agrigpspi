@@ -11,6 +11,7 @@
 class PilotModule {
     bool m_inverse = false;
     
+    bool m_engage = false;
     int m_pilot_langage = 0;
     int m_motor_vitesse_max = 0;
     int m_motor_vitesse_min = 0;

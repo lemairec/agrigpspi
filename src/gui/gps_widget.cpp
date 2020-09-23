@@ -373,13 +373,14 @@ void GpsWidget::draw_force(){
     std::chrono::duration<double> diff2 = end - begin;
     if(f.m_config.m_debug){
         int x = m_width-100;
-        int y = m_height-70;
+        int y = m_height-100;
         
         QBrush lightGrayBrush(Qt::lightGray);
-        scene->addRect(x, y, 100, 30, m_penBlack, lightGrayBrush);
+        scene->addRect(x, y, 99, 60, m_penBlack, lightGrayBrush);
         std::ostringstream oss;
         oss << "draw " << diff2.count();
         drawText(oss.str(), x+10, y+10, 10, false);
+        drawText(f.m_pilotModule.m_version_guidage, x+10, y+30, 10, false);
     
         drawDebug();
     }
