@@ -69,7 +69,7 @@ void PilotModule::run(double value, double time){
         double res = value/m_algo2_goto_angle_by_tour;
         m_volant = res;
         
-        myGotoVolant(res);
+        //myGotoVolant(res);
     } else if(m_algo2 == ALGO2_GOTO_REL){
         double res = value/m_algo2_goto_angle_by_tour;
         m_volant = res;
@@ -85,7 +85,7 @@ void PilotModule::run(double value, double time){
         m_volant0 = moy/m_algo2_goto_rel_s;
         
         m_volant = m_volant0+m_volant;
-        myGotoVolant(m_volant);
+        //myGotoVolant(m_volant);
         
         
     } else if(m_algo2 == ALGO2_MY){
@@ -95,6 +95,10 @@ void PilotModule::run(double value, double time){
         myLeftRight(res);
     }
     m_last_value = value;
+    
+    if(m_inverse){
+        m_volant = -m_volant;
+    }
     
 }
 
@@ -314,6 +318,9 @@ void PilotModule::update(){
     if(res < 0 && res > -m_motor_vitesse_min){
         res = -0;
     }
+    if(!m_engage){
+        res = 0;
+    }
     
     if(res<0){
         out << "$L;" << -res << ";\n";
@@ -322,10 +329,7 @@ void PilotModule::update(){
     }
     m_last_order_send = out.str();
     //INFO(m_last_order_send);
-    if(m_engage){
-        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
-    }
-    
+    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
 }
 
 
