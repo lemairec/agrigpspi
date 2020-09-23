@@ -129,7 +129,7 @@ void Config::load(){
     if(settings.contains("m_algo2_goto_pas_by_tour")){
         m_algo2_goto_pas_by_tour = settings.value("m_algo2_goto_pas_by_tour").toDouble();
     }
-    if(settings.contains("m_algo2_goto_rel_s")){
+    if(settings.contains("m_algo2_goto_angle_by_tour")){
         m_algo2_goto_angle_by_tour = settings.value("m_algo2_goto_angle_by_tour").toDouble();
     }
     

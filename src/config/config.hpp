@@ -45,7 +45,7 @@ public:
     
     int m_algo2 = ALGO2_GOTO_REL;
     double m_algo2_goto_pas_by_tour = 4500;
-    double m_algo2_goto_angle_by_tour = 10;
+    double m_algo2_goto_angle_by_tour = 35;
     int m_algo2_goto_rel_s = 100;
     
     bool m_logNMEA = true;
