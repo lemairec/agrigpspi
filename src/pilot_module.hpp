@@ -43,12 +43,12 @@ public:
     std::string m_version_guidage;
     
     PilotModule();
-    void run(double value, double time);
+    void run(double value, double time, double vitesse);
     void initOrLoadConfig(Config & config);
 
     void clear();
     void engage();
-    void setVitesse();
+    void setVolant0();
     void desengage();
     
     void myGotoVolant(double i);

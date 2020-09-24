@@ -6,7 +6,6 @@
 
 #include "gps_framework.hpp"
 PilotModule::PilotModule(){
-    //setRef(LAT_REF, LON_REF);
 }
 
 void PilotModule::initOrLoadConfig(Config & config){
@@ -21,25 +20,14 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_algo2_goto_rel_s = config.m_algo2_goto_rel_s;
    
     m_pilot_langage = config.m_pilot_langage;
-    //m_version_guidage = m_serial->readString(12);
-    
+
     clear();
-    
 }
 
 void PilotModule::clear(){
     m_0 = 0;
     m_last_value = 0;
     m_sum_value = 0;
-    
-    //todo GpsFramework::Instance().m_serialModule.writePilotSerialS("$C;\n");
-}
-
-void PilotModule::setVitesse(){
-    /*int vitesse = m_vitesse_motor*250/100;
-    std::ostringstream out;
-    out << "$C;" << vitesse << "\n";
-    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());*/
 }
 
 void PilotModule::engage(){
@@ -47,8 +35,6 @@ void PilotModule::engage(){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         clearHadrien();
         engageHadrien();
-    } else {
-        setVitesse();
     }
 }
 void PilotModule::desengage(){
@@ -62,43 +48,40 @@ void PilotModule::desengage(){
 }
 
 
-void PilotModule::run(double value, double time){
-    std::ostringstream out;
-    
-    if(m_algo2 == ALGO2_GOTO){
-        double res = value/m_algo2_goto_angle_by_tour;
-        m_volant = res;
-        
-        //myGotoVolant(res);
-    } else if(m_algo2 == ALGO2_GOTO_REL){
-        double res = value/m_algo2_goto_angle_by_tour;
-        m_volant = res;
-        
-        m_lastValues.push_back(res);
-        while(m_lastValues.size() > m_algo2_goto_rel_s){
-            m_lastValues.pop_front();
+void PilotModule::run(double value, double time, double vitesse){
+    if(m_engage){
+        if(vitesse < 1.0){
+            GpsFramework::Instance().addError("desengagement, vitesse trop faible");
+            desengage();
         }
-        double moy = 0;
-        for(auto i : m_lastValues){
-            moy += i;
+        
+        if(m_algo2 == ALGO2_GOTO){
+            double res = value/m_algo2_goto_angle_by_tour;
+            m_volant = res;
+        
+        } else if(m_algo2 == ALGO2_GOTO_REL){
+            double res = value/m_algo2_goto_angle_by_tour;
+            m_volant = res;
+            
+            m_lastValues.push_back(res);
+            while(m_lastValues.size() > m_algo2_goto_rel_s){
+                m_lastValues.pop_front();
+            }
+            double moy = 0;
+            for(auto i : m_lastValues){
+                moy += i;
+            }
+            m_volant0 = moy/m_algo2_goto_rel_s;
+            
+            m_volant = m_volant0+m_volant;
         }
-        m_volant0 = moy/m_algo2_goto_rel_s;
+        m_last_value = value;
         
-        m_volant = m_volant0+m_volant;
-        //myGotoVolant(m_volant);
-        
-        
-    } else if(m_algo2 == ALGO2_MY){
-        
-        int res = m_algo2_my_k * (value - m_last_value);
-        
-        myLeftRight(res);
+        if(m_inverse){
+            m_volant = -m_volant;
+        }
     }
-    m_last_value = value;
     
-    if(m_inverse){
-        m_volant = -m_volant;
-    }
     
 }
 
