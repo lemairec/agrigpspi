@@ -109,14 +109,20 @@ void PilotModule::update(){
         res = 0;
     }
     
-    if(res<0){
-        out << "$L;" << -res << ";\n";
+    if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
+        if(res<0){
+            out << "$L;" << -res << ";\n";
+        } else {
+            out << "$R;" << res << ";\n";
+        }
+        m_last_order_send = out.str();
+        //INFO(m_last_order_send);
+        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
-        out << "$R;" << res << ";\n";
+        
     }
-    m_last_order_send = out.str();
-    //INFO(m_last_order_send);
-    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+    
+    
 }
 
 
@@ -315,3 +321,39 @@ void PilotModule::setHadrienVolant(double val){
 
 
 
+void PilotModule::parseHadrienVolant(char * data){
+    int i0 = data[0];
+    int i1 = data[1];
+    int i2 = data[2];
+    
+    
+    
+    //INFO(s);
+    if (i0 == 1 && i1 ==3 && i2 == 4) {
+        
+        int r1 = data[3];
+        int r2 = data[4];
+        int r3 = data[5];
+        int r4 = data[6];
+        
+        int temp1 = r3*256+r4;
+        int temp2 = r1*256+r2;
+        uint16_t r = temp1*65536 + temp2;
+        int16_t res = r;
+        
+        GpsFramework::Instance().m_pilotModule.setHadrienVolant(res/4000.0);
+        
+        //INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
+        //u_int16_t res =
+        //INFO("c'est cool");
+        //01 10 01 36 00 02 A0 3A //acquittement sur le registre 36 peut etre 35
+    } else {
+        //INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
+    }
+}
+
+void PilotModule::handleHadrien(){
+    GpsFramework::Instance().addLog("demand angle", false);
+    std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
+    GpsFramework::Instance().m_serialModule.writePilotSerialD(l);
+}

@@ -127,38 +127,12 @@ void MyQTSerialPorts::handleReadyReadPilot(){
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         QString hex(b.toHex());
         std::string s = hex.toUtf8().constData();
+        
         GpsFramework::Instance().addLog(s);
         
         char * data = b.data();
-        int i0 = data[0];
-        int i1 = data[1];
-        int i2 = data[2];
+        GpsFramework::Instance().m_pilotModule.parseHadrienVolant(data);
         
-        
-        
-        //INFO(s);
-        if (i0 == 1 && i1 ==3 && i2 == 4) {
-            
-            int r1 = data[3];
-            int r2 = data[4];
-            int r3 = data[5];
-            int r4 = data[6];
-            
-            int temp1 = r3*256+r4;
-            int temp2 = r1*256+r2;
-            uint16_t r = temp1*65536 + temp2;
-            int16_t res = r;
-            
-            GpsFramework::Instance().m_pilotModule.setHadrienVolant(res/4000.0);
-            
-            //INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
-            //u_int16_t res =
-            //INFO("c'est cool");
-            //01 10 01 36 00 02 A0 3A //acquittement sur le registre 36 peut etre 35
-        } else {
-            m_waitOrder = false;
-            //INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
-        }
         
     } else {
         QString hex(b);
@@ -227,7 +201,6 @@ void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
 
 void MyQTSerialPorts::writePilotSerialDAndWait(std::vector<unsigned char> & l){
     DEBUG("begin");
-    m_waitOrder = true;
     writePilotSerialD(l);
     
     DEBUG("end");
@@ -285,15 +258,7 @@ void MyQTSerialPorts::handleHadrien(){
     //INFO("coucou je suis ici");
     
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
-        if(!m_waitOrder){
-            GpsFramework::Instance().addLog("demand angle", false);
-            std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
-            writePilotSerialD(l);
-            
-        } else {
-            GpsFramework::Instance().addLog("ignore");
-            
-        }
+        GpsFramework::Instance().m_pilotModule.handleHadrien();
 
     } else {
         GpsFramework::Instance().m_pilotModule.update();

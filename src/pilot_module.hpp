@@ -57,18 +57,19 @@ public:
     
     
     //HADRIEN
+    double m_hadrien0 = 0.0;
+    int m_nbrTourHadrien = 0;
+    double m_lastHadrienValue = 0;
     
     void engageHadrien();
     void desengageHadrien();
     void clearHadrien();
     void runHadrienVolant(std::vector<unsigned char> & c);
     
-    double m_hadrien0 = 0.0;
-    int m_nbrTourHadrien = 0;
-    double m_lastHadrienValue = 0;
     void setHadrienVolant(double val);
+    void parseHadrienVolant(char * c);
     
-    
+    void handleHadrien();
 };
 
 #endif //GPS_H
