@@ -63,15 +63,8 @@ void PilotModule::run(double value, double time, double vitesse){
             double res = value/m_algo2_goto_angle_by_tour;
             m_volant = res;
             
-            m_lastValues.push_back(res);
-            while(m_lastValues.size() > m_algo2_goto_rel_s){
-                m_lastValues.pop_front();
-            }
-            double moy = 0;
-            for(auto i : m_lastValues){
-                moy += i;
-            }
-            m_volant0 = moy/m_algo2_goto_rel_s;
+            
+            m_volant0 += res/50;
             
             m_volant = m_volant0+m_volant;
         }
