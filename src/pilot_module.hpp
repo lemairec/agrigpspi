@@ -55,6 +55,17 @@ public:
     void myGotoVolant2(double i);
     void myLeftRight(double i);
     
+    double m_volant = 0.0;
+    double m_volant0 = 0.0;
+    
+    double m_volantMesured = 0.0;
+    
+    void setPasMotorVolant(int pas);
+    void setVolant(double vol);
+    void update();
+    
+    //HADRIEN
+    
     void engageHadrien();
     void desengageHadrien();
     void clearHadrien();
@@ -65,14 +76,7 @@ public:
     double m_lastHadrienValue = 0;
     void setHadrienVolant(double val);
     
-    double m_volant = 0.0;
-    double m_volant0 = 0.0;
     
-    double m_volantMesured = 0.0;
-    
-    void setPasMotorVolant(int pas);
-    void setVolant(double vol);
-    void update();
 };
 
 #endif //GPS_H

@@ -74,6 +74,70 @@ void PilotModule::run(double value, double time, double vitesse){
     
 }
 
+void PilotModule::myGotoVolant2(double res){
+    m_volant = res;
+    update();
+}
+
+void PilotModule::setPasMotorVolant(int pas){
+    double res = pas/m_algo2_goto_pas_by_tour;
+    m_volantMesured = res;
+    update();
+}
+
+void PilotModule::setVolant(double vol){
+    if(m_inverse){
+        m_volantMesured = -vol;
+    } else {
+        m_volantMesured = vol;
+    }
+}
+
+void PilotModule::update(){
+    int res = 100+m_motor_vitesse_agressivite*(m_volant - m_volantMesured)*m_algo2_goto_pas_by_tour;
+    if(m_inverse){
+        res = -res;
+    }
+    std::ostringstream out;
+    
+    if(res > m_motor_vitesse_max){
+        res = m_motor_vitesse_max;
+    }
+    if(res < -m_motor_vitesse_max){
+        res = -m_motor_vitesse_max;
+    }
+    
+    if(res > 0 && res < m_motor_vitesse_min){
+        res = 0;
+    }
+    if(res < 0 && res > -m_motor_vitesse_min){
+        res = -0;
+    }
+    if(!m_engage){
+        res = 0;
+    }
+    
+    if(res<0){
+        out << "$L;" << -res << ";\n";
+    } else {
+        out << "$R;" << res << ";\n";
+    }
+    m_last_order_send = out.str();
+    //INFO(m_last_order_send);
+    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+}
+
+
+
+/**
+    ARDUINO
+ */
+
+
+/**
+   HADRIEN VOLANT
+ */
+
 void print(std::vector<u_char> & l){
     for(auto i : l){
         printf("%02" PRIx16 " ", i);
@@ -161,13 +225,10 @@ void add4hex( std::vector<unsigned char> & l, int i){
     
 }
 
-void PilotModule::myGotoVolant2(double res){
-    m_volant = res;
-    update();
-}
 
-void PilotModule::myGotoVolant(double res){
-    /*if(m_inverse){
+
+/*void PilotModule::myGotoVolant(double res){
+    if(m_inverse){
         res = -res;
     }
     
@@ -197,13 +258,13 @@ void PilotModule::myGotoVolant(double res){
         double leftRight = m_volant-gotoRel;
         INFO("leftRight " << leftRight);
         myLeftRight(leftRight);
-        //m_tour_volant = res/4000.0*/
+        //m_tour_volant = res/4000.0
         
         
-        /*std::vector<unsigned char> l;
-        l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
-        add4hex(l, res);
-        runHadrienVolant(l);*/
+    std::vector<unsigned char> l;
+    l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
+    add4hex(l, res);
+    runHadrienVolant(l);
     //}
 }
 
@@ -237,8 +298,8 @@ void PilotModule::myLeftRight(double res){
         }
         runHadrienVolant(l);
         GpsFramework::Instance().addLog(out.str(), false);
-    }*/
-}
+    }
+}*/
 
 void PilotModule::setHadrienVolant(double val){
     double temp = m_lastHadrienValue - val;
@@ -260,52 +321,5 @@ void PilotModule::setHadrienVolant(double val){
     GpsFramework::Instance().addLog(out.str(), false);
 }
 
-void PilotModule::setPasMotorVolant(int pas){
-    double res = pas/m_algo2_goto_pas_by_tour;
-    m_volantMesured = res;
-    update();
-}
-
-void PilotModule::setVolant(double vol){
-    if(m_inverse){
-        m_volantMesured = -vol;
-    } else {
-        m_volantMesured = vol;
-    }
-}
-
-void PilotModule::update(){
-    int res = 100+m_motor_vitesse_agressivite*(m_volant - m_volantMesured)*m_algo2_goto_pas_by_tour;
-    if(m_inverse){
-        res = -res;
-    }
-    std::ostringstream out;
-    
-    if(res > m_motor_vitesse_max){
-        res = m_motor_vitesse_max;
-    }
-    if(res < -m_motor_vitesse_max){
-        res = -m_motor_vitesse_max;
-    }
-    
-    if(res > 0 && res < m_motor_vitesse_min){
-        res = 0;
-    }
-    if(res < 0 && res > -m_motor_vitesse_min){
-        res = -0;
-    }
-    if(!m_engage){
-        res = 0;
-    }
-    
-    if(res<0){
-        out << "$L;" << -res << ";\n";
-    } else {
-        out << "$R;" << res << ";\n";
-    }
-    m_last_order_send = out.str();
-    //INFO(m_last_order_send);
-    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
-}
 
 
