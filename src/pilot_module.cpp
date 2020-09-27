@@ -64,7 +64,7 @@ void PilotModule::run(double value, double time, double vitesse){
             m_volant = res;
             
             
-            m_volant0 += res/50;
+            m_volant0 += res/m_algo2_goto_rel_s;
             
             m_volant = m_volant0+m_volant;
         }
