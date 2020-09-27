@@ -69,10 +69,6 @@ void PilotModule::run(double value, double time, double vitesse){
             m_volant = m_volant0+m_volant;
         }
         m_last_value = value;
-        
-        if(m_inverse){
-            m_volant = -m_volant;
-        }
     }
     
     
@@ -271,11 +267,18 @@ void PilotModule::setPasMotorVolant(int pas){
 }
 
 void PilotModule::setVolant(double vol){
-    m_volantMesured = vol;
+    if(m_inverse){
+        m_volantMesured = -vol;
+    } else {
+        m_volantMesured = vol;
+    }
 }
 
 void PilotModule::update(){
     int res = 100+m_motor_vitesse_agressivite*(m_volant - m_volantMesured)*m_algo2_goto_pas_by_tour;
+    if(m_inverse){
+        res = -res;
+    }
     std::ostringstream out;
     
     if(res > m_motor_vitesse_max){
