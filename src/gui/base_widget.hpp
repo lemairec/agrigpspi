@@ -115,7 +115,7 @@ public:
     
     void drawButton(ButtonGui * button, int color = 0);
     void drawButtonLabel(ButtonGui * button, int color = 0);
-    void drawButtonImage(ButtonGui * button, QPixmap & pixmap);
+    void drawButtonImage(ButtonGui * button, QPixmap & pixmap, double scale=1.0);
 
     void drawSelectButtonGuiOpen(SelectButtonGui * select);
     void drawSelectButtonGuiClose(SelectButtonGui * select);

@@ -695,7 +695,7 @@ void GpsWidget::drawDebug(){
         }*/
         
         
-        scene->addRect(x, y, 100, 120, m_penBlack, m_brushLightGrayDebug);
+        /*scene->addRect(x, y, 100, 120, m_penBlack, m_brushLightGrayDebug);
         
         {
             QString s = QString::number(f.m_angle_correction/3.14*180, 'f', 1) + " deg";
@@ -709,13 +709,7 @@ void GpsWidget::drawDebug(){
             auto textItem = scene->addText(s);
             textItem->setPos(x, y);
         }
-        
-        y+=15;
-        {
-            QString s = "m_0 " + QString::number(f.m_pilotModule.m_0/3.14*180, 'f', 1);
-            auto textItem = scene->addText(s);
-            textItem->setPos(x, y);
-        }
+
         
         y+=20;
         {
@@ -734,7 +728,7 @@ void GpsWidget::drawDebug(){
            QString s = "LR " + QString::number(f.m_pilotModule.m_last_leftright, 'f', 1);
            auto textItem = scene->addText(s);
            textItem->setPos(x, y);
-       }
+       }*/
         
     }
     
@@ -750,10 +744,10 @@ void GpsWidget::drawDebug(){
     //sattelite
     {
         int x = 0;
-        int y = m_height-140;
+        int y = m_height-110;
         
         auto last_frame = f.m_lastGGAFrame;
-        scene->addRect(x, y, 100, 100, m_penBlack, m_brushLightGrayDebug);
+        scene->addRect(x, y, 100, 70, m_penBlack, m_brushLightGrayDebug);
         QString s = QString::number(last_frame.m_nbrSat) + " satellites";
         auto textItem = scene->addText(s);
         textItem->setPos(x, y);
@@ -779,16 +773,12 @@ void GpsWidget::drawDebug(){
         textItem = scene->addText(s);
         textItem->setPos(x, y+30);
 
-        s = "altitude " + QString::number(last_frame.m_altitude);
-        textItem = scene->addText(s);
-        textItem->setPos(x, y+50);
-
         int h = last_frame.m_time/10000;
         int min = (int)(last_frame.m_time/100) - h*100;
         double sec = last_frame.m_time - h*10000 - min*100;
         s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
         textItem = scene->addText(s);
-        textItem->setPos(x, y+65);
+        textItem->setPos(x, y+50);
 
         int time = last_frame.m_time;
     }
@@ -840,9 +830,9 @@ void GpsWidget::addButtons(){
     }
     
     if(f.getVolantEngaged()){
-        drawButtonImage(m_buttonVolant, *m_imgVolantVert);
+        drawButtonImage(m_buttonVolant, *m_imgVolantVert, 1.4);
     } else {
-        drawButtonImage(m_buttonVolant, *m_imgVolantGris);
+        drawButtonImage(m_buttonVolant, *m_imgVolantGris, 1.4);
     }
 }
 

@@ -25,9 +25,7 @@ void PilotModule::initOrLoadConfig(Config & config){
 }
 
 void PilotModule::clear(){
-    m_0 = 0;
     m_last_value = 0;
-    m_sum_value = 0;
 }
 
 void PilotModule::engage(){
@@ -266,12 +264,12 @@ void add4hex( std::vector<unsigned char> & l, int i){
     add4hex(l, res);
     runHadrienVolant(l);
     //}
-}
+}*/
 
 
 
 void PilotModule::myLeftRight(double res){
-    /*if(m_inverse){
+    if(m_inverse){
         //res = -res;
     }
     m_last_leftright = res;
@@ -299,7 +297,7 @@ void PilotModule::myLeftRight(double res){
         runHadrienVolant(l);
         GpsFramework::Instance().addLog(out.str(), false);
     }
-}*/
+}
 
 void PilotModule::setHadrienVolant(double val){
     double temp = m_lastHadrienValue - val;

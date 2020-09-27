@@ -23,20 +23,11 @@ class PilotModule {
     double m_algo2_goto_angle_by_tour = 100;
     int m_algo2_goto_rel_s = 100;
     
-    
-    //algo my
-    double m_sum_value = 0;
-    double m_algo2_my_k = 100;
-    double m_algo2_my_p = 100;
-    
-    std::list<double> m_lastValues;
-    
     std::string m_inputPilot;
 public:
     double m_last_value = 0;
     std::string m_last_order_send;
     
-    double m_0 = 0;
     double m_last_goto_tour = 0;
     double m_last_goto_pas = 0;
     double m_last_leftright = 0;
@@ -51,7 +42,6 @@ public:
     void setVolant0();
     void desengage();
     
-    void myGotoVolant(double i);
     void myGotoVolant2(double i);
     void myLeftRight(double i);
     
@@ -63,6 +53,9 @@ public:
     void setPasMotorVolant(int pas);
     void setVolant(double vol);
     void update();
+    
+    //ARDUINO
+    
     
     //HADRIEN
     

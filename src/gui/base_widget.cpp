@@ -175,14 +175,14 @@ void BaseWidget::drawText(const std::string & text, double x, double y){
     
 }
 
-void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap){
+void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap, double scale){
     int x = m_width*button->m_x-m_height*button->m_rayon;
     int y = m_height*button->m_y-m_height*button->m_rayon;
     
     int d = m_height*button->m_rayon*2;
     
     auto item = new QGraphicsPixmapItem(pixmap);
-    item->setScale(0.4);
+    item->setScale(0.4*scale);
     item->setPos(x, y);
     scene->addItem(item);
     
