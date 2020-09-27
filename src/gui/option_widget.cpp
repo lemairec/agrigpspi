@@ -43,7 +43,7 @@ OptionWidget::OptionWidget(){
     
     
     
-
+    
     
     
     setPage3();
@@ -79,7 +79,7 @@ void OptionWidget::draw(){
         drawButtonImage(m_button_p2, *m_imgSatBlanc);
         drawPage2();
     } else {
-       drawButtonImage(m_button_p2, *m_imgSatGris);
+        drawButtonImage(m_button_p2, *m_imgSatGris);
         
     }
     
@@ -128,8 +128,8 @@ void OptionWidget::drawPage1(){
 }
 
 /**
-PAGE 2
-*/
+ PAGE 2
+ */
 
 void OptionWidget::drawPage2(){
     drawText("Connection GPS", 0.55*m_width, 0.15*m_height, 20, true);
@@ -157,7 +157,7 @@ void OptionWidget::drawPage2(){
 }
 
 void OptionWidget::onMousePage2(double x, double y){
-
+    
     for(auto button: m_buttonp2Serials){
         if(button->isActive(x,y)){
             GpsFramework & f = GpsFramework::Instance();
@@ -177,8 +177,8 @@ void OptionWidget::onMousePage2(double x, double y){
 
 
 /**
-PAGE 3
-*/
+ PAGE 3
+ */
 
 void OptionWidget::setPage3(){
     m_select_pilot_serial = new SelectButtonGui(0.35,0.3, PETIT_RAYON2);
@@ -191,9 +191,8 @@ void OptionWidget::setPage3(){
     m_select_pilot_langage->addValue("arduino");
     m_select_pilot_langage->addValue("hadrien");
     
-    m_motor_vitesse_min = new ValueGui(0.35, 0.6, PETIT_RAYON2, 0, "vitesse moteur min ");
-    m_motor_vitesse_max = new ValueGui(0.35, 0.65, PETIT_RAYON2, 0, "vitesse moteur max ");
-    m_motor_vitesse_agressivite = new ValueGui(0.35, 0.7, PETIT_RAYON2, 0, "vitesse moteur agressivite ");
+    m_value_gui_lookahead_d = new ValueGui(0.35, 0.7, PETIT_RAYON2, 0, "lookahead ");
+    
     
 };
 
@@ -210,10 +209,7 @@ void OptionWidget::drawPage3(){
     drawSelectButtonGuiClose(m_select_pilot_baudrates);
     drawSelectButtonGuiClose(m_select_pilot_serial);
     
-     
-    drawValueGui(m_motor_vitesse_min, f.m_config.m_motor_vitesse_min);
-    drawValueGui(m_motor_vitesse_max, f.m_config.m_motor_vitesse_max);
-    drawValueGui(m_motor_vitesse_agressivite, f.m_config.m_motor_vitesse_agressivite);
+    drawValueGui(m_value_gui_lookahead_d, f.m_config.m_pilot_lookahead_d);
     
     drawSelectButtonGuiOpen(m_select_pilot_serial);
     drawSelectButtonGuiOpen(m_select_pilot_langage);
@@ -226,44 +222,26 @@ void OptionWidget::onMousePage3(double x, double y){
     
     if(onMouseSelectButton(m_select_pilot_serial, x, y)){
         f.m_config.m_inputPilot = m_select_pilot_serial->getValueString();
-        f.initOrLoadConfig();
     };
-
+    
     if(onMouseSelectButton(m_select_pilot_baudrates, x, y)){
         f.m_config.m_baudratePilot = m_select_pilot_baudrates->getValueInt();
-        f.initOrLoadConfig();
     }
     
     if(onMouseSelectButton(m_select_pilot_langage, x, y)){
         f.m_config.m_pilot_langage = m_select_pilot_langage->m_selectedValue;
-        f.initOrLoadConfig();
     }
     
-    f.m_config.m_motor_vitesse_min += 5*m_motor_vitesse_min->getIntValue(x,y);
-    if(f.m_config.m_motor_vitesse_min > 70){
-        f.m_config.m_motor_vitesse_min = 70;
-    }
-    if(f.m_config.m_motor_vitesse_min < 10){
-        f.m_config.m_motor_vitesse_min = 10;
-    }
+    f.m_config.m_pilot_lookahead_d = f.m_config.m_pilot_lookahead_d * m_value_gui_lookahead_d->getMultValue(x,y);
+    f.initOrLoadConfig();
     
-    f.m_config.m_motor_vitesse_max += 5*m_motor_vitesse_max->getIntValue(x,y);
-    if(f.m_config.m_motor_vitesse_max > 100){
-        f.m_config.m_motor_vitesse_max = 100;
-    }
-    if(f.m_config.m_motor_vitesse_max < 50){
-        f.m_config.m_motor_vitesse_max = 50;
-    }
-    f.m_config.m_motor_vitesse_agressivite = f.m_config.m_motor_vitesse_agressivite * m_motor_vitesse_agressivite->getMultValue(x,y);
-      
-
 }
 
 
 
 /**
-PAGE 4
-*/
+ PAGE 4
+ */
 
 void OptionWidget::setPage4(){
     m_button_sens = new ButtonGui(0.35, 0.25, PETIT_RAYON2, 0);
@@ -304,7 +282,7 @@ void OptionWidget::onMousePage4(double x, double y){
     }
     
     f.initOrLoadConfig();
-
+    
 }
 
 /**
@@ -313,21 +291,16 @@ void OptionWidget::onMousePage4(double x, double y){
 
 void OptionWidget::setPage5(){
     double dist2 = 0.08;
-
+    
     m_button_inverse = new ButtonGui(0.35, 0.20, PETIT_RAYON2);
-    m_button_select_algo = new SelectButtonGui(0.35, 0.30, PETIT_RAYON2);
-    m_button_select_algo->addValue("algo_naif");
-    m_button_select_algo->addValue("algo_follow_karott");
-
-    m_button_algo_lookahead_d = new ValueGui(0.4, 0.35, PETIT_RAYON2, 0, "lookahead ");
     
-    m_button_select_algo2 = new SelectButtonGui(0.35, 0.50, PETIT_RAYON2);
-    m_button_select_algo2->addValue("algo_goto");
-    m_button_select_algo2->addValue("algo_goto_rel");
+    m_motor_vitesse_min = new ValueGui(0.35, 0.3, PETIT_RAYON2, 0, "vitesse moteur min ");
+    m_motor_vitesse_max = new ValueGui(0.35, 0.35, PETIT_RAYON2, 0, "vitesse moteur max ");
+    m_motor_vitesse_agressivite = new ValueGui(0.35, 0.4, PETIT_RAYON2, 0, "vitesse moteur agressivite ");
     
-    m_button_algo2_goto_pas_by_tour = new ValueGui(0.4, 0.55, PETIT_RAYON2, 0, "goto pas by tour ");
-    m_button_algo2_goto_angle_by_tour = new ValueGui(0.4, 0.6, PETIT_RAYON2, 0, "goto angle by tour ");
-    m_button_algo2_goto_rel_s = new ValueGui(0.4, 0.65, PETIT_RAYON2, 0, "goto rel ");
+    m_button_algo2_goto_pas_by_tour = new ValueGui(0.35, 0.5, PETIT_RAYON2, 0, "goto pas by tour ");
+    m_button_algo2_goto_angle_by_tour = new ValueGui(0.35, 0.55, PETIT_RAYON2, 0, "goto angle by tour ");
+    m_button_algo2_goto_rel_s = new ValueGui(0.35, 0.6, PETIT_RAYON2, 0, "goto rel ");
 };
 
 
@@ -335,9 +308,6 @@ void OptionWidget::drawPage5(){
     GpsFramework & f = GpsFramework::Instance();
     
     drawText("Autoguidage", 0.55*m_width, 0.1*m_height, 20, true);
-    
-    m_button_select_algo->m_selectedValue = f.m_config.m_algo;
-    m_button_select_algo2->m_selectedValue = f.m_config.m_algo2;
     
     drawText(f.m_pilotModule.m_version_guidage, 0.55*m_width, 0.20*m_height, 11, true);
     
@@ -348,78 +318,46 @@ void OptionWidget::drawPage5(){
     }
     drawText("Inverse", 0.4, m_button_inverse->m_y);
     
-    
-    drawSelectButtonGuiClose(m_button_select_algo);
-    drawValueGui(m_button_algo_lookahead_d, f.m_config.m_algo_lookahead_d);
-    
-    if(f.m_config.m_algo2 == ALGO2_GOTO){
-        drawValueGui(m_button_algo2_goto_pas_by_tour, f.m_config.m_algo2_goto_pas_by_tour);
-        drawValueGui(m_button_algo2_goto_angle_by_tour, f.m_config.m_algo2_goto_angle_by_tour);
-    } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
-        drawValueGui(m_button_algo2_goto_pas_by_tour, f.m_config.m_algo2_goto_pas_by_tour);
-        drawValueGui(m_button_algo2_goto_angle_by_tour, f.m_config.m_algo2_goto_angle_by_tour);
-        drawValueGui(m_button_algo2_goto_rel_s, f.m_config.m_algo2_goto_rel_s);
-    }
-    
-    drawSelectButtonGuiClose(m_button_select_algo2);
-    
-    drawSelectButtonGuiOpen(m_button_select_algo);
-    drawSelectButtonGuiOpen(m_button_select_algo2);
+    drawValueGui(m_motor_vitesse_min, f.m_config.m_motor_vitesse_min);
+    drawValueGui(m_motor_vitesse_max, f.m_config.m_motor_vitesse_max);
+    drawValueGui(m_motor_vitesse_agressivite, f.m_config.m_motor_vitesse_agressivite);
+
+    drawValueGui(m_button_algo2_goto_pas_by_tour, f.m_config.m_volant_pas_by_tour);
+    drawValueGui(m_button_algo2_goto_angle_by_tour, f.m_config.m_volant_angle_by_tour);
+    drawValueGui(m_button_algo2_goto_rel_s, f.m_config.m_volant_derive);
 }
 
 void OptionWidget::onMousePage5(double x, double y){
     GpsFramework & f = GpsFramework::Instance();
     
-    if(m_button_select_algo->m_open){
-        for(size_t i = 0; i < m_button_select_algo->m_buttons.size(); ++i){
-            if(m_button_select_algo->m_buttons[i]->isActive(x, y)){
-                m_button_select_algo->m_selectedValue = i;
-                f.m_config.m_algo = i;
-                f.initOrLoadConfig();
-            };
-        }
-        m_button_select_algo->m_open = false;
-        return;
-        
-    }
-    if( m_button_select_algo->m_buttonOpen.isActive(x, y)){
-        m_button_select_algo->m_open = !m_button_select_algo->m_open;
-    }
-    
-    if(m_button_select_algo2->m_open){
-        for(size_t i = 0; i < m_button_select_algo2->m_buttons.size(); ++i){
-            if(m_button_select_algo2->m_buttons[i]->isActive(x, y)){
-                m_button_select_algo2->m_selectedValue = i;
-                f.m_config.m_algo2 = i;
-                f.initOrLoadConfig();
-            };
-        }
-        m_button_select_algo2->m_open = false;
-        return;
-        
-    }
-    if( m_button_select_algo2->m_buttonOpen.isActive(x, y)){
-        m_button_select_algo2->m_open = !m_button_select_algo2->m_open;
-    }
-    
     if(m_button_inverse->isActive(x,y)){
         f.m_config.m_pilot_inverse = !f.m_config.m_pilot_inverse;
     }
     
-    f.m_config.m_algo_lookahead_d = f.m_config.m_algo_lookahead_d * m_button_algo_lookahead_d->getMultValue(x,y);
-    
-    if(f.m_config.m_algo2 == ALGO2_GOTO){
-        f.m_config.m_algo2_goto_pas_by_tour
-            = f.m_config.m_algo2_goto_pas_by_tour * m_button_algo2_goto_pas_by_tour->getMultValue(x,y);
-        f.m_config.m_algo2_goto_angle_by_tour
-            = f.m_config.m_algo2_goto_angle_by_tour * m_button_algo2_goto_angle_by_tour->getMultValue(x,y);
-    } else if(f.m_config.m_algo2 == ALGO2_GOTO_REL){
-        f.m_config.m_algo2_goto_pas_by_tour
-            = f.m_config.m_algo2_goto_pas_by_tour * m_button_algo2_goto_pas_by_tour->getMultValue(x,y);
-        f.m_config.m_algo2_goto_angle_by_tour
-            = f.m_config.m_algo2_goto_angle_by_tour * m_button_algo2_goto_angle_by_tour->getMultValue(x,y);
-        f.m_config.m_algo2_goto_rel_s = f.m_config.m_algo2_goto_rel_s + 10*m_button_algo2_goto_rel_s->isActive(x,y);
+    f.m_config.m_motor_vitesse_min += 5*m_motor_vitesse_min->getIntValue(x,y);
+    if(f.m_config.m_motor_vitesse_min > 70){
+        f.m_config.m_motor_vitesse_min = 70;
     }
+    if(f.m_config.m_motor_vitesse_min < 10){
+        f.m_config.m_motor_vitesse_min = 10;
+    }
+    
+    f.m_config.m_motor_vitesse_max += 5*m_motor_vitesse_max->getIntValue(x,y);
+    if(f.m_config.m_motor_vitesse_max > 100){
+        f.m_config.m_motor_vitesse_max = 100;
+    }
+    if(f.m_config.m_motor_vitesse_max < 50){
+        f.m_config.m_motor_vitesse_max = 50;
+    }
+    f.m_config.m_motor_vitesse_agressivite = f.m_config.m_motor_vitesse_agressivite * m_motor_vitesse_agressivite->getMultValue(x,y);
+    
+    
+    
+    
+    f.m_config.m_volant_pas_by_tour = f.m_config.m_volant_pas_by_tour * m_button_algo2_goto_pas_by_tour->getMultValue(x,y);
+    f.m_config.m_volant_angle_by_tour = f.m_config.m_volant_angle_by_tour * m_button_algo2_goto_angle_by_tour->getMultValue(x,y);
+    f.m_config.m_volant_derive = f.m_config.m_volant_derive * m_button_algo2_goto_rel_s->getMultValue(x,y);
+    
     
     f.initOrLoadConfig();
     
@@ -427,14 +365,14 @@ void OptionWidget::onMousePage5(double x, double y){
 
 
 /**
-PAGE 6
-*/
+ PAGE 6
+ */
 
 void OptionWidget::setPage6(){
     m_button_p6connect = new ButtonGui(0.40, 0.25, PETIT_RAYON2, 0);
     m_button_p6disable = new ButtonGui(0.55, 0.25, PETIT_RAYON2, 0);
     m_button_p6clearError = new ButtonGui(0.70, 0.25, PETIT_RAYON2, 0);
-
+    
     m_button_p6testLeft = new ButtonGui(0.40, 0.40, PETIT_RAYON2, 0);
     m_button_p6testRight = new ButtonGui(0.70, 0.40, PETIT_RAYON2, 0);
     
@@ -446,9 +384,9 @@ void OptionWidget::setPage6(){
     m_button_p6testGoToD0 = new ButtonGui(0.55, 0.7, PETIT_RAYON2, 0);
     m_button_p6testGoToDRight = new ButtonGui(0.70, 0.7, PETIT_RAYON2, 0);
     
-/*    ;
-    m_button_p6testGoToV0;
-    m_button_p6testGoToVRight;*/
+    /*    ;
+     m_button_p6testGoToV0;
+     m_button_p6testGoToVRight;*/
 };
 
 void OptionWidget::drawPage6(){
@@ -471,17 +409,17 @@ void OptionWidget::drawPage6(){
     drawText("Goto Volant", 0.55*m_width, 0.50*m_height, 12, true);
     drawButtonLabel(m_button_p6testGoToVLeft, COLOR_OTHER);
     drawText("-0.5 volant", m_button_p6testGoToVLeft->m_x*m_width, m_button_p6testGoToVLeft->m_y*m_height, 12, true);
-
+    
     drawButtonLabel(m_button_p6testGoToV0, COLOR_OTHER);
     drawText("0", m_button_p6testGoToV0->m_x*m_width, m_button_p6testGoToV0->m_y*m_height, 12, true);
     
     drawButtonLabel(m_button_p6testGoToVRight, COLOR_OTHER);
     drawText("+0.5 volant", m_button_p6testGoToVRight->m_x*m_width, m_button_p6testGoToVRight->m_y*m_height, 12, true);
-     
+    
     drawText("Goto Degree", 0.55*m_width, 0.65*m_height, 12, true);
     drawButtonLabel(m_button_p6testGoToDLeft, COLOR_OTHER);
     drawText("-20°", m_button_p6testGoToDLeft->m_x*m_width, m_button_p6testGoToDLeft->m_y*m_height, 12, true);
-
+    
     drawButtonLabel(m_button_p6testGoToD0, COLOR_OTHER);
     drawText("0", m_button_p6testGoToD0->m_x*m_width, m_button_p6testGoToD0->m_y*m_height, 12, true);
     
@@ -523,7 +461,7 @@ void OptionWidget::onMousePage6(double x, double y){
     }
     
     f.initOrLoadConfig();
-
+    
 }
 
 
@@ -597,7 +535,7 @@ void OptionWidget::addSerials(){
     for(auto s : s2){
         serials.push_back(s);
     }
-
+    
     
     
     
@@ -619,7 +557,7 @@ void OptionWidget::addSerials(){
     
     y_baurates_title = y_port_title+i*0.05;
     ++i;
-     ++i;
+    ++i;
     std::list<int> baurates;
     
     baurates.push_back(9600);
@@ -638,22 +576,22 @@ void OptionWidget::addSerials(){
  
  
  if(m_button_p5test1->isActive(x,y)){
-     f.m_pilotModule.test(-1);
-     return;
+ f.m_pilotModule.test(-1);
+ return;
  } else if(m_button_p5test2->isActive(x,y)){
-    f.m_pilotModule.test(0);
-      return;
+ f.m_pilotModule.test(0);
+ return;
  } else if(m_button_p5test3->isActive(x,y)){
-     f.m_pilotModule.test(1);
-     return;
+ f.m_pilotModule.test(1);
+ return;
  } else if(m_button_p5connect->isActive(x,y)){
-     f.m_pilotModule.run_test(0);
-     return;
+ f.m_pilotModule.run_test(0);
+ return;
  } else if(m_button_p5disable->isActive(x,y)){
-     f.m_pilotModule.run_test(1);
-     return;
+ f.m_pilotModule.run_test(1);
+ return;
  } else if(m_button_p5clearError->isActive(x,y)){
-     f.m_pilotModule.run_test(2);
-     return;
+ f.m_pilotModule.run_test(2);
+ return;
  }
  */

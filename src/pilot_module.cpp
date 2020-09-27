@@ -14,10 +14,9 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_motor_vitesse_min = config.m_motor_vitesse_min*255.0/100.0;
     m_motor_vitesse_agressivite = config.m_motor_vitesse_agressivite;
     
-    m_algo2 = config.m_algo2;
-    m_algo2_goto_pas_by_tour = config.m_algo2_goto_pas_by_tour;
-    m_algo2_goto_angle_by_tour = config.m_algo2_goto_angle_by_tour/180.0*3.14;
-    m_algo2_goto_rel_s = config.m_algo2_goto_rel_s;
+    m_algo2_goto_pas_by_tour = config.m_volant_pas_by_tour;
+    m_algo2_goto_angle_by_tour = config.m_volant_angle_by_tour/180.0*3.14;
+    m_volant_derive = config.m_volant_derive;
    
     m_pilot_langage = config.m_pilot_langage;
 
@@ -53,19 +52,14 @@ void PilotModule::run(double value, double time, double vitesse){
             desengage();
         }
         
-        if(m_algo2 == ALGO2_GOTO){
-            double res = value/m_algo2_goto_angle_by_tour;
-            m_volant = res;
+        double res = value/m_algo2_goto_angle_by_tour;
+        m_volant = res;
         
-        } else if(m_algo2 == ALGO2_GOTO_REL){
-            double res = value/m_algo2_goto_angle_by_tour;
-            m_volant = res;
-            
-            
-            m_volant0 += res/m_algo2_goto_rel_s;
-            
-            m_volant = m_volant0+m_volant;
-        }
+        
+        m_volant0 += res/m_volant_derive;
+        
+        m_volant = m_volant0+m_volant;
+        
         m_last_value = value;
     }
     

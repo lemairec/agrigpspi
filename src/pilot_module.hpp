@@ -18,10 +18,9 @@ class PilotModule {
     double m_motor_vitesse_agressivite = 1;
     
     //algo k
-    int m_algo2 = 0;
     double m_algo2_goto_pas_by_tour = 100;
     double m_algo2_goto_angle_by_tour = 100;
-    int m_algo2_goto_rel_s = 100;
+    int m_volant_derive = 100;
     
     std::string m_inputPilot;
 public:

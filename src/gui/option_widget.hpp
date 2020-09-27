@@ -69,9 +69,8 @@ public:
     SelectButtonGui * m_select_pilot_serial;
     SelectButtonGui * m_select_pilot_baudrates;
     SelectButtonGui * m_select_pilot_langage;
-    ValueGui * m_motor_vitesse_min;
-    ValueGui * m_motor_vitesse_max;
-    ValueGui * m_motor_vitesse_agressivite;
+    
+    ValueGui * m_value_gui_lookahead_d;
     
     void setPage3();
     void onMousePage3(double x, double y);
@@ -83,11 +82,10 @@ public:
     
     //page5
     ButtonGui * m_button_inverse;
-    SelectButtonGui * m_button_select_algo;
-    
-    ValueGui * m_button_algo_lookahead_d;
-    
-    SelectButtonGui * m_button_select_algo2;
+     
+    ValueGui * m_motor_vitesse_min;
+    ValueGui * m_motor_vitesse_max;
+    ValueGui * m_motor_vitesse_agressivite;
     
     ValueGui * m_button_algo2_goto_pas_by_tour;
     ValueGui * m_button_algo2_goto_angle_by_tour;

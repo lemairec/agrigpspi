@@ -47,11 +47,11 @@ void Config::save(){
     settings.setValue("m_pilot_inverse", m_pilot_inverse);
     settings.setValue("m_pilot_langage", m_pilot_langage);
     
-    settings.setValue("m_algo", m_algo);
-    settings.setValue("m_algo_lookahead_d", m_algo_lookahead_d);
-    settings.setValue("m_algo2", m_algo2);
-    settings.setValue("m_algo2_goto_pas_by_tour", m_algo2_goto_pas_by_tour);
-    settings.setValue("m_algo2_goto_angle_by_tour", m_algo2_goto_angle_by_tour);
+    settings.setValue("m_pilot_lookahead_d", m_pilot_lookahead_d);
+    
+    settings.setValue("m_volant_pas_by_tour", m_volant_pas_by_tour);
+    settings.setValue("m_volant_angle_by_tour", m_volant_angle_by_tour);
+    settings.setValue("m_volant_derive", m_volant_derive);
 }
 
 void Config::load(){
@@ -116,21 +116,18 @@ void Config::load(){
     }
     
 
-    if(settings.contains("m_algo")){
-        m_algo = settings.value("m_algo").toInt();
-    }
-    if(settings.contains("m_algo_lookahead_d")){
-        m_algo_lookahead_d = settings.value("m_algo_lookahead_d").toDouble();
+    if(settings.contains("m_pilot_lookahead_d")){
+        m_pilot_lookahead_d = settings.value("m_pilot_lookahead_d").toDouble();
     }
     
-    if(settings.contains("m_algo2")){
-        m_algo2 = settings.value("m_algo2").toInt();
+    if(settings.contains("m_volant_pas_by_tour")){
+        m_volant_pas_by_tour = settings.value("m_volant_pas_by_tour").toDouble();
     }
-    if(settings.contains("m_algo2_goto_pas_by_tour")){
-        m_algo2_goto_pas_by_tour = settings.value("m_algo2_goto_pas_by_tour").toDouble();
+    if(settings.contains("m_volant_angle_by_tour")){
+        m_volant_angle_by_tour = settings.value("m_volant_angle_by_tour").toDouble();
     }
-    if(settings.contains("m_algo2_goto_angle_by_tour")){
-        m_algo2_goto_angle_by_tour = settings.value("m_algo2_goto_angle_by_tour").toDouble();
+    if(settings.contains("m_volant_derive")){
+        m_volant_derive = settings.value("m_volant_derive").toDouble();
     }
     
 }

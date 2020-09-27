@@ -60,8 +60,7 @@ void GpsFramework::initOrLoadConfig(){
     setAB();
     m_reloadConfig = true;
     
-    m_algo = m_config.m_algo;
-    m_algo_lookahead_d = m_config.m_algo_lookahead_d;
+    m_pilot_lookahead_d = m_config.m_pilot_lookahead_d;
 }
 
 GpsFramework & GpsFramework::Instance(){
@@ -578,22 +577,22 @@ void GpsFramework::calculSurface(){
 
 // pure pousuite
 void GpsFramework::calculAngleCorrection(){
-    if(m_algo == ALGO_NAIF){
-        m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
-    } else {
-        double angleABDeplacement = m_angleAB - m_deplacementAngle;
-        if(angleABDeplacement>3.14/2){
-            angleABDeplacement = angleABDeplacement-3.14;
-        }
-        if(angleABDeplacement < -3.14/2){
-            angleABDeplacement = angleABDeplacement+3.14;
-        }
-        //INFO(angleABDeplacement/3.14*180);
-        
-        m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d)+angleABDeplacement;
-        //INFO(m_angle_correction);
-        //m_angle_correction = ;
+    //naif
+    //m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
+   
+    //follow karott
+    double angleABDeplacement = m_angleAB - m_deplacementAngle;
+    if(angleABDeplacement>3.14/2){
+        angleABDeplacement = angleABDeplacement-3.14;
     }
+    if(angleABDeplacement < -3.14/2){
+        angleABDeplacement = angleABDeplacement+3.14;
+    }
+    //INFO(angleABDeplacement/3.14*180);
+    
+    m_angle_correction = atan(m_distanceAB/m_pilot_lookahead_d)+angleABDeplacement;
+    //INFO(m_angle_correction);
+    //m_angle_correction = ;
     
     double angle_max = 0.5;
     if(m_angle_correction < -angle_max){

@@ -82,9 +82,8 @@ public:
     double m_distanceAB = 0.0;
     int m_ledAB = 0;
     
-    //algo pure poursuite
-    int m_algo;
-    double m_algo_lookahead_d;
+    //algo follow carott
+    double m_pilot_lookahead_d;
     double m_angle_correction;
     void calculAngleCorrection();
     
