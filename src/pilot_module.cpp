@@ -293,7 +293,7 @@ void PilotModule::myLeftRight(double res){
             add4hex(l, res2);
         } else {
             l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
-            add4hex(l, res2);
+            add4hex(l, -res2);
         }
         runHadrienVolant(l);
         GpsFramework::Instance().addLog(out.str(), false);
