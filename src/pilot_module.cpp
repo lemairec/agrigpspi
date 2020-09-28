@@ -285,7 +285,7 @@ void PilotModule::myLeftRight(double res){
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
-        int res2 = res*32000;
+        int res2 = -res*32000;
         INFO(out.str() << " " << res2);
         std::vector<unsigned char> l;
         if(res2>0){
