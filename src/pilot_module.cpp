@@ -120,7 +120,7 @@ void PilotModule::update(){
         //INFO(m_last_order_send);
         GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
     } else {
-        
+        myLeftRight(m_volant - m_volantMesured);
     }
     
     
