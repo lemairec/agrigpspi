@@ -187,7 +187,7 @@ void PilotModule::engageHadrien(){
     runHadrienVolant(l);
     l.clear();
     l = {0x01, 0x06, 0x00, 0x6A, 0x00};
-    uint16_t i = 50;
+    uint16_t i = m_motor_vitesse_max;
     l.push_back(i);
     runHadrienVolant(l);
 }
