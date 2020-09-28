@@ -343,6 +343,7 @@ void PilotModule::parseHadrienVolant(char * data){
         int16_t res = r;
         
         GpsFramework::Instance().m_pilotModule.setHadrienVolant(res/4000.0);
+        update();
         
         //INFO("toto" << r1 << " " << r2 << " " << r3 << " " << r4 << " ==> " << temp1 << " " << temp2 << " => " << r << " " << res);
         //u_int16_t res =
