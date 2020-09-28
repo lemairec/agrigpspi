@@ -7,7 +7,7 @@
 
 #include "environnement.hpp"
 
-#define HADRIEN_TIME_VOLANT 20
+#define HADRIEN_TIME_VOLANT 50
 #define FILE_TIME 200
 
 MyQTSerialPorts::MyQTSerialPorts(){
