@@ -42,7 +42,6 @@ public:
     void desengage();
     
     void myGotoVolant2(double i);
-    void myLeftRight(double i);
     
     double m_volant = 0.0;
     double m_volant0 = 0.0;
@@ -54,10 +53,9 @@ public:
     void update();
     
     //ARDUINO
-    
+    void updateArduino();
     
     //HADRIEN
-    double m_hadrien0 = 0.0;
     int m_nbrTourHadrien = 0;
     double m_lastHadrienValue = 0;
     
@@ -65,6 +63,8 @@ public:
     void desengageHadrien();
     void clearHadrien();
     void runHadrienVolant(std::vector<unsigned char> & c);
+    
+    void leftRightHadrien(double i);
     
     void setHadrienVolant(double val);
     void parseHadrienVolant(char * c);

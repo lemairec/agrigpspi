@@ -99,16 +99,9 @@ public:
     ButtonGui * m_button_p6disable;
     ButtonGui * m_button_p6clearError;
     
-    ButtonGui * m_button_p6testLeft;
-    ButtonGui * m_button_p6testRight;
-    
     ButtonGui * m_button_p6testGoToVLeft;
     ButtonGui * m_button_p6testGoToV0;
     ButtonGui * m_button_p6testGoToVRight;
-    
-    ButtonGui * m_button_p6testGoToDLeft;
-    ButtonGui * m_button_p6testGoToD0;
-    ButtonGui * m_button_p6testGoToDRight;
     
     void setPage6();
     void onMousePage6(double x, double y);

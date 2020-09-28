@@ -373,17 +373,9 @@ void OptionWidget::setPage6(){
     m_button_p6disable = new ButtonGui(0.55, 0.25, PETIT_RAYON2, 0);
     m_button_p6clearError = new ButtonGui(0.70, 0.25, PETIT_RAYON2, 0);
     
-    m_button_p6testLeft = new ButtonGui(0.40, 0.40, PETIT_RAYON2, 0);
-    m_button_p6testRight = new ButtonGui(0.70, 0.40, PETIT_RAYON2, 0);
-    
     m_button_p6testGoToVLeft = new ButtonGui(0.40, 0.55, PETIT_RAYON2, 0);
     m_button_p6testGoToV0 = new ButtonGui(0.55, 0.55, PETIT_RAYON2, 0);
     m_button_p6testGoToVRight = new ButtonGui(0.70, 0.55, PETIT_RAYON2, 0);
-    
-    m_button_p6testGoToDLeft = new ButtonGui(0.40, 0.7, PETIT_RAYON2, 0);
-    m_button_p6testGoToD0 = new ButtonGui(0.55, 0.7, PETIT_RAYON2, 0);
-    m_button_p6testGoToDRight = new ButtonGui(0.70, 0.7, PETIT_RAYON2, 0);
-    
     /*    ;
      m_button_p6testGoToV0;
      m_button_p6testGoToVRight;*/
@@ -391,20 +383,13 @@ void OptionWidget::setPage6(){
 
 void OptionWidget::drawPage6(){
     GpsFramework & f = GpsFramework::Instance();
-    drawText("Volant Hadrien!", 0.55*m_width, 0.1*m_height, 20, true);
+    drawText("Test Volant", 0.55*m_width, 0.1*m_height, 20, true);
     
     drawButtonLabel(m_button_p6connect, COLOR_OTHER);
     drawText("connect", m_button_p6connect->m_x*m_width, m_button_p6connect->m_y*m_height, 12, true);
     
     drawButtonLabel(m_button_p6disable, COLOR_OTHER);
     drawText("disconnect", m_button_p6disable->m_x*m_width, m_button_p6disable->m_y*m_height, 12, true);
-    
-    drawText("Left Right", 0.55*m_width, 0.35*m_height, 12, true);
-    drawButtonLabel(m_button_p6testLeft, COLOR_OTHER);
-    drawText("-0.5 volant", m_button_p6testLeft->m_x*m_width, m_button_p6testLeft->m_y*m_height, 12, true);
-    
-    drawButtonLabel(m_button_p6testRight, COLOR_OTHER);
-    drawText("+0.5 volant", m_button_p6testRight->m_x*m_width, m_button_p6testRight->m_y*m_height, 12, true);
     
     drawText("Goto Volant", 0.55*m_width, 0.50*m_height, 12, true);
     drawButtonLabel(m_button_p6testGoToVLeft, COLOR_OTHER);
@@ -415,16 +400,6 @@ void OptionWidget::drawPage6(){
     
     drawButtonLabel(m_button_p6testGoToVRight, COLOR_OTHER);
     drawText("+0.5 volant", m_button_p6testGoToVRight->m_x*m_width, m_button_p6testGoToVRight->m_y*m_height, 12, true);
-    
-    drawText("Goto Degree", 0.55*m_width, 0.65*m_height, 12, true);
-    drawButtonLabel(m_button_p6testGoToDLeft, COLOR_OTHER);
-    drawText("-20°", m_button_p6testGoToDLeft->m_x*m_width, m_button_p6testGoToDLeft->m_y*m_height, 12, true);
-    
-    drawButtonLabel(m_button_p6testGoToD0, COLOR_OTHER);
-    drawText("0", m_button_p6testGoToD0->m_x*m_width, m_button_p6testGoToD0->m_y*m_height, 12, true);
-    
-    drawButtonLabel(m_button_p6testGoToDRight, COLOR_OTHER);
-    drawText("+20°", m_button_p6testGoToDRight->m_x*m_width, m_button_p6testGoToDRight->m_y*m_height, 12, true);
 }
 
 void OptionWidget::onMousePage6(double x, double y){
@@ -435,20 +410,10 @@ void OptionWidget::onMousePage6(double x, double y){
     m_button_p6testGoToV0 = new ButtonGui(0.55, 0.55, PETIT_RAYON2, 0);
     m_button_p6testGoToVRight = new ButtonGui(0.70, 0.55, PETIT_RAYON2, 0);
     
-    m_button_p6testGoToDLeft = new ButtonGui(0.40, 0.7, PETIT_RAYON2, 0);
-    m_button_p6testGoToD0 = new ButtonGui(0.55, 0.7, PETIT_RAYON2, 0);
-    m_button_p6testGoToDRight = new ButtonGui(0.70, 0.7, PETIT_RAYON2, 0);
-    
     if(m_button_p6connect->isActive(x,y)){
         f.m_pilotModule.engage();
     } else if(m_button_p6disable->isActive(x,y)){
         f.m_pilotModule.desengage();
-    } else if(m_button_p6testLeft->isActive(x,y)){
-        f.m_pilotModule.engage();
-        f.m_pilotModule.myLeftRight(-0.5);
-    } else if(m_button_p6testRight->isActive(x,y)){
-        f.m_pilotModule.engage();
-        f.m_pilotModule.myLeftRight(0.5);
     } else if(m_button_p6testGoToVLeft->isActive(x,y)){
         f.m_pilotModule.engage();
         f.m_pilotModule.myGotoVolant2(-0.5);

@@ -87,10 +87,29 @@ void PilotModule::setVolant(double vol){
 }
 
 void PilotModule::update(){
-    int res = 100+m_motor_vitesse_agressivite*(m_volant - m_volantMesured)*m_algo2_goto_pas_by_tour;
+    if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
+        updateArduino();
+    } else {
+        leftRightHadrien(m_motor_vitesse_agressivite*(m_volant - m_volantMesured));
+    }
+}
+
+
+
+/**
+    ARDUINO
+ */
+
+void PilotModule::updateArduino(){
+    int res = m_motor_vitesse_agressivite*(m_volant - m_volantMesured)*m_algo2_goto_pas_by_tour;
     if(m_inverse){
         res = -res;
     }
+    
+    if(!m_engage){
+        res = 0;
+    }
+    
     std::ostringstream out;
     
     if(res > m_motor_vitesse_max){
@@ -110,27 +129,16 @@ void PilotModule::update(){
         res = 0;
     }
     
-    if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
-        if(res<0){
-            out << "$L;" << -res << ";\n";
-        } else {
-            out << "$R;" << res << ";\n";
-        }
-        m_last_order_send = out.str();
-        //INFO(m_last_order_send);
-        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
+    
+    if(res<0){
+        out << "$L;" << -res << ";\n";
     } else {
-        myLeftRight(m_motor_vitesse_agressivite*(m_volant - m_volantMesured));
+        out << "$R;" << res << ";\n";
     }
-    
-    
+    m_last_order_send = out.str();
+    //INFO(m_last_order_send);
+    GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
 }
-
-
-
-/**
-    ARDUINO
- */
 
 
 /**
@@ -142,7 +150,6 @@ void print(std::vector<u_char> & l){
         printf("%02" PRIx16 " ", i);
         
     }
-    
     printf("\n");
 }
 
@@ -180,7 +187,6 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
 }
 
 void PilotModule::engageHadrien(){
-    m_hadrien0 = m_volant;
     INFO("engageHadrien");
     std::vector<unsigned char> l;
     l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
@@ -269,37 +275,17 @@ void add4hex( std::vector<unsigned char> & l, int i){
     //}
 }*/
 
-
-
-void PilotModule::myLeftRight(double res){
-    if(m_inverse){
-        //res = -res;
-    }
-    m_last_leftright = res;
-    
-    std::ostringstream out;
-    if(res<0){
-        out << "$L;" << (-res) << "\n";
+void PilotModule::leftRightHadrien(double res){
+    int res2 = res*32768;
+    std::vector<unsigned char> l;
+    if(res2>0){
+        l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
+        add4hex(l, -res2);
     } else {
-        out << "$R; " << res << "\n";
+        l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
+        add4hex(l, -res2);
     }
-    m_last_order_send = out.str();
-    if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
-        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
-    } else {
-        int res2 = res*32768;
-        INFO(out.str() << " " << res2);
-        std::vector<unsigned char> l;
-        if(res2>0){
-            l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
-            add4hex(l, -res2);
-        } else {
-            l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
-            add4hex(l, -res2);
-        }
-        runHadrienVolant(l);
-        GpsFramework::Instance().addLog(out.str(), false);
-    }
+    runHadrienVolant(l);
 }
 
 void PilotModule::setHadrienVolant(double val){
@@ -322,7 +308,11 @@ void PilotModule::setHadrienVolant(double val){
     GpsFramework::Instance().addLog(out.str(), false);*/
 }
 
-
+void PilotModule::handleHadrien(){
+    //GpsFramework::Instance().addLog("demand angle", false);
+    std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
+    GpsFramework::Instance().m_serialModule.writePilotSerialD(l);
+}
 
 void PilotModule::parseHadrienVolant(char * data){
     int i0 = data[0];
@@ -330,8 +320,6 @@ void PilotModule::parseHadrienVolant(char * data){
     int i2 = data[2];
     
     
-    
-    //INFO(s);
     if (i0 == 1 && i1 ==3 && i2 == 4) {
         
         int r1 = data[3];
@@ -357,8 +345,4 @@ void PilotModule::parseHadrienVolant(char * data){
     }
 }
 
-void PilotModule::handleHadrien(){
-    //GpsFramework::Instance().addLog("demand angle", false);
-    std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
-    GpsFramework::Instance().m_serialModule.writePilotSerialD(l);
-}
+
