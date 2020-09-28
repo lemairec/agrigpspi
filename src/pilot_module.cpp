@@ -68,6 +68,7 @@ void PilotModule::run(double value, double time, double vitesse){
 
 void PilotModule::myGotoVolant2(double res){
     m_volant = res;
+    
     update();
 }
 

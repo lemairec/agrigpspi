@@ -715,7 +715,7 @@ void GpsFramework::addLog(const std::string &s, bool time2){
         m_listLog.push_front(strs3.str());
         logFile << '\n' << strs3.str();
     }
-    while(s.size()>100){
+    while(m_listLog.size()>20){
         m_listLog.pop_back();
     }
 }

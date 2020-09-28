@@ -44,11 +44,11 @@ MainWindow * MainWindow::Instance_ptr(){
 }
 
 MainWindow::MainWindow(QWidget *parent)
-    :QMainWindow(parent)
+:QMainWindow(parent)
 {
     DEBUG("begin");
     m_timer = new QTimer(this);
-    m_timer->start(100);
+    m_timer->start(1000);
     
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimerSlot()));
     
@@ -75,13 +75,13 @@ void MainWindow::setupUi(){
     m_view->setupUi();
     this->setCentralWidget(m_view);
     
-    #ifdef APPLE
-        creerMenu();
-        //showMaximized();
-    #else
-        showFullScreen();
-    #endif
-
+#ifdef APPLE
+    creerMenu();
+    //showMaximized();
+#else
+    showFullScreen();
+#endif
+    
     //showMaximized();
     //showFullScreen();
     DEBUG("end");
@@ -115,14 +115,13 @@ void MainWindow::onValueChangeSlot(){
 void MainWindow::onTimerSlot(){
     DEBUG("begin");
     m_view->m_gpsWidget->draw();
-    m_timer->start(1000);
     DEBUG("end");
 }
 
 void MainWindow::creerMenu()
 {
-   DEBUG("begin");
-   QMenu *menuFichier = menuBar()->addMenu(tr("&Fichier"));
+    DEBUG("begin");
+    QMenu *menuFichier = menuBar()->addMenu(tr("&Fichier"));
     menuFichier->addAction("open File", this, SLOT(openFile()));
     DEBUG("end");
 }
@@ -130,8 +129,8 @@ void MainWindow::creerMenu()
 void MainWindow::openFile(){
     DEBUG("begin");
     QString fileName = QFileDialog::getOpenFileName(this,
-    tr("Open Address Book"), QString::fromStdString(ProjectSourceDir)+QString("/gps_samples"),
-    tr("Gps files (*.ubx)"));
+                                                    tr("Open Address Book"), QString::fromStdString(ProjectSourceDir)+QString("/gps_samples"),
+                                                    tr("Gps files (*.ubx)"));
     
     GpsFramework & f = GpsFramework::Instance();
     f.m_config.m_file_gps = fileName.toUtf8().constData();
