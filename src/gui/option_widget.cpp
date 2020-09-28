@@ -342,12 +342,12 @@ void OptionWidget::onMousePage5(double x, double y){
         f.m_config.m_motor_vitesse_min = 10;
     }
     
-    f.m_config.m_motor_vitesse_max += 5*m_motor_vitesse_max->getIntValue(x,y);
+    f.m_config.m_motor_vitesse_max += 2*m_motor_vitesse_max->getIntValue(x,y);
     if(f.m_config.m_motor_vitesse_max > 100){
         f.m_config.m_motor_vitesse_max = 100;
     }
-    if(f.m_config.m_motor_vitesse_max < 10){
-        f.m_config.m_motor_vitesse_max = 10;
+    if(f.m_config.m_motor_vitesse_max < 0){
+        f.m_config.m_motor_vitesse_max = 0;
     }
     f.m_config.m_motor_vitesse_agressivite = f.m_config.m_motor_vitesse_agressivite * m_motor_vitesse_agressivite->getMultValue(x,y);
     
