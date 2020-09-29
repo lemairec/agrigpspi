@@ -686,7 +686,7 @@ void GpsFramework::setVolantEngaged(bool value){
 }
 
 bool GpsFramework::getVolantEngaged(){
-    m_pilotModule.m_engaged;
+    return m_pilotModule.m_engaged;
 }
 
 void GpsFramework::addLog(const std::string &s, bool time2){
