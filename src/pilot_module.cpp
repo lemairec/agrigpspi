@@ -28,14 +28,14 @@ void PilotModule::clear(){
 }
 
 void PilotModule::engage(){
-    m_engage = true;
+    m_engaged = true;
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         clearHadrien();
         engageHadrien();
     }
 }
 void PilotModule::desengage(){
-    m_engage = false;
+    m_engaged = false;
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         clearHadrien();
         desengageHadrien();
@@ -46,7 +46,7 @@ void PilotModule::desengage(){
 
 
 void PilotModule::run(double value, double time, double vitesse){
-    if(m_engage){
+    if(m_engaged){
         if(vitesse < 1.0){
             GpsFramework::Instance().addError("desengagement, vitesse trop faible");
             desengage();
@@ -88,9 +88,9 @@ void PilotModule::setVolant(double vol){
 
 void PilotModule::update(){
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
-        updateArduino();
+        arduinoUpdate();
     } else {
-        leftRightHadrien(m_motor_vitesse_agressivite*(m_volant - m_volantMesured));
+        hadrienLeftRight(m_motor_vitesse_agressivite*(m_volant - m_volantMesured));
     }
 }
 
@@ -100,13 +100,69 @@ void PilotModule::update(){
     ARDUINO
  */
 
-void PilotModule::updateArduino(){
+int getIntWithChar(char c){
+    if(c =='0'){
+        return 0;
+    } else if(c =='1'){
+        return 1;
+    } else if(c =='2'){
+        return 2;
+    } else if(c =='3'){
+        return 3;
+    } else if(c =='4'){
+        return 4;
+    } else if(c =='5'){
+        return 5;
+    } else if(c =='6'){
+        return 6;
+    } else if(c =='7'){
+        return 7;
+    } else if(c =='8'){
+        return 8;
+    } else if(c =='9'){
+        return 9;
+    } else {
+        return 0;
+    }
+}
+
+void  PilotModule::arduinoParse(const std::string & s){
+    int i =0;
+    if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == ';'){
+        int res = 0;
+        int j = i+3;
+        if(s[i+3] == '-'){
+            j = i+4;
+        }
+        while(j < s.size()){
+            char c = s[j];
+            if(c == '\r'){
+                break;
+            } else {
+                res = res*10 + getIntWithChar(c);
+                ++j;
+            }
+        }
+        if(s[i+3] == '-'){
+            res = -res;
+        }
+        //INFO(s << " => " << res);
+        GpsFramework::Instance().m_pilotModule.setPasMotorVolant(res);
+        //GpsFramework::Instance().m_pilotModule.setPasVolant(res);
+        
+    }
+    if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == 'I'){
+        GpsFramework::Instance().m_pilotModule.m_version_guidage = s;
+    }
+}
+
+void PilotModule::arduinoUpdate(){
     int res = m_motor_vitesse_agressivite*(m_volant - m_volantMesured)*m_algo2_goto_pas_by_tour;
     if(m_inverse){
         res = -res;
     }
     
-    if(!m_engage){
+    if(!m_engaged){
         res = 0;
     }
     
@@ -125,10 +181,6 @@ void PilotModule::updateArduino(){
     if(res < 0 && res > -m_motor_vitesse_min){
         res = -0;
     }
-    if(!m_engage){
-        res = 0;
-    }
-    
     
     if(res<0){
         out << "$L;" << -res << ";\n";
@@ -275,7 +327,15 @@ void add4hex( std::vector<unsigned char> & l, int i){
     //}
 }*/
 
-void PilotModule::leftRightHadrien(double res){
+void PilotModule::hadrienGoTo(double res){
+    int res2 = res*32768;
+    std::vector<unsigned char> l;
+    l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
+    add4hex(l, res2);
+    runHadrienVolant(l);
+}
+
+void PilotModule::hadrienLeftRight(double res){
     int res2 = res*32768;
     std::vector<unsigned char> l;
     if(res2>0){

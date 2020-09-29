@@ -62,12 +62,9 @@ void MyQTSerialPorts::initOrLoad(Config & config){
                 GpsFramework::Instance().addError(oss.str());
                 //standardOutput << QObject::tr("Failed to open port %1, error: %2").arg(serialPortName).arg(serialPort.errorString()) << endl;//
             }
-            
-            if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
-                
-            }
         }
     }
+    m_timerHadrien.stop();
     m_timerHadrien.start(HADRIEN_TIME_VOLANT);
     DEBUG("end");
 };
@@ -95,36 +92,11 @@ void MyQTSerialPorts::handleErrorGps(QSerialPort::SerialPortError error){
     DEBUG("end");
 }
 
-int getIntWithChar(char c){
-    if(c =='0'){
-        return 0;
-    } else if(c =='1'){
-        return 1;
-    } else if(c =='2'){
-        return 2;
-    } else if(c =='3'){
-        return 3;
-    } else if(c =='4'){
-        return 4;
-    } else if(c =='5'){
-        return 5;
-    } else if(c =='6'){
-        return 6;
-    } else if(c =='7'){
-        return 7;
-    } else if(c =='8'){
-        return 8;
-    } else if(c =='9'){
-        return 9;
-    } else {
-        return 0;
-    }
-}
-
 void MyQTSerialPorts::handleReadyReadPilot(){
     DEBUG("begin");
     QByteArray b = m_serialPortPilot.readAll();
-    if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
+    if(m_pilot_langage == PILOT_LANGAGE_HADRIEN)
+    {
         QString hex(b.toHex());
         std::string s = hex.toUtf8().constData();
         
@@ -138,35 +110,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         QString hex(b);
         std::string s = (hex.toUtf8().constData());
 
-        int i = 0;
-        INFO(s);
-        if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == ';'){
-            int res = 0;
-            int j = i+3;
-            if(s[i+3] == '-'){
-                j = i+4;
-            }
-            while(j < s.size()){
-                char c = s[j];
-                if(c == '\r'){
-                    break;
-                } else {
-                    res = res*10 + getIntWithChar(c);
-                    ++j;
-                }
-            }
-            if(s[i+3] == '-'){
-                res = -res;
-            }
-            //INFO(s << " => " << res);
-            GpsFramework::Instance().m_pilotModule.setPasMotorVolant(res);
-            //GpsFramework::Instance().m_pilotModule.setPasVolant(res);
-            
-        }
-        if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == 'I'){
-            GpsFramework::Instance().m_pilotModule.m_version_guidage = s;
-        }
-        
+        GpsFramework::Instance().m_pilotModule.arduinoParse(s);
     }
     DEBUG("end");
 }
@@ -259,9 +203,7 @@ void MyQTSerialPorts::handleHadrien(){
     
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         GpsFramework::Instance().m_pilotModule.handleHadrien();
-
-    } else {
-        GpsFramework::Instance().m_pilotModule.update();
+        //GpsFramework::Instance().m_pilotModule.update();
     }
     DEBUG("end");
     

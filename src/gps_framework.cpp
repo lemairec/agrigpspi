@@ -105,9 +105,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
         m_distance = distance(*frame);
         
         calculAngleCorrection();
-        if(m_volantEngaged){
-            m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
-        }
+        m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
         
         calculSurface();
         
@@ -145,10 +143,8 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
         
         
         calculAngleCorrection();
-        if(m_volantEngaged){
-            m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
-        }
-        
+        m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
+
         calculSurface();
         
         DEBUG("draw");
@@ -681,7 +677,6 @@ void GpsFramework::calculContourExterieur(){
 
 
 void GpsFramework::setVolantEngaged(bool value){
-    m_volantEngaged = value;
     m_pilotModule.clear();
     if(value){
         m_pilotModule.engage();
@@ -691,7 +686,7 @@ void GpsFramework::setVolantEngaged(bool value){
 }
 
 bool GpsFramework::getVolantEngaged(){
-    return m_volantEngaged;
+    m_pilotModule.m_engaged;
 }
 
 void GpsFramework::addLog(const std::string &s, bool time2){

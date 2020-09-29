@@ -127,7 +127,6 @@ public:
     std::list<std::string> m_listLog;
     void addLog(const std::string & s, bool time2 = true);
 private:
-    bool m_volantEngaged = false;
     IGpsObserver * m_observer = NULL;
     
     void readFile();

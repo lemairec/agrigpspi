@@ -11,7 +11,6 @@
 class PilotModule {
     bool m_inverse = false;
     
-    bool m_engage = false;
     int m_pilot_langage = 0;
     int m_motor_vitesse_max = 0;
     int m_motor_vitesse_min = 0;
@@ -24,6 +23,8 @@ class PilotModule {
     
     std::string m_inputPilot;
 public:
+    bool m_engaged = false;
+    
     double m_last_value = 0;
     std::string m_last_order_send;
     
@@ -53,7 +54,8 @@ public:
     void update();
     
     //ARDUINO
-    void updateArduino();
+    void arduinoUpdate();
+    void arduinoParse(const std::string & s);
     
     //HADRIEN
     int m_nbrTourHadrien = 0;
@@ -64,7 +66,8 @@ public:
     void clearHadrien();
     void runHadrienVolant(std::vector<unsigned char> & c);
     
-    void leftRightHadrien(double i);
+    void hadrienLeftRight(double i);
+    void hadrienGoTo(double i);
     
     void setHadrienVolant(double val);
     void parseHadrienVolant(char * c);

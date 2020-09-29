@@ -783,7 +783,7 @@ void GpsWidget::drawDebug(){
         int time = last_frame.m_time;
     }
     
-    if(f.m_config.m_pilot_langage == PILOT_LANGAGE_HADRIEN){
+    if(f.m_listLog.size() > 0){
         int l2 = 160;
         {
             int x = m_width-l2;
