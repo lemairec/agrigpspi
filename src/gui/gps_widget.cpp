@@ -216,9 +216,10 @@ void GpsWidget::draw(){
     bool force = false;
     auto begin = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = begin - last_update;
+    INFO(diff.count());
     if(!force && diff.count() < 0.2){
    //     INFO(diff.count());
-        return;
+   //     return;
     }
     //INFO(diff.count());
     draw_force();
