@@ -401,6 +401,9 @@ void GpsFramework::calculDraw(GpsPoint_ptr p){
         s->m_points.pop_front();
     }
     s->m_lastPoint = p;
+    if(s->m_lastPointOk == NULL){
+        s->m_lastPointOk = s->m_lastPoint;
+    };
     double x = s->m_lastPointOk->m_x - s->m_lastPoint->m_x;
     double y = s->m_lastPointOk->m_y - s->m_lastPoint->m_y;
     double dist = x*x + y*y;
