@@ -90,7 +90,8 @@ void PilotModule::update(){
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         arduinoUpdate();
     } else {
-        hadrienGoTo(m_volant);
+        //hadrienLeftRight(m_motor_vitesse_agressivite*(m_volant - m_volantMesured));
+        hadrienGoTo(-m_volant);
     }
 }
 
