@@ -22,7 +22,7 @@ public:
     double m_b_lat = 0;
     double m_b_lon = 0;
 
-    
+   
     bool m_sensDraw = false;
     bool m_debug = false;
     
@@ -39,6 +39,8 @@ public:
     double m_volant_angle_by_tour = 35;
     int m_volant_derive = 100;
     
+    double m_distance_cap_vitesse = 10.0;
+
     bool m_logNMEA = true;
     bool m_api = true;
     

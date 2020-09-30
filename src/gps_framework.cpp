@@ -52,7 +52,8 @@ void GpsFramework::initOrLoadConfig(){
     m_pilotModule.initOrLoadConfig(m_config);
     m_serialModule.initOrLoad(m_config);
     m_fileModule.initOrLoad(m_config);
-     
+    
+    m_distance_cap_vitesse = 10;
     m_pointA.m_latitude = m_config.m_a_lat;
     m_pointA.m_longitude = m_config.m_a_lon;
     m_pointB.m_latitude = m_config.m_b_lat;
@@ -105,6 +106,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
         m_distance = distance(*frame);
         
         calculAngleCorrection();
+        
         m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
         
         calculSurface();
@@ -282,7 +284,6 @@ void GpsFramework::setAB(){
     INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
 }
 
-#define DISTANCE 1
 void GpsFramework::calculDeplacement(){
     if(m_list.size() > 3){
         GpsPoint_ptr point1 = m_list.front();
@@ -297,7 +298,7 @@ void GpsFramework::calculDeplacement(){
                 double y = point1->m_y - point2->m_y;
                 
                 double d = x*x+y*y;
-                if(d>(DISTANCE*DISTANCE)){
+                if(d>(m_distance_cap_vitesse*m_distance_cap_vitesse)){
                     point3 = point;
                 }
             } else {
@@ -307,7 +308,7 @@ void GpsFramework::calculDeplacement(){
                 double y = point2->m_y - point3->m_y;
                 
                 double d = x*x+y*y;
-                if(d>(DISTANCE*DISTANCE)){
+                if(d>(m_distance_cap_vitesse*m_distance_cap_vitesse)){
                     break;
                 }
             }

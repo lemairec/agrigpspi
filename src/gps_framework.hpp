@@ -27,6 +27,8 @@ typedef std::shared_ptr<SurfaceToDraw> SurfaceToDraw_ptr;
 
 class GpsFramework {
     GpsFramework();
+    
+    double m_distance_cap_vitesse;
 public:
     static GpsFramework & Instance();
     void initOrLoadConfig();

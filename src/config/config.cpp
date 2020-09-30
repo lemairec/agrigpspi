@@ -52,6 +52,8 @@ void Config::save(){
     settings.setValue("m_volant_pas_by_tour", m_volant_pas_by_tour);
     settings.setValue("m_volant_angle_by_tour", m_volant_angle_by_tour);
     settings.setValue("m_volant_derive", m_volant_derive);
+    
+    settings.setValue("distance_cap_vitesse", m_distance_cap_vitesse);
 }
 
 void Config::load(){
@@ -128,6 +130,9 @@ void Config::load(){
     }
     if(settings.contains("m_volant_derive")){
         m_volant_derive = settings.value("m_volant_derive").toDouble();
+    }
+    if(settings.contains("distance_cap_vitesse")){
+        m_distance_cap_vitesse = settings.value("distance_cap_vitesse").toDouble();
     }
     
 }
