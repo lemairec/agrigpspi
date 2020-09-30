@@ -175,12 +175,11 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
                 m_list.pop_back();
             };
             
-            m_deplacementAngle = f->m_cap_rad;
-            m_vitesse = f->m_vitesse_kmh;
-
+            
             calculDeplacement();
             m_distance = distance(*f);
-            
+            m_deplacementAngle = f->m_cap_rad;
+            m_vitesse = f->m_vitesse_kmh;
             
             
             calculAngleCorrection();
