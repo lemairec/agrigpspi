@@ -135,10 +135,10 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
             
             calculAngleCorrection();
             
-            m_deplacementAngle = moyDeplacement(m_deplacementAngle);
             m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
             
             m_distanceAB = moyDistance(m_distanceAB);
+            m_deplacementAngle = moyDeplacement(m_deplacementAngle);
             
             calculSurface();
             
