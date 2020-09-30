@@ -11,7 +11,7 @@
 std::ofstream gpslogFile;
 std::ofstream logFile;
 
-bool rmc = false;
+bool rmc = true;
 
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
