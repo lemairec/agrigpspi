@@ -216,7 +216,6 @@ void GpsWidget::draw(){
     bool force = false;
     auto begin = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = begin - last_update;
-    INFO(diff.count());
     if(!force && diff.count() < 0.2){
    //     INFO(diff.count());
    //     return;
@@ -613,11 +612,10 @@ void GpsWidget::drawVolant_(double a, double r, double start_angle){
     j=0.9;
     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
     
-    if(nbr_tour !=0){
-        QString s = "t " + QString::number(nbr_tour, 'f', 1);
-        auto textItem = scene->addText(s);
-        textItem->setPos(m_width/2-15, y-r);
-    }
+    
+    QString s = QString::number(nbr_tour, 'f', 1);
+    auto textItem = scene->addText(s);
+    textItem->setPos(m_width/2-10, y-r);
 }
 
 void GpsWidget::drawVolant(){
@@ -628,10 +626,12 @@ void GpsWidget::drawVolant(){
     
     
     double angle = f.m_pilotModule.m_volant;
+    
     double j = 1.2;
     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penBlack, m_brushWhite);
-      
-   
+    
+    
+    
     QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
     item->setBrush(m_grayBrush);
     item->setPen(m_penNo);
@@ -641,6 +641,9 @@ void GpsWidget::drawVolant(){
     
     j=0.8;
     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
+    QString s = QString::number(f.m_pilotModule.m_volantTotal, 'f', 1);
+    auto textItem = scene->addText(s);
+    textItem->setPos(m_width/2-10, y-40);
     
     {
         drawVolant_(f.m_pilotModule.m_volantMesured, 20, 0);

@@ -25,7 +25,6 @@ class PilotModule {
 public:
     bool m_engaged = false;
     
-    double m_last_value = 0;
     std::string m_last_order_send;
     
     double m_last_goto_tour = 0;
@@ -46,6 +45,7 @@ public:
     
     double m_volant = 0.0;
     double m_volant0 = 0.0;
+    double m_volantTotal = 0.0;
     
     double m_volantMesured = 0.0;
     

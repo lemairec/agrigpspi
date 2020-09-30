@@ -24,7 +24,7 @@ void PilotModule::initOrLoadConfig(Config & config){
 }
 
 void PilotModule::clear(){
-    m_last_value = 0;
+    //m_last_value = 0;
 }
 
 void PilotModule::engage(){
@@ -58,9 +58,7 @@ void PilotModule::run(double value, double time, double vitesse){
         
         m_volant0 += res/m_volant_derive;
         
-        m_volant = m_volant0+m_volant;
-        
-        m_last_value = value;
+        m_volantTotal = m_volant0+m_volant;
     }
     
     
@@ -90,7 +88,7 @@ void PilotModule::update(){
     if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
         arduinoUpdate();
     } else {
-        hadrienLeftRight(m_motor_vitesse_agressivite*(m_volant - m_volantMesured));
+        hadrienLeftRight(m_motor_vitesse_agressivite*(m_volantTotal - m_volantMesured));
         //hadrienGoTo(-m_volant);
     }
 }
@@ -158,7 +156,7 @@ void  PilotModule::arduinoParse(const std::string & s){
 }
 
 void PilotModule::arduinoUpdate(){
-    int res = m_motor_vitesse_agressivite*(m_volant - m_volantMesured)*m_algo2_goto_pas_by_tour;
+    int res = m_motor_vitesse_agressivite*(m_volantTotal - m_volantMesured)*m_algo2_goto_pas_by_tour;
     if(m_inverse){
         res = -res;
     }
