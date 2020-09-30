@@ -53,7 +53,7 @@ void GpsFramework::initOrLoadConfig(){
     m_serialModule.initOrLoad(m_config);
     m_fileModule.initOrLoad(m_config);
     
-    m_distance_cap_vitesse = 10;
+    m_distance_cap_vitesse = 3;
     m_pointA.m_latitude = m_config.m_a_lat;
     m_pointA.m_longitude = m_config.m_a_lon;
     m_pointB.m_latitude = m_config.m_b_lat;
