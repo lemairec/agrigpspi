@@ -11,6 +11,7 @@
 std::ofstream gpslogFile;
 std::ofstream logFile;
 
+bool rmc = false;
 
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
@@ -53,7 +54,7 @@ void GpsFramework::initOrLoadConfig(){
     m_serialModule.initOrLoad(m_config);
     m_fileModule.initOrLoad(m_config);
     
-    m_distance_cap_vitesse = 10;
+    m_distance_cap_vitesse = 1;
     m_pointA.m_latitude = m_config.m_a_lat;
     m_pointA.m_longitude = m_config.m_a_lon;
     m_pointB.m_latitude = m_config.m_b_lat;
@@ -85,80 +86,119 @@ void GpsFramework::setRef(double latitude, double longitude){
     m_gpsModule.setXY(m_pointB);
 }
 
+std::list<double> distances;
+double moyDistance(double distance){
+    distances.push_front(distance);
+    while(distances.size()>10){
+        distances.pop_back();
+    }
+    double sum = 0;
+    for(auto d : distances){
+        sum += d;
+    }
+    return sum/distances.size();
+}
+
+
+std::list<double> deplacements;
+double moyDeplacement(double deplacement){
+    deplacements.push_front(deplacement);
+    while(deplacements.size()>10){
+        deplacements.pop_back();
+    }
+    double sum = 0;
+    for(auto d : deplacements){
+        sum += d;
+    }
+    return sum/deplacements.size();
+}
+
 void GpsFramework::onGGAFrame(GGAFrame & f){
     DEBUG("begin");
     m_lastGGAFrame = GGAFrame(f);
-    DEBUG("end");
     
-    if(f.isOk()){
-        if(m_gpsModule.m_latitudeRef == 0){
-            setRef(f.m_latitude, f.m_longitude);
-            return;
+    if(!rmc){
+        if(f.isOk()){
+            if(m_gpsModule.m_latitudeRef == 0){
+                setRef(f.m_latitude, f.m_longitude);
+                return;
+            }
+            GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
+            m_list.push_front(frame);
+            if(m_list.size()>100){
+                m_list.pop_back();
+            };
+            
+            
+            calculDeplacement();
+            m_distance = distance(*frame);
+            
+            m_distanceAB = moyDistance(m_distanceAB);
+            m_deplacementAngle = moyDeplacement(m_deplacementAngle);
+            
+            calculAngleCorrection();
+            
+            m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
+            
+            calculSurface();
+            
+            calculDraw(frame);
         }
-        GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
-        m_list.push_front(frame);
-        if(m_list.size()>100){
-            m_list.pop_back();
-        };
-        
-        
-        calculDeplacement();
-        m_distance = distance(*frame);
-        
-        calculAngleCorrection();
-        
-        m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
-        
-        calculSurface();
-        
-        calculDraw(frame);
+       
+        if(m_observer){
+            m_observer->onNewPoint();
+        }
+        time_t timer;
+        time(&m_last_gga_received);
     }
-   
-    if(m_observer){
-        m_observer->onNewPoint();
-    }
-    time_t timer;
-    time(&m_last_gga_received);
     //std::cout << "<trkpt lon=\""<< f.m_longitude << "\" lat=\"" << f.m_latitude << "\"><ele>51.0</ele><time>2010-12-26T17:07:40.421Z</time></trkpt>" << std::endl;
+    DEBUG("end");
 }
+
+
+
 
 void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     return;
     DEBUG("begin");
-    m_lastRMCFrame = f;
-    if(true){
-        if(m_gpsModule.m_latitudeRef == 0){
-            setRef(f->m_latitude, f->m_longitude);
-            return;
-        }
-        
-        m_list.push_front(f);
-        if(m_list.size()>100){
-            m_list.pop_back();
-        };
-        
-        m_deplacementAngle = f->m_cap_rad;
-        m_vitesse = f->m_vitesse_kmh;
-                       
-        calculDeplacement();
-        m_distance = distance(*f);
-        
-        
-        calculAngleCorrection();
-        m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
+    
+    if(rmc){
+        m_lastRMCFrame = f;
+        if(true){
+            if(m_gpsModule.m_latitudeRef == 0){
+                setRef(f->m_latitude, f->m_longitude);
+                return;
+            }
+            
+            m_list.push_front(f);
+            if(m_list.size()>100){
+                m_list.pop_back();
+            };
+            
+            m_deplacementAngle = f->m_cap_rad;
+            m_vitesse = f->m_vitesse_kmh;
 
-        calculSurface();
-        
-        DEBUG("draw");
-        calculDraw(f);
+            calculDeplacement();
+            m_distance = distance(*f);
+            
+            
+            
+            calculAngleCorrection();
+            m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
+
+            calculSurface();
+            
+            DEBUG("draw");
+            calculDraw(f);
+        }
+       
+        if(m_observer){
+            m_observer->onNewPoint();
+        }
+        time_t timer;
+        time(&m_last_gga_received);
+        DEBUG("end");
     }
-   
-    if(m_observer){
-        m_observer->onNewPoint();
-    }
-    time_t timer;
-    time(&m_last_gga_received);
-    DEBUG("end");
     
     //std::cout << "<trkpt lon=\""<< f.m_longitude << "\" lat=\"" << f.m_latitude << "\"><ele>51.0</ele><time>2010-12-26T17:07:40.421Z</time></trkpt>" << std::endl;
 }
