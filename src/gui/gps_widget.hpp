@@ -44,6 +44,10 @@ public:
     ButtonGui * m_buttonChamp;
     ButtonGui * m_buttonVolant;
     
+    QBrush m_brushTractor;
+    QPen m_penTractorEssieu;
+    QPen m_penTractorRoue;
+    
     void drawCourbe(double l);
     bool addligne(double l, int i);
     void drawLines();
@@ -53,9 +57,8 @@ public:
     void drawError();
     
     void drawDebug();
-    void drawDirection();
-    void drawVolant();
-    void drawVolant_(double a, double r, double start_angle);
+    void drawVolant(double y);
+    void drawVolant_(double y, double a, double r, double start_angle);
     
     void draw();
     void draw_force();
