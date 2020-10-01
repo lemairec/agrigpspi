@@ -261,6 +261,13 @@ void GpsWidget::draw_force(){
     scene->clear();
     
     if(f.m_list.size() >0){
+        if(f.m_config.m_debug){
+            for(auto p: f.m_list){
+                double x1, y1;
+                my_projete(p->m_x, p->m_y, x1, y1);
+                scene->addEllipse(w/2 + x1, h/2 - y1, 1, 1, m_penBlack, m_brushNo);
+            }
+        }
         for(auto s: f.m_listSurfaceToDraw){
             if(s->m_points.size() > 2){
                 double x1, y1;
