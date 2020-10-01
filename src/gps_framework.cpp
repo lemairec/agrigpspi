@@ -11,7 +11,7 @@
 std::ofstream gpslogFile;
 std::ofstream logFile;
 
-bool rmc = true;
+bool rmc = false;
 
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
@@ -86,6 +86,8 @@ void GpsFramework::setRef(double latitude, double longitude){
     m_gpsModule.setXY(m_pointB);
 }
 
+
+
 std::list<double> distances;
 double moyDistance(double distance){
     distances.push_front(distance);
@@ -123,6 +125,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
                 setRef(f.m_latitude, f.m_longitude);
                 return;
             }
+            kalmanFilter(f);
             GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
             m_list.push_front(frame);
             if(m_list.size()>100){
@@ -323,7 +326,7 @@ void GpsFramework::setAB(){
     INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
 }
 
-void GpsFramework::calculDeplacement(){
+/*void GpsFramework::calculDeplacement(){
     if(m_list.size() > 3){
         GpsPoint_ptr point1 = m_list.front();
         GpsPoint_ptr point2 = NULL;
@@ -409,6 +412,64 @@ void GpsFramework::calculDeplacement(){
         //INFO(deplacementTime << " " << vitesse);
     }
     //calculContourExterieur();
+}*/
+
+void GpsFramework::calculDeplacement(){
+    if(m_list.size() > 3){
+        GpsPoint_ptr point1 = m_list.front();
+        GpsPoint_ptr point2 = NULL;
+        int i = 0;
+        for(auto point : m_list){
+            point2 = point;
+            
+            double x = point1->m_x - point2->m_x;
+            double y = point1->m_y - point2->m_y;
+            
+            double d = x*x+y*y;
+            if(d>(m_distance_cap_vitesse*m_distance_cap_vitesse)){
+                break;
+            }
+            
+            //point2 = NULL;
+            ++i;
+        }
+        if(point2!=NULL){
+            double x = point1->m_x - point2->m_x;
+            double y = point1->m_y - point2->m_y;
+            
+            m_deplacementX = x;
+            m_deplacementY = y;
+            
+            if(m_deplacementY != 0){
+                double temp = atan(m_deplacementX/m_deplacementY);
+                if(m_deplacementY>0){
+                    m_deplacementAngle = temp;
+                } else {
+                    m_deplacementAngle = temp+3.14;
+                }
+                //int perc = temp/m_deplacementAngle*100;
+                //INFO(perc << " " << temp/3.14*180 << " " << m_deplacementAngle/3.14*180);
+            }
+            
+            if(m_ab_x != 0 || m_ab_y != 0){
+                double det = m_a*m_deplacementY - m_b*m_deplacementX;
+                //m_deplacementAngle = m_deplacementAngle+3.14;
+                m_sensAB = (det < 0);
+            }
+            
+            
+            m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
+            m_time_last_point = point1->m_timeHour - point2->m_timeHour;
+            if(m_time_last_point > 0){
+                m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
+                if(m_vitesse >50){
+                    INFO("erreur");
+                }
+            }
+        }
+        //INFO(deplacementTime << " " << vitesse);
+    }
+    //calculContourExterieur();
 }
 
 void GpsFramework::changeDraw(){
@@ -447,7 +508,7 @@ void GpsFramework::calculDraw(GpsPoint_ptr p){
     double x = s->m_lastPointOk->m_x - s->m_lastPoint->m_x;
     double y = s->m_lastPointOk->m_y - s->m_lastPoint->m_y;
     double dist = x*x + y*y;
-    if(dist > 3*3){
+    if(dist > m_distance_cap_vitesse*m_distance_cap_vitesse){
         s->m_lastPointOk = p;
     }
     s->m_points.push_front(p);
@@ -756,4 +817,9 @@ void GpsFramework::addLog(const std::string &s, bool time2){
     while(m_listLog.size()>20){
         m_listLog.pop_back();
     }
+}
+
+
+void GpsFramework::kalmanFilter(GpsPoint_ptr){
+    
 }
