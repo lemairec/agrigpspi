@@ -11,7 +11,7 @@
 std::ofstream gpslogFile;
 std::ofstream logFile;
 
-bool rmc = false;
+bool rmc = true;
 
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
@@ -125,7 +125,6 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
                 setRef(f.m_latitude, f.m_longitude);
                 return;
             }
-            kalmanFilter(f);
             GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
             m_list.push_front(frame);
             if(m_list.size()>100){
@@ -140,8 +139,8 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
             
             m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
             
-            m_distanceAB = moyDistance(m_distanceAB);
-            m_deplacementAngle = moyDeplacement(m_deplacementAngle);
+            //m_distanceAB = moyDistance(m_distanceAB);
+            //m_deplacementAngle = moyDeplacement(m_deplacementAngle);
             
             calculSurface();
             
@@ -162,7 +161,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
 
 
 void GpsFramework::onRMCFrame(RMCFrame_ptr f){
-    return;
+    //return;
     DEBUG("begin");
     
     if(rmc){
@@ -181,7 +180,7 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
             
             calculDeplacement();
             m_distance = distance(*f);
-            m_deplacementAngle = f->m_cap_rad;
+            //m_deplacementAngle = f->m_cap_rad;
             m_vitesse = f->m_vitesse_kmh;
             
             
@@ -820,6 +819,3 @@ void GpsFramework::addLog(const std::string &s, bool time2){
 }
 
 
-void GpsFramework::kalmanFilter(GpsPoint_ptr){
-    
-}
