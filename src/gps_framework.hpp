@@ -59,9 +59,9 @@ public:
     bool m_reloadConfig = true;
     
     //point
-    double m_a;
-    double m_b;
-    double m_c;
+    double m_a = 0;
+    double m_b = 0;
+    double m_c = 0;
     double m_sqrt_m_a_m_b;
     
     double m_ab_x = 0.0;

@@ -87,8 +87,11 @@ void GpsWidget::drawCourbe(double l){
 
 
 void GpsWidget::drawLines(){
-    //addligne(0, x, y);
     GpsFramework & f = GpsFramework::Instance();
+    if(f.m_a == 0 && f.m_b ==0 && f.m_c ==0){
+        return;
+    }
+    //addligne(0, x, y);
     double x0 = m_xref;
     double y0 = m_yref;
     double res = -(y0*f.m_b +(f.m_a * x0 + f.m_c));
