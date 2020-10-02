@@ -176,17 +176,20 @@ void BaseWidget::drawText(const std::string & text, double x, double y){
 }
 
 void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap, double scale){
+    double scale2 = 0.4*scale;
     int x = m_width*button->m_x-m_height*button->m_rayon;
     int y = m_height*button->m_y-m_height*button->m_rayon;
     
     int d = m_height*button->m_rayon*2;
     
     auto item = new QGraphicsPixmapItem(pixmap);
-    item->setScale(0.4*scale);
-    item->setPos(x, y);
+    item->setScale(scale2);
+    auto size = item->boundingRect();
+    item->setPos(m_width*button->m_x-size.width()*scale2/2, m_height*button->m_y-size.height()*scale2/2);
     scene->addItem(item);
     
     //scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
+    //scene->addEllipse(m_width*button->m_x, m_height*button->m_y, 1, 1, QPen(QColor(0,0,0)), QBrush(QColor(0, 0, 0)));
 }
 
 

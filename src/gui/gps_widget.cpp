@@ -28,7 +28,7 @@ QPixmap * p;
 GpsWidget::GpsWidget()
 :m_optionsWidget()
 {
-    m_zoom = 10;
+    m_zoom = 40;
     
     double temp = 0.05;
     m_buttonClose  = new ButtonGui(1-temp, temp, GROS_BUTTON, 0);
@@ -39,8 +39,8 @@ GpsWidget::GpsWidget()
     m_buttonMinus  = new ButtonGui(temp, 0.7, GROS_BUTTON, 0);
     
     m_buttonOption  = new ButtonGui(temp, temp, GROS_BUTTON, 0);
-    m_buttonChamp  = new ButtonGui(temp, 0.3, GROS_BUTTON, 0);
-    m_buttonVolant  = new ButtonGui(1-temp, 0.65, GROS_BUTTON, 0);
+    m_buttonChamp  = new ButtonGui(temp, 0.3, GROS_GROS_BUTTON, 0);
+    m_buttonVolant  = new ButtonGui(1-temp, 0.65, GROS_GROS_BUTTON, 0);
     
     m_buttonErrorOk  = new ButtonGui(0.5, 0.8, GROS_BUTTON, 0);
     
@@ -453,7 +453,7 @@ void GpsWidget::drawTracteur(){
     
     
     if(m_a){
-        y = h/2+1.8*m_zoom/4;
+        y = h/2+1*m_zoom;
         
         double l2 = 1.5*m_zoom/2;
         
