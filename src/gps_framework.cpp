@@ -783,8 +783,10 @@ void GpsFramework::setVolantEngaged(bool value){
     m_pilotModule.clear();
     if(value){
         m_pilotModule.engage();
+        m_pauseDraw = false;
     } else {
         m_pilotModule.desengage();
+        m_pauseDraw = true;
     }
 }
 
