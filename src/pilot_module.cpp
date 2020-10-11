@@ -79,7 +79,7 @@ void PilotModule::setPasMotorVolant(int pas){
 }
 
 void PilotModule::setVolant(double vol){
-    if(m_inverse){
+    if(!m_inverse){
         m_volantMesured = -vol;
     } else {
         m_volantMesured = vol;
