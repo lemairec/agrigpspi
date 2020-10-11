@@ -110,8 +110,10 @@ public:
     GGAFrame m_lastGGAFrame;
     RMCFrame_ptr m_lastRMCFrame;
     time_t m_last_gga_received;
+    time_t m_last_pilot_received;
     
     bool isGpsConnected();
+    bool isPilotConnected();
     void exportHtml();
     
      

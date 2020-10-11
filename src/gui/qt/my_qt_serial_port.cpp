@@ -86,7 +86,7 @@ void MyQTSerialPorts::handleErrorGps(QSerialPort::SerialPortError error){
     if(error != 0){
         std::ostringstream oss;
         oss << "handleErrorGps " << error << ", error:" << m_serialPortGps.errorString().toUtf8().constData();
-        GpsFramework::Instance().addError(oss.str());
+        //GpsFramework::Instance().addError(oss.str());
         WARN(error);
     }
     DEBUG("end");
@@ -121,7 +121,7 @@ void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
         //auto error_s = std::string(QMetaEnum::fromType<QSerialPort::SerialPortError>().valueToKey(error));
         auto error_s = "fix";
         oss << "handleErrorPilot " << error << " " << error_s << ", error:" << m_serialPortPilot.errorString().toUtf8().constData();
-        GpsFramework::Instance().addError(oss.str());
+        //GpsFramework::Instance().addError(oss.str());
         WARN(error);
     }
     DEBUG("end");

@@ -19,7 +19,7 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_volant_derive = config.m_volant_derive;
    
     m_pilot_langage = config.m_pilot_langage;
-
+    
     clear();
 }
 
@@ -71,6 +71,8 @@ void PilotModule::myGotoVolant2(double res){
 }
 
 void PilotModule::setPasMotorVolant(int pas){
+    time(&GpsFramework::Instance().m_last_pilot_received);
+    
     double res = pas/m_algo2_goto_pas_by_tour;
     m_volantMesured = res;
     update();
@@ -128,15 +130,19 @@ int getIntWithChar(char c){
 void ArduinoParser::parseBuffer(){
     if(m_bufferIndLast > 1){
         if(m_buffer[0] == 'P'  && m_buffer[1] == ','){
-            INFO("****new" << m_tempInd << " " << m_bufferIndLast);
-            printBuffer();
+            //INFO("****new" << m_tempInd << " " << m_bufferIndLast);
+            //printBuffer();
             readUntilCommat();
             
             int res = readNegInt();
             GpsFramework::Instance().m_pilotModule.setPasMotorVolant(res);
             
         } else if(m_buffer[0] == 'P'  && m_buffer[1] == 'I'){
-            GpsFramework::Instance().m_pilotModule.m_version_guidage = "$P";
+            std::string s;
+            for(size_t i =0; i < m_bufferIndLast; ++i){
+                s += m_buffer[i];
+            }
+            GpsFramework::Instance().m_pilotModule.m_version_guidage = s;
              //GpsFramework::Instance().m_pilotModule.m_version_guidage = s;
         } else {
             

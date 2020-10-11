@@ -841,12 +841,20 @@ void GpsWidget::drawDebug(){
 }
 
 void GpsWidget::drawError(){
+    int w = m_width/2;
+    int h = m_height/2;
+    
+    int x = 50;
+    int y = 50;
+      
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_config.m_debug){
         if(!f.m_messages_errors.empty()){
-            scene->addRect(50, 50, m_width-100, m_height-100, m_penBlack, m_brushLightGrayDebug);
-            drawText("Erreurs", 0.5*m_width, 80, 20, true);
-            drawText(f.m_messages_errors, 0.1*m_width, 0.3*m_height, 10, false);
+            scene->addRect(x, y, w, h, m_penBlack, m_brushLightGrayDebug);
+            drawText("Erreurs", x+w/2, y+15, 20, true);
+            drawText(f.m_messages_errors, x+20, y+40, 10, false);
+            m_buttonErrorOk->m_x = (x+w/2)/m_width;
+            m_buttonErrorOk->m_y = (y+h-30)/m_height;
             drawButtonImage(m_buttonErrorOk, *m_imgOk);
            // m_pilot_serial_input
         }
@@ -868,10 +876,12 @@ void GpsWidget::addButtons(){
         drawButtonImage(m_buttonChamp, *m_imgChampVert);
     }
     
-    if(f.getVolantEngaged()){
-        drawButtonImage(m_buttonVolant, *m_imgVolantVert, 1.4);
-    } else {
-        drawButtonImage(m_buttonVolant, *m_imgVolantGris, 1.4);
+    if(f.isPilotConnected()){
+        if(f.getVolantEngaged()){
+            drawButtonImage(m_buttonVolant, *m_imgVolantVert, 1.4);
+        } else {
+            drawButtonImage(m_buttonVolant, *m_imgVolantGris, 1.4);
+        }
     }
 }
 

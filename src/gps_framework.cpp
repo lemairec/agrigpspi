@@ -217,6 +217,18 @@ bool GpsFramework::isGpsConnected(){
     }
 }
 
+bool GpsFramework::isPilotConnected(){
+    time_t timer;
+    time(&timer);
+    
+    double seconds = difftime(timer,m_last_pilot_received);
+    if(seconds < 2){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void GpsFramework::onFrame(const std::string &frame){
     gpslogFile << frame << "\n";
 }
