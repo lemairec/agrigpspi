@@ -24,8 +24,9 @@ void version(){
 }
 
 void printPosition(){
-    Serial.print("$P;");
-    Serial.println(position);
+    Serial.print("$P,");
+    Serial.print(position);
+    Serial.println(";");
 }
 
 int i = 0;
@@ -48,7 +49,7 @@ void updatePosition(){
 
     
   } 
-  //Serial.print("$P;");Serial.print(state_A);Serial.print(" ");Serial.println(state_B);
+  //Serial.print("$P,");Serial.print(state_A);Serial.print(" ");Serial.println(state_B);
   encoder_last_state_A = state_A; // Updates the previous state of the outputA with the current state
 }
 
@@ -215,14 +216,14 @@ void parseBuffer(){
   updatePosition();
   if(m_buffer[0] == 'H'){
     Serial.println("");
-    Serial.println("$G;100  //goto 100");
+    Serial.println("$G,100  //goto 100");
     Serial.println("$D      //disable");
     Serial.println("$V      //give version");
     Serial.println("$P      //print position");
-    Serial.println("$C;100  //config; motor max");
-    Serial.println("$L;255  //left; motor 255");
-    Serial.println("$R;255  //right; motor 255");
-    Serial.println("$S;     //stop");
+    Serial.println("$C,100  //config; motor max");
+    Serial.println("$L,255  //left; motor 255");
+    Serial.println("$R,255  //right; motor 255");
+    Serial.println("$S      //stop");
     
     Serial.println("");
   } else if(m_buffer[0] == 'V'){
@@ -230,25 +231,25 @@ void parseBuffer(){
   } else if(m_buffer[0] == 'R'){
     int speed = myReadInt();
     m_tempInd = 2;
-    //Serial.print("#R;");Serial.println(speed);
+    //Serial.print("#R,");Serial.println(speed);
     SetMotor2(speed, false);
   } else if(m_buffer[0] == 'L'){
     int speed = myReadInt();
     m_tempInd = 2;
-    //Serial.print("#L;");Serial.println(speed);
+    //Serial.print("#L,");Serial.println(speed);
     SetMotor2(speed, true);
   } else if(m_buffer[0] == 'S'){
     SetMotor2(0, true);
   } else if(m_buffer[0] == 'C'){
     m_tempInd = 2;
     motor_max = myReadInt();
-    Serial.print("#C;");Serial.println(motor_max);
+    Serial.print("#C,");Serial.println(motor_max);
   } else if(m_buffer[0] == 'D'){
     
   } else if(m_buffer[0] == 'G'){
     m_tempInd = 2;
     long res = myReadInt();
-    Serial.print("#G;");Serial.println(res);
+    Serial.print("#G,");Serial.println(res);
     goTo(res);
   } else if(m_buffer[0] == 'P'){
     printPosition();

@@ -59,6 +59,7 @@ void GpsFramework::initOrLoadConfig(){
     m_pointA.m_longitude = m_config.m_a_lon;
     m_pointB.m_latitude = m_config.m_b_lat;
     m_pointB.m_longitude = m_config.m_b_lon;
+    gpslogFile << "[config]\n";
     setAB();
     m_reloadConfig = true;
     
@@ -782,9 +783,11 @@ void GpsFramework::calculContourExterieur(){
 void GpsFramework::setVolantEngaged(bool value){
     m_pilotModule.clear();
     if(value){
+        gpslogFile << "[engage]\n";
         m_pilotModule.engage();
         m_pauseDraw = false;
     } else {
+        gpslogFile << "[desengage]\n";
         m_pilotModule.desengage();
         m_pauseDraw = true;
     }

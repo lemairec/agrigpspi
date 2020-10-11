@@ -222,7 +222,7 @@ void GpsWidget::draw(){
     std::chrono::duration<double> diff = begin - last_update;
     if(!force && diff.count() < 0.5){
    //     INFO(diff.count());
-        return;
+    //    return;
     }
     //INFO(diff.count());
     draw_force();
@@ -482,7 +482,7 @@ void GpsWidget::drawTracteur(){
             scene->addLine(x-dx, y_direction-dy, x+dx, y_direction+dy, m_penTractorRoue);
         }
         
-        if(m_zoom > 40){
+        if(m_zoom >= 40){
             if(f.m_config.m_debug){
                 drawVolant(y_arriere - 0.5*l2);
             }
@@ -500,6 +500,12 @@ void GpsWidget::drawTracteur(){
             double a = -f.m_angle_correction;
             my_projete(m_xref+dx*cos(a)-dy*sin(a), m_yref+dx*sin(a)+dy*cos(a), x2, y2);
             scene->addLine(w/2+x, h/2-y, w/2 + x2, h/2 - y2, m_penBlue);
+        }
+        if(m_zoom >= 40){
+            y = h/4;
+            if(f.m_config.m_debug){
+                drawVolant(y);
+            }
         }
     }
     

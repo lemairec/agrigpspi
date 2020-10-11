@@ -6,9 +6,14 @@
 #include <vector>
 #include "config/config.hpp"
 #include <stdint.h>
+#include "util/parser.hpp"
 
+class ArduinoParser : public Parser {
+    void parseBuffer();
+};
 
 class PilotModule {
+    ArduinoParser m_arduino_parser;
     bool m_inverse = false;
     
     int m_pilot_langage = 0;

@@ -65,7 +65,7 @@ void PilotModule::run(double value, double time, double vitesse){
 }
 
 void PilotModule::myGotoVolant2(double res){
-    m_volant = res;
+    m_volantTotal = res;
     
     update();
 }
@@ -125,9 +125,31 @@ int getIntWithChar(char c){
     }
 }
 
+void ArduinoParser::parseBuffer(){
+    if(m_bufferIndLast > 1){
+        if(m_buffer[0] == 'P'  && m_buffer[1] == ','){
+            INFO("****new" << m_tempInd << " " << m_bufferIndLast);
+            printBuffer();
+            readUntilCommat();
+            
+            int res = readNegInt();
+            GpsFramework::Instance().m_pilotModule.setPasMotorVolant(res);
+            
+        } else if(m_buffer[0] == 'P'  && m_buffer[1] == 'I'){
+            GpsFramework::Instance().m_pilotModule.m_version_guidage = "$P";
+             //GpsFramework::Instance().m_pilotModule.m_version_guidage = s;
+        } else {
+            
+        }
+    }
+}
+
 void  PilotModule::arduinoParse(const std::string & s){
+    for(auto c : s){
+        m_arduino_parser.readChar(c);
+    }
     int i =0;
-    if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == ';'){
+    /*if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == ';'){
         int res = 0;
         int j = i+3;
         if(s[i+3] == '-'){
@@ -145,19 +167,20 @@ void  PilotModule::arduinoParse(const std::string & s){
         if(s[i+3] == '-'){
             res = -res;
         }
-        //INFO(s << " => " << res);
-        GpsFramework::Instance().m_pilotModule.setPasMotorVolant(res);
+        INFO(s << " => " << res);
         //GpsFramework::Instance().m_pilotModule.setPasVolant(res);
         
-    }
-    if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == 'I'){
-        GpsFramework::Instance().m_pilotModule.m_version_guidage = s;
-    }
+    } else if(s[i+0] == '$' && s[i+1] == 'P' && s[i+2] == 'I'){
+        //GpsFramework::Instance().m_pilotModule.m_version_guidage = s;
+    } else {
+        INFO("***error'" << s[i+0] << "'" << s);
+        
+    }*/
 }
 
 void PilotModule::arduinoUpdate(){
     int res = m_motor_vitesse_agressivite*(m_volantTotal - m_volantMesured)*m_algo2_goto_pas_by_tour;
-    if(m_inverse){
+    if(!m_inverse){
         res = -res;
     }
     
@@ -182,9 +205,9 @@ void PilotModule::arduinoUpdate(){
     }
     
     if(res<0){
-        out << "$L;" << -res << ";\n";
+        out << "$L," << -res << ";\n";
     } else {
-        out << "$R;" << res << ";\n";
+        out << "$R," << res << ";\n";
     }
     m_last_order_send = out.str();
     //INFO(m_last_order_send);

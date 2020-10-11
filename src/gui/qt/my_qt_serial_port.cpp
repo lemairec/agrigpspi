@@ -109,7 +109,7 @@ void MyQTSerialPorts::handleReadyReadPilot(){
     } else {
         QString hex(b);
         std::string s = (hex.toUtf8().constData());
-
+        
         GpsFramework::Instance().m_pilotModule.arduinoParse(s);
     }
     DEBUG("end");
@@ -203,6 +203,8 @@ void MyQTSerialPorts::handleHadrien(){
     
     if(m_pilot_langage == PILOT_LANGAGE_HADRIEN){
         GpsFramework::Instance().m_pilotModule.handleHadrien();
+        //GpsFramework::Instance().m_pilotModule.update();
+    } else {
         //GpsFramework::Instance().m_pilotModule.update();
     }
     DEBUG("end");
