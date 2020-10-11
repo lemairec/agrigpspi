@@ -133,7 +133,7 @@ void  PilotModule::arduinoParse(const std::string & s){
 
 void PilotModule::arduinoUpdate(){
     int res = m_motor_vitesse_agressivite*(m_volantTotal - m_volantMesured)*m_algo2_goto_pas_by_tour;
-    if(!m_inverse){
+    if(m_inverse){
         res = -res;
     }
     
