@@ -10,6 +10,8 @@ String a;
 #define ENCODER_A 10
 #define ENCODER_B 11
 
+#define MILLIS 20 //frequence
+
 long position = 0;
 long desired_position = 0;
 
@@ -20,13 +22,14 @@ int state_B;
 int motor_max = 150;
 
 void version(){
-    Serial.println("$PILOT_0_0_3");
+    Serial.println("$PILOT_0_0_4");
 }
 
 void printPosition(){
-    Serial.print("$P,");
-    Serial.print(position);
-    Serial.println(";");
+  String s  = "$P,";
+  s+=position;
+  s+=';';
+  Serial.println(s);
 }
 
 int i = 0;
@@ -44,7 +47,7 @@ void updatePosition(){
     ++i;
     if(i>5){
       i = 0;
-      printPosition();
+      //printPosition();
     }
 
     
@@ -260,9 +263,9 @@ void parseBuffer(){
   }
 }
 
-int my_delay = 200;
-
 void setup(){
+  Serial.begin(115200);
+  version();
   pinMode (ENCODER_A,INPUT);
   pinMode (ENCODER_B,INPUT);
   pinMode(MOTOR_PIN1, OUTPUT);
@@ -270,15 +273,25 @@ void setup(){
   pinMode(MOTOR_ENABLE_PIN, OUTPUT);
   
   encoder_last_state_A = digitalRead(ENCODER_A); 
-  Serial.begin(115200);
-  version();
- 
+  
 }
 
 
-
-
+unsigned long time1,time2;
 void loop(){
+
+  
+  time1=millis();
+
+  if (time1>=(time2+MILLIS)) // non bloquante !
+  {
+    time2=millis();
+    printPosition();
+  }
+//  int val = analogRead(A0);  // read the input pin
+
+//  double val2 = val*360.0/1024.0-180.0;
+//  Serial.println(val2);   
   readNextFrame();
   updatePosition();
 }
