@@ -28,7 +28,8 @@ public:
     
     
     int m_pilot_langage = PILOT_LANGAGE_ARDUINO;
-    bool m_pilot_inverse = false;
+    bool m_pilot_motor_inverse = false;
+    bool m_pilot_encoder_inverse = false;
     double m_motor_vitesse_max = 100;
     double m_motor_vitesse_min = 40;
     double m_motor_vitesse_agressivite = 3;

@@ -292,7 +292,8 @@ void OptionWidget::onMousePage4(double x, double y){
 void OptionWidget::setPage5(){
     double dist2 = 0.08;
     
-    m_button_inverse = new ButtonGui(0.35, 0.20, PETIT_RAYON2);
+    m_button_motor_inverse = new ButtonGui(0.35, 0.20, PETIT_RAYON2);
+    m_button_encoder_inverse = new ButtonGui(0.6, 0.20, PETIT_RAYON2);
     
     m_motor_vitesse_min = new ValueGui(0.35, 0.3, PETIT_RAYON2, 0, "vitesse moteur min ");
     m_motor_vitesse_max = new ValueGui(0.35, 0.35, PETIT_RAYON2, 0, "vitesse moteur max ");
@@ -311,12 +312,18 @@ void OptionWidget::drawPage5(){
     
     drawText(f.m_pilotModule.m_version_guidage, 0.55*m_width, 0.20*m_height, 11, true);
     
-    if(f.m_config.m_pilot_inverse){
-        drawButtonLabel(m_button_inverse, COLOR_CHECK);
+    if(f.m_config.m_pilot_motor_inverse){
+        drawButtonLabel(m_button_motor_inverse, COLOR_CHECK);
     } else {
-        drawButtonLabel(m_button_inverse, COLOR_OTHER);
+        drawButtonLabel(m_button_motor_inverse, COLOR_OTHER);
     }
-    drawText("Inverse", 0.4, m_button_inverse->m_y);
+    drawText("Inv motor", 0.4, m_button_motor_inverse->m_y);
+    if(f.m_config.m_pilot_encoder_inverse){
+        drawButtonLabel(m_button_encoder_inverse, COLOR_CHECK);
+    } else {
+        drawButtonLabel(m_button_encoder_inverse, COLOR_OTHER);
+    }
+    drawText("Inv encoder", 0.65, m_button_motor_inverse->m_y);
     
     drawValueGui(m_motor_vitesse_min, f.m_config.m_motor_vitesse_min);
     drawValueGui(m_motor_vitesse_max, f.m_config.m_motor_vitesse_max);
@@ -330,8 +337,11 @@ void OptionWidget::drawPage5(){
 void OptionWidget::onMousePage5(double x, double y){
     GpsFramework & f = GpsFramework::Instance();
     
-    if(m_button_inverse->isActive(x,y)){
-        f.m_config.m_pilot_inverse = !f.m_config.m_pilot_inverse;
+    if(m_button_motor_inverse->isActive(x,y)){
+        f.m_config.m_pilot_motor_inverse = !f.m_config.m_pilot_motor_inverse;
+    }
+    if(m_button_encoder_inverse->isActive(x,y)){
+        f.m_config.m_pilot_encoder_inverse = !f.m_config.m_pilot_encoder_inverse;
     }
     
     f.m_config.m_motor_vitesse_min += 2*m_motor_vitesse_min->getIntValue(x,y);

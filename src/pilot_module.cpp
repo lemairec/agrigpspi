@@ -9,7 +9,8 @@ PilotModule::PilotModule(){
 }
 
 void PilotModule::initOrLoadConfig(Config & config){
-    m_inverse = config.m_pilot_inverse;
+    m_pilot_motor_inverse = config.m_pilot_motor_inverse;
+    m_pilot_encoder_inverse = config.m_pilot_encoder_inverse;
     m_motor_vitesse_max = config.m_motor_vitesse_max*255.0/100.0;
     m_motor_vitesse_min = config.m_motor_vitesse_min*255.0/100.0;
     m_motor_vitesse_agressivite = config.m_motor_vitesse_agressivite;
@@ -79,7 +80,7 @@ void PilotModule::setPasMotorVolant(int pas){
 }
 
 void PilotModule::setVolant(double vol){
-    if(!m_inverse){
+    if(!m_pilot_encoder_inverse){
         m_volantMesured = vol;
     } else {
         m_volantMesured = -vol;
@@ -133,7 +134,7 @@ void  PilotModule::arduinoParse(const std::string & s){
 
 void PilotModule::arduinoUpdate(){
     int res = m_motor_vitesse_agressivite*(m_volantTotal - m_volantMesured)*m_algo2_goto_pas_by_tour;
-    if(m_inverse){
+    if(m_pilot_motor_inverse){
         res = -res;
     }
     

@@ -14,7 +14,8 @@ class ArduinoParser : public Parser {
 
 class PilotModule {
     ArduinoParser m_arduino_parser;
-    bool m_inverse = false;
+    bool m_pilot_motor_inverse = false;
+    bool m_pilot_encoder_inverse = false;
     
     int m_pilot_langage = 0;
     int m_motor_vitesse_max = 0;

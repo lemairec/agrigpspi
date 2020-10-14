@@ -81,7 +81,8 @@ public:
     void drawPage4();
     
     //page5
-    ButtonGui * m_button_inverse;
+    ButtonGui * m_button_encoder_inverse;
+    ButtonGui * m_button_motor_inverse;
      
     ValueGui * m_motor_vitesse_min;
     ValueGui * m_motor_vitesse_max;

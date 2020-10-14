@@ -44,7 +44,8 @@ void Config::save(){
     settings.setValue("b_lat", m_b_lat);
     settings.setValue("b_lon", m_b_lon);
     
-    settings.setValue("m_pilot_inverse", m_pilot_inverse);
+    settings.setValue("m_pilot_motor_inverse", m_pilot_motor_inverse);
+    settings.setValue("m_pilot_encoder_inverse", m_pilot_encoder_inverse);
     settings.setValue("m_pilot_langage", m_pilot_langage);
     
     settings.setValue("m_pilot_lookahead_d", m_pilot_lookahead_d);
@@ -110,8 +111,11 @@ void Config::load(){
         m_b_lon = settings.value("b_lon").toDouble();
     }
     
-    if(settings.contains("m_pilot_inverse")){
-        m_pilot_inverse = settings.value("m_pilot_inverse").toBool();
+    if(settings.contains("m_pilot_motor_inverse")){
+        m_pilot_motor_inverse = settings.value("m_pilot_motor_inverse").toBool();
+    }
+    if(settings.contains("m_pilot_encoder_inverse")){
+        m_pilot_encoder_inverse = settings.value("m_pilot_encoder_inverse").toBool();
     }
     if(settings.contains("m_pilot_langage")){
         m_pilot_langage = settings.value("m_pilot_langage").toInt();
