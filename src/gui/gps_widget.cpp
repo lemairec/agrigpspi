@@ -25,6 +25,8 @@
 QGraphicsPixmapItem * item;
 QPixmap * p;
 
+int l_bottom = 15;
+
 GpsWidget::GpsWidget()
 :m_optionsWidget()
 {
@@ -384,10 +386,10 @@ void GpsWidget::draw_force(){
     std::chrono::duration<double> diff2 = end - begin;
     if(f.m_config.m_debug){
         int x = m_width-100;
-        int y = m_height-100;
+        int y = m_height-40-30-l_bottom;
         
         QBrush lightGrayBrush(Qt::lightGray);
-        scene->addRect(x, y, 99, 60, m_penBlack, lightGrayBrush);
+        scene->addRect(x, y, 99, 30, m_penBlack, lightGrayBrush);
         std::ostringstream oss;
         oss << "draw " << diff2.count();
         drawText(oss.str(), x+10, y+10, 10, false);
@@ -514,7 +516,7 @@ void GpsWidget::drawTracteur(){
 void GpsWidget::drawBottom(){
     GpsFramework & f = GpsFramework::Instance();
     
-    scene->addRect(0, m_height-40, m_width, 40, m_penBlack, m_brushDarkGray);
+    scene->addRect(0, m_height-40-l_bottom, m_width, 40+l_bottom, m_penBlack, m_brushDarkGray);
     
     auto last_frame = f.m_lastGGAFrame;
     if(f.isGpsConnected()){
@@ -532,13 +534,13 @@ void GpsWidget::drawBottom(){
         item->setPos(5, m_height-45);
         scene->addItem(item);
     }
-    
+    int y_bottom = m_height-40-l_bottom;
     {
         QString s_vitesse = "cap : " + QString::number(f.m_deplacementAngle/3.14*180, 'f', 1);
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(m_width-135 - mBounds.width()/2, m_height-35);
+        textItems_vitesse->setPos(m_width-135 - mBounds.width()/2, y_bottom);
     }
     
     //scene->addRect(0, m_height-40, 80, 40, m_penBlack, m_brushLightGrayDebug);
@@ -546,14 +548,14 @@ void GpsWidget::drawBottom(){
     auto textItems_vitesse = scene->addText(s_vitesse);
     auto mBounds = textItems_vitesse->boundingRect();
     textItems_vitesse->setDefaultTextColor(Qt::white);
-    textItems_vitesse->setPos(m_width-50 - mBounds.width()/2, m_height-35);
+    textItems_vitesse->setPos(m_width-50 - mBounds.width()/2, y_bottom);
     
     {
         QString s_vitesse = "hdop : " + QString::number(last_frame.m_hdop, 'f', 1);
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(100 - mBounds.width()/2, m_height-35);
+        textItems_vitesse->setPos(100 - mBounds.width()/2, y_bottom);
     }
     
     {
@@ -561,7 +563,7 @@ void GpsWidget::drawBottom(){
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(180 - mBounds.width()/2, m_height-35);
+        textItems_vitesse->setPos(180 - mBounds.width()/2, y_bottom);
     }
     {
         std::string s;
@@ -582,7 +584,7 @@ void GpsWidget::drawBottom(){
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(260 - mBounds.width()/2, m_height-35);
+        textItems_vitesse->setPos(260 - mBounds.width()/2, y_bottom);
     }
     
     {
@@ -590,7 +592,7 @@ void GpsWidget::drawBottom(){
         auto textItems_vitesse = scene->addText(s_vitesse);
         auto mBounds = textItems_vitesse->boundingRect();
         textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(420 - mBounds.width()/2, m_height-35);
+        textItems_vitesse->setPos(420 - mBounds.width()/2, y_bottom);
     }
     
     {
@@ -598,7 +600,7 @@ void GpsWidget::drawBottom(){
         auto textItem = scene->addText(s);
         auto mBounds = textItem->boundingRect();
         textItem->setDefaultTextColor(Qt::white);
-        textItem->setPos(580 - mBounds.width()/2, m_height-35);
+        textItem->setPos(580 - mBounds.width()/2, y_bottom);
     }
     /*scene->addRect(m_width/2-50, 5, 100, 30, m_penBlack, m_grayBrush);
     QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
@@ -783,7 +785,7 @@ void GpsWidget::drawDebug(){
     //sattelite
     {
         int x = 0;
-        int y = m_height-110;
+        int y = m_height-110-l_bottom;
         
         auto last_frame = f.m_lastGGAFrame;
         scene->addRect(x, y, 100, 70, m_penBlack, m_brushLightGrayDebug);
