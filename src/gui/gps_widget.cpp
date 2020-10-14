@@ -25,7 +25,7 @@
 QGraphicsPixmapItem * item;
 QPixmap * p;
 
-int l_bottom = 15;
+int l_bottom = 20;
 
 GpsWidget::GpsWidget()
 :m_optionsWidget()
