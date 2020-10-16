@@ -99,6 +99,7 @@ public:
     std::vector<GpsPoint_ptr> m_contour;
     void calculContourExterieur();
     
+    
     void clearSurface();
     void calculSurface();
     
@@ -111,6 +112,7 @@ public:
     RMCFrame_ptr m_lastRMCFrame;
     time_t m_last_gga_received;
     time_t m_last_pilot_received;
+    int m_frequence_pilot = 0;
     
     bool isGpsConnected();
     bool isPilotConnected();

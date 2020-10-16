@@ -14,6 +14,7 @@ class ArduinoParser : public Parser {
 
 class PilotModule {
     ArduinoParser m_arduino_parser;
+    bool arduino_is_init = false;
     bool m_pilot_motor_inverse = false;
     bool m_pilot_encoder_inverse = false;
     
@@ -60,6 +61,7 @@ public:
     void update();
     
     //ARDUINO
+    void arduinoInit();
     void arduinoUpdate();
     void arduinoParse(const std::string & s);
     

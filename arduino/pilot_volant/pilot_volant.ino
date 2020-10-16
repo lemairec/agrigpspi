@@ -10,7 +10,7 @@ String a;
 #define ENCODER_A 10
 #define ENCODER_B 11
 
-#define MILLIS 20 //frequence
+int c_millis = 0; //frequence
 
 long position = 0;
 long desired_position = 0;
@@ -146,7 +146,12 @@ void readNextFrame(){
 
 void readChar(char c){
     if(c == '$'){
-        resetBuffer();
+      if(m_bufferIndLast != 0){
+        printBuffer();
+    Serial.println("$error");
+    
+      }
+      resetBuffer();
     } else if(c == '\n'){
         parseBuffer();
         resetBuffer();
@@ -207,11 +212,13 @@ long myReadInt(){
 }
 
 void printBuffer(){
-    Serial.print("##");
+    Serial.print("##(");
+    Serial.print(m_bufferIndLast);
+    Serial.print(")");
     for(int i=0; i<m_bufferIndLast-1; ++i){
         Serial.print(m_buffer[i]);
     }
-    Serial.println("");
+    Serial.println("##");
 }
 
 void parseBuffer(){
@@ -219,11 +226,12 @@ void parseBuffer(){
   updatePosition();
   if(m_buffer[0] == 'H'){
     Serial.println("");
+    Serial.println("$C,F,1000  //config frequence 1000 ms");
+    
     Serial.println("$G,100  //goto 100");
     Serial.println("$D      //disable");
     Serial.println("$V      //give version");
     Serial.println("$P      //print position");
-    Serial.println("$C,100  //config; motor max");
     Serial.println("$L,255  //left; motor 255");
     Serial.println("$R,255  //right; motor 255");
     Serial.println("$S      //stop");
@@ -244,9 +252,12 @@ void parseBuffer(){
   } else if(m_buffer[0] == 'S'){
     SetMotor2(0, true);
   } else if(m_buffer[0] == 'C'){
-    m_tempInd = 2;
-    motor_max = myReadInt();
-    Serial.print("#C,");Serial.println(motor_max);
+    if(m_buffer[2] == 'F'){
+      m_tempInd = 4;
+      c_millis = myReadInt();
+      Serial.print("#C,F,");Serial.println(c_millis);
+    }
+    
   } else if(m_buffer[0] == 'D'){
     
   } else if(m_buffer[0] == 'G'){
@@ -279,15 +290,17 @@ void setup(){
 
 unsigned long time1,time2;
 void loop(){
+  if(c_millis>0){
+    time1=millis();
 
-  
-  time1=millis();
-
-  if (time1>=(time2+MILLIS)) // non bloquante !
-  {
-    time2=millis();
-    printPosition();
+    if (time1>=(time2+c_millis)) // non bloquante !
+    {
+      time2=millis();
+      printPosition();
+    }
   }
+  
+  
 //  int val = analogRead(A0);  // read the input pin
 
 //  double val2 = val*360.0/1024.0-180.0;
