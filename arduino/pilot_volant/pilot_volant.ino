@@ -10,7 +10,7 @@ String a;
 #define ENCODER_A 10
 #define ENCODER_B 11
 
-#define MILLIS 20 //frequence
+#define MILLIS 50 //frequence
 
 long position = 0;
 long desired_position = 0;
