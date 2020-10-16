@@ -667,16 +667,19 @@ void GpsWidget::drawVolant_(double y, double a, double r, double start_angle){
     j=0.9;
     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
     
-    
-    QString s = QString::number(nbr_tour, 'f', 1);
-    auto textItem = scene->addText(s);
-    textItem->setPos(m_width/2-10, y-r);
+    {
+        QString s = QString::number(a, 'f', 2);
+        auto textItem = scene->addText(s);
+        auto mBounds = textItem->boundingRect();
+        
+        textItem->setPos(m_width/2-mBounds.width()/2, y-r);
+    }
 }
 
 void GpsWidget::drawVolant(double y){
     GpsFramework & f = GpsFramework::Instance();
 
-    int r=30;
+    int r=40;
     
     double angle = f.m_pilotModule.m_volant;
     
@@ -694,12 +697,16 @@ void GpsWidget::drawVolant(double y){
     
     j=0.8;
     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
-    QString s = QString::number(f.m_pilotModule.m_volantTotal, 'f', 1);
-    auto textItem = scene->addText(s);
-    textItem->setPos(m_width/2-10, y-40);
+    {
+        QString s = QString::number(f.m_pilotModule.m_volantTotal, 'f', 2);
+        auto textItem = scene->addText(s);
+        auto mBounds = textItem->boundingRect();
+        
+        textItem->setPos(m_width/2-mBounds.width()/2, y-r-10);
+    }
     
     {
-        drawVolant_(y, f.m_pilotModule.m_volantMesured, 20, 0);
+        drawVolant_(y, f.m_pilotModule.m_volantMesured, r-10, 0);
         
     }
     
