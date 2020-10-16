@@ -146,7 +146,6 @@ void PilotModule::arduinoInit(){
 
 void  PilotModule::arduinoParse(const std::string & s){
     if(!arduino_is_init){
-        arduino_is_init = true;
         arduinoInit();
     }
     for(auto c : s){
