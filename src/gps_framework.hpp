@@ -109,8 +109,18 @@ public:
     std::list<SurfaceToDraw_ptr> m_listSurfaceToDraw;
     GGAFrame m_lastGGAFrame;
     RMCFrame_ptr m_lastRMCFrame;
-    time_t m_last_gga_received;
-    time_t m_last_pilot_received;
+    
+    void setNewGpsTime();
+    std::list<int> m_gps_times;
+    double m_gps_time_moy;
+    double m_gps_time_et;
+    std::chrono::system_clock::time_point m_last_gps_received;
+   
+    void setNewPilotTime();
+    std::list<int> m_pilot_times;
+    double m_pilot_time_moy;
+    double m_pilot_time_et;
+    std::chrono::system_clock::time_point m_last_pilot_received;
     
     bool isGpsConnected();
     bool isPilotConnected();

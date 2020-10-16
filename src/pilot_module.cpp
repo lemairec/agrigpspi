@@ -72,7 +72,7 @@ void PilotModule::myGotoVolant2(double res){
 }
 
 void PilotModule::setPasMotorVolant(int pas){
-    time(&GpsFramework::Instance().m_last_pilot_received);
+    GpsFramework::Instance().setNewPilotTime();
     
     double res = pas/m_algo2_goto_pas_by_tour;
     setVolant(res);
