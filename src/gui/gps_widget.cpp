@@ -224,7 +224,7 @@ void GpsWidget::draw(){
     std::chrono::duration<double> diff = begin - last_update;
     if(!force && diff.count() < 0.5){
    //     INFO(diff.count());
-    //    return;
+        return;
     }
     //INFO(diff.count());
     draw_force();
