@@ -50,8 +50,8 @@ void GpsFramework::removeObserver(){
 void GpsFramework::initOrLoadConfig(){
     m_config.save();
     
-    m_serialModule.initOrLoad(m_config);
     m_pilotModule.initOrLoadConfig(m_config);
+    m_serialModule.initOrLoad(m_config);
     m_fileModule.initOrLoad(m_config);
     
     m_distance_cap_vitesse = 3;

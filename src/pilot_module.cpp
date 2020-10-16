@@ -20,7 +20,6 @@ void PilotModule::initOrLoadConfig(Config & config){
     m_volant_derive = config.m_volant_derive;
    
     m_pilot_langage = config.m_pilot_langage;
-    arduino_is_init = false;
     
     clear();
 }
@@ -42,7 +41,7 @@ void PilotModule::desengage(){
         clearHadrien();
         desengageHadrien();
     } else {
-        GpsFramework::Instance().m_serialModule.writePilotSerialS("$D;\n");
+        GpsFramework::Instance().m_serialModule.writePilotSerialS("$D;");
     }
 }
 
@@ -72,22 +71,8 @@ void PilotModule::myGotoVolant2(double res){
     update();
 }
 
-auto last_time = std::chrono::system_clock::now();
-double moy = 0;
-
-
-
-
 void PilotModule::setPasMotorVolant(int pas){
     time(&GpsFramework::Instance().m_last_pilot_received);
-    
-    auto t = std::chrono::system_clock::now();
-    std::chrono::duration<double> diff2 = t - last_time;
-    last_time = t;
-    double freq = (1.0/diff2.count());
-    moy = 0.8*moy+0.2*freq;
-    GpsFramework::Instance().m_frequence_pilot = round(moy);
-
     
     double res = pas/m_algo2_goto_pas_by_tour;
     setVolant(res);
@@ -140,20 +125,12 @@ void ArduinoParser::parseBuffer(){
     }
 }
 
-void PilotModule::arduinoInit(){
-    GpsFramework::Instance().m_serialModule.writePilotSerialS("$C;F;50;\n");
-}
-
 void  PilotModule::arduinoParse(const std::string & s){
-    if(!arduino_is_init){
-        arduinoInit();
-    }
     for(auto c : s){
         m_arduino_parser.readChar(c);
     }
 
 }
-
 
 void PilotModule::arduinoUpdate(){
     int res = m_motor_vitesse_agressivite*(m_volantTotal - m_volantMesured)*m_algo2_goto_pas_by_tour;
