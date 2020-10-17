@@ -5,7 +5,6 @@
 #include "../gps_framework.hpp"
 
 const double PETIT_RAYON = 0.035;
-const double GROS_BUTTON = 0.04;
 const double GROS_GROS_BUTTON = 0.08;
 const double PETIT_INTER = PETIT_RAYON*1.2;
 
@@ -17,11 +16,14 @@ const int COLOR_OTHER = 4;
 
 struct ButtonGui{
     ButtonGui(double x, double y, double rayon, int type = 0);
+    ButtonGui(){};
     
-    bool isActive(double x, double y);
-    double m_x = 0;
-    double m_y = 0;
-    double m_rayon = 0;
+    void setResize(int x, int y, int rayon);
+    
+    bool isActive(int x, int y);
+    int m_x = 0;
+    int m_y = 0;
+    int m_rayon = 0;
     
     int m_type = 0;
     
@@ -31,6 +33,9 @@ struct ButtonGui{
 
 struct ValueGui{
     ValueGui(double x, double y, double rayon, int type, std::string label);
+    ValueGui(){};
+    
+    void setResize(int x, int y, int rayon, std::string label);
     
     int isActive(double x, double y);
     
@@ -50,7 +55,10 @@ struct ValueGui{
 
 struct SelectButtonGui{
     SelectButtonGui(double x, double y, double rayon);
+    SelectButtonGui(){};
 
+    void setResize(int x, int y, int rayon);
+    
     double m_x = 0;
     double m_y = 0;
     double m_rayon = 0;
@@ -101,6 +109,10 @@ public:
         scene = s;
     }
 public:
+    int m_gros_button = 10;
+    int m_gros_gros_button = 10;
+    int m_petit_button = 10;
+    
     double m_width;
     double m_height;
     bool m_close = true;

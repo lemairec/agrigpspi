@@ -33,16 +33,16 @@ public:
     QPixmap * m_imgVolantVert;
     QPixmap * m_imgOk;
     
-    ButtonGui * m_buttonClose;
-    ButtonGui * m_buttonPlus;
-    ButtonGui * m_buttonMinus;
-    ButtonGui * m_buttonA;
-    ButtonGui * m_buttonB;
-    ButtonGui * m_buttonOption;
-    ButtonGui * m_buttonErrorOk;
+    ButtonGui m_buttonClose;
+    ButtonGui m_buttonPlus;
+    ButtonGui m_buttonMinus;
+    ButtonGui m_buttonA;
+    ButtonGui m_buttonB;
+    ButtonGui m_buttonOption;
+    ButtonGui m_buttonErrorOk;
     
-    ButtonGui * m_buttonChamp;
-    ButtonGui * m_buttonVolant;
+    ButtonGui m_buttonChamp;
+    ButtonGui m_buttonVolant;
     
     QBrush m_brushTractor;
     QPen m_penTractorEssieu;

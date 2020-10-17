@@ -8,8 +8,14 @@ ButtonGui::ButtonGui(double x, double y, double rayon, int type)
 {
 }
 
-bool ButtonGui::isActive(double x, double y){
-    
+void ButtonGui::setResize(int x, int y, int rayon){
+    m_x = x;
+    m_y = y;
+    m_rayon = rayon;
+}
+
+
+bool ButtonGui::isActive(int x, int y){
     if(x > this->m_x-this->m_rayon  && x < this->m_x+this->m_rayon && y > this->m_y-this->m_rayon  && y < this->m_y+this->m_rayon){
         return true;
     }
@@ -17,11 +23,22 @@ bool ButtonGui::isActive(double x, double y){
 }
 
 
+
 ValueGui::ValueGui(double x, double y, double rayon, int type, std::string label)
 :m_x(x), m_y(y), m_rayon(rayon), m_label(label), m_buttonAdd(x+1.5*rayon, y, rayon, 0), m_buttonMinus(x, y, rayon, 0)
 {
     m_buttonAdd.m_label = "+";
     m_buttonMinus.m_label = "-";
+}
+
+void ValueGui::setResize(int x, int y, int rayon, std::string label){
+    m_x = x;
+    m_y = y;
+    m_rayon = rayon;
+    m_label = label;
+    m_buttonAdd.setResize(x+1.5*rayon, y, rayon);
+    m_buttonMinus.setResize(x-1.5*rayon, y, rayon);
+    
 }
 
 int ValueGui::isActive(double x, double y){
@@ -45,7 +62,7 @@ double ValueGui::getMultValue2(double x, double y, double value){
 }
 
 double ValueGui::getMultValue(double x, double y){
-    return getMultValue2(x, y, 1.1);
+    return getMultValue2(x, y, 1.2);
 }
 
 double ValueGui::getIntValue(double x, double y){
@@ -61,6 +78,17 @@ double ValueGui::getIntValue(double x, double y){
 SelectButtonGui::SelectButtonGui(double x, double y, double rayon)
     : m_x(x), m_y(y), m_rayon(rayon), m_buttonOpen(x, y, rayon, 0)
 {
+    
+}
+
+void SelectButtonGui::setResize(int x, int y, int rayon){
+    m_x = x;
+    m_y = y;
+    m_rayon = rayon;
+    m_buttonOpen.setResize(x, m_y, rayon);
+    for(size_t i = 0; i < m_values.size(); ++i){
+        m_buttons[i]->setResize(x, m_y+m_rayon*2*(i+1), rayon*0.8);
+    }
     
 }
 
@@ -84,6 +112,7 @@ void SelectButtonGui::addValueInt(std::string s, int i){
 void SelectButtonGui::clear(){
     m_values.clear();
     m_buttons.clear();
+    m_values_int.clear();
 }
 
 std::string SelectButtonGui::getValueString(){
@@ -170,33 +199,32 @@ void BaseWidget::drawText(const std::string & text, double x, double y){
       //  auto mBounds = textItem->boundingRect();
       //  textItem->setPos(x-mBounds.width()/2, y);
     //} else {
-        textItem->setPos(x*m_width, y*m_height-18);
+        textItem->setPos(x, y-18);
     //}
     
 }
 
 void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap, double scale){
     double scale2 = 0.4*scale;
-    int x = m_width*button->m_x-m_height*button->m_rayon;
-    int y = m_height*button->m_y-m_height*button->m_rayon;
-    
-    int d = m_height*button->m_rayon*2;
+    int x = button->m_x-button->m_rayon;
+    int y = button->m_y-button->m_rayon;
+    int d = button->m_rayon*2;
     
     auto item = new QGraphicsPixmapItem(pixmap);
     item->setScale(scale2);
     auto size = item->boundingRect();
-    item->setPos(m_width*button->m_x-size.width()*scale2/2, m_height*button->m_y-size.height()*scale2/2);
+    item->setPos(button->m_x-size.width()*scale2/2, button->m_y-size.height()*scale2/2);
     scene->addItem(item);
     
-    //scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
+    scene->addRect(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
     //scene->addEllipse(m_width*button->m_x, m_height*button->m_y, 1, 1, QPen(QColor(0,0,0)), QBrush(QColor(0, 0, 0)));
 }
 
 
 void BaseWidget::drawButton(ButtonGui * button, int color){
-    int x = m_width*button->m_x-m_height*button->m_rayon;
-    int y = m_height*button->m_y-m_height*button->m_rayon;
-    int d = m_height*button->m_rayon*2;
+    int x = button->m_x-button->m_rayon;
+    int y = button->m_y-button->m_rayon;
+    int d = button->m_rayon*2;
     
     if(color == COLOR_RED){
         scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
@@ -214,9 +242,9 @@ void BaseWidget::drawButton(ButtonGui * button, int color){
 
 
 void BaseWidget::drawButtonLabel(ButtonGui * button, int color){
-    double x = m_width*button->m_x-m_height*button->m_rayon;
-    double y = m_height*button->m_y-m_height*button->m_rayon;
-    double d = m_height*button->m_rayon*2;
+    int x = button->m_x-button->m_rayon;
+    int y = button->m_y-button->m_rayon;
+    int d = button->m_rayon*2;
     
     if(color == COLOR_RED){
         scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
@@ -236,14 +264,14 @@ void BaseWidget::drawButtonLabel(ButtonGui * button, int color){
 
 void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
     if(select->m_open){
-        scene->addRect(select->m_x*m_width, select->m_y*m_height, m_width*0.4, (select->m_buttons.size()+1)*select->m_rayon*2*m_height, m_penBlack, m_brushLightGrayDebug);
+        scene->addRect(select->m_x, select->m_y, m_width*0.4, (select->m_buttons.size()+1)*select->m_rayon*2, m_penBlack, m_brushLightGrayDebug);
         for(size_t i = 0; i < select->m_buttons.size(); ++i){
             if(select->m_selectedValue == i){
                 drawButtonLabel(select->m_buttons[i], COLOR_CHECK);
             } else {
                 drawButtonLabel(select->m_buttons[i], COLOR_OTHER);
             }
-            drawText(select->m_values[i], 0.4, select->m_buttons[i]->m_y);
+            drawText(select->m_values[i], 0.4*m_width, select->m_buttons[i]->m_y);
         }
     }
 }
@@ -251,7 +279,7 @@ void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
 void BaseWidget::drawSelectButtonGuiClose(SelectButtonGui *select){
     if(!select->m_open){
         drawButtonLabel(&(select->m_buttonOpen));
-        drawText(select->getValueString(), 0.4, select->m_buttonOpen.m_y);
+        drawText(select->getValueString(), select->m_buttonOpen.m_x+2*select->m_buttonOpen.m_rayon, select->m_buttonOpen.m_y);
     }
 }
 

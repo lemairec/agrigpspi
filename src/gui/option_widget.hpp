@@ -17,94 +17,92 @@ class OptionWidget : public BaseWidget {
     QPixmap * m_imgOptionBlanc;
     QPixmap * m_imgOptionGris;
       
-    ButtonGui * m_button_close = NULL;
+    ButtonGui m_button_close;
     
-    ButtonGui * m_button_p1 = NULL;
-    ButtonGui * m_button_p2 = NULL;
-    ButtonGui * m_button_p3 = NULL;
-    ButtonGui * m_button_p4 = NULL;
-    ButtonGui * m_button_p5 = NULL;
-    ButtonGui * m_button_p6 = NULL;
+    ButtonGui m_button_p1;
+    ButtonGui m_button_p2;
+    ButtonGui m_button_p3;
+    ButtonGui m_button_p4;
+    ButtonGui m_button_p5;
+    ButtonGui m_button_p6;
     
     int m_page = 1;
     double y_baurates_title, y_port_title;
-    
-    //page1
-    ButtonGui * m_button_p1add1;
-    ButtonGui * m_button_p1add2;
-    ButtonGui * m_button_p1minus1;
-    ButtonGui * m_button_p1minus2;
-    
-    std::list<ButtonGui *> m_buttonp2Serials;
-    std::list<ButtonGui *> m_buttonp2Baurates;
-    
-    //page2
-    ButtonGui * m_button_p3add1;
-    ButtonGui * m_button_p3minus1;
-    
-    
-    
-    //page 4
-    ButtonGui * m_button_sens;
-    ButtonGui * m_button_debug;
-    
-    
-    
-    
     
     void addSerials();
     
 public:
     OptionWidget();
     
-    virtual void draw();
-    virtual void drawPage1();
-    virtual void drawPage2();
+    void setSize(int width, int heigth);
     
-    virtual void onMouse(double x, double y);
-    virtual void onMousePage1(double x, double y);
-    virtual void onMousePage2(double x, double y);
+    virtual void draw();
+    virtual void onMouseInt(int x, int y);
+    
+    
+    //page1
+    ButtonGui m_button_p1add1;
+    ButtonGui m_button_p1add2;
+    ButtonGui m_button_p1minus1;
+    ButtonGui m_button_p1minus2;
+    
+    void resizePage1();
+    void onMousePage1(int x, int y);
+    void drawPage1();
+    
+    //page2
+    ButtonGui m_button_p3add1;
+    ButtonGui m_button_p3minus1;
+    SelectButtonGui m_select_gps_serial;
+    SelectButtonGui m_select_gps_baudrates;
+    void resizePage2();
+    void onMousePage2(int x, int y);
+    void drawPage2();
     
     //page3
-    SelectButtonGui * m_select_pilot_serial;
-    SelectButtonGui * m_select_pilot_baudrates;
-    SelectButtonGui * m_select_pilot_langage;
+    SelectButtonGui m_select_pilot_serial;
+    SelectButtonGui m_select_pilot_baudrates;
+    SelectButtonGui m_select_pilot_langage;
     
-    ValueGui * m_value_gui_lookahead_d;
+    ValueGui m_value_gui_lookahead_d;
     
-    void setPage3();
+    void resizePage3();
     void onMousePage3(double x, double y);
     void drawPage3();
     
-    void setPage4();
+    //page4
+    ButtonGui m_button_sens;
+    ButtonGui m_button_debug;
+    
+    void resizePage4();
     void onMousePage4(double x, double y);
     void drawPage4();
     
     //page5
-    ButtonGui * m_button_encoder_inverse;
-    ButtonGui * m_button_motor_inverse;
+    ButtonGui m_button_encoder_inverse;
+    ButtonGui m_button_motor_inverse;
      
-    ValueGui * m_motor_vitesse_min;
-    ValueGui * m_motor_vitesse_max;
-    ValueGui * m_motor_vitesse_agressivite;
+    ValueGui m_motor_vitesse_min;
+    ValueGui m_motor_vitesse_max;
+    ValueGui m_motor_vitesse_agressivite;
     
-    ValueGui * m_button_algo2_goto_pas_by_tour;
-    ValueGui * m_button_algo2_goto_angle_by_tour;
-    ValueGui * m_button_algo2_goto_rel_s;
+    ValueGui m_button_algo2_goto_pas_by_tour;
+    ValueGui m_button_algo2_goto_angle_by_tour;
+    ValueGui m_button_algo2_goto_rel_s;
     
-    void setPage5();
+    void resizePage5();
     void onMousePage5(double x, double y);
     void drawPage5();
     
-    ButtonGui * m_button_p6connect;
-    ButtonGui * m_button_p6disable;
-    ButtonGui * m_button_p6clearError;
+    ButtonGui m_button_p6connect;
+    ButtonGui m_button_p6disable;
+    ButtonGui m_button_p6clearError;
     
-    ButtonGui * m_button_p6testGoToVLeft;
-    ButtonGui * m_button_p6testGoToV0;
-    ButtonGui * m_button_p6testGoToVRight;
+    ButtonGui m_button_p6testGoToVLeft;
+    ButtonGui m_button_p6testGoToV0;
+    ButtonGui m_button_p6testGoToVRight;
     
-    void setPage6();
+    void resizePage6();
     void onMousePage6(double x, double y);
     void drawPage6();
     
