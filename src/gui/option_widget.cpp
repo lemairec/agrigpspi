@@ -26,9 +26,8 @@ OptionWidget::OptionWidget(){
     //addSerials();
 }
 
-void OptionWidget::setSize(int width, int heigth){
-    m_width = width;
-    m_height = heigth;
+void OptionWidget::setSize(int width, int height){
+    BaseWidget::setSize(width, height);
     m_button_close.setResize(0.75*m_width, 0.83*m_height, m_gros_button);
     
     m_button_p1.setResize(0.24*m_width, 0.20*m_height, m_gros_button);

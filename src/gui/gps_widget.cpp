@@ -13,7 +13,7 @@
 
 
 #define MY_WIDTH 800
-#define MY_HEIGTH 400
+#define MY_HEIGHT 400
 
 #define BUTTON_A 0
 #define BUTTON_B 1
@@ -55,9 +55,8 @@ GpsWidget::GpsWidget()
 }
 
 void GpsWidget::setSize(int width, int height){
-    INFO(width << " " << height);
-    m_width = width;
-    m_height = height;
+    BaseWidget::setSize(width, height);
+    
     m_widthMax = m_width/2-50;
     m_heightMax = m_height/2-50;
 

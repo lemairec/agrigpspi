@@ -34,7 +34,7 @@ class OptionWidget : public BaseWidget {
 public:
     OptionWidget();
     
-    void setSize(int width, int heigth);
+    void setSize(int width, int height);
     
     virtual void draw();
     virtual void onMouseInt(int x, int y);

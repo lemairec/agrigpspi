@@ -4,10 +4,6 @@
 #include "qt/include_qt.hpp"
 #include "../gps_framework.hpp"
 
-const double PETIT_RAYON = 0.035;
-const double GROS_GROS_BUTTON = 0.08;
-const double PETIT_INTER = PETIT_RAYON*1.2;
-
 const int COLOR_RED = 1;
 const int COLOR_GREEN = 2;
 const int COLOR_CHECK = 3;
