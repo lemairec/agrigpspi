@@ -191,21 +191,6 @@ void BaseWidget::onMouseInt(double x, double y){
 }
 
 
-
-void BaseWidget::drawText(const std::string & text, double x, double y){
-    int size = 20;
-    QString s = QString::fromStdString(text);
-    auto textItem = scene->addText(QString(s));
-    textItem->setFont(QFont("Latin", size, 1, false));
-    //if(center){
-      //  auto mBounds = textItem->boundingRect();
-      //  textItem->setPos(x-mBounds.width()/2, y);
-    //} else {
-        textItem->setPos(x, y-18);
-    //}
-    
-}
-
 void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap, double scale){
     double scale2 = 0.4*scale;
     int x = button->m_x-button->m_rayon;
@@ -261,7 +246,7 @@ void BaseWidget::drawButtonLabel(ButtonGui * button, int color){
         scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255,255,255)));
     }
     
-    drawText(button->m_label, button->m_x-20, button->m_y);
+    drawText(button->m_label, button->m_x-20, button->m_y, sizeText_medium);
 }
 
 void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
@@ -273,7 +258,7 @@ void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
             } else {
                 drawButtonLabel(select->m_buttons[i], COLOR_OTHER);
             }
-            drawText(select->m_values[i], 0.4*m_width, select->m_buttons[i]->m_y);
+            drawText(select->m_values[i], 0.4*m_width, select->m_buttons[i]->m_y, sizeText_medium);
         }
     }
 }
@@ -281,7 +266,7 @@ void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
 void BaseWidget::drawSelectButtonGuiClose(SelectButtonGui *select){
     if(!select->m_open){
         drawButtonLabel(&(select->m_buttonOpen));
-        drawText(select->getValueString(), select->m_buttonOpen.m_x+2*select->m_buttonOpen.m_rayon, select->m_buttonOpen.m_y);
+        drawText(select->getValueString(), select->m_buttonOpen.m_x+2*select->m_buttonOpen.m_rayon, select->m_buttonOpen.m_y, sizeText_medium);
     }
 }
 
@@ -302,15 +287,56 @@ int BaseWidget::onMouseSelectButton(SelectButtonGui *select, double x, double y)
     return res;
 }
 
-void BaseWidget::drawText(const std::string & text, int x, int y, int size, bool center){
+void BaseWidget::drawText(const std::string & text, int x, int y, SizeText size, bool center){
     QString s = QString::fromStdString(text);
-    auto textItem = scene->addText(QString(s));
-    textItem->setFont(QFont("Latin", size, 1, false));
+    auto textItem = scene->addText(s);
+    
+    int s2 = 10;
+    switch (size) {
+        case sizeText_big:
+            s2 = 22;
+            break;
+        case sizeText_medium:
+            s2 = 18;
+            break;
+        case sizeText_little:
+            s2 = 14;
+            break;
+    }
+    textItem->setFont(QFont("Latin", s2, 1, false));
+    
     if(center){
         auto mBounds = textItem->boundingRect();
-        textItem->setPos(x-mBounds.width()/2, y);
+        textItem->setPos(x-mBounds.width()/2, y-s2+2);
     } else {
-        textItem->setPos(x, y);
+        textItem->setPos(x, y-s2+2);
+    }
+    
+}
+
+void BaseWidget::drawTextWhite(const std::string & text, int x, int y, SizeText size, bool center){
+    QString s = QString::fromStdString(text);
+    auto textItem = scene->addText(s);
+    
+    int s2 = 10;
+    switch (size) {
+        case sizeText_big:
+            s2 = 22;
+            break;
+        case sizeText_medium:
+            s2 = 18;
+            break;
+        case sizeText_little:
+            s2 = 14;
+            break;
+    }
+    textItem->setFont(QFont("Latin", s2, 1, false));
+    
+    if(center){
+        auto mBounds = textItem->boundingRect();
+        textItem->setPos(x-mBounds.width()/2, y-s2+2);
+    } else {
+        textItem->setPos(x, y-s2+2);
     }
     
 }
@@ -319,7 +345,7 @@ void BaseWidget::drawValueGui2(ValueGui * valueGui, QPixmap * pixmap1, QPixmap *
     
     drawButtonImage(&(valueGui->m_buttonAdd), *pixmap1);
     drawButtonImage(&(valueGui->m_buttonMinus), *pixmap2);
-    drawText(s, valueGui->m_x+valueGui->m_rayon*3, valueGui->m_y);
+    drawText(s, valueGui->m_x+valueGui->m_rayon*3, valueGui->m_y, sizeText_medium);
 
 }
 QPixmap * BaseWidget::loadImage(const std::string & s){
@@ -335,7 +361,7 @@ void BaseWidget::drawValueGui(ValueGui * valueGui, double value){
     
     std::ostringstream strs;
     strs << valueGui->m_label << value;
-    drawText(strs.str(), valueGui->m_x + 3*valueGui->m_rayon, valueGui->m_y);
+    drawText(strs.str(), valueGui->m_x + 3*valueGui->m_rayon, valueGui->m_y, sizeText_medium);
     
 }
 

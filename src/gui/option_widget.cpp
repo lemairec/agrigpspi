@@ -149,7 +149,7 @@ void OptionWidget::resizePage1(){
 void OptionWidget::drawPage1(){
     GpsFramework & f = GpsFramework::Instance();
     QString s = "largueur de l'outil " + QString::number(f.m_config.m_largeur, 'f', 2) + " m";
-    drawText(s.toUtf8().constData(), 0.55*m_width, 0.15*m_height, 20, true);
+    drawText(s.toUtf8().constData(), 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     drawButtonImage(&m_button_p1add1, *m_imgPlus);
     drawButtonImage(&m_button_p1add2, *m_imgPlus);
@@ -195,7 +195,7 @@ void OptionWidget::resizePage2(){
 }
 
 void OptionWidget::drawPage2(){
-    drawText("Connection GPS", 0.55*m_width, 0.15*m_height, 20, true);
+    drawText("Connection GPS", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     GpsFramework & f = GpsFramework::Instance();
     
@@ -249,7 +249,7 @@ void OptionWidget::resizePage3(){
 
 void OptionWidget::drawPage3(){
     GpsFramework & f = GpsFramework::Instance();
-    drawText("Connection Pilot", 0.55*m_width, 0.15*m_height, 20, true);
+    drawText("Connection Pilot", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     
     m_select_pilot_baudrates.setValueInt(f.m_config.m_baudratePilot);
@@ -301,7 +301,7 @@ void OptionWidget::resizePage4(){
 
 void OptionWidget::drawPage4(){
     GpsFramework & f = GpsFramework::Instance();
-    drawText("Avancé", 0.55*m_width, 0.1*m_height, 20, true);
+    drawText("Avancé", 0.55*m_width, 0.1*m_height, sizeText_big, true);
     
     drawText("Sens de la ligne", 0.4*m_width, 0.25*m_height);
     drawText("Mode technicien", 0.4*m_width, 0.35*m_height);
@@ -359,9 +359,9 @@ void OptionWidget::resizePage5(){
 void OptionWidget::drawPage5(){
     GpsFramework & f = GpsFramework::Instance();
     
-    drawText("Autoguidage", 0.55*m_width, 0.1*m_height, 20, true);
+    drawText("Autoguidage", 0.55*m_width, 0.1*m_height, sizeText_big, true);
     
-    drawText(f.m_pilotModule.m_version_guidage, 0.55*m_width, 0.20*m_height, 11, true);
+    drawText(f.m_pilotModule.m_version_guidage, 0.55*m_width, 0.20*m_height, sizeText_medium, true);
     
     if(f.m_config.m_pilot_motor_inverse){
         drawButtonLabel(&m_button_motor_inverse, COLOR_CHECK);
@@ -441,23 +441,23 @@ void OptionWidget::resizePage6(){
 
 void OptionWidget::drawPage6(){
     GpsFramework & f = GpsFramework::Instance();
-    drawText("Test Volant", 0.55*m_width, 0.1*m_height, 20, true);
+    drawText("Test Volant", 0.55*m_width, 0.1*m_height, sizeText_big, true);
     
     drawButtonLabel(&m_button_p6connect, COLOR_OTHER);
-    drawText("connect", m_button_p6connect.m_x, m_button_p6connect.m_y, 12, true);
+    drawText("connect", m_button_p6connect.m_x, m_button_p6connect.m_y, sizeText_medium, true);
     
     drawButtonLabel(&m_button_p6disable, COLOR_OTHER);
-    drawText("disconnect", m_button_p6disable.m_x, m_button_p6disable.m_y, 12, true);
+    drawText("disconnect", m_button_p6disable.m_x, m_button_p6disable.m_y, sizeText_medium, true);
     
-    drawText("Goto Volant", 0.55*m_width, 0.50*m_height, 12, true);
+    drawText("Goto Volant", 0.55*m_width, 0.50*m_height, sizeText_medium, true);
     drawButtonLabel(&m_button_p6testGoToVLeft, COLOR_OTHER);
-    drawText("-0.5 volant", m_button_p6testGoToVLeft.m_x, m_button_p6testGoToVLeft.m_y, 12, true);
+    drawText("-0.5 volant", m_button_p6testGoToVLeft.m_x, m_button_p6testGoToVLeft.m_y, sizeText_medium, true);
     
     drawButtonLabel(&m_button_p6testGoToV0, COLOR_OTHER);
-    drawText("0", m_button_p6testGoToV0.m_x, m_button_p6testGoToV0.m_y, 12, true);
+    drawText("0", m_button_p6testGoToV0.m_x, m_button_p6testGoToV0.m_y, sizeText_medium, true);
     
     drawButtonLabel(&m_button_p6testGoToVRight, COLOR_OTHER);
-    drawText("+0.5 volant", m_button_p6testGoToVRight.m_x, m_button_p6testGoToVRight.m_y, 12, true);
+    drawText("+0.5 volant", m_button_p6testGoToVRight.m_x, m_button_p6testGoToVRight.m_y, sizeText_medium, true);
 }
 
 void OptionWidget::onMousePage6(double x, double y){

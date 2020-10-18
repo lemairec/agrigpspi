@@ -130,6 +130,7 @@ void GpsModule::parseRMC(){
     m_lastRMCEvent->m_vitesse_kmh = m_lastRMCEvent->m_vitesse_noeud * 1.852;
     m_lastRMCEvent->m_cap_deg = readDouble();
     m_lastRMCEvent->m_cap_rad = m_lastRMCEvent->m_cap_deg/180*3.14;
+    m_lastRMCEvent->m_timeHour = getTimeHour(m_lastGGAEvent.m_time);
     
     if(m_buffer[16] == 'A'){
         m_lastRMCEvent->m_isOk = true;

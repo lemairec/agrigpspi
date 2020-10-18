@@ -10,6 +10,12 @@ const int COLOR_CHECK = 3;
 
 const int COLOR_OTHER = 4;
 
+enum SizeText{
+    sizeText_little,
+    sizeText_medium,
+    sizeText_big
+};
+
 struct ButtonGui{
     ButtonGui(double x, double y, double rayon, int type = 0);
     ButtonGui(){};
@@ -133,13 +139,12 @@ public:
     
     void drawLabel(std::string s, double x, double y);
     void drawLabel2(std::string s, double x, double y);
-     
-    void drawText(const std::string & text, double x, double y);
-     
+
     void drawValueGui(ValueGui * valueGui, double value);
     void drawValueGui2(ValueGui * valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s);
     
-    void drawText(const std::string & text, int x, int y, int size, bool center);
+    void drawText(const std::string & text, int x, int y, SizeText = sizeText_little, bool center = false);
+    void drawTextWhite(const std::string & text, int x, int y, SizeText = sizeText_little, bool center = false);
 
     QPixmap * loadImage(const std::string & s);
 };

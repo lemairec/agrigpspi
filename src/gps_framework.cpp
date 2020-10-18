@@ -706,6 +706,8 @@ void GpsFramework::clearSurface(){
 void GpsFramework::calculSurface(){
     double l = m_config.m_largeur;
     m_surface = 0;
+    m_surface_h = 0;
+    INFO("****");
     for(auto s : m_listSurfaceToDraw){
         if(s->m_points.size()>0){
             auto last_frame = s->m_lastPoint;
@@ -719,6 +721,12 @@ void GpsFramework::calculSurface(){
                 
                 double surface = std::sqrt(dist)*m_config.m_largeur/10000.0;
                 m_surface += surface;
+                /*if(m_surface_h == 0){
+                    if(last_frame->m_timeHour!=frame->m_timeHour){
+                        m_surface_h = m_surface/(last_frame->m_timeHour-frame->m_timeHour);
+                                
+                    }
+                }*/
                 
                 x1 = x0;
                 y1 = y0;
