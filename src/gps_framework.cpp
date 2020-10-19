@@ -707,7 +707,7 @@ void GpsFramework::calculSurface(){
     double l = m_config.m_largeur;
     m_surface = 0;
     m_surface_h = 0;
-    INFO("****");
+    //INFO("****");
     for(auto s : m_listSurfaceToDraw){
         if(s->m_points.size()>0){
             auto last_frame = s->m_lastPoint;
