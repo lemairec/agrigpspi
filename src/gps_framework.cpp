@@ -480,6 +480,9 @@ void GpsFramework::setAB(){
 void GpsFramework::calculDeplacement(){
     if(m_list.size() > 3){
         GpsPoint_ptr point1 = m_list.front();
+              
+        
+        
         GpsPoint_ptr point2 = NULL;
         int i = 0;
         for(auto point : m_list){
@@ -523,13 +526,22 @@ void GpsFramework::calculDeplacement(){
             
             m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
+            
+            m_tracteur.m_x_essieu_avant = point1->m_x + sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
+            m_tracteur.m_y_essieu_avant = point1->m_y + cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
+            
             if(m_time_last_point > 0){
                 m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
                 if(m_vitesse >50){
                     INFO("erreur");
                 }
             }
+            
         }
+        
+            
+        
+        
         //INFO(deplacementTime << " " << vitesse);
     }
     //calculContourExterieur();

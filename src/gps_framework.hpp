@@ -15,6 +15,18 @@ public:
     virtual void onNewPoint() = 0;
 };
 
+struct Tracteur {
+    double m_antenne_essieu_avant = 1.5;
+    double m_antenne_essieu_arriere = 1.2;
+    
+    double m_x_antenne = 0;
+    double m_y_antenne = 0;
+    
+    double m_x_essieu_avant = 0;
+    double m_y_essieu_avant = 0;
+    
+};
+
 class SurfaceToDraw{
 public:
     bool m_isClose = false;
@@ -58,7 +70,6 @@ public:
     Config m_config;
     bool m_reloadConfig = true;
     
-    //point
     double m_a = 0;
     double m_b = 0;
     double m_c = 0;
@@ -133,6 +144,7 @@ public:
     void setVolantEngaged(bool value);
     bool getVolantEngaged();
     
+    Tracteur m_tracteur;
     GpsModule m_gpsModule;
     MyQTSerialPorts m_serialModule;
     MyQTFile m_fileModule;

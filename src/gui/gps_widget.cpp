@@ -433,7 +433,7 @@ void GpsWidget::drawTracteur(){
     double dx = f.m_vitesse*sin(f.m_deplacementAngle);
     double dy = f.m_vitesse*cos(f.m_deplacementAngle);
     
-    double l2 = 5;
+    double l2 = f.m_tracteur.m_antenne_essieu_avant;
     double res = sqrt(dx*dx+dy*dy);
     dx = dx/res*l2;
     dy = dy/res*l2;
@@ -467,11 +467,11 @@ void GpsWidget::drawTracteur(){
     
     
     if(m_a){
-        y = h/2+1*m_zoom;
+        y = h/2;
         
-        double l2 = 1.5*m_zoom/2;
+        double l2 = f.m_tracteur.m_antenne_essieu_arriere*m_zoom/2;
         
-        double y_arriere = y-l2;
+        double y_arriere = y+l2;
         double voie = 1.8*m_zoom;
         double l_roue = 1.5*m_zoom/2;
         scene->addLine(w/2 - voie/2, y_arriere, w/2 + voie/2, y_arriere, m_penTractorEssieu);
@@ -480,12 +480,17 @@ void GpsWidget::drawTracteur(){
         //scene->addRect(w/2, y_arriere - voie/2, y-4*l2, l2, 4*l2, m_penBlue);
         
         
-        scene->addRect(w/2 - l2/2, y-4*l2, l2, 4*l2, m_penTractorEssieu, m_brushTractor);
+        //scene->addRect(w/2 - l2/2, y-4*l2, l2, 4*l2, m_penTractorEssieu, m_brushTractor);
         
-        scene->addRect(w/2 - l2, y-2*l2, 2*l2, 2*l2, m_penTractorEssieu, m_brushTractor);
-        scene->addRect(w/2 - l2/2, y-4*l2, l2, 4*l2, m_penTractorEssieu, m_brushTractor);
+        //cabine
+        scene->addRect(w/2 - 1.5*m_zoom/2, y_arriere-1*m_zoom, 1.5*m_zoom, 1.5*m_zoom, m_penTractorEssieu, m_brushTractor);
         
-        double y_direction = y-3.6*l2;
+        //capot
+        double lg_capot = 0.9*m_zoom;
+        double l_capot = (f.m_tracteur.m_antenne_essieu_avant+0.2)*m_zoom;
+        scene->addRect(w/2 - lg_capot/2, y-l_capot, lg_capot, l_capot, m_penTractorEssieu, m_brushTractor);
+        
+        double y_direction = y-f.m_tracteur.m_antenne_essieu_avant*m_zoom;
         scene->addLine(w/2 - voie/2, y_direction, w/2 + voie/2, y_direction, m_penTractorEssieu);
         double l_roue2 = 0.8*m_zoom/2;
         
@@ -496,9 +501,12 @@ void GpsWidget::drawTracteur(){
             scene->addLine(x-dx, y_direction-dy, x+dx, y_direction+dy, m_penTractorRoue);
         }
         
+        scene->addEllipse(w/2-0.10*m_zoom, h/2-0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
+        
+        
         if(m_zoom >= 40){
             if(f.m_config.m_debug){
-                drawVolant(y_arriere - 0.5*l2);
+                //drawVolant(y_arriere - 0.5*l2);
             }
         }
         
@@ -518,9 +526,17 @@ void GpsWidget::drawTracteur(){
         if(m_zoom >= 40){
             y = h/4;
             if(f.m_config.m_debug){
-                drawVolant(y);
+                //drawVolant(y);
             }
         }
+    }
+    
+    {
+        double x_temp, y_temp;
+        my_projete(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, x_temp, y_temp);
+        INFO(x_temp << " " << y_temp);
+        scene->addEllipse(w/2 + x_temp-5, h/2 - y_temp-5, 10, 10, m_penRed, m_grayBrush);
+        
     }
     
 }
@@ -631,7 +647,7 @@ void GpsWidget::drawBottom(){
         textItems_vitesse->setPos(m_width-135 - mBounds.width()/2, y_bottom);
     }*/
     
-    if(last_frame.m_fix < 1){
+    if(!f.isGpsConnected()){
         int x = m_width/2;
         int y = m_height/2;
         scene->addRect(x-200, y-30, 400, 60, m_penBlack, m_grayBrush);
