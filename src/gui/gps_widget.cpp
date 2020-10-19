@@ -612,7 +612,7 @@ void GpsWidget::drawBottom(){
         auto mBounds = textItem->boundingRect();
         textItem->setFont(QFont("Latin", 16, 1, false));
         textItem->setDefaultTextColor(Qt::white);
-        textItem->setPos(540 - mBounds.width()/2, y_bottom);
+        textItem->setPos(580 - mBounds.width()/2, y_bottom);
     }
     /*{
         QString s = QString::number(f.m_surface_h, 'f', 2) + " ha/h";

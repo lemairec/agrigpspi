@@ -182,6 +182,7 @@ BaseWidget::BaseWidget(){
 void BaseWidget::setSize(int width, int height){
     m_gros_button = 0.05*height;
     m_petit_button = 0.035*height;
+    m_gros_gros_button = 0.07*height;
     m_width = width;
     m_height = height;
 }
@@ -203,7 +204,7 @@ void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap, double sc
     item->setPos(button->m_x-size.width()*scale2/2, button->m_y-size.height()*scale2/2);
     scene->addItem(item);
     
-    scene->addRect(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
+    //scene->addRect(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
     //scene->addEllipse(m_width*button->m_x, m_height*button->m_y, 1, 1, QPen(QColor(0,0,0)), QBrush(QColor(0, 0, 0)));
 }
 
