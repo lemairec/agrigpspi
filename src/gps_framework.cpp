@@ -273,9 +273,6 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
             calculDraw(f);
         }
        
-        if(m_observer){
-            m_observer->onNewPoint();
-        }
         setNewGpsTime();
         DEBUG("end");
     }

@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     DEBUG("begin");
     m_timer = new QTimer(this);
-    m_timer->start(1000);
+    m_timer->start(500);
     
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimerSlot()));
     
