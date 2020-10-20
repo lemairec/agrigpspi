@@ -4,12 +4,14 @@
 #include "../gps_framework.hpp"
 #include "base_widget.hpp"
 #include "option_widget.hpp"
+#include "sat_widget.hpp"
 
 class GpsWidget : public BaseWidget {
 public:
     GpsWidget();
     
     OptionWidget m_optionsWidget;
+    SatWidget m_satWidget;
     
     void addButtons();
 

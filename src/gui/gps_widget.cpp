@@ -61,6 +61,7 @@ void GpsWidget::setSize(int width, int height){
     m_heightMax = m_height/2-50;
 
     m_optionsWidget.setSize(m_width, m_height);
+    m_satWidget.setSize(m_width, m_height);
     
     double temp = 0.05;
     
@@ -383,6 +384,9 @@ void GpsWidget::draw_force(){
     if(!m_optionsWidget.m_close){
         m_optionsWidget.draw();
     }
+    if(!m_satWidget.m_close){
+        m_satWidget.draw();
+    }
     DEBUG("END");
     
 }
@@ -563,7 +567,7 @@ void GpsWidget::drawBottom(){
     
     auto last_frame = f.m_lastGGAFrame;
     scene->addRect(0, m_height-40-l_bottom, m_width, 40+l_bottom, m_penBlack, m_brushDarkGray);
-    int y_bottom = m_height-40-l_bottom;
+    int y_bottom = m_height-40-l_bottom+12;
     
     
     //scene->addRect(0, m_height-40, 80, 40, m_penBlack, m_brushLightGrayDebug);
@@ -577,46 +581,13 @@ void GpsWidget::drawBottom(){
         textItems_vitesse->setPos(80 - mBounds.width()/2, y_bottom);
     }*/
     
-    {
-        QString s_vitesse = "sat : " + QString::number(last_frame.m_nbrSat);
-        auto textItems_vitesse = scene->addText(s_vitesse);
-        auto mBounds = textItems_vitesse->boundingRect();
-        textItems_vitesse->setFont(QFont("Latin", 16, 1, false));
-        
-        textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(80 - mBounds.width()/2, y_bottom);
-    }
-    {
-        std::string s;
-        if(last_frame.m_fix == 1){
-            s = "GPS";
-        } else if(last_frame.m_fix == 2){
-            s = "DGPS";
-        } else if(last_frame.m_fix == 3){
-            s = "PPSFIX";
-        } else if(last_frame.m_fix == 4){
-            s = "RTK";
-        } else if(last_frame.m_fix == 5){
-            s = "FRTK";
-        } else {
-            s = "invalid";
-        }
-        QString s_vitesse = QString::fromStdString(s);
-        auto textItems_vitesse = scene->addText(s_vitesse);
-        auto mBounds = textItems_vitesse->boundingRect();
-        textItems_vitesse->setFont(QFont("Latin", 16, 1, false));
-        textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(160 - mBounds.width()/2, y_bottom);
-    }
     
-    {
-        QString s_vitesse = QString::fromStdString("licence non commerciale");
-        auto textItems_vitesse = scene->addText(s_vitesse);
-        auto mBounds = textItems_vitesse->boundingRect();
-        textItems_vitesse->setFont(QFont("Latin", 16, 1, false));
-        textItems_vitesse->setDefaultTextColor(Qt::white);
-        textItems_vitesse->setPos(350 - mBounds.width()/2, y_bottom);
-    }
+   
+    
+    /*{
+        QString s = QString::fromStdString("licence non commerciale");
+        drawQText(s, m_width/2, y_bottom, sizeText_little, true, true);
+    }*/
     
     /*{
         QString s = QString::number(f.m_surface_h, 'f', 2) + " ha/h";
@@ -803,46 +774,14 @@ void GpsWidget::drawDebug(){
         drawText(out.str(),x, y, sizeText_medium, false);
     }
     
-    //sattelite
+    //bas gauche
     {
-        int x = 0;
+        /*int x = 0;
         int y = m_height-110-l_bottom;
         
         auto last_frame = f.m_lastGGAFrame;
-        scene->addRect(x, y, 100, 70, m_penBlack, m_brushLightGrayDebug);
-        QString s = QString::number(last_frame.m_nbrSat) + " satellites";
-        auto textItem = scene->addText(s);
-        textItem->setPos(x, y);
-
-        s = QString::number(last_frame.m_fix)+ " ";
-        if(last_frame.m_fix == 1){
-            s += "GPS";
-        } else if(last_frame.m_fix == 2){
-            s += "DGPS";
-        } else if(last_frame.m_fix == 3){
-            s += "PPSFIX";
-        } else if(last_frame.m_fix == 4){
-            s += "RTK";
-        } else if(last_frame.m_fix == 5){
-            s += "FRTK";
-        } else {
-            s += "invalid";
-        }
-        textItem = scene->addText(s);
-        textItem->setPos(x, y+15);
-
-        s = "hdop " + QString::number(last_frame.m_hdop, 'f', 2);
-        textItem = scene->addText(s);
-        textItem->setPos(x, y+30);
-
-        int h = last_frame.m_time/10000;
-        int min = (int)(last_frame.m_time/100) - h*100;
-        double sec = last_frame.m_time - h*10000 - min*100;
-        s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
-        textItem = scene->addText(s);
-        textItem->setPos(x, y+50);
-
-        int time = last_frame.m_time;
+        scene->addRect(x, y, 100, 70, m_penBlack, m_brushLightGrayDebug);*/
+        
     }
     
     if(f.m_listLog.size() > 0){
@@ -934,6 +873,8 @@ void GpsWidget::onMouse(int x, int y){
     } else if(m_buttonOption.isActive(x2, y2)){
         m_optionsWidget.open();
         m_optionsWidget.m_close = false;
+    } else if(m_buttonSat.isActive(x2, y2)){
+        m_satWidget.m_close = false;
     } else if(m_buttonChamp.isActive(x2, y2)){
         GpsFramework::Instance().changeDraw();
     } else if(m_buttonVolant.isActive(x2, y2)){
