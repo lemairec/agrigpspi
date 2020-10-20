@@ -7,6 +7,7 @@ class SatWidget : public BaseWidget {
     QPixmap * m_imgOk;
     
     bool m_debug = false;
+    int m_x = 0;
 public:
     SatWidget();
     

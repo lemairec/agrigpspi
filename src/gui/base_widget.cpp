@@ -220,11 +220,11 @@ void BaseWidget::drawButton(ButtonGui * button, int color){
         scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(0, 255, 0)));
     } else if(color == COLOR_CHECK){
         scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255,255,255)));
-        scene->addEllipse(x, y, d*0.8, d*0.8, QPen(QColor(0,0,0)), QBrush(QColor(155,155,155)));
+        scene->addEllipse(x+d*0.1, y+d*0.1, d*0.8, d*0.8, QPen(QColor(0,0,0)), QBrush(QColor(155,155,155)));
         
             
     } else {
-        scene->addEllipse(x, y, d*0.8, d*0.8, QPen(QColor(0,0,0)), QBrush(QColor(255,255,255)));
+        scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255,255,255)));
     }
 }
 

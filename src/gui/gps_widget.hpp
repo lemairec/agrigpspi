@@ -5,6 +5,7 @@
 #include "base_widget.hpp"
 #include "option_widget.hpp"
 #include "sat_widget.hpp"
+#include "guidage_widget.hpp"
 
 class GpsWidget : public BaseWidget {
 public:
@@ -12,6 +13,7 @@ public:
     
     OptionWidget m_optionsWidget;
     SatWidget m_satWidget;
+    GuidageWidget m_guidWidget;
     
     void addButtons();
 
@@ -21,8 +23,8 @@ public:
     QPixmap * m_imgClose;
     QPixmap * m_imgPlus;
     QPixmap * m_imgMinus;
-    QPixmap * m_imgA;
-    QPixmap * m_imgB;
+    QPixmap * m_imgGuidage;
+    QPixmap * m_imgParcelle;
     QPixmap * m_imgOption;
     QPixmap * m_imgSatBlanc;
     QPixmap * m_imgSatVert;
@@ -39,8 +41,8 @@ public:
     ButtonGui m_buttonClose;
     ButtonGui m_buttonPlus;
     ButtonGui m_buttonMinus;
-    ButtonGui m_buttonA;
-    ButtonGui m_buttonB;
+    ButtonGui m_buttonGuidage;
+    ButtonGui m_buttonParcelle;
     ButtonGui m_buttonOption;
     ButtonGui m_buttonErrorOk;
     

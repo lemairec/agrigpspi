@@ -36,8 +36,8 @@ GpsWidget::GpsWidget()
     m_imgClose = loadImage("/images/close.png");
     m_imgPlus = loadImage("/images/plus.png");
     m_imgMinus = loadImage("/images/minus.png");
-    m_imgA = loadImage("/images/a.png");
-    m_imgB = loadImage("/images/b.png");
+    m_imgGuidage = loadImage("/images/guidage.png");
+    m_imgParcelle = loadImage("/images/parcelle.png");
     m_imgOption = loadImage("/images/option.png");
     m_imgSatBlanc = loadImage("/images/sat.png");
     m_imgSatVert = loadImage("/images/sat_vert.png");
@@ -62,21 +62,21 @@ void GpsWidget::setSize(int width, int height){
 
     m_optionsWidget.setSize(m_width, m_height);
     m_satWidget.setSize(m_width, m_height);
-    
+    m_guidWidget.setSize(m_width, m_height);
     double temp = 0.05;
     
     m_buttonSat.setResize(m_width-30, 20, m_gros_button);
     
     m_buttonClose.setResize((1-temp)*m_width, 0.2*m_height, m_gros_button);
-    m_buttonA.setResize((1-temp)*m_width, 0.3*m_height, m_gros_button);
-    m_buttonB.setResize((1-temp)*m_width, 0.4*m_height, m_gros_button);
+    m_buttonGuidage.setResize((temp)*m_width, 0.3*m_height, m_gros_button);
+    m_buttonParcelle.setResize((temp)*m_width, 0.4*m_height, m_gros_button);
     
     m_buttonPlus.setResize((temp)*m_width, 0.6*m_height, m_gros_button);
     m_buttonMinus.setResize((temp)*m_width, 0.7*m_height, m_gros_button);
     
     m_buttonOption.setResize((temp)*m_width, 0.2*m_height, m_gros_button);
-    m_buttonChamp.setResize((temp)*m_width, 0.3*m_height, m_gros_gros_button);
-    m_buttonVolant.setResize((1-temp)*m_width, 0.65*m_height, m_gros_gros_button);
+    m_buttonChamp.setResize((1-temp)*m_width, 0.4*m_height, m_gros_gros_button);
+    m_buttonVolant.setResize((1-temp)*m_width, 0.6*m_height, m_gros_gros_button);
     
     m_buttonErrorOk.setResize((0.5)*m_width, 0.8*m_height, m_gros_button);
     
@@ -386,6 +386,9 @@ void GpsWidget::draw_force(){
     }
     if(!m_satWidget.m_close){
         m_satWidget.draw();
+    }
+    if(!m_guidWidget.m_close){
+        m_guidWidget.draw();
     }
     DEBUG("END");
     
@@ -826,8 +829,8 @@ void GpsWidget::drawError(){
 void GpsWidget::addButtons(){
     drawButtonImage(&m_buttonPlus, *m_imgPlus);
     drawButtonImage(&m_buttonMinus, *m_imgMinus);
-    drawButtonImage(&m_buttonA, *m_imgA);
-    drawButtonImage(&m_buttonB, *m_imgB);
+    drawButtonImage(&m_buttonGuidage, *m_imgGuidage);
+    drawButtonImage(&m_buttonParcelle, *m_imgParcelle);
     drawButtonImage(&m_buttonOption, *m_imgOption);
     drawButtonImage(&m_buttonClose, *m_imgClose);
     
@@ -866,9 +869,9 @@ void GpsWidget::onMouse(int x, int y){
     } else if(m_buttonMinus.isActive(x2, y2)){
         m_zoom /= 1.2;
         m_zoom = std::round(m_zoom*10.0)/10.0;
-    } else if(m_buttonA.isActive(x2, y2)){
-        GpsFramework::Instance().savePointA();
-    } else if(m_buttonB.isActive(x2, y2)){
+    } else if(m_buttonGuidage.isActive(x2, y2)){
+        m_guidWidget.m_close = false;
+    } else if(m_buttonParcelle.isActive(x2, y2)){
         GpsFramework::Instance().savePointB();
     } else if(m_buttonOption.isActive(x2, y2)){
         m_optionsWidget.open();
