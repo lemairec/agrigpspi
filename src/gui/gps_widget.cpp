@@ -93,14 +93,14 @@ void GpsWidget::drawCourbe(double l){
 
 void GpsWidget::drawLines(){
     GpsFramework & f = GpsFramework::Instance();
-    if(f.m_a == 0 && f.m_b ==0 && f.m_c ==0){
+    if(f.m_lineAB.m_a == 0 && f.m_lineAB.m_b ==0 && f.m_lineAB.m_c ==0){
         return;
     }
     //addligne(0, x, y);
     double x0 = m_xref;
     double y0 = m_yref;
-    double res = -(y0*f.m_b +(f.m_a * x0 + f.m_c));
-    double l = res / (f.m_b/cos(atan(-f.m_a/f.m_b)));
+    double res = -(y0*f.m_lineAB.m_b +(f.m_lineAB.m_a * x0 + f.m_lineAB.m_c));
+    double l = res / (f.m_lineAB.m_b/cos(atan(-f.m_lineAB.m_a/f.m_lineAB.m_b)));
     //INFO("l " << l << " x " << x << " res " << res);
     
     
@@ -133,15 +133,15 @@ void GpsWidget::my_projete(double x, double y, double & x_res, double & y_res){
 bool GpsWidget::addligne(double l, int i){
     GpsFramework & f = GpsFramework::Instance();
     
-    double a = f.m_a;
-    double b = f.m_b;
+    double a = f.m_lineAB.m_a;
+    double b = f.m_lineAB.m_b;
     
     double res = l*b/cos(atan(-a/b));
     double x0 = -m_width/(m_zoom*2) + m_xref;
-    double y0 = -(a * x0 + f.m_c + res)/b;
+    double y0 = -(a * x0 + f.m_lineAB.m_c + res)/b;
     
     double x1 = m_width/(m_zoom*2) + m_xref;
-    double y1 = -(a * x1 + f.m_c + res)/b;
+    double y1 = -(a * x1 + f.m_lineAB.m_c + res)/b;
     
     double x02;
     double y02;
@@ -209,9 +209,9 @@ void GpsWidget::draw_force(){
     m_widthMax = m_width/2+f.m_config.m_largeur*m_zoom/2;
     m_heightMax = m_height/2+f.m_config.m_largeur*m_zoom/2;
     
-    m_la = f.m_a;
-    m_lb = f.m_b;
-    m_lc = f.m_c;
+    m_la = f.m_lineAB.m_a;
+    m_lb = f.m_lineAB.m_b;
+    m_lc = f.m_lineAB.m_c;
     
     m_a = -f.m_deplacementAngle; //TODO etonnant!
     if(!f.m_config.m_sensDraw){
@@ -319,21 +319,21 @@ void GpsWidget::draw_force(){
     drawLines();
     
     
-    if(f.m_pointA.m_isOk){
+    if(f.m_lineAB.m_pointA.m_isOk){
         double xA, yA;
-        my_projete(f.m_pointA.m_x, f.m_pointA.m_y, xA, yA);
+        my_projete(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, xA, yA);
         scene->addEllipse(w/2 + xA, h/2 - yA, 5, 5, m_penRed, m_brushNo);
     }
-    if(f.m_pointB.m_isOk){
+    if(f.m_lineAB.m_pointB.m_isOk){
         double xB, yB;
-        my_projete(f.m_pointB.m_x, f.m_pointB.m_y, xB, yB);
+        my_projete(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, xB, yB);
         scene->addEllipse(w/2 + xB, h/2 - yB, 5, 5, m_penRed, m_brushNo);
     }
-    if(f.m_pointA.m_isOk && f.m_pointB.m_isOk){
+    if(f.m_lineAB.m_pointA.m_isOk && f.m_lineAB.m_pointB.m_isOk){
         double xA, yA;
-        my_projete(f.m_pointA.m_x, f.m_pointA.m_y, xA, yA);
+        my_projete(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, xA, yA);
         double xB, yB;
-        my_projete(f.m_pointB.m_x, f.m_pointB.m_y, xB, yB);
+        my_projete(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, xB, yB);
         
         
         //INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");

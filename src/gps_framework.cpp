@@ -56,10 +56,10 @@ void GpsFramework::initOrLoadConfig(){
     m_fileModule.initOrLoad(m_config);
     
     m_distance_cap_vitesse = 3;
-    m_pointA.m_latitude = m_config.m_a_lat;
-    m_pointA.m_longitude = m_config.m_a_lon;
-    m_pointB.m_latitude = m_config.m_b_lat;
-    m_pointB.m_longitude = m_config.m_b_lon;
+    m_lineAB.m_pointA.m_latitude = m_config.m_a_lat;
+    m_lineAB.m_pointA.m_longitude = m_config.m_a_lon;
+    m_lineAB.m_pointB.m_latitude = m_config.m_b_lat;
+    m_lineAB.m_pointB.m_longitude = m_config.m_b_lon;
     gpslogFile << "[config]\n";
     setAB();
     m_reloadConfig = true;
@@ -84,8 +84,8 @@ void GpsFramework::setRef(double latitude, double longitude){
            m_gpsModule.setXY(*l2);
        }
     }
-    m_gpsModule.setXY(m_pointA);
-    m_gpsModule.setXY(m_pointB);
+    m_gpsModule.setXY(m_lineAB.m_pointA);
+    m_gpsModule.setXY(m_lineAB.m_pointB);
 }
 
 
@@ -286,12 +286,12 @@ void GpsFramework::onFrame(const std::string &frame){
 
 
 double GpsFramework::distance(GpsPoint & gpsPoint){
-    if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
+    if(m_lineAB.m_pointA.m_x!=0 && m_lineAB.m_pointB.m_x!=0){
         //INFO("-ym "<< gpsPoint.m_y << " xm " << gpsPoint.m_x << " " << gpsPoint.m_y - m_a * gpsPoint.m_x - m_b);
         //INFO("-m_a " << m_a << " m_b " << m_b << " " << " m_c " << m_c << " m_sqrt_m_a_m_b " << m_sqrt_m_a_m_b);
         //INFO("-res1 " << (m_a * gpsPoint.m_x + m_b * gpsPoint.m_y + m_c));
         
-        double dist = (m_a * gpsPoint.m_x + m_b * gpsPoint.m_y + m_c)/m_sqrt_m_a_m_b;
+        double dist = (m_lineAB.m_a * gpsPoint.m_x + m_lineAB.m_b * gpsPoint.m_y + m_lineAB.m_c)/m_lineAB.m_sqrt_m_a_m_b;
         //INFO(dist);
         if(!m_sensAB){
             dist = -dist;
@@ -319,10 +319,10 @@ double GpsFramework::distance(GpsPoint & gpsPoint){
         }
         //INFO("distance Point AB " << dist);
         return dist;
-    }else if(m_pointA.m_x!=0){
+    }else if(m_lineAB.m_pointA.m_x!=0){
         //double dist = distanceBetween(m_pointA, gpsPoint);
-        double dx = m_pointA.m_x - gpsPoint.m_x;
-        double dy = m_pointA.m_y - gpsPoint.m_y;
+        double dx = m_lineAB.m_pointA.m_x - gpsPoint.m_x;
+        double dy = m_lineAB.m_pointA.m_y - gpsPoint.m_y;
         double dist = sqrt(dx*dx + dy*dy);
         m_distanceAB = dist;
         //INFO("distance Point A " << dist);
@@ -335,25 +335,25 @@ double GpsFramework::distance(GpsPoint & gpsPoint){
 
 void GpsFramework::savePointA(){
     if(!m_list.empty()){
-        m_pointA = *(*m_list.begin());
+        m_lineAB.m_pointA = *(*m_list.begin());
     }
     if(m_observer){
         m_observer->onNewPoint();
     }
-    setRef(m_pointA.m_latitude, m_pointA.m_longitude);
+    setRef(m_lineAB.m_pointA.m_latitude, m_lineAB.m_pointA.m_longitude);
     
     gpslogFile << "[savePointA]\n";
-    INFO(m_pointA.m_time << " " << m_pointA.m_latitude << " " << m_pointA.m_longitude);
+    INFO(m_lineAB.m_pointA.m_time << " " << m_lineAB.m_pointA.m_latitude << " " << m_lineAB.m_pointA.m_longitude);
     clearSurface();
 }
 
 void GpsFramework::savePointB(){
     if(!m_list.empty()){
-        m_pointB = *(*m_list.begin());
+        m_lineAB.m_pointB = *(*m_list.begin());
     }
     
-    INFO(m_pointB.m_time << " " << m_pointB.m_latitude << " " << m_pointB.m_longitude);
-    if(m_pointA.m_isOk!=0 && m_pointB.m_isOk!=0){
+    INFO(m_lineAB.m_pointB.m_time << " " << m_lineAB.m_pointB.m_latitude << " " << m_lineAB.m_pointB.m_longitude);
+    if(m_lineAB.m_pointA.m_isOk!=0 && m_lineAB.m_pointB.m_isOk!=0){
         setAB();
     }
     if(m_observer){
@@ -363,30 +363,30 @@ void GpsFramework::savePointB(){
 }
 
 void GpsFramework::setAB(){
-    m_config.m_a_lat = m_pointA.m_latitude;
-    m_config.m_a_lon = m_pointA.m_longitude;
-    m_config.m_b_lat = m_pointB.m_latitude;
-    m_config.m_b_lon = m_pointB.m_longitude;
+    m_config.m_a_lat = m_lineAB.m_pointA.m_latitude;
+    m_config.m_a_lon = m_lineAB.m_pointA.m_longitude;
+    m_config.m_b_lat = m_lineAB.m_pointB.m_latitude;
+    m_config.m_b_lon = m_lineAB.m_pointB.m_longitude;
     m_config.save();
     
     //m_pointA.m_x = 1; m_pointA.m_y = 1;
-    setRef((m_pointA.m_latitude + m_pointB.m_latitude)/2, (m_pointA.m_longitude + m_pointB.m_longitude)/2);
-    m_ab_x = m_pointB.m_x - m_pointA.m_x;
-    m_ab_y = m_pointB.m_y - m_pointA.m_y;
+    setRef((m_lineAB.m_pointA.m_latitude + m_lineAB.m_pointB.m_latitude)/2, (m_lineAB.m_pointA.m_longitude + m_lineAB.m_pointB.m_longitude)/2);
+    m_lineAB.m_ab_x = m_lineAB.m_pointB.m_x - m_lineAB.m_pointA.m_x;
+    m_lineAB.m_ab_y = m_lineAB.m_pointB.m_y - m_lineAB.m_pointA.m_y;
     
     
-    m_a = -(m_pointB.m_y - m_pointA.m_y);
-    m_b = m_pointB.m_x - m_pointA.m_x;
-    m_c = -m_a * m_pointA.m_x - m_b *  m_pointA.m_y;
-    m_sqrt_m_a_m_b = sqrt(m_a*m_a + m_b*m_b);
+    m_lineAB.m_a = -(m_lineAB.m_pointB.m_y - m_lineAB.m_pointA.m_y);
+    m_lineAB.m_b = m_lineAB.m_pointB.m_x - m_lineAB.m_pointA.m_x;
+    m_lineAB.m_c = -m_lineAB.m_a * m_lineAB.m_pointA.m_x - m_lineAB.m_b *  m_lineAB.m_pointA.m_y;
+    m_lineAB.m_sqrt_m_a_m_b = sqrt(m_lineAB.m_a*m_lineAB.m_a + m_lineAB.m_b*m_lineAB.m_b);
     
-    if(m_ab_y != 0 && m_ab_x != 0){
-        m_angleAB = atan(m_ab_x/m_ab_y);
+    if(m_lineAB.m_ab_y != 0 && m_lineAB.m_ab_x != 0){
+        m_lineAB.m_angleAB = atan(m_lineAB.m_ab_x/m_lineAB.m_ab_y);
     } else {
-        m_angleAB = 0;
+        m_lineAB.m_angleAB = 0;
     }
-    INFO("yb  " << std::fixed << m_pointB.m_y << " ya " << m_pointA.m_y << " xb " << m_pointB.m_x << " xa " << m_pointA.m_x);
-    INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
+    INFO("yb  " << std::fixed << m_lineAB.m_pointB.m_y << " ya " << m_lineAB.m_pointA.m_y << " xb " << m_lineAB.m_pointB.m_x << " xa " << m_lineAB.m_pointA.m_x);
+    INFO(m_lineAB.m_a << "*x + " << m_lineAB.m_b << "*y + " << m_lineAB.m_c << " = 0; " << m_lineAB.m_sqrt_m_a_m_b);
 }
 
 /*void GpsFramework::calculDeplacement(){
@@ -517,8 +517,8 @@ void GpsFramework::calculDeplacement(){
                 //INFO(perc << " " << temp/3.14*180 << " " << m_deplacementAngle/3.14*180);
             }
             
-            if(m_ab_x != 0 || m_ab_y != 0){
-                double det = m_a*m_deplacementY - m_b*m_deplacementX;
+            if(m_lineAB.m_ab_x != 0 || m_lineAB.m_ab_y != 0){
+                double det = m_lineAB.m_a*m_deplacementY - m_lineAB.m_b*m_deplacementX;
                 //m_deplacementAngle = m_deplacementAngle+3.14;
                 m_sensAB = (det < 0);
             }
@@ -764,7 +764,7 @@ void GpsFramework::calculAngleCorrection(){
     //m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
    
     //follow karott
-    double angleABDeplacement = m_angleAB - m_deplacementAngle;
+    double angleABDeplacement = m_lineAB.m_angleAB - m_deplacementAngle;
     if(angleABDeplacement>3.14/2){
         angleABDeplacement = angleABDeplacement-3.14;
     }
@@ -858,7 +858,7 @@ void GpsFramework::calculContourExterieur(){
         } while (p != l);  // Whil
         m_contour.push_back(m_contour[0]);
         m_surface_exterieur = polygonArea(m_contour)/10000.0;
-        m_surface_exterieur_h = m_surface_exterieur/(m_list.front()->m_timeHour - m_pointA.m_timeHour);
+        m_surface_exterieur_h = m_surface_exterieur/(m_list.front()->m_timeHour - m_lineAB.m_pointA.m_timeHour);
     }
 }
 
