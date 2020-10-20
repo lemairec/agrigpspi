@@ -143,9 +143,9 @@ public:
     void drawValueGui(ValueGui * valueGui, double value);
     void drawValueGui2(ValueGui * valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s);
     
-    void drawText(const std::string & text, int x, int y, SizeText = sizeText_little, bool center = false);
-    void drawTextWhite(const std::string & text, int x, int y, SizeText = sizeText_little, bool center = false);
-
+    void drawText(const std::string & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
+    void drawQText(const QString & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
+    
     QPixmap * loadImage(const std::string & s);
 };
 

@@ -157,7 +157,7 @@ BaseWidget::BaseWidget(){
     m_penBlue = QPen(Qt::blue);
     m_penBlue2 = QPen(Qt::blue, 5);
     
-    m_grayBrush = QBrush (QColor(160,160,160));
+    m_grayBrush = QBrush (QColor(200,200,200));
     
     m_brushDarkGray = QBrush (QColor(60,60,60));
     
@@ -288,35 +288,13 @@ int BaseWidget::onMouseSelectButton(SelectButtonGui *select, double x, double y)
     return res;
 }
 
-void BaseWidget::drawText(const std::string & text, int x, int y, SizeText size, bool center){
+void BaseWidget::drawText(const std::string & text, int x, int y, SizeText size, bool center, bool white){
     QString s = QString::fromStdString(text);
-    auto textItem = scene->addText(s);
     
-    int s2 = 10;
-    switch (size) {
-        case sizeText_big:
-            s2 = 22;
-            break;
-        case sizeText_medium:
-            s2 = 18;
-            break;
-        case sizeText_little:
-            s2 = 14;
-            break;
-    }
-    textItem->setFont(QFont("Latin", s2, 1, false));
-    
-    if(center){
-        auto mBounds = textItem->boundingRect();
-        textItem->setPos(x-mBounds.width()/2, y-s2+2);
-    } else {
-        textItem->setPos(x, y-s2+2);
-    }
-    
+    drawQText(s, x, y, size, center, white);
 }
 
-void BaseWidget::drawTextWhite(const std::string & text, int x, int y, SizeText size, bool center){
-    QString s = QString::fromStdString(text);
+void BaseWidget::drawQText(const QString & s, int x, int y, SizeText size, bool center, bool white){
     auto textItem = scene->addText(s);
     
     int s2 = 10;
@@ -332,6 +310,9 @@ void BaseWidget::drawTextWhite(const std::string & text, int x, int y, SizeText 
             break;
     }
     textItem->setFont(QFont("Latin", s2, 1, false));
+    if(white){
+        textItem->setDefaultTextColor(Qt::white);
+    }
     
     if(center){
         auto mBounds = textItem->boundingRect();
@@ -339,7 +320,6 @@ void BaseWidget::drawTextWhite(const std::string & text, int x, int y, SizeText 
     } else {
         textItem->setPos(x, y-s2+2);
     }
-    
 }
 
 void BaseWidget::drawValueGui2(ValueGui * valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s){

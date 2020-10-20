@@ -22,7 +22,7 @@ public:
     QPixmap * m_imgA;
     QPixmap * m_imgB;
     QPixmap * m_imgOption;
-    QPixmap * m_imgSat;
+    QPixmap * m_imgSatBlanc;
     QPixmap * m_imgSatVert;
     QPixmap * m_imgSatOrange;
     QPixmap * m_imgSatRouge;
@@ -33,6 +33,7 @@ public:
     QPixmap * m_imgVolantVert;
     QPixmap * m_imgOk;
     
+    ButtonGui m_buttonSat;
     ButtonGui m_buttonClose;
     ButtonGui m_buttonPlus;
     ButtonGui m_buttonMinus;
@@ -53,6 +54,7 @@ public:
     void drawLines();
     void drawTracteur();
     void drawBottom();
+    void drawTop();
     void drawContour();
     void drawError();
     
@@ -85,8 +87,6 @@ public:
     
     
     void mouseReleaseEvent ( QMouseEvent * event );
-
-    void drawBarreGuidage();
     
     void onMouse(int x, int y);
 };
