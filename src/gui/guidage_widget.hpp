@@ -15,9 +15,9 @@ class GuidageWidget : public BaseWidget {
     ButtonGui m_buttonCurveAB;
     ButtonGui m_buttonA;
     ButtonGui m_buttonB;
+    
     int m_x = 0;
     int m_lg = 20;
-
 public:
     GuidageWidget();
     

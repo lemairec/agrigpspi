@@ -62,6 +62,7 @@ void GpsWidget::setSize(int width, int height){
     m_optionsWidget.setSize(m_width, m_height);
     m_satWidget.setSize(m_width, m_height);
     m_guidWidget.setSize(m_width, m_height);
+    m_parcelleWidget.setSize(m_width, m_height);
     double temp = 0.05;
     
     m_buttonSat.setResize(m_width-30, 20, m_gros_button);
@@ -387,6 +388,9 @@ void GpsWidget::draw_force(){
     }
     if(!m_guidWidget.m_close){
         m_guidWidget.draw();
+    }
+    if(!m_parcelleWidget.m_close){
+        m_parcelleWidget.draw();
     }
     DEBUG("END");
     
@@ -867,7 +871,7 @@ void GpsWidget::onMouse(int x, int y){
     } else if(m_buttonGuidage.isActive(x2, y2)){
         m_guidWidget.m_close = false;
     } else if(m_buttonParcelle.isActive(x2, y2)){
-        GpsFramework::Instance().savePointB();
+        m_parcelleWidget.m_close = false;
     } else if(m_buttonOption.isActive(x2, y2)){
         m_optionsWidget.open();
         m_optionsWidget.m_close = false;

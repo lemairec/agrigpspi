@@ -6,6 +6,7 @@
 #include "option_widget.hpp"
 #include "sat_widget.hpp"
 #include "guidage_widget.hpp"
+#include "parcelle_widget.hpp"
 
 class GpsWidget : public BaseWidget {
 public:
@@ -14,6 +15,7 @@ public:
     OptionWidget m_optionsWidget;
     SatWidget m_satWidget;
     GuidageWidget m_guidWidget;
+    ParcelleWidget m_parcelleWidget;
     
     void addButtons();
 

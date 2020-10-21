@@ -24,6 +24,8 @@ void View::setupUi(){
     m_gpsWidget->m_optionsWidget.setScene(scene);
     m_gpsWidget->m_satWidget.setScene(scene);
     m_gpsWidget->m_guidWidget.setScene(scene);
+    m_gpsWidget->m_parcelleWidget.setScene(scene);
+    
     DEBUG("end");
     
 };
@@ -41,6 +43,9 @@ void View::mouseReleaseEvent ( QMouseEvent * event ){
     }
     if(!m_gpsWidget->m_guidWidget.m_close){
         m_gpsWidget->m_guidWidget.onMouseInt(x, y);
+    }
+    if(!m_gpsWidget->m_parcelleWidget.m_close){
+        m_gpsWidget->m_parcelleWidget.onMouseInt(x, y);
     }
     
     m_gpsWidget->draw_force();
