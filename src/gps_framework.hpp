@@ -7,6 +7,7 @@
 #include "gui/qt/my_qt_file.hpp"
 #include "config/config.hpp"
 #include "lineAB.hpp"
+#include "curveAB.hpp"
 #include <chrono>
 #include <QThread>
 #include <time.h>
@@ -25,6 +26,16 @@ struct Tracteur {
     
     double m_x_essieu_avant = 0;
     double m_y_essieu_avant = 0;
+    
+};
+
+enum Etat {
+    EtatLineAB_Reset,
+    EtatLineAB_PointASaved,
+    EtatLineAB_ABOK,
+    EtatCurveAB_Reset,
+    EtatCurveAB_PointASaved,
+    EtatCurveAB_ABOK,
     
 };
 
@@ -53,6 +64,9 @@ public:
     void removeObserver();
     void onGGAFrame(GGAFrame & frame);
     void onRMCFrame(RMCFrame_ptr frame);
+   
+    void onNewPoint(GpsPoint_ptr point);
+      
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
@@ -68,7 +82,9 @@ public:
     Config m_config;
     bool m_reloadConfig = true;
     
+    Etat m_etat = EtatCurveAB_PointASaved;
     LineAB m_lineAB;
+    CurveAB m_curveAB;
     void setAB();
     
     //deplacement

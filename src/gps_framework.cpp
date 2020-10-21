@@ -12,7 +12,7 @@
 std::ofstream gpslogFile;
 std::ofstream logFile;
 
-bool rmc = true;
+bool rmc = false;
 
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
@@ -118,45 +118,59 @@ double moyDeplacement(double deplacement){
 }
 
 void GpsFramework::onGGAFrame(GGAFrame & f){
-    DEBUG("begin");
     m_lastGGAFrame = GGAFrame(f);
-    
     if(!rmc){
         if(f.isOk()){
-            if(m_gpsModule.m_latitudeRef == 0){
-                setRef(f.m_latitude, f.m_longitude);
-                return;
-            }
             GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
-            m_list.push_front(frame);
-            if(m_list.size()>100){
-                m_list.pop_back();
-            };
-            
-            
-            calculDeplacement();
-            m_distance = distance(*frame);
-            
-            calculAngleCorrection();
-            
-            m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
-            
-            //m_distanceAB = moyDistance(m_distanceAB);
-            //m_deplacementAngle = moyDeplacement(m_deplacementAngle);
-            
-            calculSurface();
-            
-            calculDraw(frame);
+            onNewPoint(frame);
         }
-       
-        if(m_observer){
-            m_observer->onNewPoint();
-        }
-        setNewGpsTime();
     }
-    //std::cout << "<trkpt lon=\""<< f.m_longitude << "\" lat=\"" << f.m_latitude << "\"><ele>51.0</ele><time>2010-12-26T17:07:40.421Z</time></trkpt>" << std::endl;
-    DEBUG("end");
 }
+
+void GpsFramework::onRMCFrame(RMCFrame_ptr f){
+    m_lastRMCFrame = f;
+    if(rmc){
+        onNewPoint(f);
+            
+        m_vitesse = f->m_vitesse_kmh;
+    }
+}
+
+void GpsFramework::onNewPoint(GpsPoint_ptr f){
+    if(m_etat == EtatCurveAB_ABOK){
+        return;
+    }
+    
+    if(m_gpsModule.m_latitudeRef == 0){
+        setRef(f->m_latitude, f->m_longitude);
+        return;
+    }
+    
+    if(m_etat == EtatCurveAB_PointASaved){
+        m_curveAB.addPoint(f);
+    }
+    
+    m_list.push_front(f);
+    if(m_list.size()>100){
+        m_list.pop_back();
+    };
+    
+    calculDeplacement();
+    m_distance = distance(*f);
+    //m_deplacementAngle = f->m_cap_rad;
+    
+    
+    calculAngleCorrection();
+    m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
+
+    calculSurface();
+    
+    DEBUG("draw");
+    calculDraw(f);
+    setNewGpsTime();
+    
+}
+
 
 void GpsFramework::setNewGpsTime(){
     auto begin = std::chrono::system_clock::now();
@@ -240,45 +254,7 @@ bool GpsFramework::isPilotConnected(){
 
 
 
-void GpsFramework::onRMCFrame(RMCFrame_ptr f){
-    //return;
-    DEBUG("begin");
-    
-    if(rmc){
-        m_lastRMCFrame = f;
-        if(true){
-            if(m_gpsModule.m_latitudeRef == 0){
-                setRef(f->m_latitude, f->m_longitude);
-                return;
-            }
-            
-            m_list.push_front(f);
-            if(m_list.size()>100){
-                m_list.pop_back();
-            };
-            
-            
-            calculDeplacement();
-            m_distance = distance(*f);
-            //m_deplacementAngle = f->m_cap_rad;
-            m_vitesse = f->m_vitesse_kmh;
-            
-            
-            calculAngleCorrection();
-            m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
 
-            calculSurface();
-            
-            DEBUG("draw");
-            calculDraw(f);
-        }
-       
-        setNewGpsTime();
-        DEBUG("end");
-    }
-    
-    //std::cout << "<trkpt lon=\""<< f.m_longitude << "\" lat=\"" << f.m_latitude << "\"><ele>51.0</ele><time>2010-12-26T17:07:40.421Z</time></trkpt>" << std::endl;
-}
 
 void GpsFramework::onFrame(const std::string &frame){
     gpslogFile << frame << "\n";
@@ -316,6 +292,8 @@ void GpsFramework::savePointA(){
     gpslogFile << "[savePointA]\n";
     INFO(m_lineAB.m_pointA.m_time << " " << m_lineAB.m_pointA.m_latitude << " " << m_lineAB.m_pointA.m_longitude);
     clearSurface();
+    
+    m_etat = EtatCurveAB_PointASaved;
 }
 
 void GpsFramework::savePointB(){
@@ -331,6 +309,9 @@ void GpsFramework::savePointB(){
         m_observer->onNewPoint();
     }
     gpslogFile << "[savePointB]\n";
+    
+    m_etat = EtatCurveAB_ABOK;
+    m_curveAB.savePointB();
 }
 
 void GpsFramework::setAB(){

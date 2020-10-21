@@ -12,6 +12,7 @@ GuidageWidget::GuidageWidget(){
     m_imgLigneAB = loadImage("/images/line_ab.png");
     m_imgCurveAB = loadImage("/images/curve_ab.png");
     
+    m_close = false;
 }
 
 

@@ -7,7 +7,7 @@
 
 #include "environnement.hpp"
 
-#define FILE_TIME 50
+#define FILE_TIME 100
 
 MyQTFile::MyQTFile(){
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(handleLineFile()));
@@ -31,9 +31,9 @@ void MyQTFile::handleLineFile(){
     if(!line.isNull()){
        std::string line_s = line.toUtf8().constData();
         if(line_s == "[savePointA]"){
-            GpsFramework::Instance().savePointA();
+            //GpsFramework::Instance().savePointA();
         } else if(line_s == "[savePointB]"){
-            GpsFramework::Instance().savePointB();
+            //GpsFramework::Instance().savePointB();
         }
        for(size_t i = 0; i < line_s.size(); ++i){
            

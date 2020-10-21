@@ -30,7 +30,7 @@ int l_bottom = 20;
 GpsWidget::GpsWidget()
 :m_optionsWidget()
 {
-    m_zoom = 40;
+    m_zoom = 10;
     
     m_imgOk = loadImage("/images/ok.png");
     m_imgPlus = loadImage("/images/plus.png");
@@ -233,7 +233,48 @@ void GpsWidget::draw_force(){
     
     scene->clear();
     
-    if(f.m_list.size() >0){
+    GpsPoint_ptr old_point = nullptr;
+    for(auto p : f.m_curveAB.m_listAB){
+        if(old_point){
+            double xA, yA;
+            my_projete(old_point->m_x, old_point->m_y, xA, yA);
+            double xB, yB;
+            my_projete(p->m_x, p->m_y, xB, yB);
+            
+            
+            //INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
+            scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penBlue);
+            
+        }
+        old_point = p;
+    }
+    
+    for(auto t : f.m_curveAB.m_list){
+        GpsPoint_ptr old_point = nullptr;
+        int i = 0;
+        for(auto p : t.second){
+            if(old_point){
+                double xA, yA;
+                my_projete(old_point->m_x, old_point->m_y, xA, yA);
+                double xB, yB;
+                my_projete(p->m_x, p->m_y, xB, yB);
+                
+                
+                //INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
+                scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penBlue);
+                //scene->addEllipse(w/2 + xA, h/2 - yA, i,i, m_penBlue);
+                ++i;
+                
+            }
+            old_point = p;
+        }
+    }
+    
+    if(f.m_etat == EtatCurveAB_ABOK){
+        
+    }
+    
+    /*if(f.m_list.size() >0){
         if(f.m_config.m_debug){
             for(auto p: f.m_list){
                 double x1, y1;
@@ -314,7 +355,7 @@ void GpsWidget::draw_force(){
             }
         }
     }
-    drawLines();
+    drawLines();*/
     
     
     if(f.m_lineAB.m_pointA.m_isOk){
@@ -607,14 +648,14 @@ void GpsWidget::drawBottom(){
         textItems_vitesse->setPos(m_width-135 - mBounds.width()/2, y_bottom);
     }*/
     
-    if(!f.isGpsConnected()){
+    /*if(!f.isGpsConnected()){
         int x = m_width/2;
         int y = m_height/2;
         scene->addRect(x-200, y-30, 400, 60, m_penBlack, m_grayBrush);
         {
             drawText("mauvaise réception GPS", x, y-10, sizeText_big, true);
         }
-    }
+    }*/
 }
 
 void GpsWidget::drawVolant_(double y, double a, double r, double start_angle){

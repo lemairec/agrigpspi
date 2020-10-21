@@ -16,6 +16,10 @@ struct GpsPoint {
     double m_timeHour;
     
     bool m_isOk = false;
+    
+    double distance(GpsPoint & p2){
+        return (p2.m_x - m_x)*(p2.m_x - m_x) + (p2.m_y - m_y)*(p2.m_y - m_y);
+    }
 };
 
 struct GGAFrame : public GpsPoint {
