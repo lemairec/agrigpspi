@@ -33,7 +33,6 @@ GpsWidget::GpsWidget()
     m_zoom = 40;
     
     m_imgOk = loadImage("/images/ok.png");
-    m_imgClose = loadImage("/images/close.png");
     m_imgPlus = loadImage("/images/plus.png");
     m_imgMinus = loadImage("/images/minus.png");
     m_imgGuidage = loadImage("/images/guidage.png");
@@ -67,7 +66,6 @@ void GpsWidget::setSize(int width, int height){
     
     m_buttonSat.setResize(m_width-30, 20, m_gros_button);
     
-    m_buttonClose.setResize((1-temp)*m_width, 0.2*m_height, m_gros_button);
     m_buttonGuidage.setResize(100, m_height-30, m_gros_button);
     m_buttonParcelle.setResize(150, m_height-30, m_gros_button);
     
@@ -508,7 +506,7 @@ void GpsWidget::drawTracteur(){
     {
         double x_temp, y_temp;
         my_projete(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, x_temp, y_temp);
-        INFO(x_temp << " " << y_temp);
+        //INFO(x_temp << " " << y_temp);
         scene->addEllipse(w/2 + x_temp-5, h/2 - y_temp-5, 10, 10, m_penRed, m_grayBrush);
         
     }
@@ -832,7 +830,6 @@ void GpsWidget::addButtons(){
     drawButtonImage(&m_buttonGuidage, *m_imgGuidage);
     drawButtonImage(&m_buttonParcelle, *m_imgParcelle);
     drawButtonImage(&m_buttonOption, *m_imgOption);
-    drawButtonImage(&m_buttonClose, *m_imgClose);
     
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_pauseDraw){
@@ -861,9 +858,7 @@ void GpsWidget::onMouse(int x, int y){
             f.m_messages_errors = "";
         }
     }
-    if(m_buttonClose.isActive(x2, y2)){
-        exit(0);
-    } else if(m_buttonPlus.isActive(x2, y2)){
+    if(m_buttonPlus.isActive(x2, y2)){
         m_zoom *= 1.2;
         m_zoom = std::round(m_zoom*10.0)/10.0;
     } else if(m_buttonMinus.isActive(x2, y2)){

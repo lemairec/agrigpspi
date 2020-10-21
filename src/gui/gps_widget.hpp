@@ -20,7 +20,6 @@ public:
     int m_widthMax;
     int m_heightMax;
 
-    QPixmap * m_imgClose;
     QPixmap * m_imgPlus;
     QPixmap * m_imgMinus;
     QPixmap * m_imgGuidage;
@@ -38,7 +37,6 @@ public:
     QPixmap * m_imgOk;
     
     ButtonGui m_buttonSat;
-    ButtonGui m_buttonClose;
     ButtonGui m_buttonPlus;
     ButtonGui m_buttonMinus;
     ButtonGui m_buttonGuidage;
