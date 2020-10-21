@@ -309,7 +309,9 @@ void BaseWidget::drawQText(const QString & s, int x, int y, SizeText size, bool 
             s2 = 14;
             break;
     }
-    textItem->setFont(QFont("Latin", s2, 1, false));
+    QFont font = QFont("Latin", s2, 1, false);
+    font.setBold(true);
+    textItem->setFont(font);
     if(white){
         textItem->setDefaultTextColor(Qt::white);
     }
