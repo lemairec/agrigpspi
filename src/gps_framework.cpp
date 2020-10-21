@@ -287,28 +287,8 @@ void GpsFramework::onFrame(const std::string &frame){
 
 double GpsFramework::distance(GpsPoint & gpsPoint){
     if(m_lineAB.m_pointA.m_x!=0 && m_lineAB.m_pointB.m_x!=0){
-        //INFO("-ym "<< gpsPoint.m_y << " xm " << gpsPoint.m_x << " " << gpsPoint.m_y - m_a * gpsPoint.m_x - m_b);
-        //INFO("-m_a " << m_a << " m_b " << m_b << " " << " m_c " << m_c << " m_sqrt_m_a_m_b " << m_sqrt_m_a_m_b);
-        //INFO("-res1 " << (m_a * gpsPoint.m_x + m_b * gpsPoint.m_y + m_c));
+        double dist =  m_lineAB.distance(gpsPoint.m_x, gpsPoint.m_y, m_config.m_largeur);
         
-        double dist = (m_lineAB.m_a * gpsPoint.m_x + m_lineAB.m_b * gpsPoint.m_y + m_lineAB.m_c)/m_lineAB.m_sqrt_m_a_m_b;
-        //INFO(dist);
-        if(!m_sensAB){
-            dist = -dist;
-        }
-        dist = fmod(dist, m_config.m_largeur);
-        if(dist > m_config.m_largeur/2){
-            dist -= m_config.m_largeur;
-        }
-        if(dist < -m_config.m_largeur/2){
-            dist += m_config.m_largeur;
-        }
-        if(dist < -m_config.m_largeur/2){
-            dist += m_config.m_largeur;
-        }
-        if(dist > m_config.m_largeur/2){
-            dist -= m_config.m_largeur;
-        }
         double coeff = m_config.m_largeur/(2*6);
         m_distanceAB = dist;
         if(dist < 0.0){
@@ -319,16 +299,7 @@ double GpsFramework::distance(GpsPoint & gpsPoint){
         }
         //INFO("distance Point AB " << dist);
         return dist;
-    }else if(m_lineAB.m_pointA.m_x!=0){
-        //double dist = distanceBetween(m_pointA, gpsPoint);
-        double dx = m_lineAB.m_pointA.m_x - gpsPoint.m_x;
-        double dy = m_lineAB.m_pointA.m_y - gpsPoint.m_y;
-        double dist = sqrt(dx*dx + dy*dy);
-        m_distanceAB = dist;
-        //INFO("distance Point A " << dist);
-        return dist;
-        
-   } else {
+    } else {
         return 0.0;
     }
 }
@@ -520,7 +491,7 @@ void GpsFramework::calculDeplacement(){
             if(m_lineAB.m_ab_x != 0 || m_lineAB.m_ab_y != 0){
                 double det = m_lineAB.m_a*m_deplacementY - m_lineAB.m_b*m_deplacementX;
                 //m_deplacementAngle = m_deplacementAngle+3.14;
-                m_sensAB = (det < 0);
+                m_lineAB.m_sensAB = (det < 0);
             }
             
             

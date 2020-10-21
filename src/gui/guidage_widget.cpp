@@ -9,8 +9,8 @@ GuidageWidget::GuidageWidget(){
     m_imgOk = loadImage("/images/ok.png");
     m_imgA = loadImage("/images/a.png");
     m_imgB = loadImage("/images/b.png");
-    m_imgLigneAB = loadImage("/images/line_ab.jpg");
-    m_imgCurveAB = loadImage("/images/curve_ab.jpg");
+    m_imgLigneAB = loadImage("/images/line_ab.png");
+    m_imgCurveAB = loadImage("/images/curve_ab.png");
     
 }
 

@@ -301,7 +301,7 @@ void OptionWidget::resizePage4(){
 
 void OptionWidget::drawPage4(){
     GpsFramework & f = GpsFramework::Instance();
-    drawText("Avancé", 0.55*m_width, 0.1*m_height, sizeText_big, true);
+    drawText("Avancé", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     drawText("Sens de la ligne", 0.4*m_width, 0.25*m_height);
     drawText("Mode technicien", 0.4*m_width, 0.35*m_height);
@@ -359,7 +359,7 @@ void OptionWidget::resizePage5(){
 void OptionWidget::drawPage5(){
     GpsFramework & f = GpsFramework::Instance();
     
-    drawText("Autoguidage", 0.55*m_width, 0.1*m_height, sizeText_big, true);
+    drawText("Autoguidage", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     drawText(f.m_pilotModule.m_version_guidage, 0.55*m_width, 0.20*m_height, sizeText_medium, true);
     
@@ -441,23 +441,23 @@ void OptionWidget::resizePage6(){
 
 void OptionWidget::drawPage6(){
     GpsFramework & f = GpsFramework::Instance();
-    drawText("Test Volant", 0.55*m_width, 0.1*m_height, sizeText_big, true);
+    drawText("Test Volant", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     drawButtonLabel(&m_button_p6connect, COLOR_OTHER);
-    drawText("connect", m_button_p6connect.m_x, m_button_p6connect.m_y, sizeText_medium, true);
+    drawText("connect", m_button_p6connect.m_x, m_button_p6connect.m_y, sizeText_little, true);
     
     drawButtonLabel(&m_button_p6disable, COLOR_OTHER);
-    drawText("disconnect", m_button_p6disable.m_x, m_button_p6disable.m_y, sizeText_medium, true);
+    drawText("disconnect", m_button_p6disable.m_x, m_button_p6disable.m_y, sizeText_little, true);
     
     drawText("Goto Volant", 0.55*m_width, 0.50*m_height, sizeText_medium, true);
     drawButtonLabel(&m_button_p6testGoToVLeft, COLOR_OTHER);
-    drawText("-0.5 volant", m_button_p6testGoToVLeft.m_x, m_button_p6testGoToVLeft.m_y, sizeText_medium, true);
+    drawText("-0.5 volant", m_button_p6testGoToVLeft.m_x, m_button_p6testGoToVLeft.m_y, sizeText_little, true);
     
     drawButtonLabel(&m_button_p6testGoToV0, COLOR_OTHER);
-    drawText("0", m_button_p6testGoToV0.m_x, m_button_p6testGoToV0.m_y, sizeText_medium, true);
+    drawText("0", m_button_p6testGoToV0.m_x, m_button_p6testGoToV0.m_y, sizeText_little, true);
     
     drawButtonLabel(&m_button_p6testGoToVRight, COLOR_OTHER);
-    drawText("+0.5 volant", m_button_p6testGoToVRight.m_x, m_button_p6testGoToVRight.m_y, sizeText_medium, true);
+    drawText("+0.5 volant", m_button_p6testGoToVRight.m_x, m_button_p6testGoToVRight.m_y, sizeText_little, true);
 }
 
 void OptionWidget::onMousePage6(double x, double y){

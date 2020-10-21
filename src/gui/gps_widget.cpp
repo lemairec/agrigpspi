@@ -38,7 +38,7 @@ GpsWidget::GpsWidget()
     m_imgMinus = loadImage("/images/minus.png");
     m_imgGuidage = loadImage("/images/guidage.png");
     m_imgParcelle = loadImage("/images/parcelle.png");
-    m_imgOption = loadImage("/images/option.png");
+    m_imgOption = loadImage("/images/menu.png");
     m_imgSatBlanc = loadImage("/images/sat.png");
     m_imgSatVert = loadImage("/images/sat_vert.png");
     m_imgSatOrange = loadImage("/images/sat_orange.png");
@@ -68,13 +68,13 @@ void GpsWidget::setSize(int width, int height){
     m_buttonSat.setResize(m_width-30, 20, m_gros_button);
     
     m_buttonClose.setResize((1-temp)*m_width, 0.2*m_height, m_gros_button);
-    m_buttonGuidage.setResize((temp)*m_width, 0.3*m_height, m_gros_button);
-    m_buttonParcelle.setResize((temp)*m_width, 0.4*m_height, m_gros_button);
+    m_buttonGuidage.setResize(100, m_height-30, m_gros_button);
+    m_buttonParcelle.setResize(150, m_height-30, m_gros_button);
     
-    m_buttonPlus.setResize((temp)*m_width, 0.6*m_height, m_gros_button);
-    m_buttonMinus.setResize((temp)*m_width, 0.7*m_height, m_gros_button);
+    m_buttonPlus.setResize(20, 0.45*m_height, m_gros_button);
+    m_buttonMinus.setResize(20, 0.55*m_height, m_gros_button);
     
-    m_buttonOption.setResize((temp)*m_width, 0.2*m_height, m_gros_button);
+    m_buttonOption.setResize((temp)*m_width, m_height-30, m_gros_button);
     m_buttonChamp.setResize((1-temp)*m_width, 0.4*m_height, m_gros_gros_button);
     m_buttonVolant.setResize((1-temp)*m_width, 0.6*m_height, m_gros_gros_button);
     

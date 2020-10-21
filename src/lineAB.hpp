@@ -1,10 +1,14 @@
 #ifndef LINE_AB_H
 #define LINE_AB_H
 
+#include "gps_module.hpp"
+
 class LineAB{
 public:
     GpsPoint m_pointA;
     GpsPoint m_pointB;
+    
+    bool m_sensAB = true;
     
     double m_a = 0;
     double m_b = 0;
@@ -16,6 +20,7 @@ public:
 
     double m_angleAB = 0;
     
+    double distance(double x, double y, double lg);
 };
 
 
