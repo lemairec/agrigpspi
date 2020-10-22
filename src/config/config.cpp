@@ -55,6 +55,9 @@ void Config::save(){
     settings.setValue("m_volant_derive", m_volant_derive);
     
     settings.setValue("distance_cap_vitesse", m_distance_cap_vitesse);
+    
+    settings.setValue("tracteur_distance_antenne_pont_avant", m_tracteur_distance_antenne_pont_avant);
+    settings.setValue("tracteur_distance_empatement", m_tracteur_distance_empatement);
 }
 
 void Config::load(){
@@ -138,5 +141,13 @@ void Config::load(){
     if(settings.contains("distance_cap_vitesse")){
         m_distance_cap_vitesse = settings.value("distance_cap_vitesse").toDouble();
     }
+    
+    if(settings.contains("tracteur_distance_antenne_pont_avant")){
+        m_tracteur_distance_antenne_pont_avant = settings.value("tracteur_distance_antenne_pont_avant").toDouble();
+    }
+    if(settings.contains("tracteur_distance_empatement")){
+        m_tracteur_distance_empatement = settings.value("tracteur_distance_empatement").toDouble();
+    }
+
     
 }

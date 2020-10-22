@@ -65,6 +65,9 @@ void GpsFramework::initOrLoadConfig(){
     m_reloadConfig = true;
     
     m_pilot_lookahead_d = m_config.m_pilot_lookahead_d;
+    
+    m_tracteur.m_antenne_essieu_avant = m_config.m_tracteur_distance_antenne_pont_avant;
+    m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_distance_empatement - m_config.m_tracteur_distance_antenne_pont_avant;
 }
 
 GpsFramework & GpsFramework::Instance(){

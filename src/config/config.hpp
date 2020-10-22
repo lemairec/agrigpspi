@@ -45,6 +45,8 @@ public:
     bool m_logNMEA = true;
     bool m_api = true;
     
+    double m_tracteur_distance_antenne_pont_avant = 1.5;
+    double m_tracteur_distance_empatement = 2.75;
     
     Config();
     
