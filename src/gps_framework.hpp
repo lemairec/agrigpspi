@@ -53,6 +53,8 @@ public:
     void removeObserver();
     void onGGAFrame(GGAFrame & frame);
     void onRMCFrame(RMCFrame_ptr frame);
+    
+    void onNewPoint(GpsPoint_ptr point);
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
