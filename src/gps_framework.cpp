@@ -715,7 +715,9 @@ void GpsFramework::calculAngleCorrection(){
     }
     //INFO(angleABDeplacement/3.14*180);
     
-    m_angle_correction = atan(m_distanceAB/m_pilot_lookahead_d)+angleABDeplacement;
+    double distance = m_distanceAB;
+    distance = m_lineAB.distance(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_largeur);
+    m_angle_correction = atan(distance/m_pilot_lookahead_d)+angleABDeplacement;
     //INFO(m_angle_correction);
     //m_angle_correction = ;
     
