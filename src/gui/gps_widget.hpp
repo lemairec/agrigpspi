@@ -34,6 +34,7 @@ public:
     QPixmap * m_imgFleche;
     QPixmap * m_imgChampGris;
     QPixmap * m_imgChampVert;
+    QPixmap * m_imgVolantBlanc;
     QPixmap * m_imgVolantGris;
     QPixmap * m_imgVolantVert;
     QPixmap * m_imgOk;

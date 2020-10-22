@@ -47,6 +47,7 @@ GpsWidget::GpsWidget()
     m_imgChampVert = loadImage("/images/champ_vert.png");
     m_imgVolantGris = loadImage("/images/volant_gris.png");
     m_imgVolantVert = loadImage("/images/volant_vert.png");
+    m_imgVolantBlanc = loadImage("/images/volant_blanc.png");
     
     m_imgFleche = loadImage("/images/fleche.png");
 
@@ -840,8 +841,10 @@ void GpsWidget::addButtons(){
         if(f.getVolantEngaged()){
             drawButtonImage(&m_buttonVolant, *m_imgVolantVert, 1.4);
         } else {
-            drawButtonImage(&m_buttonVolant, *m_imgVolantGris, 1.4);
+            drawButtonImage(&m_buttonVolant, *m_imgVolantBlanc, 1.4);
         }
+    } else {
+        drawButtonImage(&m_buttonVolant, *m_imgVolantGris, 1.4);
     }
 }
 
