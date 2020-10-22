@@ -479,13 +479,6 @@ void GpsWidget::drawTracteur(){
         
         scene->addEllipse(w/2-0.10*m_zoom, h/2-0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
         
-        
-        if(m_zoom >= 40){
-            if(f.m_config.m_debug){
-                //drawVolant(y_arriere - 0.5*l2);
-            }
-        }
-        
     } else {
         QPolygon polygon;
         polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + x2, h/2 - y2) << QPoint(w/2 - xA, h/2 + yA)<< QPoint(w/2 + x, h/2 - y);
@@ -499,11 +492,12 @@ void GpsWidget::drawTracteur(){
             my_projete(m_xref+dx*cos(a)-dy*sin(a), m_yref+dx*sin(a)+dy*cos(a), x2, y2);
             scene->addLine(w/2+x, h/2-y, w/2 + x2, h/2 - y2, m_penBlue);
         }
-        if(m_zoom >= 40){
-            y = h/4;
-            if(f.m_config.m_debug){
-                //drawVolant(y);
-            }
+        
+    }
+    if(m_zoom >= 60){
+        y = h/2;
+        if(f.m_config.m_debug){
+            drawVolant(y);
         }
     }
     
@@ -511,7 +505,7 @@ void GpsWidget::drawTracteur(){
         double x_temp, y_temp;
         my_projete(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, x_temp, y_temp);
         //INFO(x_temp << " " << y_temp);
-        scene->addEllipse(w/2 + x_temp-5, h/2 - y_temp-5, 10, 10, m_penRed, m_grayBrush);
+        //scene->addEllipse(w/2 + x_temp-5, h/2 - y_temp-5, 10, 10, m_penRed, m_grayBrush);
         
     }
     
