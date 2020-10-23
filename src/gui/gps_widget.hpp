@@ -6,16 +6,21 @@
 #include "option_widget.hpp"
 #include "sat_widget.hpp"
 #include "guidage_widget.hpp"
+#include "machine_widget.hpp"
+#include "menu_widget.hpp"
 #include "parcelle_widget.hpp"
+#include "keyboard_widget.hpp"
 
 class GpsWidget : public BaseWidget {
 public:
     GpsWidget();
     
-    OptionWidget m_optionsWidget;
     SatWidget m_satWidget;
     GuidageWidget m_guidWidget;
     ParcelleWidget m_parcelleWidget;
+    MenuWidget m_menuWidget;
+    
+    KeyPadWidget m_key_pad_widget;
     
     void addButtons();
 
@@ -51,9 +56,12 @@ public:
     ButtonGui m_buttonVolant;
     
     QBrush m_brushTractor;
+    QBrush m_brushOutil;
+    QPen m_penOutil;
     QPen m_penTractorEssieu;
     QPen m_penTractorRoue;
     
+    void setScene(QGraphicsScene * s);
     void drawCourbe(double l);
     bool addligne(double l, int i);
     void drawLines();

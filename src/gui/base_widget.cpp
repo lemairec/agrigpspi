@@ -150,6 +150,17 @@ void SelectButtonGui::setValueString(std::string s){
 
 
 
+void ValueGuiKeyPad::setResize(int x, int y){
+    m_x = x;
+    m_y = y;
+}
+
+int ValueGuiKeyPad::isActive(double x, double y){
+    
+}
+
+
+
 
 BaseWidget::BaseWidget(){
     m_penBlack = QPen(Qt::black);

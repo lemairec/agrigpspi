@@ -145,9 +145,6 @@ void OptionWidget::resizePage1(){
     
     m_button_p1minus1.setResize((0.4+dist)*m_width, 0.3*m_height, m_petit_button);
     m_button_p1minus2.setResize((0.4-dist)*m_width, 0.3*m_height, m_petit_button);
-    
-    m_button_shudown.setResize(0.4*m_width, 0.6*m_height, m_petit_button);
-    
 }
 
 void OptionWidget::drawPage1(){
@@ -159,14 +156,10 @@ void OptionWidget::drawPage1(){
     drawButtonImage(&m_button_p1add2, *m_imgPlus);
     drawButtonImage(&m_button_p1minus1, *m_imgMinus);
     drawButtonImage(&m_button_p1minus2, *m_imgMinus);
-    
-    drawButtonImage(&m_button_shudown, *m_imgShutDown);
-    
 }
 
 void OptionWidget::onMousePage1(int x, int y){
     if(m_button_shudown.isActive(x, y)){
-        exit(0);
     } else if(m_button_p1add1.isActive(x,y)){
         GpsFramework & f = GpsFramework::Instance();
         f.m_config.m_largeur += 0.1;

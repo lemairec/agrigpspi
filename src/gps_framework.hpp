@@ -19,12 +19,16 @@ public:
 struct Tracteur {
     double m_antenne_essieu_avant = 1.5;
     double m_antenne_essieu_arriere = 1.2;
+    double m_outil_arriere = 2;
     
     double m_x_antenne = 0;
     double m_y_antenne = 0;
     
     double m_x_essieu_avant = 0;
     double m_y_essieu_avant = 0;
+    
+    double m_x_outil_arriere = 0;
+    double m_y_outil_arriere = 0;
     
 };
 

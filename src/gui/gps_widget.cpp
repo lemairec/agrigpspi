@@ -28,7 +28,6 @@ QPixmap * p;
 int l_bottom = 20;
 
 GpsWidget::GpsWidget()
-:m_optionsWidget()
 {
     m_zoom = 40;
     
@@ -51,19 +50,21 @@ GpsWidget::GpsWidget()
     
     m_imgFleche = loadImage("/images/fleche.png");
 
-
+    m_menuWidget.m_machine_widget.m_key_pad_widget = &m_key_pad_widget;
 }
 
 void GpsWidget::setSize(int width, int height){
     BaseWidget::setSize(width, height);
+    m_menuWidget.setSize(width, height);
     
     m_widthMax = m_width/2-50;
     m_heightMax = m_height/2-50;
 
-    m_optionsWidget.setSize(m_width, m_height);
     m_satWidget.setSize(m_width, m_height);
     m_guidWidget.setSize(m_width, m_height);
     m_parcelleWidget.setSize(m_width, m_height);
+    m_key_pad_widget.setSize(m_width, m_height);
+    
     double temp = 0.05;
     
     m_buttonSat.setResize(m_width-30, 20, m_gros_button);
@@ -79,10 +80,14 @@ void GpsWidget::setSize(int width, int height){
     m_buttonVolant.setResize((1-temp)*m_width, 0.6*m_height, m_gros_gros_button);
     
     m_buttonErrorOk.setResize((0.5)*m_width, 0.8*m_height, m_gros_button);
-    
-    m_optionsWidget.setSize(width, height);
 //    onValueChangeSlot(true);
 }
+
+void GpsWidget::setScene(QGraphicsScene * s){
+    BaseWidget::setScene(s);
+    m_menuWidget.setScene(s);
+}
+
 
 
 void GpsWidget::drawCourbe(double l){
@@ -381,9 +386,7 @@ void GpsWidget::draw_force(){
     
     drawError();
     
-    if(!m_optionsWidget.m_close){
-        m_optionsWidget.draw();
-    }
+
     if(!m_satWidget.m_close){
         m_satWidget.draw();
     }
@@ -393,6 +396,16 @@ void GpsWidget::draw_force(){
     if(!m_parcelleWidget.m_close){
         m_parcelleWidget.draw();
     }
+    
+    
+    if(!m_menuWidget.m_close){
+        m_menuWidget.draw();
+    }
+    
+    if(!m_key_pad_widget.m_close){
+        m_key_pad_widget.draw();
+    }
+    
     DEBUG("END");
     
 }
@@ -401,6 +414,8 @@ void GpsWidget::drawTracteur(){
     GpsFramework & f = GpsFramework::Instance();
     QColor color = Qt::blue;
     m_brushTractor = QBrush(color);
+    m_brushOutil = QBrush(Qt::darkBlue);
+    m_penOutil = QPen(Qt::darkBlue, 0.3*m_zoom);
     m_penTractorEssieu = QPen(color, 0.15*m_zoom);
     m_penTractorRoue = QPen(color, 0.3*m_zoom);
     
@@ -449,6 +464,12 @@ void GpsWidget::drawTracteur(){
         double l2 = f.m_tracteur.m_antenne_essieu_arriere*m_zoom/2;
         
         double y_arriere = y+l2;
+        
+        //outil
+        scene->addRect(w/2 - 1.5*m_zoom, y_arriere + 1.5*m_zoom, 3.0*m_zoom, 0.2*m_zoom, m_penOutil, m_brushOutil);
+        scene->addRect(w/2 - 0.1*m_zoom, y_arriere - 0.1*m_zoom, 0.2*m_zoom, 1.5*m_zoom, m_penOutil, m_brushOutil);
+        
+        
         double voie = 1.8*m_zoom;
         double l_roue = 1.5*m_zoom/2;
         scene->addLine(w/2 - voie/2, y_arriere, w/2 + voie/2, y_arriere, m_penTractorEssieu);
@@ -478,7 +499,8 @@ void GpsWidget::drawTracteur(){
             scene->addLine(x-dx, y_direction-dy, x+dx, y_direction+dy, m_penTractorRoue);
         }
         
-        scene->addEllipse(w/2-0.10*m_zoom, h/2-0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
+        
+        scene->addEllipse(w/2 - 0.10*m_zoom, h/2 - 0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
         
     } else {
         QPolygon polygon;
@@ -551,7 +573,7 @@ void GpsWidget::drawTop(){
            
        if(last_frame.m_fix == 1 || last_frame.m_fix == 5){
           img = m_imgSatOrange;
-       } else if(last_frame.m_fix == 2 || last_frame.m_fix == 4){
+       } else if(last_frame.m_fix == 2 || last_frame.m_fix == 4 || last_frame.m_fix == 9){
           img = m_imgSatVert;
        } else {
           img = m_imgSatRouge;
@@ -850,6 +872,8 @@ void GpsWidget::addButtons(){
 
 
 void GpsWidget::onMouse(int x, int y){
+    m_menuWidget.onMouseInt(x, y);
+    
     double x2 = x;
     double y2 = y;
     
@@ -870,8 +894,7 @@ void GpsWidget::onMouse(int x, int y){
     } else if(m_buttonParcelle.isActive(x2, y2)){
         m_parcelleWidget.m_close = false;
     } else if(m_buttonOption.isActive(x2, y2)){
-        m_optionsWidget.open();
-        m_optionsWidget.m_close = false;
+        m_menuWidget.m_close = false;
     } else if(m_buttonSat.isActive(x2, y2)){
         m_satWidget.m_close = false;
     } else if(m_buttonChamp.isActive(x2, y2)){
