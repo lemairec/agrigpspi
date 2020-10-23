@@ -14,14 +14,16 @@ MenuWidget::MenuWidget(){
 void MenuWidget::setScene(QGraphicsScene * s){
     BaseWidget::setScene(s);
     m_machine_widget.setScene(s);
-    m_optionsWidget.setScene(scene);
+    m_outil_widget.setScene(s);
+    m_options_widget.setScene(scene);
     
 }
 
 void MenuWidget::setSize(int width, int height){
     BaseWidget::setSize(width, height);
     m_machine_widget.setSize(width, height);
-    m_optionsWidget.setSize(m_width, m_height);
+    m_options_widget.setSize(m_width, m_height);
+    m_outil_widget.setSize(m_width, m_height);
     
     m_x = m_width*0.0;
     m_lg = m_width*1;
@@ -39,8 +41,10 @@ void MenuWidget::setSize(int width, int height){
 void MenuWidget::draw(){
     if(!m_machine_widget.m_close){
         m_machine_widget.draw();
-    } else if(!m_optionsWidget.m_close){
-        m_optionsWidget.draw();
+    } else if(!m_options_widget.m_close){
+        m_options_widget.draw();
+    } else if(!m_outil_widget.m_close){
+        m_outil_widget.draw();
     } else {
     
         auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
@@ -64,8 +68,10 @@ void MenuWidget::draw(){
 void MenuWidget::onMouseInt(int x, int y){
     if(!m_machine_widget.m_close){
         m_machine_widget.onMouseInt(x, y);
-    } else if(!m_optionsWidget.m_close){
-        m_optionsWidget.onMouseInt(x, y);
+    } else if(!m_options_widget.m_close){
+        m_options_widget.onMouseInt(x, y);
+    } else if(!m_outil_widget.m_close){
+        m_outil_widget.onMouseInt(x, y);
     } else {
     
         if(m_buttonOk.isActive(x, y)){
@@ -73,10 +79,14 @@ void MenuWidget::onMouseInt(int x, int y){
         } else if(m_buttonStop.isActive(x, y)){
             exit(0);
         } else if(m_buttonTractor.isActive(x, y)){
+            m_machine_widget.open();
             m_machine_widget.m_close = false;
         } else if(m_buttonParam.isActive(x, y)){
-            m_optionsWidget.open();
-            m_optionsWidget.m_close = false;
+            m_options_widget.open();
+            m_options_widget.m_close = false;
+        } else if(m_buttonOutil.isActive(x, y)){
+            m_outil_widget.open();
+            m_outil_widget.m_close = false;
         }
     }
    

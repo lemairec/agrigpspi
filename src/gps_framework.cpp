@@ -66,8 +66,8 @@ void GpsFramework::initOrLoadConfig(){
     
     m_pilot_lookahead_d = m_config.m_pilot_lookahead_d;
     
-    m_tracteur.m_antenne_essieu_avant = m_config.m_tracteur_distance_antenne_pont_avant;
-    m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_distance_empatement - m_config.m_tracteur_distance_antenne_pont_avant;
+    m_tracteur.m_antenne_essieu_avant = m_config.m_tracteur_empatement - m_config.m_tracteur_antenne_pont_arriere;
+    m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_antenne_pont_arriere;
 }
 
 GpsFramework & GpsFramework::Instance(){
@@ -258,9 +258,9 @@ void GpsFramework::onFrame(const std::string &frame){
 
 double GpsFramework::distance(GpsPoint & gpsPoint){
     if(m_lineAB.m_pointA.m_x!=0 && m_lineAB.m_pointB.m_x!=0){
-        double dist =  m_lineAB.distance(gpsPoint.m_x, gpsPoint.m_y, m_config.m_largeur);
+        double dist =  m_lineAB.distance(gpsPoint.m_x, gpsPoint.m_y, m_config.m_outil_largeur);
         
-        double coeff = m_config.m_largeur/(2*6);
+        double coeff = m_config.m_outil_largeur/(2*6);
         m_distanceAB = dist;
         if(dist < 0.0){
             dist = -dist;
@@ -655,7 +655,7 @@ void GpsFramework::clearSurface(){
 }
 
 void GpsFramework::calculSurface(){
-    double l = m_config.m_largeur;
+    double l = m_config.m_outil_largeur;
     m_surface = 0;
     m_surface_h = 0;
     //INFO("****");
@@ -670,7 +670,7 @@ void GpsFramework::calculSurface(){
                 double y0 = frame->m_y;
                 double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
                 
-                double surface = std::sqrt(dist)*m_config.m_largeur/10000.0;
+                double surface = std::sqrt(dist)*m_config.m_outil_largeur/10000.0;
                 m_surface += surface;
                 /*if(m_surface_h == 0){
                     if(last_frame->m_timeHour!=frame->m_timeHour){
@@ -716,7 +716,7 @@ void GpsFramework::calculAngleCorrection(){
     //INFO(angleABDeplacement/3.14*180);
     
     double distance = m_distanceAB;
-    distance = m_lineAB.distance(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_largeur);
+    distance = m_lineAB.distance(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur);
     m_angle_correction = atan(distance/m_pilot_lookahead_d)+angleABDeplacement;
     //INFO(m_angle_correction);
     //m_angle_correction = ;

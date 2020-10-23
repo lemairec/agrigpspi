@@ -51,6 +51,7 @@ GpsWidget::GpsWidget()
     m_imgFleche = loadImage("/images/fleche.png");
 
     m_menuWidget.m_machine_widget.m_key_pad_widget = &m_key_pad_widget;
+    m_menuWidget.m_outil_widget.m_key_pad_widget = &m_key_pad_widget;
 }
 
 void GpsWidget::setSize(int width, int height){
@@ -109,14 +110,14 @@ void GpsWidget::drawLines(){
     //INFO("l " << l << " x " << x << " res " << res);
     
     
-    int i0 = round(l/f.m_config.m_largeur);
+    int i0 = round(l/f.m_config.m_outil_largeur);
     for(int i = 0; i < 100; ++i){
-        if(! addligne((i0 + i)*f.m_config.m_largeur, i0 + i)){
+        if(! addligne((i0 + i)*f.m_config.m_outil_largeur, i0 + i)){
             break;
         }
     }
     for(int i = 1; i < 100; ++i){
-        if(! addligne((i0 - i)*f.m_config.m_largeur, i0 - i)){
+        if(! addligne((i0 - i)*f.m_config.m_outil_largeur, i0 - i)){
             break;
         }
     }
@@ -211,8 +212,8 @@ void GpsWidget::draw_force(){
     DEBUG("BEGIN");
     auto begin = std::chrono::system_clock::now();
     GpsFramework & f = GpsFramework::Instance();
-    m_widthMax = m_width/2+f.m_config.m_largeur*m_zoom/2;
-    m_heightMax = m_height/2+f.m_config.m_largeur*m_zoom/2;
+    m_widthMax = m_width/2+f.m_config.m_outil_largeur*m_zoom/2;
+    m_heightMax = m_height/2+f.m_config.m_outil_largeur*m_zoom/2;
     
     m_la = f.m_lineAB.m_a;
     m_lb = f.m_lineAB.m_b;
@@ -255,7 +256,7 @@ void GpsWidget::draw_force(){
                 
                 double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
                 
-                double l = f.m_config.m_largeur*m_zoom/2;
+                double l = f.m_config.m_outil_largeur*m_zoom/2;
                 int j = 0;
                 int init = 0;
                 

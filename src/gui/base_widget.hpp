@@ -67,6 +67,8 @@ struct ValueGuiKeyPad{
     double m_x = 0;
     double m_y = 0;
     double m_value = 1.0;
+    std::string m_label;
+    std::string m_unity = "m";
 };
 
 struct SelectButtonGui{
@@ -154,6 +156,7 @@ public:
     void drawSelectButtonGuiClose(SelectButtonGui * select);
     int onMouseSelectButton(SelectButtonGui *select, double x, double y);
     
+    void drawMyImage(QPixmap & pixmap, int x, int y, double scale, bool center);
     
     void drawLabel(std::string s, double x, double y);
     void drawLabel2(std::string s, double x, double y);

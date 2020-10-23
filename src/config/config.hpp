@@ -8,8 +8,6 @@
 
 class Config  {
 public:
-    double m_largeur = 27;
-    
     std::string m_input_gps;
     int m_baudrate_gps = 115200;
     std::string m_file_gps;
@@ -45,8 +43,11 @@ public:
     bool m_logNMEA = true;
     bool m_api = true;
     
-    double m_tracteur_distance_antenne_pont_avant = 1.5;
-    double m_tracteur_distance_empatement = 2.75;
+    double m_tracteur_antenne_pont_arriere = 1;
+    double m_tracteur_empatement = 2.75;
+    double m_tracteur_hauteur = 2.75;
+    double m_outil_distance = 1.5;
+    double m_outil_largeur = 3.0;
     
     Config();
     

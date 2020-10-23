@@ -23,7 +23,8 @@ class MenuWidget : public BaseWidget {
     int m_lg = 0;
 public:
     MachineWidget m_machine_widget;
-    OptionWidget m_optionsWidget;
+    OutilWidget m_outil_widget;
+    OptionWidget m_options_widget;
     
     
     MenuWidget();
