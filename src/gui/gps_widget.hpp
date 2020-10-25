@@ -37,10 +37,10 @@ public:
     QPixmap * m_imgSatOrange;
     QPixmap * m_imgSatRouge;
     QPixmap * m_imgFleche;
-    QPixmap * m_imgChampGris;
+    QPixmap * m_imgChampBlanc;
     QPixmap * m_imgChampVert;
     QPixmap * m_imgVolantBlanc;
-    QPixmap * m_imgVolantGris;
+    QPixmap * m_imgVolantRouge;
     QPixmap * m_imgVolantVert;
     QPixmap * m_imgOk;
     

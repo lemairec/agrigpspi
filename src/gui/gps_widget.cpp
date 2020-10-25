@@ -42,9 +42,9 @@ GpsWidget::GpsWidget()
     m_imgSatOrange = loadImage("/images/sat_orange.png");
     m_imgSatRouge = loadImage("/images/sat_rouge.png");
 
-    m_imgChampGris = loadImage("/images/champ_gris.png");
+    m_imgChampBlanc = loadImage("/images/champ_blanc.png");
     m_imgChampVert = loadImage("/images/champ_vert.png");
-    m_imgVolantGris = loadImage("/images/volant_gris.png");
+    m_imgVolantRouge = loadImage("/images/volant_rouge.png");
     m_imgVolantVert = loadImage("/images/volant_vert.png");
     m_imgVolantBlanc = loadImage("/images/volant_blanc.png");
     
@@ -70,13 +70,23 @@ void GpsWidget::setSize(int width, int height){
     
     m_buttonSat.setResize(m_width-30, 20, m_gros_button);
     
+    
+    m_buttonPlus.setResize(temp*m_width, 0.60*m_height, m_gros_button);
+    m_buttonMinus.setResize(temp*m_width, 0.70*m_height, m_gros_button);
+    
+    m_buttonOption.setResize(40, m_height-30, m_gros_button);
     m_buttonGuidage.setResize(100, m_height-30, m_gros_button);
-    m_buttonParcelle.setResize(150, m_height-30, m_gros_button);
+    m_buttonParcelle.setResize(160, m_height-30, m_gros_button);
+    if(GpsFramework::Instance().m_config.m_debug){
+        m_imgGuidage = loadImage("/images/guidage2.png");
+        m_imgParcelle = loadImage("/images/parcelle2.png");
+        m_imgOption = loadImage("/images/menu2.png");
+        m_buttonOption.setResize(temp*m_width, 0.20*m_height, m_gros_button);
+        m_buttonGuidage.setResize(temp*m_width, 0.30*m_height, m_gros_button);
+        m_buttonParcelle.setResize(temp*m_width, 0.40*m_height, m_gros_button);
+        
+    }
     
-    m_buttonPlus.setResize(20, 0.45*m_height, m_gros_button);
-    m_buttonMinus.setResize(20, 0.55*m_height, m_gros_button);
-    
-    m_buttonOption.setResize((temp)*m_width, m_height-30, m_gros_button);
     m_buttonChamp.setResize((1-temp)*m_width, 0.4*m_height, m_gros_gros_button);
     m_buttonVolant.setResize((1-temp)*m_width, 0.6*m_height, m_gros_gros_button);
     
@@ -855,19 +865,19 @@ void GpsWidget::addButtons(){
     
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_pauseDraw){
-        drawButtonImage(&m_buttonChamp, *m_imgChampGris);
+        drawButtonImage(&m_buttonChamp, *m_imgChampBlanc);
     } else {
         drawButtonImage(&m_buttonChamp, *m_imgChampVert);
     }
     
     if(f.isPilotConnected()){
         if(f.getVolantEngaged()){
-            drawButtonImage(&m_buttonVolant, *m_imgVolantVert, 1.4);
+            drawButtonImage(&m_buttonVolant, *m_imgVolantVert);
         } else {
-            drawButtonImage(&m_buttonVolant, *m_imgVolantBlanc, 1.4);
+            drawButtonImage(&m_buttonVolant, *m_imgVolantBlanc);
         }
     } else {
-        drawButtonImage(&m_buttonVolant, *m_imgVolantGris, 1.4);
+        drawButtonImage(&m_buttonVolant, *m_imgVolantRouge);
     }
 }
 
