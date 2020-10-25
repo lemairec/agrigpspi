@@ -9,8 +9,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-std::ofstream gpslogFile;
-std::ofstream logFile;
+
+#include <filesystem>
+
+std::ofstream gpsJobFile;
 
 bool rmc = true;
 
@@ -23,13 +25,14 @@ GpsFramework::GpsFramework(){
     //    exit(0);
     }
     
-    std::string file = ProjectSourceBin + "/gps_" + s.toUtf8().constData() + ".ubx";
+    std::string dir = ProjectSourceBin + "/job";
+    std::string file = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".ubx";
+    mode_t mt;
+    std::__fs::filesystem::create_directory(dir);
     INFO(file);
-    gpslogFile.open(file, std::ios::out);
+    gpsJobFile.open(file, std::ios::out);
+    INFO(gpsJobFile.is_open());
     
-    std::string file2 = ProjectSourceBin + "/alog_framework.ubx";
-    INFO(file2);
-    logFile.open(file2, std::ios::out);
     m_config.load();
 }
 
@@ -60,7 +63,7 @@ void GpsFramework::initOrLoadConfig(){
     m_lineAB.m_pointA.m_longitude = m_config.m_a_lon;
     m_lineAB.m_pointB.m_latitude = m_config.m_b_lat;
     m_lineAB.m_pointB.m_longitude = m_config.m_b_lon;
-    gpslogFile << "[config]\n";
+    gpsJobFile << "[config]\n";
     setAB();
     m_reloadConfig = true;
     
@@ -82,7 +85,7 @@ void GpsFramework::setRef(double latitude, double longitude){
     }
     for(auto l: m_listSurfaceToDraw){
         m_gpsModule.setXY(*l->m_lastPoint);
-        m_gpsModule.setXY(*l->m_lastPointOk);
+        //m_gpsModule.setXY(*l->m_lastPointOk);
         for(auto l2: l->m_points){
            m_gpsModule.setXY(*l2);
        }
@@ -139,31 +142,46 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     }
 }
 
-void GpsFramework::onNewPoint(GpsPoint_ptr f){
+void GpsFramework::onNewPoint(GpsPoint_ptr p){
     if(m_gpsModule.m_latitudeRef == 0){
-        setRef(f->m_latitude, f->m_longitude);
+        setRef(p->m_latitude, p->m_longitude);
         return;
     }
     
-    m_list.push_front(f);
+    m_list.push_front(p);
     if(m_list.size()>100){
         m_list.pop_back();
     };
     
     calculDeplacement();
-    m_distance = distance(*f);
+    m_distance = distance(*p);
     //m_deplacementAngle = f->m_cap_rad;
     
     
     calculAngleCorrection();
     m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
 
-    calculSurface();
-    
-    DEBUG("draw");
-    calculDraw(f);
     setNewGpsTime();
     
+    
+    if(m_listSurfaceToDraw.size()>0){
+        m_listSurfaceToDraw.front()->m_lastPoint = p;
+    }
+    if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) < m_distance_cap_vitesse*m_distance_cap_vitesse){
+        return;
+    }
+    m_lastImportantPoint = p;
+    
+    onNewImportantPoint(p);
+}
+
+void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
+    calculSurface();
+    DEBUG("draw");
+    calculDraw(p);
+    
+    INFO(p->m_time << "," << p->m_latitude << "," << p->m_longitude);
+    gpsJobFile <<"[" << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << "]," << std::endl;
 }
 
 
@@ -252,7 +270,7 @@ bool GpsFramework::isPilotConnected(){
 
 
 void GpsFramework::onFrame(const std::string &frame){
-    gpslogFile << frame << "\n";
+    //gpslogFile << frame << "\n";
 }
 
 
@@ -284,7 +302,7 @@ void GpsFramework::savePointA(){
     }
     setRef(m_lineAB.m_pointA.m_latitude, m_lineAB.m_pointA.m_longitude);
     
-    gpslogFile << "[savePointA]\n";
+    gpsJobFile << "[savePointA]\n";
     INFO(m_lineAB.m_pointA.m_time << " " << m_lineAB.m_pointA.m_latitude << " " << m_lineAB.m_pointA.m_longitude);
     clearSurface();
 }
@@ -301,7 +319,7 @@ void GpsFramework::savePointB(){
     if(m_observer){
         m_observer->onNewPoint();
     }
-    gpslogFile << "[savePointB]\n";
+    gpsJobFile << "[savePointB]\n";
 }
 
 void GpsFramework::setAB(){
@@ -504,9 +522,6 @@ void GpsFramework::calculDraw(GpsPoint_ptr p){
         SurfaceToDraw_ptr s(new SurfaceToDraw());
         m_listSurfaceToDraw.push_front(s);
         s->m_points.push_front(p);
-        s->m_points.push_front(p);
-        s->m_lastPoint = p;
-        s->m_lastPointOk = p;
         return;
     }
     if(m_pauseDraw){
@@ -514,20 +529,6 @@ void GpsFramework::calculDraw(GpsPoint_ptr p){
     }
     
     auto s = m_listSurfaceToDraw.front();
-    
-    if(s->m_lastPoint != s->m_lastPointOk){
-        s->m_points.pop_front();
-    }
-    s->m_lastPoint = p;
-    if(s->m_lastPointOk == NULL){
-        s->m_lastPointOk = s->m_lastPoint;
-    };
-    double x = s->m_lastPointOk->m_x - s->m_lastPoint->m_x;
-    double y = s->m_lastPointOk->m_y - s->m_lastPoint->m_y;
-    double dist = x*x + y*y;
-    if(dist > m_distance_cap_vitesse*m_distance_cap_vitesse){
-        s->m_lastPointOk = p;
-    }
     s->m_points.push_front(p);
 }
 
@@ -810,11 +811,11 @@ void GpsFramework::calculContourExterieur(){
 void GpsFramework::setVolantEngaged(bool value){
     m_pilotModule.clear();
     if(value){
-        gpslogFile << "[engage]\n";
+        gpsJobFile << "[engage]\n";
         m_pilotModule.engage();
         m_pauseDraw = false;
     } else {
-        gpslogFile << "[desengage]\n";
+        gpsJobFile << "[desengage]\n";
         m_pilotModule.desengage();
         m_pauseDraw = true;
     }

@@ -46,6 +46,8 @@ class GpsFramework {
     GpsFramework();
     
     double m_distance_cap_vitesse;
+    GpsPoint_ptr m_lastImportantPoint;
+    
 public:
     static GpsFramework & Instance();
     void initOrLoadConfig();
@@ -59,6 +61,7 @@ public:
     void onRMCFrame(RMCFrame_ptr frame);
     
     void onNewPoint(GpsPoint_ptr point);
+    void onNewImportantPoint(GpsPoint_ptr point);
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
