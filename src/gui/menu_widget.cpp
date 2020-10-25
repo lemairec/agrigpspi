@@ -6,7 +6,7 @@ MenuWidget::MenuWidget(){
     m_imgOk = loadImage("/images/ok.png");
     m_imgStop = loadImage("/images/close.png");
     m_imgOutil = loadImage("/images/outil_gris.png");
-    m_imgTractor = loadImage("/images/outil_gris.png");
+    m_imgTractor = loadImage("/images/tracteur.png");
     m_imgParam = loadImage("/images/option_gris.png");
     
 }
