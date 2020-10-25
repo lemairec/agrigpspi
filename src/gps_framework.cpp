@@ -824,30 +824,3 @@ bool GpsFramework::getVolantEngaged(){
     return m_pilotModule.m_engaged;
 }
 
-void GpsFramework::addLog(const std::string &s, bool time2){
-    if(time2){
-        time_t     now = time(0);
-        struct tm  tstruct;
-        char       buf[80];
-        tstruct = *localtime(&now);
-        // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
-        // for more information about date/time format
-        strftime(buf, sizeof(buf), "%M:%S ", &tstruct);
-
-        std::ostringstream strs3;
-        strs3 << buf << s;
-        
-        m_listLog.push_front(strs3.str());
-        logFile << '\n' <<  strs3.str();
-    } else {
-        std::ostringstream strs3;
-        strs3 << "  " << s;
-        m_listLog.push_front(strs3.str());
-        logFile << '\n' << strs3.str();
-    }
-    while(m_listLog.size()>20){
-        m_listLog.pop_back();
-    }
-}
-
-
