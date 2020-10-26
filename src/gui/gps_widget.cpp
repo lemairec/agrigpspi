@@ -260,7 +260,7 @@ void GpsWidget::draw_force(){
             }
         }
         for(auto s: f.m_listSurfaceToDraw){
-            if(s->m_points.size() > 2){
+            if(s->m_points.size() > 0 && s->m_lastPoint){
                 double x1, y1;
                 my_projete(s->m_lastPoint->m_x, s->m_lastPoint->m_y, x1, y1);
                 
