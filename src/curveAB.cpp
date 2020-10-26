@@ -30,11 +30,11 @@ double CurveAB::distance(double x, double y, double lg){
 }
 
 void CurveAB::addPoint(GpsPoint_ptr p){
-    m_listAB.push_front(p);
+    m_listAB.push_back(p);
 }
 
 
-void clearLine(std::list<GpsPoint_ptr> & l){
+void clearLine(std::vector<GpsPoint_ptr> & l){
     double longeur = 1.0;
     auto l2 = l;
     l.clear();
@@ -68,9 +68,10 @@ void CurveAB::addLine(int i){
     }
     
     
-    INFO("ici " << i << " " << j);
     INFO("  ");
-    INFO(m_list[j].size());
+    INFO("  ");
+    INFO("ici " << i << " " << j);
+    //INFO(m_list[j].size());
     
     GpsPoint_ptr old_point = nullptr;
     for(auto p : m_list[j]){
@@ -108,17 +109,7 @@ void CurveAB::addLine(int i){
                 }
             }
             bool eliminate = false;
-            for(auto p: m_list[j]){
-                double res = p3->distanceCarre(*p);
-                if(res < l*l){
-                    eliminate = true;
-                }
-            }
-            if(!eliminate){
             m_list[i].push_back(p3);
-            
-            }
-            
             
             
         }

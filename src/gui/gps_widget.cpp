@@ -288,11 +288,7 @@ void GpsWidget::draw_force(){
         }
     }
     
-    if(f.m_etat == EtatCurveAB_ABOK){
-        
-    }
-    
-    /*if(f.m_list.size() >0){
+    if(f.m_list.size() >0){
         if(f.m_config.m_debug){
             for(auto p: f.m_list){
                 double x1, y1;
@@ -373,7 +369,7 @@ void GpsWidget::draw_force(){
             }
         }
     }
-    drawLines();*/
+    /*drawLines();*/
     
     
     if(f.m_lineAB.m_pointA.m_isOk){
@@ -942,6 +938,7 @@ void GpsWidget::onMouse(int x, int y){
         m_zoom /= 1.2;
         m_zoom = std::round(m_zoom*10.0)/10.0;
     } else if(m_buttonGuidage.isActive(x2, y2)){
+        m_guidWidget.open();
         m_guidWidget.m_close = false;
     } else if(m_buttonParcelle.isActive(x2, y2)){
         m_parcelleWidget.m_close = false;

@@ -21,10 +21,8 @@ void GuidageWidget::setSize(int width, int height){
     
     m_x = 0;
     m_lg = 0.30*m_width;
-    m_buttonA.setResize(m_lg/3, 0.6*m_height, m_petit_button);
-    m_buttonB.setResize(2*m_lg/3, 0.6*m_height, m_petit_button);
-    m_buttonCurveAB.setResize(m_lg/3, 0.4*m_height, m_petit_button);
-    m_buttonLigneAB.setResize(2*m_lg/3, 0.4*m_height, m_petit_button);
+    m_buttonAB.setResize(m_lg/3, 0.6*m_height, m_petit_button);
+    m_buttonLigneCurve.setResize(m_lg/3, 0.4*m_height, m_petit_button);
     m_buttonOk.setResize(m_lg/2.0, 0.8*m_height, m_petit_button);
 }
 
@@ -41,11 +39,20 @@ void GuidageWidget::draw(){
     }
     
     
+    GpsFramework & f = GpsFramework::Instance();
     drawButtonImage(&m_buttonOk, *m_imgOk);
-    drawButtonImage(&m_buttonA, *m_imgA);
-    drawButtonImage(&m_buttonB, *m_imgB);
-    drawButtonImage(&m_buttonCurveAB, *m_imgCurveAB);
-    drawButtonImage(&m_buttonLigneAB, *m_imgLigneAB);
+    if(f.m_etat == Etat_Reset){
+        drawButtonImage(&m_buttonAB, *m_imgA);
+    } else {
+        drawButtonImage(&m_buttonAB, *m_imgB);
+    }
+    if(f.m_line){
+        drawButtonImage(&m_buttonLigneCurve, *m_imgLigneAB);
+    } else {
+        drawButtonImage(&m_buttonLigneCurve, *m_imgCurveAB);
+    }
+    
+    
     
 }
 void GuidageWidget::onMouseInt(int x, int y){
@@ -54,12 +61,21 @@ void GuidageWidget::onMouseInt(int x, int y){
     }
     GpsFramework & f = GpsFramework::Instance();
     
-    if(m_buttonA.isActive(x, y)){
-        f.savePointA();
-    }
-    
-    if(m_buttonB.isActive(x, y)){
-        f.savePointB();
+    if(m_buttonAB.isActive(x, y)){
+        if(f.m_etat == Etat_Reset){
+            f.savePointA();
+        } else {
+            f.savePointB();
+        }
     }
 
+    if(m_buttonLigneCurve.isActive(x, y)){
+        f.m_line = !f.m_line;
+    }
+
+}
+
+void GuidageWidget::open(){
+    GpsFramework & f = GpsFramework::Instance();
+    f.setEtat(Etat_Reset);
 }

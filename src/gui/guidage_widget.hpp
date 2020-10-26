@@ -11,11 +11,9 @@ class GuidageWidget : public BaseWidget {
     QPixmap * m_imgB;
     
     ButtonGui m_buttonOk;
-    ButtonGui m_buttonLigneAB;
-    ButtonGui m_buttonCurveAB;
-    ButtonGui m_buttonA;
-    ButtonGui m_buttonB;
-    
+    ButtonGui m_buttonLigneCurve;
+    ButtonGui m_buttonAB;
+     
     int m_x = 0;
     int m_lg = 20;
 public:

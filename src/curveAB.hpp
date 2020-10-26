@@ -3,6 +3,7 @@
 
 #include "gps_module.hpp"
 #include <list>
+#include <vector>
 #include <map>
 
 class CurveAB{
@@ -22,9 +23,9 @@ public:
 
     double m_angleAB = 0;
     
-    std::list<GpsPoint_ptr> m_listAB;
+    std::vector<GpsPoint_ptr> m_listAB;
     
-    std::map<int, std::list<GpsPoint_ptr>> m_list;
+    std::map<int, std::vector<GpsPoint_ptr>> m_list;
     void addLine(int i);
     
     double distance(double x, double y, double lg);

@@ -16,7 +16,7 @@ std::ofstream gpsJobFile;
 std::string file_info;
 std::string date_str;
 
-bool rmc = false;
+bool rmc = true;
 
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
@@ -163,17 +163,9 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
 }
 
 void GpsFramework::onNewPoint(GpsPoint_ptr p){
-    if(m_etat == EtatCurveAB_ABOK){
-        return;
-    }
-    
     if(m_gpsModule.m_latitudeRef == 0){
         setRef(p->m_latitude, p->m_longitude);
         return;
-    }
-    
-    if(m_etat == EtatCurveAB_PointASaved){
-        m_curveAB.addPoint(p);
     }
     
     m_list.push_front(p);
@@ -206,6 +198,10 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
 }
 
 void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
+    
+    if(m_etat == Etat_PointASaved && !m_line){
+        m_curveAB.addPoint(p);
+    }
     m_lastImportantPoint = p;
     calculSurface();
     DEBUG("draw");
@@ -337,7 +333,7 @@ void GpsFramework::savePointA(){
     INFO(m_lineAB.m_pointA.m_time << " " << m_lineAB.m_pointA.m_latitude << " " << m_lineAB.m_pointA.m_longitude);
     clearSurface();
     
-    m_etat = EtatCurveAB_PointASaved;
+    m_etat = Etat_PointASaved;
 }
 
 void GpsFramework::savePointB(){
@@ -355,8 +351,22 @@ void GpsFramework::savePointB(){
 
     gpsJobFile << "[savePointB]\n";
     
-    m_etat = EtatCurveAB_ABOK;
+    m_etat = Etat_OK;
     m_curveAB.savePointB();
+}
+
+void GpsFramework::setEtat(Etat etat){
+    m_etat = etat;
+    if(etat == Etat_Reset){
+        m_surface = 0;
+        m_lastPoint = nullptr;
+        m_listSurfaceToDraw.clear();
+        m_ledAB = 0;
+        m_list.clear();
+        m_contour.clear();
+        m_curveAB.m_list.clear();
+        m_curveAB.m_listAB.clear();
+    }
 }
 
 void GpsFramework::setAB(){

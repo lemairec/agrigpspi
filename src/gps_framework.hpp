@@ -34,13 +34,9 @@ struct Tracteur {
 };
 
 enum Etat {
-    EtatLineAB_Reset,
-    EtatLineAB_PointASaved,
-    EtatLineAB_ABOK,
-    EtatCurveAB_Reset,
-    EtatCurveAB_PointASaved,
-    EtatCurveAB_ABOK,
-    
+    Etat_Reset,
+    Etat_PointASaved,
+    Etat_OK
 };
 
 class SurfaceToDraw{
@@ -91,9 +87,12 @@ public:
     Config m_config;
     bool m_reloadConfig = true;
     
-    Etat m_etat = EtatCurveAB_PointASaved;
+    bool m_line = true;
+    Etat m_etat;
     LineAB m_lineAB;
     CurveAB m_curveAB;
+    
+    void setEtat(Etat etat);
     void setAB();
     
     //deplacement
