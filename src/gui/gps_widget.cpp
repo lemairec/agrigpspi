@@ -28,7 +28,6 @@ QPixmap * p;
 int l_bottom = 20;
 
 GpsWidget::GpsWidget()
-:m_optionsWidget()
 {
     m_zoom = 10;
     
@@ -43,44 +42,63 @@ GpsWidget::GpsWidget()
     m_imgSatOrange = loadImage("/images/sat_orange.png");
     m_imgSatRouge = loadImage("/images/sat_rouge.png");
 
-    m_imgChampGris = loadImage("/images/champ_gris.png");
+    m_imgChampBlanc = loadImage("/images/champ_blanc.png");
     m_imgChampVert = loadImage("/images/champ_vert.png");
-    m_imgVolantGris = loadImage("/images/volant_gris.png");
+    m_imgVolantRouge = loadImage("/images/volant_rouge.png");
     m_imgVolantVert = loadImage("/images/volant_vert.png");
+    m_imgVolantBlanc = loadImage("/images/volant_blanc.png");
     
     m_imgFleche = loadImage("/images/fleche.png");
 
-
+    m_menuWidget.m_machine_widget.m_key_pad_widget = &m_key_pad_widget;
+    m_menuWidget.m_outil_widget.m_key_pad_widget = &m_key_pad_widget;
 }
 
 void GpsWidget::setSize(int width, int height){
     BaseWidget::setSize(width, height);
+    m_menuWidget.setSize(width, height);
     
     m_widthMax = m_width/2-50;
     m_heightMax = m_height/2-50;
 
-    m_optionsWidget.setSize(m_width, m_height);
     m_satWidget.setSize(m_width, m_height);
     m_guidWidget.setSize(m_width, m_height);
+    m_parcelleWidget.setSize(m_width, m_height);
+    m_key_pad_widget.setSize(m_width, m_height);
+    
     double temp = 0.05;
     
     m_buttonSat.setResize(m_width-30, 20, m_gros_button);
     
+    
+    m_buttonPlus.setResize(temp*m_width, 0.60*m_height, m_gros_button);
+    m_buttonMinus.setResize(temp*m_width, 0.70*m_height, m_gros_button);
+    
+    m_buttonOption.setResize(40, m_height-30, m_gros_button);
     m_buttonGuidage.setResize(100, m_height-30, m_gros_button);
-    m_buttonParcelle.setResize(150, m_height-30, m_gros_button);
+    m_buttonParcelle.setResize(160, m_height-30, m_gros_button);
+    if(GpsFramework::Instance().m_config.m_debug){
+        m_imgGuidage = loadImage("/images/guidage2.png");
+        m_imgParcelle = loadImage("/images/parcelle2.png");
+        m_imgOption = loadImage("/images/menu2.png");
+        m_buttonOption.setResize(temp*m_width, 0.20*m_height, m_gros_button);
+        m_buttonGuidage.setResize(temp*m_width, 0.30*m_height, m_gros_button);
+        m_buttonParcelle.setResize(temp*m_width, 0.40*m_height, m_gros_button);
+        
+    }
     
-    m_buttonPlus.setResize(20, 0.45*m_height, m_gros_button);
-    m_buttonMinus.setResize(20, 0.55*m_height, m_gros_button);
-    
-    m_buttonOption.setResize((temp)*m_width, m_height-30, m_gros_button);
     m_buttonChamp.setResize((1-temp)*m_width, 0.4*m_height, m_gros_gros_button);
     m_buttonVolant.setResize((1-temp)*m_width, 0.6*m_height, m_gros_gros_button);
     
     m_buttonErrorOk.setResize((0.5)*m_width, 0.8*m_height, m_gros_button);
-    
-    m_optionsWidget.setSize(width, height);
 //    onValueChangeSlot(true);
 }
+
+void GpsWidget::setScene(QGraphicsScene * s){
+    BaseWidget::setScene(s);
+    m_menuWidget.setScene(s);
+}
+
 
 
 void GpsWidget::drawCourbe(double l){
@@ -102,14 +120,14 @@ void GpsWidget::drawLines(){
     //INFO("l " << l << " x " << x << " res " << res);
     
     
-    int i0 = round(l/f.m_config.m_largeur);
+    int i0 = round(l/f.m_config.m_outil_largeur);
     for(int i = 0; i < 100; ++i){
-        if(! addligne((i0 + i)*f.m_config.m_largeur, i0 + i)){
+        if(! addligne((i0 + i)*f.m_config.m_outil_largeur, i0 + i)){
             break;
         }
     }
     for(int i = 1; i < 100; ++i){
-        if(! addligne((i0 - i)*f.m_config.m_largeur, i0 - i)){
+        if(! addligne((i0 - i)*f.m_config.m_outil_largeur, i0 - i)){
             break;
         }
     }
@@ -204,8 +222,8 @@ void GpsWidget::draw_force(){
     DEBUG("BEGIN");
     auto begin = std::chrono::system_clock::now();
     GpsFramework & f = GpsFramework::Instance();
-    m_widthMax = m_width/2+f.m_config.m_largeur*m_zoom/2;
-    m_heightMax = m_height/2+f.m_config.m_largeur*m_zoom/2;
+    m_widthMax = m_width/2+f.m_config.m_outil_largeur*m_zoom/2;
+    m_heightMax = m_height/2+f.m_config.m_outil_largeur*m_zoom/2;
     
     m_la = f.m_lineAB.m_a;
     m_lb = f.m_lineAB.m_b;
@@ -283,13 +301,13 @@ void GpsWidget::draw_force(){
             }
         }
         for(auto s: f.m_listSurfaceToDraw){
-            if(s->m_points.size() > 2){
+            if(s->m_points.size() > 0 && s->m_lastPoint){
                 double x1, y1;
                 my_projete(s->m_lastPoint->m_x, s->m_lastPoint->m_y, x1, y1);
                 
                 double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
                 
-                double l = f.m_config.m_largeur*m_zoom/2;
+                double l = f.m_config.m_outil_largeur*m_zoom/2;
                 int j = 0;
                 int init = 0;
                 
@@ -420,15 +438,26 @@ void GpsWidget::draw_force(){
     
     drawError();
     
-    if(!m_optionsWidget.m_close){
-        m_optionsWidget.draw();
-    }
+
     if(!m_satWidget.m_close){
         m_satWidget.draw();
     }
     if(!m_guidWidget.m_close){
         m_guidWidget.draw();
     }
+    if(!m_parcelleWidget.m_close){
+        m_parcelleWidget.draw();
+    }
+    
+    
+    if(!m_menuWidget.m_close){
+        m_menuWidget.draw();
+    }
+    
+    if(!m_key_pad_widget.m_close){
+        m_key_pad_widget.draw();
+    }
+    
     DEBUG("END");
     
 }
@@ -437,6 +466,8 @@ void GpsWidget::drawTracteur(){
     GpsFramework & f = GpsFramework::Instance();
     QColor color = Qt::blue;
     m_brushTractor = QBrush(color);
+    m_brushOutil = QBrush(Qt::darkBlue);
+    m_penOutil = QPen(Qt::darkBlue, 0.3*m_zoom);
     m_penTractorEssieu = QPen(color, 0.15*m_zoom);
     m_penTractorRoue = QPen(color, 0.3*m_zoom);
     
@@ -485,6 +516,12 @@ void GpsWidget::drawTracteur(){
         double l2 = f.m_tracteur.m_antenne_essieu_arriere*m_zoom/2;
         
         double y_arriere = y+l2;
+        
+        //outil
+        scene->addRect(w/2 - 1.5*m_zoom, y_arriere + 1.5*m_zoom, 3.0*m_zoom, 0.2*m_zoom, m_penOutil, m_brushOutil);
+        scene->addRect(w/2 - 0.1*m_zoom, y_arriere - 0.1*m_zoom, 0.2*m_zoom, 1.5*m_zoom, m_penOutil, m_brushOutil);
+        
+        
         double voie = 1.8*m_zoom;
         double l_roue = 1.5*m_zoom/2;
         scene->addLine(w/2 - voie/2, y_arriere, w/2 + voie/2, y_arriere, m_penTractorEssieu);
@@ -514,14 +551,8 @@ void GpsWidget::drawTracteur(){
             scene->addLine(x-dx, y_direction-dy, x+dx, y_direction+dy, m_penTractorRoue);
         }
         
-        scene->addEllipse(w/2-0.10*m_zoom, h/2-0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
         
-        
-        if(m_zoom >= 40){
-            if(f.m_config.m_debug){
-                //drawVolant(y_arriere - 0.5*l2);
-            }
-        }
+        scene->addEllipse(w/2 - 0.10*m_zoom, h/2 - 0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
         
     } else {
         QPolygon polygon;
@@ -536,11 +567,12 @@ void GpsWidget::drawTracteur(){
             my_projete(m_xref+dx*cos(a)-dy*sin(a), m_yref+dx*sin(a)+dy*cos(a), x2, y2);
             scene->addLine(w/2+x, h/2-y, w/2 + x2, h/2 - y2, m_penBlue);
         }
-        if(m_zoom >= 40){
-            y = h/4;
-            if(f.m_config.m_debug){
-                //drawVolant(y);
-            }
+        
+    }
+    if(m_zoom >= 60){
+        y = h/2;
+        if(f.m_config.m_debug){
+            drawVolant(y);
         }
     }
     
@@ -548,7 +580,7 @@ void GpsWidget::drawTracteur(){
         double x_temp, y_temp;
         my_projete(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, x_temp, y_temp);
         //INFO(x_temp << " " << y_temp);
-        scene->addEllipse(w/2 + x_temp-5, h/2 - y_temp-5, 10, 10, m_penRed, m_grayBrush);
+        //scene->addEllipse(w/2 + x_temp-5, h/2 - y_temp-5, 10, 10, m_penRed, m_grayBrush);
         
     }
     
@@ -593,7 +625,7 @@ void GpsWidget::drawTop(){
            
        if(last_frame.m_fix == 1 || last_frame.m_fix == 5){
           img = m_imgSatOrange;
-       } else if(last_frame.m_fix == 2 || last_frame.m_fix == 4){
+       } else if(last_frame.m_fix == 2 || last_frame.m_fix == 4 || last_frame.m_fix == 9){
           img = m_imgSatVert;
        } else {
           img = m_imgSatRouge;
@@ -874,22 +906,26 @@ void GpsWidget::addButtons(){
     
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_pauseDraw){
-        drawButtonImage(&m_buttonChamp, *m_imgChampGris);
+        drawButtonImage(&m_buttonChamp, *m_imgChampBlanc);
     } else {
         drawButtonImage(&m_buttonChamp, *m_imgChampVert);
     }
     
     if(f.isPilotConnected()){
         if(f.getVolantEngaged()){
-            drawButtonImage(&m_buttonVolant, *m_imgVolantVert, 1.4);
+            drawButtonImage(&m_buttonVolant, *m_imgVolantVert);
         } else {
-            drawButtonImage(&m_buttonVolant, *m_imgVolantGris, 1.4);
+            drawButtonImage(&m_buttonVolant, *m_imgVolantBlanc);
         }
+    } else {
+        drawButtonImage(&m_buttonVolant, *m_imgVolantRouge);
     }
 }
 
 
 void GpsWidget::onMouse(int x, int y){
+    m_menuWidget.onMouseInt(x, y);
+    
     double x2 = x;
     double y2 = y;
     
@@ -908,10 +944,9 @@ void GpsWidget::onMouse(int x, int y){
     } else if(m_buttonGuidage.isActive(x2, y2)){
         m_guidWidget.m_close = false;
     } else if(m_buttonParcelle.isActive(x2, y2)){
-        GpsFramework::Instance().savePointB();
+        m_parcelleWidget.m_close = false;
     } else if(m_buttonOption.isActive(x2, y2)){
-        m_optionsWidget.open();
-        m_optionsWidget.m_close = false;
+        m_menuWidget.m_close = false;
     } else if(m_buttonSat.isActive(x2, y2)){
         m_satWidget.m_close = false;
     } else if(m_buttonChamp.isActive(x2, y2)){

@@ -100,8 +100,6 @@ void MyQTSerialPorts::handleReadyReadPilot(){
         QString hex(b.toHex());
         std::string s = hex.toUtf8().constData();
         
-        GpsFramework::Instance().addLog(s);
-        
         char * data = b.data();
         GpsFramework::Instance().m_pilotModule.parseHadrienVolant(data);
         
@@ -135,10 +133,6 @@ void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
     }
     m_serialPortPilot.write(b);
     QString hex(b.toHex());
-    GpsFramework::Instance().addLog(hex.toUtf8().constData());
-    //INFO("toto");
-    //INFO(hex.toUtf8().constData());
-    //INFO("toto");
     
     DEBUG("end");
 }

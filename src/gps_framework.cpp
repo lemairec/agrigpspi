@@ -9,28 +9,51 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-std::ofstream gpslogFile;
-std::ofstream logFile;
+
+#include <filesystem>
+
+std::ofstream gpsJobFile;
+std::string file_info;
+std::string date_str;
 
 bool rmc = false;
 
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
-    QString s = date.toString("yyyyMMdd_hhmm");
+    QString s = date.toString("yyyyMMddThhmm");
+    date_str = s.toUtf8().constData();
     
     int y = date.date().year();
     if(y>(1011+1011)){
     //    exit(0);
     }
     
-    std::string file = ProjectSourceBin + "/gps_" + s.toUtf8().constData() + ".ubx";
+    std::string dir = ProjectSourceBin + "/job";
+    std::string file = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".ubx";
+    file_info = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".info";
+    mode_t mt;
+    std::__fs::filesystem::create_directory(dir);
     INFO(file);
-    gpslogFile.open(file, std::ios::out);
+    gpsJobFile.open(file, std::ios::out);
+    INFO(gpsJobFile.is_open());
     
-    std::string file2 = ProjectSourceBin + "/alog_framework.ubx";
-    INFO(file2);
-    logFile.open(file2, std::ios::out);
     m_config.load();
+}
+
+void GpsFramework::saveInfoFile(){
+    std::ofstream file;
+    file.open(file_info, std::ios::out);
+    
+    QDateTime date_end = QDateTime::currentDateTime();
+    QString s = date_end.toString("yyyyMMddThhmm");
+    std::string date_end_str = s.toUtf8().constData();
+    
+    
+    file << "{" << std::endl;
+    file << "\"date_begin\":\"" << date_str << "\"" << std::endl;
+    file << ",\"date_end\":\"" << date_end_str << "\"" << std::endl;
+    file << ",\"surface\":" << m_surface << std::endl;
+    file << "}" << std::endl;
 }
 
 void GpsFramework::addError(std::string s){
@@ -60,11 +83,14 @@ void GpsFramework::initOrLoadConfig(){
     m_lineAB.m_pointA.m_longitude = m_config.m_a_lon;
     m_lineAB.m_pointB.m_latitude = m_config.m_b_lat;
     m_lineAB.m_pointB.m_longitude = m_config.m_b_lon;
-    gpslogFile << "[config]\n";
+    gpsJobFile << "[config]\n";
     setAB();
     m_reloadConfig = true;
     
     m_pilot_lookahead_d = m_config.m_pilot_lookahead_d;
+    
+    m_tracteur.m_antenne_essieu_avant = m_config.m_tracteur_empatement - m_config.m_tracteur_antenne_pont_arriere;
+    m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_antenne_pont_arriere;
 }
 
 GpsFramework & GpsFramework::Instance(){
@@ -79,7 +105,7 @@ void GpsFramework::setRef(double latitude, double longitude){
     }
     for(auto l: m_listSurfaceToDraw){
         m_gpsModule.setXY(*l->m_lastPoint);
-        m_gpsModule.setXY(*l->m_lastPointOk);
+        //m_gpsModule.setXY(*l->m_lastPointOk);
         for(auto l2: l->m_points){
            m_gpsModule.setXY(*l2);
        }
@@ -136,39 +162,57 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     }
 }
 
-void GpsFramework::onNewPoint(GpsPoint_ptr f){
+void GpsFramework::onNewPoint(GpsPoint_ptr p){
     if(m_etat == EtatCurveAB_ABOK){
         return;
     }
     
     if(m_gpsModule.m_latitudeRef == 0){
-        setRef(f->m_latitude, f->m_longitude);
+        setRef(p->m_latitude, p->m_longitude);
         return;
     }
     
     if(m_etat == EtatCurveAB_PointASaved){
-        m_curveAB.addPoint(f);
+        m_curveAB.addPoint(p);
     }
     
-    m_list.push_front(f);
+    m_list.push_front(p);
+
     if(m_list.size()>100){
         m_list.pop_back();
     };
     
     calculDeplacement();
-    m_distance = distance(*f);
+
+    m_distance = distance(*p);
+
     //m_deplacementAngle = f->m_cap_rad;
     
     
     calculAngleCorrection();
     m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
 
-    calculSurface();
-    
-    DEBUG("draw");
-    calculDraw(f);
     setNewGpsTime();
     
+    m_lastPoint = p;
+    if(m_listSurfaceToDraw.size()>0 && !m_pauseDraw){
+        m_listSurfaceToDraw.front()->m_lastPoint = p;
+    }
+    if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) < m_distance_cap_vitesse*m_distance_cap_vitesse){
+        return;
+    }
+    
+    onNewImportantPoint(p);
+}
+
+void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
+    m_lastImportantPoint = p;
+    calculSurface();
+    DEBUG("draw");
+    calculDraw(p);
+    
+    gpsJobFile << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
+    saveInfoFile();
 }
 
 
@@ -257,15 +301,15 @@ bool GpsFramework::isPilotConnected(){
 
 
 void GpsFramework::onFrame(const std::string &frame){
-    gpslogFile << frame << "\n";
+    //gpslogFile << frame << "\n";
 }
 
 
 double GpsFramework::distance(GpsPoint & gpsPoint){
     if(m_lineAB.m_pointA.m_x!=0 && m_lineAB.m_pointB.m_x!=0){
-        double dist =  m_lineAB.distance(gpsPoint.m_x, gpsPoint.m_y, m_config.m_largeur);
+        double dist =  m_lineAB.distance(gpsPoint.m_x, gpsPoint.m_y, m_config.m_outil_largeur);
         
-        double coeff = m_config.m_largeur/(2*6);
+        double coeff = m_config.m_outil_largeur/(2*6);
         m_distanceAB = dist;
         if(dist < 0.0){
             dist = -dist;
@@ -289,7 +333,7 @@ void GpsFramework::savePointA(){
     }
     setRef(m_lineAB.m_pointA.m_latitude, m_lineAB.m_pointA.m_longitude);
     
-    gpslogFile << "[savePointA]\n";
+    gpsJobFile << "[savePointA]\n";
     INFO(m_lineAB.m_pointA.m_time << " " << m_lineAB.m_pointA.m_latitude << " " << m_lineAB.m_pointA.m_longitude);
     clearSurface();
     
@@ -308,7 +352,8 @@ void GpsFramework::savePointB(){
     if(m_observer){
         m_observer->onNewPoint();
     }
-    gpslogFile << "[savePointB]\n";
+
+    gpsJobFile << "[savePointB]\n";
     
     m_etat = EtatCurveAB_ABOK;
     m_curveAB.savePointB();
@@ -506,6 +551,7 @@ void GpsFramework::changeDraw(){
         SurfaceToDraw_ptr p(new SurfaceToDraw());
         m_listSurfaceToDraw.push_front(p);
         m_pauseDraw = false;
+        onNewImportantPoint(m_lastPoint);
     }
 }
 
@@ -514,9 +560,6 @@ void GpsFramework::calculDraw(GpsPoint_ptr p){
         SurfaceToDraw_ptr s(new SurfaceToDraw());
         m_listSurfaceToDraw.push_front(s);
         s->m_points.push_front(p);
-        s->m_points.push_front(p);
-        s->m_lastPoint = p;
-        s->m_lastPointOk = p;
         return;
     }
     if(m_pauseDraw){
@@ -524,20 +567,6 @@ void GpsFramework::calculDraw(GpsPoint_ptr p){
     }
     
     auto s = m_listSurfaceToDraw.front();
-    
-    if(s->m_lastPoint != s->m_lastPointOk){
-        s->m_points.pop_front();
-    }
-    s->m_lastPoint = p;
-    if(s->m_lastPointOk == NULL){
-        s->m_lastPointOk = s->m_lastPoint;
-    };
-    double x = s->m_lastPointOk->m_x - s->m_lastPoint->m_x;
-    double y = s->m_lastPointOk->m_y - s->m_lastPoint->m_y;
-    double dist = x*x + y*y;
-    if(dist > m_distance_cap_vitesse*m_distance_cap_vitesse){
-        s->m_lastPointOk = p;
-    }
     s->m_points.push_front(p);
 }
 
@@ -665,7 +694,7 @@ void GpsFramework::clearSurface(){
 }
 
 void GpsFramework::calculSurface(){
-    double l = m_config.m_largeur;
+    double l = m_config.m_outil_largeur;
     m_surface = 0;
     m_surface_h = 0;
     //INFO("****");
@@ -680,7 +709,7 @@ void GpsFramework::calculSurface(){
                 double y0 = frame->m_y;
                 double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
                 
-                double surface = std::sqrt(dist)*m_config.m_largeur/10000.0;
+                double surface = std::sqrt(dist)*m_config.m_outil_largeur/10000.0;
                 m_surface += surface;
                 /*if(m_surface_h == 0){
                     if(last_frame->m_timeHour!=frame->m_timeHour){
@@ -725,7 +754,9 @@ void GpsFramework::calculAngleCorrection(){
     }
     //INFO(angleABDeplacement/3.14*180);
     
-    m_angle_correction = atan(m_distanceAB/m_pilot_lookahead_d)+angleABDeplacement;
+    double distance = m_distanceAB;
+    distance = m_lineAB.distance(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur);
+    m_angle_correction = atan(distance/m_pilot_lookahead_d)+angleABDeplacement;
     //INFO(m_angle_correction);
     //m_angle_correction = ;
     
@@ -818,11 +849,11 @@ void GpsFramework::calculContourExterieur(){
 void GpsFramework::setVolantEngaged(bool value){
     m_pilotModule.clear();
     if(value){
-        gpslogFile << "[engage]\n";
+        gpsJobFile << "[engage]\n";
         m_pilotModule.engage();
         m_pauseDraw = false;
     } else {
-        gpslogFile << "[desengage]\n";
+        gpsJobFile << "[desengage]\n";
         m_pilotModule.desengage();
         m_pauseDraw = true;
     }
@@ -831,31 +862,4 @@ void GpsFramework::setVolantEngaged(bool value){
 bool GpsFramework::getVolantEngaged(){
     return m_pilotModule.m_engaged;
 }
-
-void GpsFramework::addLog(const std::string &s, bool time2){
-    if(time2){
-        time_t     now = time(0);
-        struct tm  tstruct;
-        char       buf[80];
-        tstruct = *localtime(&now);
-        // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
-        // for more information about date/time format
-        strftime(buf, sizeof(buf), "%M:%S ", &tstruct);
-
-        std::ostringstream strs3;
-        strs3 << buf << s;
-        
-        m_listLog.push_front(strs3.str());
-        logFile << '\n' <<  strs3.str();
-    } else {
-        std::ostringstream strs3;
-        strs3 << "  " << s;
-        m_listLog.push_front(strs3.str());
-        logFile << '\n' << strs3.str();
-    }
-    while(m_listLog.size()>20){
-        m_listLog.pop_back();
-    }
-}
-
 

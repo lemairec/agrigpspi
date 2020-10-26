@@ -339,14 +339,9 @@ void PilotModule::setHadrienVolant(double val){
     m_lastHadrienValue = val;
     
     setVolant(m_nbrTourHadrien + val);
-    
-    /*std::ostringstream out;
-    out << "set H " << m_volant;
-    GpsFramework::Instance().addLog(out.str(), false);*/
 }
 
 void PilotModule::handleHadrien(){
-    //GpsFramework::Instance().addLog("demand angle", false);
     std::vector<unsigned char> l = {0x01, 0x03, 0x40, 0x08, 0x00, 0x02, 0x50, 0x09};
     GpsFramework::Instance().m_serialModule.writePilotSerialD(l);
 }
@@ -377,7 +372,6 @@ void PilotModule::parseHadrienVolant(char * data){
         //INFO("c'est cool");
         //01 10 01 36 00 02 A0 3A //acquittement sur le registre 36 peut etre 35
     } else {
-        GpsFramework::Instance().addLog("autre", false);
         //INFO("c'est moin cool" << i0 << " " << i1 << " " << i2);
     }
 }

@@ -90,8 +90,8 @@ void CurveAB::addLine(int i){
             p3->m_y = (old_point->m_y + p->m_y)/2 + dx/temp*l;
             
             if(m_list[i].size() > 0){
-                double d2 = m_list[i].back()->distance(*p2);
-                double d3 = m_list[i].back()->distance(*p3);
+                double d2 = m_list[i].back()->distanceCarre(*p2);
+                double d3 = m_list[i].back()->distanceCarre(*p3);
                 
                 if(d2 < d3){
                     auto r = p3;
@@ -100,8 +100,8 @@ void CurveAB::addLine(int i){
                 }
                 
             } else {
-                double d2 = m_list[j2].front()->distance(*p2);
-                double d3 = m_list[j2].front()->distance(*p3);
+                double d2 = m_list[j2].front()->distanceCarre(*p2);
+                double d3 = m_list[j2].front()->distanceCarre(*p3);
                 INFO(d2 << " " << d3);
                 if(d2 > d3){
                     p3 = p2;
@@ -109,7 +109,7 @@ void CurveAB::addLine(int i){
             }
             bool eliminate = false;
             for(auto p: m_list[j]){
-                double res = p3->distance(*p);
+                double res = p3->distanceCarre(*p);
                 if(res < l*l){
                     eliminate = true;
                 }
@@ -150,8 +150,8 @@ void CurveAB::savePointB(){
             p3->m_y = (old_point->m_y + p->m_y)/2 + dx/temp*l;
             
             if(m_list[1].size() > 0){
-                double d2 = m_list[1].back()->distance(*p2);
-                double d3 = m_list[1].back()->distance(*p3);
+                double d2 = m_list[1].back()->distanceCarre(*p2);
+                double d3 = m_list[1].back()->distanceCarre(*p3);
                 
                 if(d2 < d3){
                     auto r = p3;
@@ -162,7 +162,7 @@ void CurveAB::savePointB(){
             }
             bool eliminate = false;
             for(auto p: m_listAB){
-                double res = p2->distance(*p);
+                double res = p2->distanceCarre(*p);
                 if(res < l*l){
                     eliminate = true;
                 }
@@ -174,7 +174,7 @@ void CurveAB::savePointB(){
             
             eliminate = false;
             for(auto p: m_listAB){
-                double res = p3->distance(*p);
+                double res = p3->distanceCarre(*p);
                 if(res < l*l){
                     eliminate = true;
                 }
@@ -182,13 +182,8 @@ void CurveAB::savePointB(){
             if(!eliminate){
                 m_list[1].push_back(p3);
             }
-            
-            
                        
             m_list[0].push_back(p);
-            
-            
-            
         }
         old_point = p;
     }

@@ -20,12 +20,16 @@ public:
 struct Tracteur {
     double m_antenne_essieu_avant = 1.5;
     double m_antenne_essieu_arriere = 1.2;
+    double m_outil_arriere = 2;
     
     double m_x_antenne = 0;
     double m_y_antenne = 0;
     
     double m_x_essieu_avant = 0;
     double m_y_essieu_avant = 0;
+    
+    double m_x_outil_arriere = 0;
+    double m_y_outil_arriere = 0;
     
 };
 
@@ -53,6 +57,10 @@ class GpsFramework {
     GpsFramework();
     
     double m_distance_cap_vitesse;
+    GpsPoint_ptr m_lastPoint;
+    GpsPoint_ptr m_lastImportantPoint;
+    
+    void saveInfoFile();
 public:
     static GpsFramework & Instance();
     void initOrLoadConfig();
@@ -64,9 +72,10 @@ public:
     void removeObserver();
     void onGGAFrame(GGAFrame & frame);
     void onRMCFrame(RMCFrame_ptr frame);
-   
+    
     void onNewPoint(GpsPoint_ptr point);
-      
+    void onNewImportantPoint(GpsPoint_ptr point);
+
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
@@ -156,7 +165,6 @@ public:
     PilotModule m_pilotModule;
     
     std::list<std::string> m_listLog;
-    void addLog(const std::string & s, bool time2 = true);
 private:
     IGpsObserver * m_observer = NULL;
     

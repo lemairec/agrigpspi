@@ -150,6 +150,17 @@ void SelectButtonGui::setValueString(std::string s){
 
 
 
+void ValueGuiKeyPad::setResize(int x, int y){
+    m_x = x;
+    m_y = y;
+}
+
+int ValueGuiKeyPad::isActive(double x, double y){
+    
+}
+
+
+
 
 BaseWidget::BaseWidget(){
     m_penBlack = QPen(Qt::black);
@@ -202,6 +213,19 @@ void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap, double sc
     item->setScale(scale2);
     auto size = item->boundingRect();
     item->setPos(button->m_x-size.width()*scale2/2, button->m_y-size.height()*scale2/2);
+    scene->addItem(item);
+    
+    //scene->addRect(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
+    //scene->addEllipse(m_width*button->m_x, m_height*button->m_y, 1, 1, QPen(QColor(0,0,0)), QBrush(QColor(0, 0, 0)));
+}
+
+void BaseWidget::drawMyImage(QPixmap & pixmap, int x, int y, double scale, bool center){
+    double scale2 = 0.4*scale;
+    
+    auto item = new QGraphicsPixmapItem(pixmap);
+    item->setScale(scale2);
+    auto size = item->boundingRect();
+    item->setPos(x-size.width()*scale2/2, y-size.height()*scale2/2);
     scene->addItem(item);
     
     //scene->addRect(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));

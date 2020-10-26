@@ -10,6 +10,8 @@ const int COLOR_CHECK = 3;
 
 const int COLOR_OTHER = 4;
 
+class KeyPadWidget;
+
 enum SizeText{
     sizeText_little,
     sizeText_medium,
@@ -55,6 +57,20 @@ struct ValueGui{
     int m_type = 0;
 };
 
+struct ValueGuiKeyPad{
+    ValueGuiKeyPad(){};
+    
+    void setResize(int x, int y);
+    
+    int isActive(double x, double y);
+    
+    double m_x = 0;
+    double m_y = 0;
+    double m_value = 1.0;
+    std::string m_label;
+    std::string m_unity = "m";
+};
+
 struct SelectButtonGui{
     SelectButtonGui(double x, double y, double rayon);
     SelectButtonGui(){};
@@ -88,7 +104,7 @@ struct SelectButtonGui{
 };
 
 class BaseWidget{
-protected:
+public:
     QGraphicsScene * scene;
     QPen m_penBlack;
     QPen m_penRed;
@@ -119,7 +135,11 @@ public:
     double m_height;
     bool m_close = true;
     
+    KeyPadWidget * m_key_pad_widget;
+    
     BaseWidget();
+    
+    
     
     virtual void draw() = 0;
     virtual void onButton(const ButtonGui & button){};
@@ -136,6 +156,7 @@ public:
     void drawSelectButtonGuiClose(SelectButtonGui * select);
     int onMouseSelectButton(SelectButtonGui *select, double x, double y);
     
+    void drawMyImage(QPixmap & pixmap, int x, int y, double scale, bool center);
     
     void drawLabel(std::string s, double x, double y);
     void drawLabel2(std::string s, double x, double y);
@@ -148,8 +169,5 @@ public:
     
     QPixmap * loadImage(const std::string & s);
 };
-
-
-
 
 #endif

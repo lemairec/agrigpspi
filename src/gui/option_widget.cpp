@@ -145,45 +145,38 @@ void OptionWidget::resizePage1(){
     
     m_button_p1minus1.setResize((0.4+dist)*m_width, 0.3*m_height, m_petit_button);
     m_button_p1minus2.setResize((0.4-dist)*m_width, 0.3*m_height, m_petit_button);
-    
-    m_button_shudown.setResize(0.4*m_width, 0.6*m_height, m_petit_button);
-    
 }
 
 void OptionWidget::drawPage1(){
     GpsFramework & f = GpsFramework::Instance();
-    QString s = "largueur de l'outil " + QString::number(f.m_config.m_largeur, 'f', 2) + " m";
+    QString s = "largueur de l'outil " + QString::number(f.m_config.m_outil_largeur, 'f', 2) + " m";
     drawText(s.toUtf8().constData(), 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     drawButtonImage(&m_button_p1add1, *m_imgPlus);
     drawButtonImage(&m_button_p1add2, *m_imgPlus);
     drawButtonImage(&m_button_p1minus1, *m_imgMinus);
     drawButtonImage(&m_button_p1minus2, *m_imgMinus);
-    
-    drawButtonImage(&m_button_shudown, *m_imgShutDown);
-    
 }
 
 void OptionWidget::onMousePage1(int x, int y){
     if(m_button_shudown.isActive(x, y)){
-        exit(0);
     } else if(m_button_p1add1.isActive(x,y)){
         GpsFramework & f = GpsFramework::Instance();
-        f.m_config.m_largeur += 0.1;
+        f.m_config.m_outil_largeur += 0.1;
         f.initOrLoadConfig();
     } else if(m_button_p1minus1.isActive(x,y)){
         GpsFramework & f = GpsFramework::Instance();
-        f.m_config.m_largeur -= 0.1;
+        f.m_config.m_outil_largeur -= 0.1;
         f.initOrLoadConfig();
         
     } else if(m_button_p1add2.isActive(x,y)){
         GpsFramework & f = GpsFramework::Instance();
-        f.m_config.m_largeur += 1;
+        f.m_config.m_outil_largeur += 1;
         f.initOrLoadConfig();
         
     } else if(m_button_p1minus2.isActive(x,y)){
         GpsFramework & f = GpsFramework::Instance();
-        f.m_config.m_largeur -= 1;
+        f.m_config.m_outil_largeur -= 1;
         f.initOrLoadConfig();
     }
 }

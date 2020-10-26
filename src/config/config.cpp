@@ -23,7 +23,6 @@ void Config::save(){
     
      
     
-    settings.setValue("largeur", m_largeur);
     settings.setValue("sensDraw", m_sensDraw);
     settings.setValue("debug", m_debug);
     
@@ -55,6 +54,14 @@ void Config::save(){
     settings.setValue("m_volant_derive", m_volant_derive);
     
     settings.setValue("distance_cap_vitesse", m_distance_cap_vitesse);
+    
+    settings.setValue("tracteur_antenne_pont_arriere", m_tracteur_antenne_pont_arriere);
+    settings.setValue("tracteur_empatement", m_tracteur_empatement);
+    settings.setValue("tracteur_hauteur", m_tracteur_hauteur);
+    
+    settings.setValue("outil_largeur", m_outil_largeur);
+    settings.setValue("outil_distance", m_outil_distance);
+    
 }
 
 void Config::load(){
@@ -62,9 +69,6 @@ void Config::load(){
     QString qpath = QString::fromStdString(s);
     QSettings settings(qpath, QSettings::IniFormat);
     
-    if(settings.contains("largeur")){
-        m_largeur = settings.value("largeur").toDouble();
-    }
     if(settings.contains("sensDraw")){
         m_sensDraw = settings.value("sensDraw").toBool();
     }
@@ -138,5 +142,23 @@ void Config::load(){
     if(settings.contains("distance_cap_vitesse")){
         m_distance_cap_vitesse = settings.value("distance_cap_vitesse").toDouble();
     }
+    
+    if(settings.contains("tracteur_antenne_pont_arriere")){
+        m_tracteur_antenne_pont_arriere = settings.value("tracteur_antenne_pont_arriere").toDouble();
+    }
+    if(settings.contains("tracteur_empatement")){
+        m_tracteur_empatement = settings.value("tracteur_empatement").toDouble();
+    }
+    if(settings.contains("tracteur_hauteur")){
+        m_tracteur_hauteur = settings.value("tracteur_hauteur").toDouble();
+    }
+
+    if(settings.contains("outil_largeur")){
+        m_outil_largeur = settings.value("outil_largeur").toDouble();
+    }
+    if(settings.contains("outil_distance")){
+        m_outil_distance = settings.value("outil_distance").toDouble();
+    }
+    
     
 }

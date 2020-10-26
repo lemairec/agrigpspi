@@ -48,6 +48,8 @@ void SatWidget::draw(){
                 s += "RTK";
             } else if(last_frame.m_fix == 5){
                 s += "FRTK";
+            } else if(last_frame.m_fix == 9){
+                s += "DGPS compas";
             } else {
                 s += "invalid";
             }
