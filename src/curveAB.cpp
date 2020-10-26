@@ -57,8 +57,6 @@ void clearLine(std::vector<GpsPoint_ptr> & l){
     
 }
 
-double l = 10.0;
-
 void CurveAB::addLine(int i){
     int j=i-1;
     int j2=i-2;
@@ -83,12 +81,12 @@ void CurveAB::addLine(int i){
             double temp = sqrt(dx*dx + dy*dy);
             
             GpsPoint_ptr p2(new GpsPoint());
-            p2->m_x = (old_point->m_x + p->m_x)/2 + dy/temp*l;
-            p2->m_y = (old_point->m_y + p->m_y)/2 - dx/temp*l;
+            p2->m_x = (old_point->m_x + p->m_x)/2 + dy/temp*m_largeur;
+            p2->m_y = (old_point->m_y + p->m_y)/2 - dx/temp*m_largeur;
             
             GpsPoint_ptr p3(new GpsPoint());
-            p3->m_x = (old_point->m_x + p->m_x)/2 - dy/temp*l;
-            p3->m_y = (old_point->m_y + p->m_y)/2 + dx/temp*l;
+            p3->m_x = (old_point->m_x + p->m_x)/2 - dy/temp*m_largeur;
+            p3->m_y = (old_point->m_y + p->m_y)/2 + dx/temp*m_largeur;
             
             if(m_list[i].size() > 0){
                 double d2 = m_list[i].back()->distanceCarre(*p2);
@@ -133,12 +131,12 @@ void CurveAB::savePointB(){
             double temp = sqrt(dx*dx + dy*dy);
             
             GpsPoint_ptr p2(new GpsPoint());
-            p2->m_x = (old_point->m_x + p->m_x)/2 + dy/temp*l;
-            p2->m_y = (old_point->m_y + p->m_y)/2 - dx/temp*l;
+            p2->m_x = (old_point->m_x + p->m_x)/2 + dy/temp*m_largeur;
+            p2->m_y = (old_point->m_y + p->m_y)/2 - dx/temp*m_largeur;
             
             GpsPoint_ptr p3(new GpsPoint());
-            p3->m_x = (old_point->m_x + p->m_x)/2 - dy/temp*l;
-            p3->m_y = (old_point->m_y + p->m_y)/2 + dx/temp*l;
+            p3->m_x = (old_point->m_x + p->m_x)/2 - dy/temp*m_largeur;
+            p3->m_y = (old_point->m_y + p->m_y)/2 + dx/temp*m_largeur;
             
             if(m_list[1].size() > 0){
                 double d2 = m_list[1].back()->distanceCarre(*p2);
@@ -154,7 +152,7 @@ void CurveAB::savePointB(){
             bool eliminate = false;
             for(auto p: m_listAB){
                 double res = p2->distanceCarre(*p);
-                if(res < l*l){
+                if(res < m_largeur*m_largeur){
                     eliminate = true;
                 }
             }
@@ -166,7 +164,7 @@ void CurveAB::savePointB(){
             eliminate = false;
             for(auto p: m_listAB){
                 double res = p3->distanceCarre(*p);
-                if(res < l*l){
+                if(res < m_largeur*m_largeur){
                     eliminate = true;
                 }
             }
@@ -181,7 +179,7 @@ void CurveAB::savePointB(){
     clearLine(m_list[1]);
     clearLine(m_list[-1]);
     
-    for(int i = 2; i < 10; ++i){
+    for(int i = 2; i < 11; ++i){
         addLine(i);
         addLine(-i);
     }

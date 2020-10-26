@@ -251,26 +251,22 @@ void GpsWidget::draw_force(){
     
     scene->clear();
     
-    GpsPoint_ptr old_point = nullptr;
-    for(auto p : f.m_curveAB.m_listAB){
-        if(old_point){
+    if(f.m_line){
+        if(f.m_lineAB.m_pointA.m_isOk && f.m_lineAB.m_pointB.m_isOk){
             double xA, yA;
-            my_projete(old_point->m_x, old_point->m_y, xA, yA);
+            my_projete(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, xA, yA);
             double xB, yB;
-            my_projete(p->m_x, p->m_y, xB, yB);
+            my_projete(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, xB, yB);
             
             
             //INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
-            scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penBlue);
-            
+            scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
         }
-        old_point = p;
-    }
-    
-    for(auto t : f.m_curveAB.m_list){
-        GpsPoint_ptr old_point = nullptr;
-        int i = 0;
-        for(auto p : t.second){
+        drawLines();
+        
+    } else {
+        /*GpsPoint_ptr old_point = nullptr;
+        for(auto p : f.m_curveAB.m_listAB){
             if(old_point){
                 double xA, yA;
                 my_projete(old_point->m_x, old_point->m_y, xA, yA);
@@ -280,11 +276,36 @@ void GpsWidget::draw_force(){
                 
                 //INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
                 scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penBlue);
-                //scene->addEllipse(w/2 + xA, h/2 - yA, i,i, m_penBlue);
-                ++i;
                 
             }
             old_point = p;
+        }*/
+        
+        
+        for(auto t : f.m_curveAB.m_list){
+            GpsPoint_ptr old_point = nullptr;
+            int i = 0;
+            for(auto p : t.second){
+                if(old_point){
+                    double xA, yA;
+                    my_projete(old_point->m_x, old_point->m_y, xA, yA);
+                    double xB, yB;
+                    my_projete(p->m_x, p->m_y, xB, yB);
+                    
+                    
+                    //INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
+                    
+                    if(t.first%10 == 0){
+                       scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penBlue);
+                   } else {
+                       scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penBlack);
+                   }
+                    //scene->addEllipse(w/2 + xA, h/2 - yA, i,i, m_penBlue);
+                    ++i;
+                    
+                }
+                old_point = p;
+            }
         }
     }
     
@@ -369,7 +390,7 @@ void GpsWidget::draw_force(){
             }
         }
     }
-    /*drawLines();*/
+    
     
     
     if(f.m_lineAB.m_pointA.m_isOk){
@@ -382,16 +403,7 @@ void GpsWidget::draw_force(){
         my_projete(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, xB, yB);
         scene->addEllipse(w/2 + xB, h/2 - yB, 5, 5, m_penRed, m_brushNo);
     }
-    if(f.m_lineAB.m_pointA.m_isOk && f.m_lineAB.m_pointB.m_isOk){
-        double xA, yA;
-        my_projete(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, xA, yA);
-        double xB, yB;
-        my_projete(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, xB, yB);
-        
-        
-        //INFO("drawLine " << xA << " " << yA << " " <<  xB << " " << yB << " ");
-        scene->addLine(w/2 + xA, h/2 - yA, w/2 + xB, h/2 - yB, m_penRed);
-    }
+    
     
     //drawCourbe(1);
     //drawCourbe(10);

@@ -91,6 +91,8 @@ void GpsFramework::initOrLoadConfig(){
     
     m_tracteur.m_antenne_essieu_avant = m_config.m_tracteur_empatement - m_config.m_tracteur_antenne_pont_arriere;
     m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_antenne_pont_arriere;
+    
+    m_curveAB.m_largeur = m_config.m_outil_largeur;
 }
 
 GpsFramework & GpsFramework::Instance(){

@@ -11,6 +11,7 @@ public:
     GpsPoint m_pointA;
     GpsPoint m_pointB;
     
+    double m_largeur = 10;
     bool m_sensAB = true;
     
     double m_a = 0;
