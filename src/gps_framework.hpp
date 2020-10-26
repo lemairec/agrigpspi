@@ -46,8 +46,10 @@ class GpsFramework {
     GpsFramework();
     
     double m_distance_cap_vitesse;
+    GpsPoint_ptr m_lastPoint;
     GpsPoint_ptr m_lastImportantPoint;
     
+    void saveInfoFile();
 public:
     static GpsFramework & Instance();
     void initOrLoadConfig();

@@ -13,12 +13,15 @@
 #include <filesystem>
 
 std::ofstream gpsJobFile;
+std::string file_info;
+std::string date_str;
 
 bool rmc = true;
 
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
-    QString s = date.toString("yyyyMMdd_hhmm");
+    QString s = date.toString("yyyyMMddThhmm");
+    date_str = s.toUtf8().constData();
     
     int y = date.date().year();
     if(y>(1011+1011)){
@@ -27,6 +30,7 @@ GpsFramework::GpsFramework(){
     
     std::string dir = ProjectSourceBin + "/job";
     std::string file = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".ubx";
+    file_info = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".info";
     mode_t mt;
     std::__fs::filesystem::create_directory(dir);
     INFO(file);
@@ -34,6 +38,22 @@ GpsFramework::GpsFramework(){
     INFO(gpsJobFile.is_open());
     
     m_config.load();
+}
+
+void GpsFramework::saveInfoFile(){
+    std::ofstream file;
+    file.open(file_info, std::ios::out);
+    
+    QDateTime date_end = QDateTime::currentDateTime();
+    QString s = date_end.toString("yyyyMMddThhmm");
+    std::string date_end_str = s.toUtf8().constData();
+    
+    
+    file << "{" << std::endl;
+    file << "\"date_begin\":\"" << date_str << "\"" << std::endl;
+    file << ",\"date_end\":\"" << date_end_str << "\"" << std::endl;
+    file << ",\"surface\":" << m_surface << std::endl;
+    file << "}" << std::endl;
 }
 
 void GpsFramework::addError(std::string s){
@@ -163,25 +183,25 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
 
     setNewGpsTime();
     
-    
-    if(m_listSurfaceToDraw.size()>0){
+    m_lastPoint = p;
+    if(m_listSurfaceToDraw.size()>0 && !m_pauseDraw){
         m_listSurfaceToDraw.front()->m_lastPoint = p;
     }
     if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) < m_distance_cap_vitesse*m_distance_cap_vitesse){
         return;
     }
-    m_lastImportantPoint = p;
     
     onNewImportantPoint(p);
 }
 
 void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
+    m_lastImportantPoint = p;
     calculSurface();
     DEBUG("draw");
     calculDraw(p);
     
-    INFO(p->m_time << "," << p->m_latitude << "," << p->m_longitude);
-    gpsJobFile <<"[" << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << "]," << std::endl;
+    gpsJobFile << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
+    saveInfoFile();
 }
 
 
@@ -514,6 +534,7 @@ void GpsFramework::changeDraw(){
         SurfaceToDraw_ptr p(new SurfaceToDraw());
         m_listSurfaceToDraw.push_front(p);
         m_pauseDraw = false;
+        onNewImportantPoint(m_lastPoint);
     }
 }
 
