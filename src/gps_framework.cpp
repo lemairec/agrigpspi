@@ -204,7 +204,7 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
     DEBUG("draw");
     calculDraw(p);
     
-    gpsJobFile << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
+    //gpsJobFile << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
     saveInfoFile();
 }
 
