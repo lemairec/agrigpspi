@@ -10,8 +10,6 @@
 #include <fstream>
 #include <sstream>
 
-#include <filesystem>
-
 std::ofstream gpsJobFile;
 std::string file_info;
 std::string date_str;
@@ -32,7 +30,7 @@ GpsFramework::GpsFramework(){
     std::string file = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".ubx";
     file_info = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".info";
     mode_t mt;
-    std::__fs::filesystem::create_directory(dir);
+    //std::__fs::filesystem::create_directory(dir);
     INFO(file);
     gpsJobFile.open(file, std::ios::out);
     INFO(gpsJobFile.is_open());
