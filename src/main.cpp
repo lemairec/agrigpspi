@@ -58,7 +58,6 @@ int main(int argc, char *argv[])
     GpsFramework & framework = GpsFramework::Instance();
     //framework.test();
     MainWindow * m = MainWindow::Instance_ptr();
-    framework.addGpsObserver(m);
     DEBUG("init");
     framework.initOrLoadConfig();
     DEBUG("fin init");

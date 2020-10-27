@@ -64,8 +64,6 @@ public:
     std::string m_messages_errors;
     void addError(std::string s);
     
-    void addGpsObserver(IGpsObserver *);
-    void removeObserver();
     void onGGAFrame(GGAFrame & frame);
     void onRMCFrame(RMCFrame_ptr frame);
     
@@ -165,8 +163,6 @@ public:
     
     std::list<std::string> m_listLog;
 private:
-    IGpsObserver * m_observer = NULL;
-    
     void readFile();
 };
 

@@ -63,14 +63,6 @@ void GpsFramework::addError(std::string s){
     m_messages_errors = oss.str();
 }
 
-void GpsFramework::addGpsObserver(IGpsObserver * o){
-    m_observer = o;
-}
-
-void GpsFramework::removeObserver(){
-    m_observer = NULL;
-}
-
 void GpsFramework::initOrLoadConfig(){
     m_config.save();
     
@@ -326,9 +318,6 @@ void GpsFramework::savePointA(){
     if(!m_list.empty()){
         m_lineAB.m_pointA = *(*m_list.begin());
     }
-    if(m_observer){
-        m_observer->onNewPoint();
-    }
     setRef(m_lineAB.m_pointA.m_latitude, m_lineAB.m_pointA.m_longitude);
     
     gpsJobFile << "[savePointA]\n";
@@ -347,10 +336,6 @@ void GpsFramework::savePointB(){
     if(m_lineAB.m_pointA.m_isOk!=0 && m_lineAB.m_pointB.m_isOk!=0){
         setAB();
     }
-    if(m_observer){
-        m_observer->onNewPoint();
-    }
-
     gpsJobFile << "[savePointB]\n";
     
     m_etat = Etat_OK;
@@ -580,124 +565,6 @@ void GpsFramework::calculDraw(GpsPoint_ptr p){
     
     auto s = m_listSurfaceToDraw.front();
     s->m_points.push_front(p);
-}
-
-#include <iostream>
-
-using namespace std;
-
-
-/*void GpsFramework::exportHtml(){
-    ostringstream oss;
-    oss << "<html><body>" << std::endl;
-
-    oss << "<div id=\"mapdiv\"></div>" << std::endl;
-    oss << "<script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script>" << std::endl;
-    oss << "<script>" << std::endl;
-    oss << "map = new OpenLayers.Map(\"mapdiv\");" << std::endl;
-    oss << "map.addLayer(new OpenLayers.Layer.OSM());" << std::endl;
-    
-    oss << "function addPoint(lat, long, markers){" << std::endl;
-    oss << "    var lonLat = new OpenLayers.LonLat( lat, long )" << std::endl;
-    oss << "    .transform(" << std::endl;
-    oss << "               new OpenLayers.Projection(\"EPSG:4326\"), // transform from WGS 1984" << std::endl;
-    oss << "               map.getProjectionObject() // to Spherical Mercator Projection" << std::endl;
-    oss << "               );" << std::endl;
-    oss << "    markers.addMarker(new OpenLayers.Marker(lonLat));" << std::endl;
-    oss << "    return lonLat;" << std::endl;
-    oss << "}" << std::endl;
-    oss << "var markers = new OpenLayers.Layer.Markers( \"Markers\" );" << std::endl;
-    oss << "map.addLayer(markers);" << std::endl;
-
-    for(auto it = m_list.rbegin(); it != m_list.rend(); ++it){
-        auto p = (*it);
-        oss << "lonLat = addPoint(" << p->m_longitude << "," << p->m_latitude << ", markers)" << std::endl;
-    }
-    
-    oss << "map.setCenter (lonLat, 18);" << std::endl;
-    oss << "</script>" << std::endl;
-    oss << "</body></html>" << std::endl;
-    INFO(oss.str());
-    std::ofstream infile("/Users/lemairec/fablab/agrigpspi/build/test.html");
-    infile << oss.str();
-}*/
-
-#define SLEEP_TIME 50
-void GpsFramework::readFile(){
-    std::ifstream infile(m_config.m_file_gps);
-    if(!infile.is_open()){
-        INFO("can not open " << m_config.m_file_gps);
-        return;
-    }
-    std::string line;
-    
-    std::chrono::time_point<std::chrono::system_clock> start_time = std::chrono::system_clock::now();
-    while (std::getline(infile, line) && !m_reloadConfig)
-    {
-        if(!line.empty() && line[0] == '$'){
-            m_gpsModule.readFrame(line);
-            QThread::msleep(SLEEP_TIME);
-        }else if(!line.empty() && line[0] == 'G'){
-            line = '$'+line;
-            m_gpsModule.readFrame(line);
-            QThread::msleep(SLEEP_TIME);
-        } else if(line == "[savePointA]"){
-            savePointA();
-        } else if(line == "[savePointB]"){
-            savePointB();
-        }
-        //INFO(line);
-        
-    }
-    std::chrono::time_point<std::chrono::system_clock> end_time = std::chrono::system_clock::now();
-    INFO("Wall time passed: " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count());
-    if(!m_reloadConfig){
-        m_config.m_input_gps = "none";
-    } else {
-        m_list.clear();
-        m_listSurfaceToDraw.clear();
-        clearSurface();
-    }
-    //exportHtml();
-}
-
-
-void GpsFramework::test(){
-    m_gpsModule.readFrame("$GNGGA,110138.80,4902.71554,N,00324.04388,E,1,07,1.94,46.6,M,46.3,M,,*71");
-    GpsPoint_ptr f = m_list.front();
-    INFO(f->m_latitude << " " << f->m_longitude);
-    savePointA();
-    GGAFrame f2;
-    f2.m_latitude = 49.1453;
-    f2.m_longitude = 3.50073;
-    m_gpsModule.setXY(f2);
-    INFO(f2.m_x << " " << f2.m_y);
-    onGGAFrame(f2);
-    INFO("res " << 13291);
-    INFO(m_distance << " " << m_distance/13291 <<  " %");
-    
-    f2.m_latitude = 49.1453;
-    f2.m_longitude = 3.40;
-    m_gpsModule.setXY(f2);
-    INFO(f2.m_x << " " << f2.m_y);
-    onGGAFrame(f2);
-    INFO("res " << 11124);
-    INFO(m_distance << " " << m_distance/11124 <<  " %");
-    
-    f2.m_latitude = 49.04;
-    f2.m_longitude = 3.50073;
-    m_gpsModule.setXY(f2);
-    INFO(f2.m_x << " " << f2.m_y);
-    onGGAFrame(f2);
-    INFO("res " << 7333);
-    INFO(m_distance << " " << m_distance/7333 <<  " %");
-    
-    f2.m_latitude = 49.04;
-    f2.m_longitude = 3.40;
-    m_gpsModule.setXY(f2);
-    onGGAFrame(f2);
-    INFO("res " << 592);
-    INFO(m_distance << " " << m_distance/592<<  " %");
 }
 
 //surface
