@@ -162,6 +162,11 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
         return;
     }
     
+    if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) > 100*100){
+        INFO("point");
+        return;
+    }
+    
     m_list.push_front(p);
 
     if(m_list.size()>100){
