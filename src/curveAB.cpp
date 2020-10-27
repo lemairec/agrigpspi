@@ -93,9 +93,9 @@ void CurveAB::addLine(int i){
     }
     
     
-    INFO("  ");
-    INFO("  ");
-    INFO("ici " << i << " " << j);
+    //INFO("  ");
+    //INFO("  ");
+    //INFO("ici " << i << " " << j);
     //INFO(m_list[j].size());
     
     GpsPoint_ptr old_point = nullptr;
