@@ -21,6 +21,12 @@ find_library(PTHREAD pthread)
 
 set(CMAKE_AUTOMOC ON)
 
+if(UNIX)
+    ADD_DEFINITIONS(-std=c++0x -Wall)
+    ADD_DEFINITIONS(-DUNIX)
+    ADD_DEFINITIONS(-O3)
+    #ADD_DEFINITIONS(-g -Wall)
+endif()
 
 find_package(Boost REQUIRED COMPONENTS system thread)
 include_directories( ${Boost_INCLUDE_DIR}   )
