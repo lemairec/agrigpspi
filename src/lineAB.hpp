@@ -20,6 +20,8 @@ public:
 
     double m_angleAB = 0;
     
+    double m_current_line = 0;
+    
     double distance(double x, double y, double lg);
 };
 

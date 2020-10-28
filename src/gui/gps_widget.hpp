@@ -90,7 +90,9 @@ public:
     double m_sinA;
     
     void my_projete(double x, double y, double & x_res, double & y_res);
-   
+    void my_projete2(double x, double y, double & x_res, double & y_res);
+    bool must_be_draw(double x, double y);
+    
     //courbe
     double m_la;
     double m_lb;
