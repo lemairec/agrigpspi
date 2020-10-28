@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    GpsFramework::Instance().removeObserver();
+//    GpsFramework::Instance().removeObserver();
 }
 
 void MainWindow::setupUi(){
