@@ -285,7 +285,6 @@ void GpsWidget::draw_force(){
         for(auto t : f.m_curveAB.m_list){
             double xA = 0, yA = 0;
             GpsPoint_ptr old_point = nullptr;
-            int i = 0;
             for(auto p : t.second){
                 if(must_be_draw(p->m_x, p->m_y)){
                     double xB, yB;
@@ -337,7 +336,7 @@ void GpsWidget::draw_force(){
                         y1 = y0;
                         continue;
                     }
-                    double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+                    //double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
                     if(y1 != y0){
                         double res = (x1-x0)/(y1-y0);
                         double i = 1.0;
@@ -869,7 +868,6 @@ void GpsWidget::drawDebug(){
             int x = m_width-l2;
             int y = 00;
             
-            auto last_frame = f.m_lastGGAFrame;
             scene->addRect(x, y, l2, m_height-100, m_penBlack, m_brushLightGrayDebug);
             
             int y_temp = m_height - 120;

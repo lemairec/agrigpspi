@@ -46,12 +46,8 @@ void MenuWidget::draw(){
     } else if(!m_outil_widget.m_close){
         m_outil_widget.draw();
     } else {
-    
-        auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
         scene->addRect(m_x, m_height*0.15, m_lg, m_height*0.7, m_penBlack, m_brushWhiteAlpha);
-        //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
         
-        int x2 = m_x+30;
         {
             QString s = "Menu";
             drawQText(s, m_x + m_lg/2, 0.25*m_height, sizeText_big, true);

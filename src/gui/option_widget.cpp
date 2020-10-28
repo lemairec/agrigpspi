@@ -343,8 +343,6 @@ void OptionWidget::onMousePage4(double x, double y){
  */
 
 void OptionWidget::resizePage5(){
-    double dist2 = 0.08;
-    
     m_button_motor_inverse.setResize(0.35*m_width, 0.20*m_height, m_petit_button);
     m_button_encoder_inverse.setResize(0.6*m_width, 0.20*m_height, m_petit_button);
     
@@ -507,7 +505,6 @@ void OptionWidget::addSerials(){
     
     m_select_gps_serial.clear();
     m_select_pilot_serial.clear();
-    y_port_title = 0.2;
     for(auto serial: serials){
         m_select_gps_serial.addValue(serial);
         

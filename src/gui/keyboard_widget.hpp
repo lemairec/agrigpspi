@@ -8,8 +8,6 @@ class KeyPadWidget : public BaseWidget {
     int m_x = 0;
     QString m_res;
     double m_lg;
-    double decimal = 1.0;
-    
     
     ButtonGui m_button0;
     ButtonGui m_button1;

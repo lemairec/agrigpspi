@@ -20,11 +20,9 @@ void ParcelleWidget::setSize(int width, int height){
 
 
 void ParcelleWidget::draw(){
-    auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
     scene->addRect(m_x, m_height*0.1, m_lg, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
     //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
     
-    int x2 = m_x+30;
     {
         QString s = "Parcelles";
         drawQText(s, m_lg/2, 0.15*m_height, sizeText_big, true);

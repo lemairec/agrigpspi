@@ -29,7 +29,7 @@ GpsFramework::GpsFramework(){
     std::string dir = ProjectSourceBin + "/job";
     std::string file = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".ubx";
     file_info = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".info";
-    mode_t mt;
+    //mode_t mt;
     //std::__fs::filesystem::create_directory(dir);
     INFO(file);
     gpsJobFile.open(file, std::ios::out);

@@ -28,7 +28,6 @@ class OptionWidget : public BaseWidget {
     ButtonGui m_button_p6;
     
     int m_page = 1;
-    double y_baurates_title, y_port_title;
     
     void addSerials();
     
