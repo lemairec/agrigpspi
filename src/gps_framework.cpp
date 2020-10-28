@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 
 std::ofstream gpsJobFile;
 std::string file_info;
@@ -27,10 +28,15 @@ GpsFramework::GpsFramework(){
     }
     
     std::string dir = ProjectSourceBin + "/job";
+    std::string s2 = "mkdir -p "+ dir + ";";
+    if(system( s2.c_str() )){
+        WARN("can not execute : " << s2);
+    };
+    
     std::string file = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".ubx";
     file_info = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".info";
     //mode_t mt;
-    //std::__fs::filesystem::create_directory(dir);
+    
     INFO(file);
     gpsJobFile.open(file, std::ios::out);
     INFO(gpsJobFile.is_open());
@@ -204,7 +210,7 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
     DEBUG("draw");
     calculDraw(p);
     
-    //gpsJobFile << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
+    gpsJobFile << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
     saveInfoFile();
 }
 
