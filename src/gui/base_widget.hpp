@@ -143,9 +143,8 @@ public:
     
     virtual void draw() = 0;
     virtual void onButton(const ButtonGui & button){};
-    virtual void onMouse(double x, double y){};
     
-    void onMouseInt(double x, double y);
+    virtual void onMouse(int x, int y);
     void setSize(int width, int height);
     
     void drawButton(ButtonGui * button, int color = 0);

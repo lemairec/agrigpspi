@@ -38,7 +38,7 @@ public:
     void setSize(int width, int height);
     
     virtual void draw();
-    virtual void onMouseInt(int x, int y);
+    virtual void onMouse(int x, int y);
     
     
     //page1
@@ -103,6 +103,8 @@ public:
     ButtonGui m_button_p6testGoToVLeft;
     ButtonGui m_button_p6testGoToV0;
     ButtonGui m_button_p6testGoToVRight;
+    
+    ButtonGui m_button_p6test1;
     
     void resizePage6();
     void onMousePage6(double x, double y);

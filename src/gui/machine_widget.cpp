@@ -57,7 +57,7 @@ void MachineWidget::open(){
 }
 
 void MachineWidget::draw(){
-    auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
+    //auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
     scene->addRect(m_x, m_height*0.1, m_width-m_x, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
 
     
@@ -75,7 +75,7 @@ void MachineWidget::draw(){
     drawValueGuiTemp(this, &m_valueC);
     
 }
-void MachineWidget::onMouseInt(int x, int y){
+void MachineWidget::onMouse(int x, int y){
     if(!m_key_pad_widget->m_close){
         return;
     }
@@ -143,7 +143,7 @@ void OutilWidget::open(){
 }
 
 void OutilWidget::draw(){
-    auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
+    //auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
     scene->addRect(m_x, m_height*0.1, m_width-m_x, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
 
     
@@ -161,7 +161,7 @@ void OutilWidget::draw(){
     drawValueGuiTemp(this, &m_valueB);
     
 }
-void OutilWidget::onMouseInt(int x, int y){
+void OutilWidget::onMouse(int x, int y){
     if(!m_key_pad_widget->m_close){
         return;
     }

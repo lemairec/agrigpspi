@@ -65,13 +65,13 @@ void MenuWidget::draw(){
     
     }
 }
-void MenuWidget::onMouseInt(int x, int y){
+void MenuWidget::onMouse(int x, int y){
     if(!m_machine_widget.m_close){
-        m_machine_widget.onMouseInt(x, y);
+        m_machine_widget.onMouse(x, y);
     } else if(!m_options_widget.m_close){
-        m_options_widget.onMouseInt(x, y);
+        m_options_widget.onMouse(x, y);
     } else if(!m_outil_widget.m_close){
-        m_outil_widget.onMouseInt(x, y);
+        m_outil_widget.onMouse(x, y);
     } else {
     
         if(m_buttonOk.isActive(x, y)){

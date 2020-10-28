@@ -576,7 +576,6 @@ void GpsFramework::clearSurface(){
 }
 
 void GpsFramework::calculSurface(){
-    double l = m_config.m_outil_largeur;
     m_surface = 0;
     m_surface_h = 0;
     //INFO("****");
@@ -667,7 +666,6 @@ double cp(GpsPoint & a, GpsPoint &  b){ //returns cross product
 
 double polygonArea(std::vector<GpsPoint_ptr> tab)
 {
-    double area = 0;
     int n = tab.size();
     double sum=0.0;
     for(int i=0; i<n; i++){

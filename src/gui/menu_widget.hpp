@@ -18,7 +18,6 @@ class MenuWidget : public BaseWidget {
     ButtonGui m_buttonOutil;
     ButtonGui m_buttonStop;
     
-    bool m_debug = false;
     int m_x = 0;
     int m_lg = 0;
 public:
@@ -33,7 +32,7 @@ public:
     void setScene(QGraphicsScene * s);
     
     virtual void draw();
-    virtual void onMouseInt(int x, int y);
+    virtual void onMouse(int x, int y);
     
 };
 

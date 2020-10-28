@@ -29,6 +29,8 @@ public:
     void initOrLoad(Config & config);
     void open();
     
+    void writeGpsSerialS(const std::string & l);
+    
     void writePilotSerialD(std::vector<unsigned char> & l);
     void writePilotSerialDAndWait(std::vector<unsigned char> & l);
     void writePilotSerialS(const std::string & l);

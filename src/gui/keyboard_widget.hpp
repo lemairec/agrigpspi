@@ -31,7 +31,7 @@ public:
     void setSize(int width, int height);
     
     void draw();
-    void onMouseInt(int x, int y);
+    void onMouse(int x, int y);
     
     void setValueGuiKeyPad(ValueGuiKeyPad * value){
         m_value = value;

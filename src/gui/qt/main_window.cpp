@@ -35,18 +35,18 @@ void View::mouseReleaseEvent ( QMouseEvent * event ){
     int y = event->y()-5;
     
     if(!m_gpsWidget->m_key_pad_widget.m_close){
-        m_gpsWidget->m_key_pad_widget.onMouseInt(x, y);
+        m_gpsWidget->m_key_pad_widget.onMouse(x, y);
     } else {
         m_gpsWidget->onMouse(x, y);//TODO
         
         if(!m_gpsWidget->m_satWidget.m_close){
-            m_gpsWidget->m_satWidget.onMouseInt(x, y);
+            m_gpsWidget->m_satWidget.onMouse(x, y);
         }
         if(!m_gpsWidget->m_guidWidget.m_close){
-            m_gpsWidget->m_guidWidget.onMouseInt(x, y);
+            m_gpsWidget->m_guidWidget.onMouse(x, y);
         }
         if(!m_gpsWidget->m_parcelleWidget.m_close){
-            m_gpsWidget->m_parcelleWidget.onMouseInt(x, y);
+            m_gpsWidget->m_parcelleWidget.onMouse(x, y);
         }
     }
     

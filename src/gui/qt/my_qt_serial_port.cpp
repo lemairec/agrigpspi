@@ -125,6 +125,13 @@ void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
     DEBUG("end");
 }
 
+void MyQTSerialPorts::writeGpsSerialS(const std::string & l){
+    QByteArray b;
+    b.append(l.c_str());
+    m_serialPortGps.write(b);
+}
+
+
 void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
     DEBUG("begin");
     QByteArray b;

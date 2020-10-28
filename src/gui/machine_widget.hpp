@@ -7,7 +7,6 @@ class MachineWidget : public BaseWidget {
     QPixmap * m_imgOk;
     QPixmap * m_imgMachine;
      
-    bool m_debug = false;
     int m_x = 0;
     int m_lg = 0;
 public:
@@ -22,7 +21,7 @@ public:
     
     void open();
     void draw();
-    void onMouseInt(int x, int y);
+    void onMouse(int x, int y);
     
 };
 
@@ -31,7 +30,6 @@ class OutilWidget : public BaseWidget {
     QPixmap * m_imgOutil1;
     QPixmap * m_imgOutil2;
     
-    bool m_debug = false;
     int m_x = 0;
     int m_lg = 0;
 public:
@@ -45,7 +43,7 @@ public:
     
     void open();
     void draw();
-    void onMouseInt(int x, int y);
+    void onMouse(int x, int y);
     
 };
 

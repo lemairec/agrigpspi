@@ -12,7 +12,7 @@ GuidageWidget::GuidageWidget(){
     m_imgLigneAB = loadImage("/images/line_ab.png");
     m_imgCurveAB = loadImage("/images/curve_ab.png");
     
-    m_close = false;
+    m_close = true;
 }
 
 
@@ -28,11 +28,9 @@ void GuidageWidget::setSize(int width, int height){
 
 
 void GuidageWidget::draw(){
-    auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
     scene->addRect(m_x, m_height*0.1, m_lg, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
     //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
     
-    int x2 = m_x+30;
     {
         QString s = "nouvelle ligne";
         drawQText(s, m_lg/2, 0.15*m_height, sizeText_big, true);
@@ -55,7 +53,7 @@ void GuidageWidget::draw(){
     
     
 }
-void GuidageWidget::onMouseInt(int x, int y){
+void GuidageWidget::onMouse(int x, int y){
     if(m_buttonOk.isActive(x, y)){
         m_close = true;
     }

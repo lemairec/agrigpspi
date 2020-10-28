@@ -198,17 +198,9 @@ void BaseWidget::setSize(int width, int height){
     m_height = height;
 }
 
-void BaseWidget::onMouseInt(double x, double y){
-    this->onMouse(x/m_width, y/m_height);
-}
-
-
 void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap, double scale){
     double scale2 = 0.4*scale;
-    int x = button->m_x-button->m_rayon;
-    int y = button->m_y-button->m_rayon;
-    int d = button->m_rayon*2;
-    
+
     auto item = new QGraphicsPixmapItem(pixmap);
     item->setScale(scale2);
     auto size = item->boundingRect();

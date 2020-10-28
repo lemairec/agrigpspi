@@ -773,10 +773,10 @@ void GpsWidget::drawDebug(){
 
     //surface
     {
-        int x = 0;
+        /*int x = 0;
         int y = m_height-320;
         
-        /*scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
+        scene->addRect(x, y, 100, 100, m_penBlack, lightGrayBrush);
         {
             QString s = QString::number(f.m_pilotModule.m_0, 'f', 2) + " m_0";
             auto textItem = scene->addText(s);
@@ -929,7 +929,7 @@ void GpsWidget::addButtons(){
 
 
 void GpsWidget::onMouse(int x, int y){
-    m_menuWidget.onMouseInt(x, y);
+    m_menuWidget.onMouse(x, y);
     
     double x2 = x;
     double y2 = y;

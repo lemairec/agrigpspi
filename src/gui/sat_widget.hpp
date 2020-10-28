@@ -18,7 +18,7 @@ public:
     void setSize(int width, int height);
     
     virtual void draw();
-    virtual void onMouseInt(int x, int y);
+    virtual void onMouse(int x, int y);
     
 };
 

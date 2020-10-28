@@ -34,7 +34,7 @@ void ParcelleWidget::draw(){
     drawButtonImage(&m_buttonOk, *m_imgOk);
     
 }
-void ParcelleWidget::onMouseInt(int x, int y){
+void ParcelleWidget::onMouse(int x, int y){
     if(m_buttonOk.isActive(x, y)){
         m_close = true;
     }

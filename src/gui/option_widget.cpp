@@ -101,7 +101,7 @@ void OptionWidget::draw(){
     }
 }
 
-void OptionWidget::onMouseInt(int x, int y){
+void OptionWidget::onMouse(int x, int y){
     
     if(m_button_close.isActive(x,y)){
         m_close = true;
@@ -439,10 +439,11 @@ void OptionWidget::resizePage6(){
     m_button_p6testGoToVLeft.setResize(0.40*m_width, 0.55*m_height, m_petit_button);
     m_button_p6testGoToV0.setResize(0.55*m_width, 0.55*m_height, m_petit_button);
     m_button_p6testGoToVRight.setResize(0.70*m_width, 0.55*m_height, m_petit_button);
+    
+    m_button_p6test1.setResize(0.50*m_width, 0.65*m_height, m_petit_button);
 };
 
 void OptionWidget::drawPage6(){
-    GpsFramework & f = GpsFramework::Instance();
     drawText("Test Volant", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     drawButtonLabel(&m_button_p6connect, COLOR_OTHER);
@@ -460,6 +461,9 @@ void OptionWidget::drawPage6(){
     
     drawButtonLabel(&m_button_p6testGoToVRight, COLOR_OTHER);
     drawText("+0.5 volant", m_button_p6testGoToVRight.m_x, m_button_p6testGoToVRight.m_y, sizeText_little, true);
+
+    drawButtonLabel(&m_button_p6test1, COLOR_OTHER);
+    drawText("button", m_button_p6test1.m_x, m_button_p6test1.m_y, sizeText_little, true);
 }
 
 void OptionWidget::onMousePage6(double x, double y){
@@ -478,10 +482,9 @@ void OptionWidget::onMousePage6(double x, double y){
     } else if(m_button_p6testGoToVRight.isActive(x,y)){
         f.m_pilotModule.engage();
         f.m_pilotModule.myGotoVolant2(0.5);
+    } else if(m_button_p6test1.isActive(x,y)){
+        f.m_pilotModule.test();
     }
-    
-    f.initOrLoadConfig();
-    
 }
 
 void OptionWidget::open(){
@@ -504,7 +507,6 @@ void OptionWidget::addSerials(){
     
     m_select_gps_serial.clear();
     m_select_pilot_serial.clear();
-    int i=2;
     y_port_title = 0.2;
     for(auto serial: serials){
         m_select_gps_serial.addValue(serial);

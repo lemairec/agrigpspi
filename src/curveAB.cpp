@@ -133,7 +133,6 @@ void CurveAB::addLine(int i){
                     p3 = p2;
                 }
             }
-            bool eliminate = false;
             m_list[i].push_back(p3);
             
             

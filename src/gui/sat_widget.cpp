@@ -83,7 +83,7 @@ void SatWidget::draw(){
     }
     
 }
-void SatWidget::onMouseInt(int x, int y){
+void SatWidget::onMouse(int x, int y){
     if(m_buttonOk.isActive(x, y)){
         m_close = true;
     }

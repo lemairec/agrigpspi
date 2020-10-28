@@ -59,6 +59,8 @@ public:
     void setVolant(double vol);
     void update();
     
+    void test();
+    
     //ARDUINO
     void arduinoUpdate();
     void arduinoParse(const std::string & s);
