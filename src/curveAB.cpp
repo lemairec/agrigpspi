@@ -18,18 +18,13 @@ Lines_ptr CurveAB::getCurrentLineRel(int i){
 }
 
 void CurveAB::verify(int i){
-    INFO(i);
     if(i<m_i_min){
-        INFO("min");
         for(int j = m_i_min-1; j >= i-2; --j){
-            INFO("min " << j);
             addLine(j);
         }
     }
     if(i>m_i_max){
-        INFO("max");
         for(int j = m_i_max+1; j <= i+2; ++j){
-            INFO("max " << j);
             addLine(j);
         }
     }
