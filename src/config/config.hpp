@@ -23,7 +23,8 @@ public:
    
     bool m_sensDraw = false;
     bool m_debug = false;
-    
+    bool m_menu_vertical = false;
+    bool m_debug_log = true;
     
     int m_pilot_langage = PILOT_LANGAGE_ARDUINO;
     bool m_pilot_motor_inverse = false;

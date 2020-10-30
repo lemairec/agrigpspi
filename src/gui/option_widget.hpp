@@ -74,6 +74,8 @@ public:
     //page4
     ButtonGui m_button_sens;
     ButtonGui m_button_debug;
+    ButtonGui m_button_debug_file;
+    ButtonGui m_button_menu_vertical;
     
     void resizePage4();
     void onMousePage4(double x, double y);

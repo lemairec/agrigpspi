@@ -81,6 +81,8 @@ public:
     void test();
     
     Config m_config;
+    
+    bool m_debug_log = false;
     bool m_reloadConfig = true;
     
     bool m_line = true;

@@ -26,6 +26,9 @@ void Config::save(){
     settings.setValue("sensDraw", m_sensDraw);
     settings.setValue("debug", m_debug);
     
+    settings.setValue("menu_vertical", m_menu_vertical);
+    settings.setValue("debug_log", m_debug_log);
+    
     QString input_gps = QString::fromStdString(m_input_gps);
     settings.setValue("input_gps", input_gps);
     settings.setValue("baudrate_gps", m_baudrate_gps);
@@ -74,6 +77,12 @@ void Config::load(){
     }
     if(settings.contains("debug")){
         m_debug = settings.value("debug").toBool();
+    }
+    if(settings.contains("menu_vertical")){
+        m_menu_vertical = settings.value("menu_vertical").toBool();
+    }
+    if(settings.contains("debug_log")){
+        m_debug_log = settings.value("debug_log").toBool();
     }
     
     if(settings.contains("input_gps")){

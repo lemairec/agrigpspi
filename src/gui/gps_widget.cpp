@@ -77,7 +77,7 @@ void GpsWidget::setSize(int width, int height){
     m_buttonOption.setResize(40, m_height-30, m_gros_button);
     m_buttonGuidage.setResize(100, m_height-30, m_gros_button);
     m_buttonParcelle.setResize(160, m_height-30, m_gros_button);
-    if(GpsFramework::Instance().m_config.m_debug){
+    if(GpsFramework::Instance().m_config.m_menu_vertical){
         m_imgGuidage = loadImage("/images/guidage2.png");
         m_imgParcelle = loadImage("/images/parcelle2.png");
         m_imgOption = loadImage("/images/menu2.png");

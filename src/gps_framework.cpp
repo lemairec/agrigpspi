@@ -91,6 +91,7 @@ void GpsFramework::initOrLoadConfig(){
     file_job_stream << "[config]\n";
     setAB();
     m_reloadConfig = true;
+    m_debug_log = m_config.m_debug_log;
     
     m_pilot_lookahead_d = m_config.m_pilot_lookahead_d;
     
@@ -307,7 +308,9 @@ bool GpsFramework::isPilotConnected(){
 
 
 void GpsFramework::onFrame(const std::string &frame){
-    file_debug_stream << frame << "\n";
+    if(m_debug_log){
+        file_debug_stream << frame << "\n";
+    }
 }
 
 
