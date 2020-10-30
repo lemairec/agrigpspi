@@ -11,8 +11,9 @@
 #include <sstream>
 #include <iomanip>
 
-std::ofstream gpsJobFile;
 std::string file_info;
+std::ofstream file_job_stream;
+std::ofstream file_debug_stream;
 std::string date_str;
 
 bool rmc = true;
@@ -33,13 +34,21 @@ GpsFramework::GpsFramework(){
         WARN("can not execute : " << s2);
     };
     
-    std::string file = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".ubx";
     file_info = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".info";
+    
+    std::string file_job = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".job";
+    file_job_stream.open(file_job, std::ios::out);
+    
+    
+    std::string file_debug = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".debug";
+    file_debug_stream.open(file_debug, std::ios::out);
     //mode_t mt;
     
-    INFO(file);
-    gpsJobFile.open(file, std::ios::out);
-    INFO(gpsJobFile.is_open());
+    INFO(file_info);
+    INFO(file_job);
+    INFO(file_debug);
+    INFO(file_job_stream.is_open());
+    INFO(file_debug_stream.is_open());
     
     m_config.load();
 }
@@ -79,7 +88,7 @@ void GpsFramework::initOrLoadConfig(){
     m_lineAB.m_pointA.m_longitude = m_config.m_a_lon;
     m_lineAB.m_pointB.m_latitude = m_config.m_b_lat;
     m_lineAB.m_pointB.m_longitude = m_config.m_b_lon;
-    gpsJobFile << "[config]\n";
+    file_job_stream << "[config]\n";
     setAB();
     m_reloadConfig = true;
     
@@ -208,7 +217,7 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
     DEBUG("draw");
     calculDraw(p);
     
-    gpsJobFile << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
+    file_job_stream << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
     saveInfoFile();
 }
 
@@ -298,7 +307,7 @@ bool GpsFramework::isPilotConnected(){
 
 
 void GpsFramework::onFrame(const std::string &frame){
-    //gpslogFile << frame << "\n";
+    file_debug_stream << frame << "\n";
 }
 
 
@@ -329,7 +338,7 @@ void GpsFramework::savePointA(){
     }
     setRef(m_lineAB.m_pointA.m_latitude, m_lineAB.m_pointA.m_longitude);
     
-    gpsJobFile << "[savePointA]\n";
+    file_job_stream << "[savePointA]\n";
     INFO(m_lineAB.m_pointA.m_time << " " << m_lineAB.m_pointA.m_latitude << " " << m_lineAB.m_pointA.m_longitude);
     clearSurface();
     
@@ -345,7 +354,7 @@ void GpsFramework::savePointB(){
     if(m_lineAB.m_pointA.m_isOk!=0 && m_lineAB.m_pointB.m_isOk!=0){
         setAB();
     }
-    gpsJobFile << "[savePointB]\n";
+    file_job_stream << "[savePointB]\n";
     
     m_etat = Etat_OK;
     m_curveAB.savePointB();
@@ -739,11 +748,11 @@ void GpsFramework::calculContourExterieur(){
 void GpsFramework::setVolantEngaged(bool value){
     m_pilotModule.clear();
     if(value){
-        gpsJobFile << "[engage]\n";
+        file_job_stream << "[engage]\n";
         m_pilotModule.engage();
         m_pauseDraw = false;
     } else {
-        gpsJobFile << "[desengage]\n";
+        file_job_stream << "[desengage]\n";
         m_pilotModule.desengage();
         m_pauseDraw = true;
     }
