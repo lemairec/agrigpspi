@@ -165,6 +165,29 @@ bool GpsWidget::must_be_draw(double x, double y){
     return (-l < x_temp && x_temp < l && -l < y_temp && y_temp < l);
 }
 
+void GpsWidget::drawLine(Lines_ptr l, QPen & pen){
+    if(!l){
+        return;
+    }
+    double xA = 0, yA = 0;
+    GpsPoint_ptr old_point = nullptr;
+    for(auto p :l->m_points){
+        if(must_be_draw(p->m_x, p->m_y)){
+            double xB, yB;
+            my_projete2(p->m_x, p->m_y, xB, yB);
+            if(m_debug){
+                scene->addEllipse(xB-1, yB-1, 2, 2, pen);
+            }
+            if(xA != 0 && yA != 0){
+                scene->addLine(xA, yA, xB, yB, pen);
+            }
+            xA = xB, yA = yB;
+        } else {
+            xA = 0, yA = 0;
+        }
+    }
+}
+
 bool GpsWidget::addligne(double l, int i){
     GpsFramework & f = GpsFramework::Instance();
     
@@ -243,6 +266,7 @@ void GpsWidget::draw_force(){
     GpsFramework & f = GpsFramework::Instance();
     m_widthMax = m_width/2+f.m_config.m_outil_largeur*m_zoom/2;
     m_heightMax = m_height/2+f.m_config.m_outil_largeur*m_zoom/2;
+    m_debug = f.m_config.m_debug;
     
     m_la = f.m_lineAB.m_a;
     m_lb = f.m_lineAB.m_b;
@@ -282,30 +306,8 @@ void GpsWidget::draw_force(){
         drawLines();
         
     } else {
-        //for(auto t : f.m_curveAB.m_list){
-            auto list = f.m_curveAB.getCurrentLine();
-            double xA = 0, yA = 0;
-            GpsPoint_ptr old_point = nullptr;
-            if(list){
-                for(auto p :list->m_points){
-                    if(must_be_draw(p->m_x, p->m_y)){
-                        double xB, yB;
-                        my_projete2(p->m_x, p->m_y, xB, yB);
-                        scene->addEllipse(xB-1, yB-1, 2, 2, m_penBlue);
-                        if(xA != 0 && yA != 0){
-                            if(false){
-                                scene->addLine(xA, yA, xB, yB, m_penBlue);
-                            } else {
-                                scene->addLine(xA, yA, xB, yB, m_penBlack);
-                            }
-                        }
-                        xA = xB, yA = yB;
-                    } else {
-                        xA = 0, yA = 0;
-                    }
-                }
-            }
-        //}
+        auto list = f.m_curveAB.getCurrentLine();
+        drawLine(list, m_penBlack);
     }
     
     if(f.m_list.size() >0){
@@ -471,12 +473,20 @@ void GpsWidget::draw_force(){
 
 void GpsWidget::drawTracteur(){
     GpsFramework & f = GpsFramework::Instance();
-    QColor color = Qt::blue;
+    int alpha = 255;
+    if(f.m_config.m_debug){
+        alpha = 155;
+    }
+    
+    QColor color = QColor(0,0,200,alpha);
+    QColor colorOutil = QColor(60,60,200,alpha);
+    
     m_brushTractor = QBrush(color);
-    m_brushOutil = QBrush(Qt::darkBlue);
-    m_penOutil = QPen(Qt::darkBlue, 0.3*m_zoom);
+    m_brushOutil = QBrush(colorOutil);
+    m_penOutil = QPen(colorOutil, 0.3*m_zoom);
     m_penTractorEssieu = QPen(color, 0.15*m_zoom);
     m_penTractorRoue = QPen(color, 0.3*m_zoom);
+    
     
     double h = m_height;
     double w = m_width;
@@ -525,8 +535,8 @@ void GpsWidget::drawTracteur(){
         double y_arriere = y+l2;
         
         //outil
-        scene->addRect(w/2 - 1.5*m_zoom, y_arriere + 1.5*m_zoom, 3.0*m_zoom, 0.2*m_zoom, m_penOutil, m_brushOutil);
-        scene->addRect(w/2 - 0.1*m_zoom, y_arriere - 0.1*m_zoom, 0.2*m_zoom, 1.5*m_zoom, m_penOutil, m_brushOutil);
+        scene->addRect(w/2 - 1.5*m_zoom, y_arriere + 1.5*m_zoom, 3.0*m_zoom, 0.5*m_zoom, m_penNo, m_brushOutil);
+        scene->addRect(w/2 - 0.1*m_zoom, y_arriere, 0.2*m_zoom, 1.5*m_zoom, m_penNo, m_brushOutil);
         
         
         double voie = 1.8*m_zoom;
@@ -540,12 +550,12 @@ void GpsWidget::drawTracteur(){
         //scene->addRect(w/2 - l2/2, y-4*l2, l2, 4*l2, m_penTractorEssieu, m_brushTractor);
         
         //cabine
-        scene->addRect(w/2 - 1.5*m_zoom/2, y_arriere-1*m_zoom, 1.5*m_zoom, 1.5*m_zoom, m_penTractorEssieu, m_brushTractor);
+        scene->addRect(w/2 - 1.5*m_zoom/2, y_arriere-1*m_zoom, 1.5*m_zoom, 1.5*m_zoom, m_penNo, m_brushTractor);
         
         //capot
         double lg_capot = 0.9*m_zoom;
         double l_capot = (f.m_tracteur.m_antenne_essieu_avant+0.2)*m_zoom;
-        scene->addRect(w/2 - lg_capot/2, y-l_capot, lg_capot, l_capot, m_penTractorEssieu, m_brushTractor);
+        scene->addRect(w/2 - lg_capot/2, y-l_capot, lg_capot, l_capot, m_penNo, m_brushTractor);
         
         double y_direction = y-f.m_tracteur.m_antenne_essieu_avant*m_zoom;
         scene->addLine(w/2 - voie/2, y_direction, w/2 + voie/2, y_direction, m_penTractorEssieu);
@@ -564,7 +574,7 @@ void GpsWidget::drawTracteur(){
     } else {
         QPolygon polygon;
         polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + x2, h/2 - y2) << QPoint(w/2 - xA, h/2 + yA)<< QPoint(w/2 + x, h/2 - y);
-        scene->addPolygon(polygon, m_penNo, m_brushGreenTractor);
+        scene->addPolygon(polygon, m_penNo, m_brushTractor);
         
         scene->addLine(w/2+xA, h/2-yA, w/2 - xA, h/2 + yA, m_penBlue);
         

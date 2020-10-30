@@ -61,8 +61,11 @@ public:
     QPen m_penTractorEssieu;
     QPen m_penTractorRoue;
     
+    bool m_debug = false;
+    
     void setScene(QGraphicsScene * s);
     void drawCourbe(double l);
+    void drawLine(Lines_ptr l, QPen & pen);
     bool addligne(double l, int i);
     void drawLines();
     void drawTracteur();

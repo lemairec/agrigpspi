@@ -185,7 +185,6 @@ BaseWidget::BaseWidget(){
     white.setAlphaF(0.9);
     m_brushWhiteAlpha =QBrush(white);
     m_brushGreen = QBrush(QColor(0, 150, 0, 100));
-    m_brushGreenTractor = QBrush(QColor(0, 150, 0));
     m_penNo.setColor(QColor(0, 250, 0, 0));
 }
 
