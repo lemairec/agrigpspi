@@ -622,7 +622,13 @@ void GpsWidget::drawTop(){
     }
     
     {
-        QString s = QString::number(f.m_surface, 'f', 2) + " ha    ( "+QString::number(f.m_lineAB.m_current_line)+" )";
+        int current_line = 0;
+        if(f.m_line){
+            current_line = f.m_lineAB.m_current_line;
+        } else {
+            current_line = f.m_curveAB.m_i_current;
+        }
+        QString s = QString::number(f.m_surface, 'f', 2) + " ha    ( "+QString::number(current_line)+" )";
         drawQText(s, 1*m_width/8, 20,sizeText_medium, true, true);
     }
     
@@ -773,31 +779,34 @@ void GpsWidget::drawVolant(double y){
 void GpsWidget::drawDebug(){
     GpsFramework & f = GpsFramework::Instance();
     
-    {
-        double x_h;
-        double y_h;
-        
-        my_projete2(f.m_curveAB.x_h, f.m_curveAB.y_h, x_h, y_h);
-        scene->addEllipse(x_h, y_h, 2, 2, m_penRed, m_brushNo);
-    }
-    
-    if(f.m_curveAB.m_listAB.size()>3){
+    if(!f.m_line){
         {
             double x_h;
             double y_h;
             
-            auto p = f.m_curveAB.m_listAB[f.m_curveAB.m_curve_i_min];
-            my_projete2(p->m_x, p->m_y, x_h, y_h);
-            scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
+            my_projete2(f.m_curveAB.x_h, f.m_curveAB.y_h, x_h, y_h);
+            scene->addEllipse(x_h, y_h, 2, 2, m_penRed, m_brushNo);
         }
         
-        {
-            double x_h;
-            double y_h;
+        auto list = f.m_curveAB.getCurrentLine();
+        if(list && list->m_points.size()>3){
+            {
+                double x_h;
+                double y_h;
+                
+                auto p = list->m_points[list->m_curve_i_min];
+                my_projete2(p->m_x, p->m_y, x_h, y_h);
+                scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
+            }
             
-            auto p = f.m_curveAB.m_listAB[f.m_curveAB.m_curve_i_min2];
-            my_projete2(p->m_x, p->m_y, x_h, y_h);
-            scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
+            {
+                double x_h;
+                double y_h;
+                
+                auto p = list->m_points[list->m_curve_i_min2];
+                my_projete2(p->m_x, p->m_y, x_h, y_h);
+                scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
+            }
         }
     }
     

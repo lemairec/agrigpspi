@@ -80,7 +80,7 @@ void CurveAB::addLine(int i){
     //INFO("  ");
     //INFO("ici " << i << " " << j);
     //INFO(m_list[j].size());
-    m_list[i] = Lines_ptr(new Lines());
+    m_list[i] = Lines_ptr(new Lines(i));
     if(i<m_i_min){
         m_i_min = i;
     }
@@ -136,7 +136,22 @@ void CurveAB::addLine(int i){
 }
 
 void CurveAB::setCurrent(int i){
-    
+    INFO(i);
+    if(i<m_i_min){
+        INFO("min");
+        for(int j = m_i_min-1; j >= i-2; --j){
+            INFO("min " << j);
+            addLine(j);
+        }
+    }
+    if(i>m_i_max){
+        INFO("max");
+        for(int j = m_i_max+1; j <= i+2; ++j){
+            INFO("max " << j);
+            addLine(j);
+        }
+    }
+    m_i_current = i;
 }
 
 void CurveAB::savePointB(){
@@ -145,9 +160,9 @@ void CurveAB::savePointB(){
     m_list.clear();
     GpsPoint_ptr old_point = nullptr;
     
-    m_list[0] = Lines_ptr(new Lines());
-    m_list[1] = Lines_ptr(new Lines());
-    m_list[-1] = Lines_ptr(new Lines());
+    m_list[0] = Lines_ptr(new Lines(0));
+    m_list[1] = Lines_ptr(new Lines(1));
+    m_list[-1] = Lines_ptr(new Lines(-1));
     m_i_max = -1;
     m_i_max = 1;
     for(auto p : m_listAB){
@@ -215,41 +230,45 @@ void CurveAB::savePointB(){
 }
 
 void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
-    if(m_listAB.size() < 5){
+    Lines_ptr list = getCurrentLine();
+    if(list->m_points.size() < 5){
         return;
     }
-    m_curve_i_min = 0;
-    m_curve_i_min2 = 0;
+    list->m_curve_i_min = 0;
+    list->m_curve_i_min2 = 0;
     double dist_min = 10000;
-    for(int i = 0; i < m_listAB.size(); ++i){
-        double d = m_listAB[i]->distanceCarre(*p);
+    
+    
+    
+    for(int i = 0; i < list->m_points.size(); ++i){
+        double d = list->m_points[i]->distanceCarre(*p);
         if(d < dist_min){
             dist_min = d;
-            m_curve_i_min = i;
+            list->m_curve_i_min = i;
         }
     }
-    if(m_curve_i_min == 0){
-        m_curve_i_min2 = 1;
-    } else if(m_curve_i_min == m_listAB.size()-1){
-        m_curve_i_min2 = m_listAB.size()-2;
+    if(list->m_curve_i_min == 0){
+        list->m_curve_i_min2 = 1;
+    } else if(list->m_curve_i_min == list->m_points.size()-1){
+        list->m_curve_i_min2 = list->m_points.size()-2;
     } else {
         
-        double d1 = m_listAB[m_curve_i_min-1]->distanceCarre(*p);
-        double d2 = m_listAB[m_curve_i_min+1]->distanceCarre(*p);
+        double d1 = list->m_points[list->m_curve_i_min-1]->distanceCarre(*p);
+        double d2 = list->m_points[list->m_curve_i_min+1]->distanceCarre(*p);
         
         if(d1 < d2){
-            m_curve_i_min = m_curve_i_min-1;
+            list->m_curve_i_min = list->m_curve_i_min-1;
         }
-        m_curve_i_min2 = m_curve_i_min+1;
+        list->m_curve_i_min2 = list->m_curve_i_min+1;
     }
     
     double x_a = p->m_x;
     double y_a = p->m_y;
     
-    double x_b = m_listAB[m_curve_i_min]->m_x;
-    double y_b = m_listAB[m_curve_i_min]->m_y;
-    double x_m = m_listAB[m_curve_i_min2]->m_x;
-    double y_m = m_listAB[m_curve_i_min2]->m_y;
+    double x_b = list->m_points[list->m_curve_i_min]->m_x;
+    double y_b = list->m_points[list->m_curve_i_min]->m_y;
+    double x_m = list->m_points[list->m_curve_i_min2]->m_x;
+    double y_m = list->m_points[list->m_curve_i_min2]->m_y;
 
     //https://fr.wikipedia.org/wiki/Projection_orthogonale
     double x_v = x_m-x_b;
@@ -284,21 +303,22 @@ void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplace
     if(dist > m_largeur/2){
         double temp_x_h = x_h;
         double temp_y_h = y_h;
+        double temp_i = m_i_current;
         double temp_distance = m_distance;
         
-        m_i_current = m_i_current + 1;
+        setCurrent(m_i_current + 1);
         calculProjete2(p, deplacement_x, deplacement_y);
         double dist2 = abs(m_distance);
         if(dist2 < dist){
             return;
         }
-        m_i_current = m_i_current - 2;
+        setCurrent(m_i_current - 2);
         calculProjete2(p, deplacement_x, deplacement_y);
         double dist3 = abs(m_distance);
         if(dist3 < dist){
             return;
         }
-        
+        setCurrent(temp_i);
         x_h = temp_x_h;
         y_h = temp_y_h;
         m_distance = temp_distance;

@@ -8,6 +8,12 @@
 
 class Lines{
 public:
+    Lines(int i){
+        m_i = i;
+    }
+    int m_i;
+    int m_curve_i_min = 0;
+    int m_curve_i_min2 = 0;
     std::vector<GpsPoint_ptr> m_points;
 };
 
@@ -42,8 +48,6 @@ public:
     
     void savePointB();
     
-    int m_curve_i_min = 0;
-    int m_curve_i_min2 = 0;
     double m_distance = 0;
     double x_h = 0, y_h = 0;
     
