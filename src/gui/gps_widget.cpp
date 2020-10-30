@@ -306,8 +306,17 @@ void GpsWidget::draw_force(){
         drawLines();
         
     } else {
-        auto list = f.m_curveAB.getCurrentLine();
-        drawLine(list, m_penBlack);
+        if(f.m_etat == Etat_OK){
+            auto list = f.m_curveAB.getCurrentLine();
+            drawLine(list, m_penBlack);
+            for(int i = 1; i<3; ++i){
+                auto list2 = f.m_curveAB.getCurrentLineRel(i);
+                drawLine(list2, m_penGray);
+                auto list3 = f.m_curveAB.getCurrentLineRel(-i);
+                drawLine(list3, m_penGray);
+                
+            }
+        }
     }
     
     if(f.m_list.size() >0){

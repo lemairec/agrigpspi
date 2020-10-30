@@ -164,6 +164,7 @@ int ValueGuiKeyPad::isActive(double x, double y){
 
 BaseWidget::BaseWidget(){
     m_penBlack = QPen(Qt::black);
+    m_penGray = QPen(QColor(120,120,120));
     m_penRed = QPen(Qt::red);
     m_penBlue = QPen(Qt::blue);
     m_penBlue2 = QPen(Qt::blue, 5);

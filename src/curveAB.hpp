@@ -34,8 +34,9 @@ public:
     int m_i_max = 0;
     int m_i_current = 0;
     
-    
+    void verify(int i);
     Lines_ptr getCurrentLine();
+    Lines_ptr getCurrentLineRel(int i);
     
     std::map<int, Lines_ptr> m_list;
     void addLine(int i);

@@ -11,7 +11,30 @@ Lines_ptr CurveAB::getCurrentLine(){
     return m_list[m_i_current];
 }
 
+Lines_ptr CurveAB::getCurrentLineRel(int i){
+    int res = m_i_current+i;
+    verify(res);
+    return m_list[res];
+}
 
+void CurveAB::verify(int i){
+    INFO(i);
+    if(i<m_i_min){
+        INFO("min");
+        for(int j = m_i_min-1; j >= i-2; --j){
+            INFO("min " << j);
+            addLine(j);
+        }
+    }
+    if(i>m_i_max){
+        INFO("max");
+        for(int j = m_i_max+1; j <= i+2; ++j){
+            INFO("max " << j);
+            addLine(j);
+        }
+    }
+}
+             
 void CurveAB::addPoint(GpsPoint_ptr p){
     m_listAB.push_back(p);
 }
@@ -136,21 +159,7 @@ void CurveAB::addLine(int i){
 }
 
 void CurveAB::setCurrent(int i){
-    INFO(i);
-    if(i<m_i_min){
-        INFO("min");
-        for(int j = m_i_min-1; j >= i-2; --j){
-            INFO("min " << j);
-            addLine(j);
-        }
-    }
-    if(i>m_i_max){
-        INFO("max");
-        for(int j = m_i_max+1; j <= i+2; ++j){
-            INFO("max " << j);
-            addLine(j);
-        }
-    }
+    verify(i);
     m_i_current = i;
 }
 
