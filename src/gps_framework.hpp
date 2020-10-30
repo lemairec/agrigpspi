@@ -73,20 +73,18 @@ public:
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
-    double distance(GpsPoint & gpsPoint);
+    void calculDistance(GpsPoint_ptr p);
     
     void savePointA();
     void savePointB();
     
     void test();
     
-    double m_distance;
-    
     Config m_config;
     bool m_reloadConfig = true;
     
     bool m_line = true;
-    Etat m_etat;
+    Etat m_etat = Etat_OK;
     LineAB m_lineAB;
     CurveAB m_curveAB;
     

@@ -282,27 +282,30 @@ void GpsWidget::draw_force(){
         drawLines();
         
     } else {
-        for(auto t : f.m_curveAB.m_list){
+        //for(auto t : f.m_curveAB.m_list){
+            auto list = f.m_curveAB.getCurrentLine();
             double xA = 0, yA = 0;
             GpsPoint_ptr old_point = nullptr;
-            for(auto p : t.second){
-                if(must_be_draw(p->m_x, p->m_y)){
-                    double xB, yB;
-                    my_projete2(p->m_x, p->m_y, xB, yB);
-                    if(xA != 0 && yA != 0){
-                        if(t.first%10 == 0){
-                            scene->addLine(xA, yA, xB, yB, m_penBlue);
-                        } else {
-                            scene->addLine(xA, yA, xB, yB, m_penBlack);
+            if(list){
+                for(auto p :list->m_points){
+                    if(must_be_draw(p->m_x, p->m_y)){
+                        double xB, yB;
+                        my_projete2(p->m_x, p->m_y, xB, yB);
+                        scene->addEllipse(xB-1, yB-1, 2, 2, m_penBlue);
+                        if(xA != 0 && yA != 0){
+                            if(false){
+                                scene->addLine(xA, yA, xB, yB, m_penBlue);
+                            } else {
+                                scene->addLine(xA, yA, xB, yB, m_penBlack);
+                            }
                         }
+                        xA = xB, yA = yB;
+                    } else {
+                        xA = 0, yA = 0;
                     }
-                    xA = xB, yA = yB;
-                } else {
-                    xA = 0, yA = 0;
                 }
-                
             }
-        }
+        //}
     }
     
     if(f.m_list.size() >0){
@@ -641,7 +644,7 @@ void GpsWidget::drawTop(){
 
 
 void GpsWidget::drawBottom(){
-    GpsFramework & f = GpsFramework::Instance();
+    //GpsFramework & f = GpsFramework::Instance();
     
     //auto last_frame = f.m_lastGGAFrame;
     scene->addRect(0, m_height-40-l_bottom, m_width, 40+l_bottom, m_penBlack, m_brushDarkGray);
@@ -769,7 +772,35 @@ void GpsWidget::drawVolant(double y){
 
 void GpsWidget::drawDebug(){
     GpsFramework & f = GpsFramework::Instance();
-
+    
+    {
+        double x_h;
+        double y_h;
+        
+        my_projete2(f.m_curveAB.x_h, f.m_curveAB.y_h, x_h, y_h);
+        scene->addEllipse(x_h, y_h, 2, 2, m_penRed, m_brushNo);
+    }
+    
+    if(f.m_curveAB.m_listAB.size()>3){
+        {
+            double x_h;
+            double y_h;
+            
+            auto p = f.m_curveAB.m_listAB[f.m_curveAB.m_curve_i_min];
+            my_projete2(p->m_x, p->m_y, x_h, y_h);
+            scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
+        }
+        
+        {
+            double x_h;
+            double y_h;
+            
+            auto p = f.m_curveAB.m_listAB[f.m_curveAB.m_curve_i_min2];
+            my_projete2(p->m_x, p->m_y, x_h, y_h);
+            scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
+        }
+    }
+    
     //surface
     {
         /*int x = 0;

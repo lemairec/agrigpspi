@@ -176,13 +176,10 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     if(m_list.size()>100){
         m_list.pop_back();
     };
-    
+
     calculDeplacement();
 
-    m_distance = distance(*p);
-
-    //m_deplacementAngle = f->m_cap_rad;
-    
+    calculDistance(p);
     
     calculAngleCorrection();
     m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
@@ -196,6 +193,7 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) < m_distance_cap_vitesse*m_distance_cap_vitesse){
         return;
     }
+    
     
     onNewImportantPoint(p);
 }
@@ -304,22 +302,24 @@ void GpsFramework::onFrame(const std::string &frame){
 }
 
 
-double GpsFramework::distance(GpsPoint & gpsPoint){
-    if(m_lineAB.m_pointA.m_x!=0 && m_lineAB.m_pointB.m_x!=0){
-        double dist =  m_lineAB.distance(gpsPoint.m_x, gpsPoint.m_y, m_config.m_outil_largeur);
-        
-        double coeff = m_config.m_outil_largeur/(2*6);
-        m_distanceAB = dist;
-        if(dist < 0.0){
-            dist = -dist;
-            m_ledAB = round(dist/coeff) + 1;
+void GpsFramework::calculDistance(GpsPoint_ptr p){
+    
+    if(m_etat == Etat_OK){
+        if(m_line == false){
+            m_curveAB.calculProjete(p, m_deplacementX, m_deplacementY);
+            m_distanceAB = m_curveAB.m_distance;
         } else {
-            m_ledAB = -round(dist/coeff) - 1;
+            m_distanceAB = m_lineAB.distance(p->m_x, p->m_y, m_config.m_outil_largeur);
         }
-        //INFO("distance Point AB " << dist);
-        return dist;
     } else {
-        return 0.0;
+        m_distanceAB = 0;
+    }
+    
+    double coeff = m_config.m_outil_largeur/(2*6);
+    if(m_distanceAB < 0.0){
+        m_ledAB = round(-m_distanceAB/coeff) + 1;
+    } else {
+        m_ledAB = -round(m_distanceAB/coeff) - 1;
     }
 }
 
@@ -481,6 +481,8 @@ void GpsFramework::setAB(){
 }*/
 
 void GpsFramework::calculDeplacement(){
+    
+    
     if(m_list.size() > 3){
         GpsPoint_ptr point1 = m_list.front();
               
@@ -530,6 +532,8 @@ void GpsFramework::calculDeplacement(){
             m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
             
+            m_tracteur.m_x_antenne = point1->m_x;
+            m_tracteur.m_y_antenne = point1->m_y;
             m_tracteur.m_x_essieu_avant = point1->m_x + sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             m_tracteur.m_y_essieu_avant = point1->m_y + cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             
