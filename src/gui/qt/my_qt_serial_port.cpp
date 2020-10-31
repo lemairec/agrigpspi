@@ -36,7 +36,7 @@ void MyQTSerialPorts::initOrLoad(Config & config){
             m_gps_serial_input = config.m_input_gps;
             m_serialPortGps.setPortName(QString::fromStdString(m_gps_serial_input));
             m_serialPortGps.setBaudRate(config.m_baudrate_gps);
-            if (!m_serialPortGps.open(QIODevice::ReadOnly)) {
+            if (!m_serialPortGps.open(QIODevice::ReadWrite)) {
                 std::ostringstream oss;
                 oss << "Failed to open gps port " << m_gps_serial_input << ", error:" << m_serialPortGps.errorString().toUtf8().constData();
                 GpsFramework::Instance().addError(oss.str());//standardOutput << QObject::tr("Failed to open port %1, error: %2").arg(serialPortName).arg(serialPort.errorString()) << endl;//
