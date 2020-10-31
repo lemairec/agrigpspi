@@ -98,12 +98,11 @@ void PilotModule::update(){
 }
 
 void PilotModule::test(){
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("sbascontrol enable");
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("\n");
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("egnos 0 none");
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("\n");
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("saveconfig");
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("\n");
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("sbas control enable egnos 0 none\n");
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("saveconfig\n");
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("pdpfilter enable\n");
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("pdpmode relative auto\n");
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("saveconfig\n");
 }
 
 
