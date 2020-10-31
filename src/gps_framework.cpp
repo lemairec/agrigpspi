@@ -16,8 +16,6 @@ std::ofstream file_job_stream;
 std::ofstream file_debug_stream;
 std::string date_str;
 
-bool rmc = true;
-
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
     QString s = date.toString("yyyyMMddThhmm");
@@ -99,6 +97,7 @@ void GpsFramework::initOrLoadConfig(){
     m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_antenne_pont_arriere;
     
     m_curveAB.m_largeur = m_config.m_outil_largeur;
+    m_gga = m_config.m_gga;
 }
 
 GpsFramework & GpsFramework::Instance(){
@@ -153,7 +152,7 @@ double moyDeplacement(double deplacement){
 
 void GpsFramework::onGGAFrame(GGAFrame & f){
     m_lastGGAFrame = GGAFrame(f);
-    if(!rmc){
+    if(m_gga){
         if(f.isOk()){
             GGAFrame_ptr frame = GGAFrame_ptr(new GGAFrame(f));
             onNewPoint(frame);
@@ -163,7 +162,7 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
 
 void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     m_lastRMCFrame = f;
-    if(rmc){
+    if(!m_gga){
         onNewPoint(f);
             
         m_vitesse = f->m_vitesse_kmh;

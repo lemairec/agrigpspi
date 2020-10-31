@@ -25,6 +25,7 @@ void Config::save(){
     
     settings.setValue("sensDraw", m_sensDraw);
     settings.setValue("debug", m_debug);
+    settings.setValue("gga", m_gga);
     
     settings.setValue("menu_vertical", m_menu_vertical);
     settings.setValue("debug_log", m_debug_log);
@@ -78,6 +79,10 @@ void Config::load(){
     if(settings.contains("debug")){
         m_debug = settings.value("debug").toBool();
     }
+    if(settings.contains("gga")){
+        m_gga = settings.value("gga").toBool();
+    }
+    
     if(settings.contains("menu_vertical")){
         m_menu_vertical = settings.value("menu_vertical").toBool();
     }
