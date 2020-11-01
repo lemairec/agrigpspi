@@ -50,29 +50,6 @@ GpsFramework::GpsFramework(){
     m_config.load();
 }
 
-void GpsFramework::saveInfoFile(){
-    std::ofstream file;
-    file.open(file_info, std::ios::out);
-    
-    QDateTime date_end = QDateTime::currentDateTime();
-    QString s = date_end.toString("yyyyMMddThhmm");
-    std::string date_end_str = s.toUtf8().constData();
-    
-    
-    file << "{" << std::endl;
-    file << "\"date_begin\":\"" << date_str << "\"" << std::endl;
-    file << ",\"date_end\":\"" << date_end_str << "\"" << std::endl;
-    file << ",\"surface\":" << m_surface << std::endl;
-    file << "}" << std::endl;
-}
-
-void GpsFramework::addError(std::string s){
-    WARN(s);
-    std::ostringstream oss;
-    oss << m_messages_errors << "\n" << s;
-    m_messages_errors = oss.str();
-}
-
 void GpsFramework::initOrLoadConfig(){
     m_config.save();
     
@@ -97,6 +74,33 @@ void GpsFramework::initOrLoadConfig(){
     
     m_curveAB.m_largeur = m_config.m_outil_largeur;
     m_gga = m_config.m_gga;
+    
+    //m_line = false;
+    //m_curveAB.loadABCurve();
+    //m_etat = Etat_OK;
+}
+
+void GpsFramework::saveInfoFile(){
+    std::ofstream file;
+    file.open(file_info, std::ios::out);
+    
+    QDateTime date_end = QDateTime::currentDateTime();
+    QString s = date_end.toString("yyyyMMddThhmm");
+    std::string date_end_str = s.toUtf8().constData();
+    
+    
+    file << "{" << std::endl;
+    file << "\"date_begin\":\"" << date_str << "\"" << std::endl;
+    file << ",\"date_end\":\"" << date_end_str << "\"" << std::endl;
+    file << ",\"surface\":" << m_surface << std::endl;
+    file << "}" << std::endl;
+}
+
+void GpsFramework::addError(std::string s){
+    WARN(s);
+    std::ostringstream oss;
+    oss << m_messages_errors << "\n" << s;
+    m_messages_errors = oss.str();
 }
 
 GpsFramework & GpsFramework::Instance(){
