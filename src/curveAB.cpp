@@ -2,6 +2,13 @@
 #include <math.h>
 #include "logging.hpp"
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+
+#include "environnement.hpp"
+
 double CurveAB::distance(double x, double y, double lg){
     return 0.0;
     
@@ -158,9 +165,58 @@ void CurveAB::setCurrent(int i){
     m_i_current = i;
 }
 
-void CurveAB::savePointB(){
+
+void CurveAB::saveABCurve(){
+    std::string file_job = ProjectSourceBin + "/curveAB.job";
+    std::ofstream file;
+    file.open(file_job, std::ios::out);
+    for(auto p : m_list[0]->m_points){
+        file << std::setprecision(11) << p->m_latitude << " " << p->m_longitude << std::endl;
+    }
+}
+
+#include "gps_framework.hpp"
+
+void CurveAB::loadABCurve(){
+    std::string file_job = ProjectSourceBin + "/curveAB.job";
+    std::ifstream file(file_job);
+    std::string line;
+    bool init = false;
     
+    GpsFramework & f = GpsFramework::Instance();
+    
+    while (std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        float a, b;
+        if (!(iss >> a >> b)) {
+            INFO("error");
+            break;
+            
+        } // error
+        INFO(a << " " << b);
+        GpsPoint_ptr p = GpsPoint_ptr(new GpsPoint());
+        p->m_latitude = a;
+        p->m_longitude = b;
+        
+        if(!init){
+            f.setRef(a, b);
+            init = true;
+        }
+        f.m_gpsModule.setXY(*p);
+        
+        addPoint(p);
+        // process pair (a,b)
+    }
+    savePointB();
+    
+}
+
+
+void CurveAB::savePointB(){
+    INFO(m_listAB.size());
     clearLine(m_listAB);
+    INFO(m_listAB.size());
     m_list.clear();
     GpsPoint_ptr old_point = nullptr;
     
@@ -231,11 +287,13 @@ void CurveAB::savePointB(){
         addLine(-i);
     }
     
+    //saveABCurve();;
+    
 }
 
 void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
     Lines_ptr list = getCurrentLine();
-    if(list->m_points.size() < 5){
+    if(list == NULL || list->m_points.size() < 5){
         return;
     }
     list->m_curve_i_min = 0;
@@ -299,6 +357,99 @@ void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplac
     if(det < 0){
         m_distance = -m_distance;
     }
+}
+
+void CurveAB::calculProjetePont(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead){
+    Lines_ptr list = getCurrentLine();
+    if(list == NULL || list->m_points.size() < 5){
+        return;
+    }
+    list->m_curve_i_min = 0;
+    list->m_curve_i_min2 = 0;
+    double dist_min = 10000;
+    
+    
+    
+    for(int i = 0; i < list->m_points.size(); ++i){
+        double d = list->m_points[i]->distanceCarre(x_pont, y_pont);
+        if(d < dist_min){
+            dist_min = d;
+            list->m_curve_i_min = i;
+        }
+    }
+    if(list->m_curve_i_min == 0){
+        list->m_curve_i_min2 = 1;
+    } else if(list->m_curve_i_min == list->m_points.size()-1){
+        list->m_curve_i_min2 = list->m_points.size()-2;
+    } else {
+        
+        double d1 = list->m_points[list->m_curve_i_min-1]->distanceCarre(x_pont, y_pont);
+        double d2 = list->m_points[list->m_curve_i_min+1]->distanceCarre(x_pont, y_pont);
+        
+        if(d1 < d2){
+            list->m_curve_i_min = list->m_curve_i_min-1;
+        }
+        list->m_curve_i_min2 = list->m_curve_i_min+1;
+    }
+    
+    double x_a = x_pont;
+    double y_a = y_pont;
+    
+    double x_b = list->m_points[list->m_curve_i_min]->m_x;
+    double y_b = list->m_points[list->m_curve_i_min]->m_y;
+    double x_m = list->m_points[list->m_curve_i_min2]->m_x;
+    double y_m = list->m_points[list->m_curve_i_min2]->m_y;
+
+    //https://fr.wikipedia.org/wiki/Projection_orthogonale
+    double x_v = x_m-x_b;
+    double y_v = y_m-y_b;
+    double d_v = sqrt(x_v*x_v + y_v*y_v);
+    x_v = x_v/d_v;
+    y_v = y_v/d_v;
+    
+    
+    
+    double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
+    x_h_pont = x_b + bh*x_v;
+    y_h_pont = y_b + bh*y_v;
+    
+    x_h_lookhead = 0;
+    y_h_lookhead = 0;
+    
+    double d = deplacement_x*x_v+deplacement_y*y_v;
+    if(d > 0){
+        x_h_lookhead = x_h_pont + x_v*lookhead;
+        y_h_lookhead = y_h_pont + y_v*lookhead;
+        
+    } else {
+        x_h_lookhead = x_h_pont - x_v*lookhead;
+        y_h_lookhead = y_h_pont - y_v*lookhead;
+        
+    }
+    
+    double x_segment = x_h_lookhead - x_pont;
+    double y_segment = y_h_lookhead - y_pont;
+    
+    double cos_a = (deplacement_x*x_segment+deplacement_y*y_segment)/(sqrt(x_segment*x_segment+y_segment*y_segment)*sqrt(deplacement_x*deplacement_x+deplacement_y*deplacement_y));
+    
+    m_angle = acos(cos_a);
+    
+    double ah = sqrt((x_h-x_a)*(x_h-x_a) + (y_h-y_a)*(y_h-y_a));
+    m_distance_pont = ah;
+    
+    double x_ab = x_b-x_a;
+    double y_ab = y_b-y_a;
+    
+    double det = x_ab*deplacement_y-y_ab*deplacement_x;
+    
+    if(det < 0){
+        m_distance_pont = -m_distance_pont;
+        m_angle = -m_angle;
+    }
+    
+    double a_d = m_angle/3.14*180;
+    INFO(a_d);
+    
 }
 
 void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y){

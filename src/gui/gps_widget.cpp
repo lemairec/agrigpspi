@@ -804,7 +804,23 @@ void GpsWidget::drawDebug(){
             double y_h;
             
             my_projete2(f.m_curveAB.x_h, f.m_curveAB.y_h, x_h, y_h);
-            scene->addEllipse(x_h, y_h, 2, 2, m_penRed, m_brushNo);
+            scene->addEllipse(x_h-1, y_h-1, 2, 2, m_penRed, m_brushNo);
+        }
+        
+        {
+            double x_h_pont;
+            double y_h_pont;
+            
+            my_projete2(f.m_curveAB.x_h_pont, f.m_curveAB.y_h_pont, x_h_pont, y_h_pont);
+            scene->addEllipse(x_h_pont-1, y_h_pont-1, 2, 2, m_penGreen, m_brushNo);
+        }
+        
+        {
+            double x_h_pont;
+            double y_h_pont;
+            
+            my_projete2(f.m_curveAB.x_h_lookhead, f.m_curveAB.y_h_lookhead, x_h_pont, y_h_pont);
+            scene->addEllipse(x_h_pont-1, y_h_pont-1, 2, 2, m_penGreen, m_brushNo);
         }
         
         auto list = f.m_curveAB.getCurrentLine();

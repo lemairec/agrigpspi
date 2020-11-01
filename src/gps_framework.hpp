@@ -73,7 +73,7 @@ public:
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
-    void calculDistance(GpsPoint_ptr p);
+    void setDistance(double distance);
     
     void savePointA();
     void savePointB();

@@ -109,6 +109,7 @@ public:
     QPen m_penBlack;
     QPen m_penGray;
     QPen m_penRed;
+    QPen m_penGreen;
     QPen m_penBlue;
     QPen m_penBlue2;
     QPen m_penNo;

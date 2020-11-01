@@ -45,15 +45,23 @@ public:
     double distance(double x, double y, double lg);
     void addPoint(GpsPoint_ptr p);
     
+    void loadABCurve();
+    void saveABCurve();
     
     
     void savePointB();
     
     double m_distance = 0;
     double x_h = 0, y_h = 0;
+    double m_distance_pont = 0;
     
     void calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
     void calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
+    
+    double x_h_pont = 0, y_h_pont = 0;
+    double x_h_lookhead = 0, y_h_lookhead = 0;
+    double m_angle = 0;
+    void calculProjetePont(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead);
 };
 
 

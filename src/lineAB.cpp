@@ -28,3 +28,9 @@ double LineAB::distance(double x, double y, double lg){
     return 0.0;
     
 }
+
+
+double LineAB::anglefollowTheCarrot(double x, double y, double lg, double lk){
+    double distance = this->distance(x, y, lg);
+    return atan(distance/lk);
+}

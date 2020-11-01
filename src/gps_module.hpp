@@ -20,6 +20,10 @@ struct GpsPoint {
     double distanceCarre(GpsPoint & p2){
         return (p2.m_x - m_x)*(p2.m_x - m_x) + (p2.m_y - m_y)*(p2.m_y - m_y);
     }
+    
+    double distanceCarre(double x, double y){
+        return (x - m_x)*(x - m_x) + (y - m_y)*(y - m_y);
+    }
 };
 
 struct GGAFrame : public GpsPoint {

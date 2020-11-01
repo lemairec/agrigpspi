@@ -180,16 +180,37 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     }
     
     m_list.push_front(p);
-
     if(m_list.size()>100){
         m_list.pop_back();
     };
 
     calculDeplacement();
 
-    calculDistance(p);
+    if(m_etat == Etat_OK){
+       if(m_line == false){
+           m_curveAB.calculProjete(p, m_deplacementX, m_deplacementY);
+           double dist = m_curveAB.m_distance;
+           setDistance(dist);
+           
+           m_curveAB.calculProjetePont(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+           m_angle_correction = m_curveAB.m_angle;
+       } else {
+           double dist = m_lineAB.distance(p->m_x, p->m_y, m_config.m_outil_largeur);
+           setDistance(dist);
+           calculAngleCorrection();
+       }
+   } else {
+       setDistance(0);
+   }
     
-    calculAngleCorrection();
+   double angle_max = 0.5;
+   if(m_angle_correction < -angle_max){
+       m_angle_correction = -angle_max;
+   }
+   if(m_angle_correction > angle_max){
+       m_angle_correction = angle_max;
+   }
+    
     m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
 
     setNewGpsTime();
@@ -200,10 +221,9 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     }
     if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) < m_distance_cap_vitesse*m_distance_cap_vitesse){
         return;
+    } else {
+        onNewImportantPoint(p);
     }
-    
-    
-    onNewImportantPoint(p);
 }
 
 void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
@@ -312,18 +332,8 @@ void GpsFramework::onFrame(const std::string &frame){
 }
 
 
-void GpsFramework::calculDistance(GpsPoint_ptr p){
-    
-    if(m_etat == Etat_OK){
-        if(m_line == false){
-            m_curveAB.calculProjete(p, m_deplacementX, m_deplacementY);
-            m_distanceAB = m_curveAB.m_distance;
-        } else {
-            m_distanceAB = m_lineAB.distance(p->m_x, p->m_y, m_config.m_outil_largeur);
-        }
-    } else {
-        m_distanceAB = 0;
-    }
+void GpsFramework::setDistance(double distance){
+    m_distanceAB = distance;
     
     double coeff = m_config.m_outil_largeur/(2*6);
     if(m_distanceAB < 0.0){
@@ -655,19 +665,10 @@ void GpsFramework::calculAngleCorrection(){
     }
     //INFO(angleABDeplacement/3.14*180);
     
-    double distance = m_distanceAB;
-    distance = m_lineAB.distance(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur);
-    m_angle_correction = atan(distance/m_pilot_lookahead_d)+angleABDeplacement;
+    double angle_followKarott = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_pilot_lookahead_d);
+    m_angle_correction = angle_followKarott + angleABDeplacement;
     //INFO(m_angle_correction);
     //m_angle_correction = ;
-    
-    double angle_max = 0.5;
-    if(m_angle_correction < -angle_max){
-        m_angle_correction = -angle_max;
-    }
-    if(m_angle_correction > angle_max){
-        m_angle_correction = angle_max;
-    }
     //m_angle_correction = -3.14/6;
     
 }
