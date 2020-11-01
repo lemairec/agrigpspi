@@ -447,9 +447,6 @@ void CurveAB::calculProjetePont(double x_pont, double y_pont, double deplacement
         m_angle = -m_angle;
     }
     
-    double a_d = m_angle/3.14*180;
-    INFO(a_d);
-    
 }
 
 void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
