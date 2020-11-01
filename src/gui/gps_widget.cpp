@@ -29,7 +29,7 @@ int l_bottom = 20;
 
 GpsWidget::GpsWidget()
 {
-    m_zoom = 10;
+    m_zoom = 30;
     
     m_imgOk = loadImage("/images/ok.png");
     m_imgPlus = loadImage("/images/plus.png");

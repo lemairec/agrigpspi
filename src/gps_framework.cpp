@@ -37,7 +37,6 @@ GpsFramework::GpsFramework(){
     std::string file_job = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".job";
     file_job_stream.open(file_job, std::ios::out);
     
-    
     std::string file_debug = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".debug";
     file_debug_stream.open(file_debug, std::ios::out);
     //mode_t mt;
