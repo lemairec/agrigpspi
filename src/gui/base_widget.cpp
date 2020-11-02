@@ -116,7 +116,7 @@ void SelectButtonGui::clear(){
 }
 
 std::string SelectButtonGui::getValueString(){
-     if(m_selectedValue >=0 && m_selectedValue < m_values.size()){
+     if(m_selectedValue >=0 && m_selectedValue < ((int)m_values.size())){
          return m_values[m_selectedValue];
      } else {
          return "error";
@@ -124,7 +124,7 @@ std::string SelectButtonGui::getValueString(){
  }
  
  int SelectButtonGui::getValueInt(){
-    if(m_selectedValue >=0 && m_selectedValue < m_values_int.size()){
+    if(m_selectedValue >=0 && m_selectedValue < ((int)m_values.size())){
         return m_values_int[m_selectedValue];
     } else {
         return 0;
@@ -133,7 +133,7 @@ std::string SelectButtonGui::getValueString(){
  
 void SelectButtonGui::setValueInt(int i){
     m_selectedValue = -1;
-    for(int j = 0; j < m_values_int.size(); ++j){
+    for(size_t j = 0; j < m_values_int.size(); ++j){
         if(m_values_int[j] == i){
             m_selectedValue = j;
         }
@@ -141,7 +141,7 @@ void SelectButtonGui::setValueInt(int i){
 }
 void SelectButtonGui::setValueString(std::string s){
     m_selectedValue = -1;
-    for(int j = 0; j < m_values.size(); ++j){
+    for(size_t j = 0; j < m_values.size(); ++j){
         if(m_values[j] == s){
             m_selectedValue = j;
         }

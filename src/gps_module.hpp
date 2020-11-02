@@ -69,7 +69,7 @@ public:
 private:
     size_t m_bufferIndLast = 0;
     char m_buffer[200];
-    int m_tempInd = 0;
+    size_t m_tempInd = 0;
     
     double m_longitudeRef = 0;
     double m_acosLatRef = 0;
