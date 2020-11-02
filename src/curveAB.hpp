@@ -39,6 +39,10 @@ public:
     Lines_ptr getCurrentLineRel(int i);
     
     std::map<int, Lines_ptr> m_list;
+    
+    void clearAll();
+    void clearWithoutAB();
+    
     void addLine(int i);
     void setCurrent(int i);
     

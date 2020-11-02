@@ -9,6 +9,17 @@
 
 #include "environnement.hpp"
 
+
+void CurveAB::clearAll(){
+    m_list.clear();
+    m_listAB.clear();
+}
+
+void CurveAB::clearWithoutAB(){
+    m_list.clear();
+    savePointB();
+}
+
 double CurveAB::distance(double x, double y, double lg){
     return 0.0;
     
@@ -182,6 +193,8 @@ void CurveAB::loadABCurve(){
     std::ifstream file(file_job);
     std::string line;
     bool init = false;
+    clearAll();
+    
     
     GpsFramework & f = GpsFramework::Instance();
     
