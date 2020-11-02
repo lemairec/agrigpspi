@@ -73,7 +73,7 @@ void MyQTSerialPorts::handleReadyReadGps(){
     DEBUG("begin");
     std::string s = "";
     QByteArray a = m_serialPortGps.readAll();
-    for(long unsigned int i = 0; i < a.size(); ++i){
+    for(int i = 0; i < (int)a.size(); ++i){
         
         GpsFramework::Instance().m_gpsModule.readChar(a.data()[i]);
         s += ((char)(a.data()[i]));

@@ -207,7 +207,7 @@ uint16_t crc16_update(uint16_t crc, uint8_t a) {
 uint16_t calculcrc16Modbus(std::vector<unsigned char> & l){
     uint16_t crc;
     crc = 0xFFFF;
-    for(int i = 0; i < l.size(); i++){
+    for(size_t i = 0; i < l.size(); i++){
         crc = crc16_update(crc, l[i]);
     }
     return crc;
