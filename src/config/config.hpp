@@ -6,7 +6,7 @@
 #define PILOT_LANGAGE_ARDUINO 0
 #define PILOT_LANGAGE_HADRIEN 1
 
-class Config  {
+class Config {
 public:
     std::string m_input_gps;
     int m_baudrate_gps = 115200;
