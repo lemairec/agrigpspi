@@ -270,7 +270,7 @@ void BaseWidget::drawButtonLabel(ButtonGui * button, int color){
 void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
     if(select->m_open){
         scene->addRect(select->m_x, select->m_y, m_width*0.4, (select->m_buttons.size()+1)*select->m_rayon*2, m_penBlack, m_brushLightGrayDebug);
-        for(size_t i = 0; i < select->m_buttons.size(); ++i){
+        for(int i = 0; i < (int)select->m_buttons.size(); ++i){
             if(select->m_selectedValue == i){
                 drawButtonLabel(select->m_buttons[i], COLOR_CHECK);
             } else {

@@ -14,9 +14,9 @@ public:
     void readChar(char c);
 
 protected:
-    int m_bufferIndLast = 0;
+    size_t m_bufferIndLast = 0;
     char m_buffer[200];
-    int m_tempInd = 0;
+    size_t m_tempInd = 0;
     
     void resetBuffer();
     void error();
