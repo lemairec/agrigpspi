@@ -67,7 +67,7 @@ public:
     RMCFrame_ptr m_lastRMCEvent;
     double m_latitudeRef = 0;
 private:
-    int m_bufferIndLast = 0;
+    size_t m_bufferIndLast = 0;
     char m_buffer[200];
     int m_tempInd = 0;
     
