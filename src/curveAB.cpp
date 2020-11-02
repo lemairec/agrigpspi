@@ -315,7 +315,7 @@ void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplac
     
     
     
-    for(int i = 0; i < list->m_points.size(); ++i){
+    for(int i = 0; i < (int)list->m_points.size(); ++i){
         double d = list->m_points[i]->distanceCarre(*p);
         if(d < dist_min){
             dist_min = d;
@@ -324,7 +324,7 @@ void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplac
     }
     if(list->m_curve_i_min == 0){
         list->m_curve_i_min2 = 1;
-    } else if(list->m_curve_i_min == list->m_points.size()-1){
+    } else if(list->m_curve_i_min == ((int)list->m_points.size())-1){
         list->m_curve_i_min2 = list->m_points.size()-2;
     } else {
         
@@ -383,7 +383,7 @@ void CurveAB::calculProjetePont(double x_pont, double y_pont, double deplacement
     
     
     
-    for(int i = 0; i < list->m_points.size(); ++i){
+    for(size_t i = 0; i < list->m_points.size(); ++i){
         double d = list->m_points[i]->distanceCarre(x_pont, y_pont);
         if(d < dist_min){
             dist_min = d;
