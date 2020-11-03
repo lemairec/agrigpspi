@@ -33,6 +33,7 @@ public:
     double m_motor_vitesse_max = 100;
     double m_motor_vitesse_min = 40;
     double m_motor_vitesse_agressivite = 3;
+    int m_pilot_time = 20;
     
     double m_pilot_lookahead_d = 10;
     
@@ -50,6 +51,8 @@ public:
     double m_tracteur_hauteur = 2.75;
     double m_outil_distance = 1.5;
     double m_outil_largeur = 3.0;
+    
+    
     
     Config();
     

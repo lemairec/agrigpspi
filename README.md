@@ -12,8 +12,8 @@ This included software and 3d piece
 
 [env:atmelavr_arduino_uno_board]
 platform = atmelavr
-framework = arduino
 board = uno
+framework = arduino
 
 [env:nanoatmega328]
 platform = atmelavr

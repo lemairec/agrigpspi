@@ -7,9 +7,6 @@
 
 #include "environnement.hpp"
 
-#define HADRIEN_TIME_VOLANT 20
-#define FILE_TIME 200
-
 MyQTSerialPorts::MyQTSerialPorts(){
     connect(&m_serialPortGps, SIGNAL(readyRead()), this, SLOT(handleReadyReadGps()));
     connect(&m_serialPortGps, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
@@ -18,7 +15,7 @@ MyQTSerialPorts::MyQTSerialPorts(){
     connect(&m_serialPortPilot, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
             this, &MyQTSerialPorts::handleErrorPilot);
     
-    connect(&m_timerHadrien, SIGNAL(timeout()), this, SLOT(handleHadrien()));
+    connect(&m_timerPilot, SIGNAL(timeout()), this, SLOT(handlePilot()));
       
 }
 void MyQTSerialPorts::initOrLoad(Config & config){
@@ -64,8 +61,8 @@ void MyQTSerialPorts::initOrLoad(Config & config){
             }
         }
     }
-    m_timerHadrien.stop();
-    m_timerHadrien.start(HADRIEN_TIME_VOLANT);
+    m_timerPilot.stop();
+    m_timerPilot.start(config.m_pilot_time);
     DEBUG("end");
 };
 
@@ -198,7 +195,7 @@ std::vector<std::string> & MyQTSerialPorts::getAvailablePorts(){
 }
 
 
-void MyQTSerialPorts::handleHadrien(){
+void MyQTSerialPorts::handlePilot(){
     DEBUG("begin");
     //INFO("coucou je suis ici");
     

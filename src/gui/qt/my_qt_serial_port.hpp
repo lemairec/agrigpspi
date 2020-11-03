@@ -45,10 +45,10 @@ private slots:
     void handleErrorPilot(QSerialPort::SerialPortError error);
 
 private:
-    QTimer m_timerHadrien;
+    QTimer m_timerPilot;
 private slots:
     
-    void handleHadrien();
+    void handlePilot();
 };
 
 

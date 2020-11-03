@@ -177,6 +177,11 @@ void PilotModule::arduinoUpdate(){
     GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
 }
 
+void PilotModule::handleArduino(){
+    GpsFramework::Instance().m_serialModule.writePilotSerialS("$P;\n");
+}
+
+
 
 /**
    HADRIEN VOLANT

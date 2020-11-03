@@ -10,8 +10,6 @@ String a;
 #define ENCODER_A 10
 #define ENCODER_B 11
 
-#define MILLIS 50 //frequence
-
 long position = 0;
 long desired_position = 0;
 
@@ -277,21 +275,7 @@ void setup(){
 }
 
 
-unsigned long time1,time2;
-void loop(){
-
-  
-  time1=millis();
-
-  if (time1>=(time2+MILLIS)) // non bloquante !
-  {
-    time2=millis();
-    printPosition();
-  }
-//  int val = analogRead(A0);  // read the input pin
-
-//  double val2 = val*360.0/1024.0-180.0;
-//  Serial.println(val2);   
+void loop(){ 
   readNextFrame();
   updatePosition();
 }

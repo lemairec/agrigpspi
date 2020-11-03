@@ -64,6 +64,7 @@ public:
     //ARDUINO
     void arduinoUpdate();
     void arduinoParse(const std::string & s);
+    void handleArduino();
     
     //HADRIEN
     int m_nbrTourHadrien = 0;
