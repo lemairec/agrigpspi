@@ -166,9 +166,9 @@ void GpsFramework::onGGAFrame(GGAFrame & f){
 void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     m_lastRMCFrame = f;
     if(!m_gga){
+        m_vitesse = f->m_vitesse_kmh;
         onNewPoint(f);
             
-        m_vitesse = f->m_vitesse_kmh;
     }
 }
 
@@ -561,7 +561,7 @@ void GpsFramework::calculDeplacement(){
             m_tracteur.m_x_essieu_avant = point1->m_x + sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             m_tracteur.m_y_essieu_avant = point1->m_y + cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             
-            if(m_time_last_point > 0){
+            if(m_gga && m_time_last_point > 0 ){
                 m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
                 if(m_vitesse >50){
                     INFO("erreur");
