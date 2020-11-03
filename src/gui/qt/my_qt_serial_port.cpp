@@ -203,7 +203,7 @@ void MyQTSerialPorts::handlePilot(){
         GpsFramework::Instance().m_pilotModule.handleHadrien();
         //GpsFramework::Instance().m_pilotModule.update();
     } else {
-        //GpsFramework::Instance().m_pilotModule.update();
+        GpsFramework::Instance().m_pilotModule.handleArduino();
     }
     DEBUG("end");
     
