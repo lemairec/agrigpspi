@@ -1002,7 +1002,9 @@ void GpsWidget::addButtons(){
 
 
 void GpsWidget::onMouse(int x, int y){
-    m_menuWidget.onMouse(x, y);
+    if(!m_menuWidget.m_close){
+        m_menuWidget.onMouse(x, y);
+    }
     
     double x2 = x;
     double y2 = y;
