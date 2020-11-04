@@ -97,3 +97,9 @@ void KeyPadWidget::addChiffre(QString s){
     m_res = m_res + s;
 }
 
+
+/*if(m_buttonA.isActive(x, y)){
+    addLetter("A");
+} else if(m_buttonB.isActive(x, y)){
+    addLetter("B");
+}*/

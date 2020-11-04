@@ -64,6 +64,8 @@ void GpsWidget::setSize(int width, int height){
     m_satWidget.setSize(m_width, m_height);
     m_guidWidget.setSize(m_width, m_height);
     m_parcelleWidget.setSize(m_width, m_height);
+    m_parcelleNewWidget.setSize(m_width, m_height);
+    m_parcelleLoadWidget.setSize(m_width, m_height);
     m_key_pad_widget.setSize(m_width, m_height);
     
     double temp = 0.05;
@@ -92,6 +94,11 @@ void GpsWidget::setSize(int width, int height){
     
     m_buttonErrorOk.setResize((0.5)*m_width, 0.8*m_height, m_gros_button);
 //    onValueChangeSlot(true);
+}
+
+GpsWidget * GpsWidget::Instance(){
+    static GpsWidget gf;
+    return &gf;
 }
 
 void GpsWidget::setScene(QGraphicsScene * s){
@@ -465,6 +472,12 @@ void GpsWidget::draw_force(){
     }
     if(!m_parcelleWidget.m_close){
         m_parcelleWidget.draw();
+    }
+    if(!m_parcelleNewWidget.m_close){
+        m_parcelleNewWidget.draw();
+    }
+    if(!m_parcelleLoadWidget.m_close){
+        m_parcelleLoadWidget.draw();
     }
     
     

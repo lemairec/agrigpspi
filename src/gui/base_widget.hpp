@@ -71,6 +71,19 @@ struct ValueGuiKeyPad{
     std::string m_unity = "m";
 };
 
+struct ValueGuiKeyBoard{
+    ValueGuiKeyBoard(){};
+    
+    void setResize(int x, int y);
+    
+    int isActive(double x, double y);
+    
+    double m_x = 0;
+    double m_y = 0;
+    std::string m_label;
+};
+
+
 struct SelectButtonGui{
     SelectButtonGui(double x, double y, double rayon);
     SelectButtonGui(){};
@@ -166,6 +179,13 @@ public:
     
     void drawText(const std::string & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
     void drawQText(const QString & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
+    
+
+    void drawValueGuiKeyPad(ValueGuiKeyPad * value);
+    bool isActiveValueGuiKeyPad(ValueGuiKeyPad * value, int x, int y);
+    
+    void drawValueGuiKeyBoard(ValueGuiKeyPad * value);
+    bool isActiveValueGuiKeyBoard(ValueGuiKeyPad * value, int x, int y);
     
     QPixmap * loadImage(const std::string & s);
 };

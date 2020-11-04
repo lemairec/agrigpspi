@@ -8,16 +8,21 @@
 #include "guidage_widget.hpp"
 #include "machine_widget.hpp"
 #include "menu_widget.hpp"
-#include "parcelle_widget.hpp"
+#include "parcelle/parcelle_widget.hpp"
+#include "parcelle/parcelle_new_widget.hpp"
+#include "parcelle/parcelle_load_widget.hpp"
 #include "keyboard_widget.hpp"
 
 class GpsWidget : public BaseWidget {
-public:
     GpsWidget();
+public:
+    static GpsWidget * Instance();
     
     SatWidget m_satWidget;
     GuidageWidget m_guidWidget;
     ParcelleWidget m_parcelleWidget;
+    ParcelleNewWidget m_parcelleNewWidget;
+    ParcelleLoadWidget m_parcelleLoadWidget;
     MenuWidget m_menuWidget;
     
     KeyPadWidget m_key_pad_widget;

@@ -365,3 +365,28 @@ void BaseWidget::drawValueGui(ValueGui * valueGui, double value){
     
 }
 
+
+void BaseWidget::drawValueGuiKeyPad(ValueGuiKeyPad * value){
+    QString s = QString::number(value->m_value);
+    scene->addRect(value->m_x-40, value->m_y-15, 80, 30, m_penBlack, m_brushGreen);
+    drawQText(s, value->m_x, value->m_y, sizeText_medium, true);
+    if(value->m_label.size() > 0){
+        drawText(value->m_label, value->m_x-60, value->m_y, sizeText_medium, true);
+    }
+    if(value->m_unity.size() > 0){
+        drawText(value->m_unity, value->m_x+60, value->m_y, sizeText_medium, true);
+    }
+    
+}
+
+bool BaseWidget::isActiveValueGuiKeyPad(ValueGuiKeyPad * value, int x, int y){
+    if(value->m_x-30 < x && x < value->m_x + 30 && value->m_y-15 < y && y <value->m_y+15){
+        return true;
+    }
+    return false;
+    
+}
+
+
+//void drawValueGuiKeyBoard(ValueGuiKeyPad * value);
+//bool isActiveValueGuiKeyBoard(ValueGuiKeyPad * value, int x, int y);

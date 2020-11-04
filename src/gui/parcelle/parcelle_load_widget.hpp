@@ -1,16 +1,19 @@
-#ifndef PARCELLE_WIDGET_H
-#define PARCELLE_WIDGET_H
+#ifndef PARCELLE_LOAD_WIDGET_H
+#define PARCELLE_LOAD_WIDGET_H
 
-#include "base_widget.hpp"
+#include "../base_widget.hpp"
 
-class ParcelleWidget : public BaseWidget {
+class ParcelleLoadWidget : public BaseWidget {
     QPixmap * m_imgOk;
     ButtonGui m_buttonOk;
+    
+    ButtonGui m_buttonParcelleNew;
+    ButtonGui m_buttonParcelleLoad;
     
     int m_x = 0;
     int m_lg = 20;
 public:
-    ParcelleWidget();
+    ParcelleLoadWidget();
     
     void setSize(int width, int height);
     
