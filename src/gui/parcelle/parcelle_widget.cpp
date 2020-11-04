@@ -42,6 +42,11 @@ void ParcelleWidget::draw(){
         drawQText(s, m_buttonParcelleLoad.m_x + 50, m_buttonParcelleLoad.m_y, sizeText_big, true);
     }
     
+    {
+        QString s = "Pas de parcelle\nselectionne";
+        drawQText(s, m_x + m_lg/2, m_height*0.5, sizeText_big, true);
+    }
+    
     
     drawButtonImage(&m_buttonOk, *m_imgOk);
     

@@ -11,6 +11,7 @@ const int COLOR_CHECK = 3;
 const int COLOR_OTHER = 4;
 
 class KeyPadWidget;
+class KeyBoardWidget;
 
 enum SizeText{
     sizeText_little,
@@ -80,7 +81,7 @@ struct ValueGuiKeyBoard{
     
     double m_x = 0;
     double m_y = 0;
-    std::string m_label;
+    std::string m_text;
 };
 
 
@@ -150,7 +151,7 @@ public:
     bool m_close = true;
     
     KeyPadWidget * m_key_pad_widget;
-    
+    KeyBoardWidget * m_key_board_widget;
     BaseWidget();
     
     
@@ -184,9 +185,9 @@ public:
     void drawValueGuiKeyPad(ValueGuiKeyPad * value);
     bool isActiveValueGuiKeyPad(ValueGuiKeyPad * value, int x, int y);
     
-    void drawValueGuiKeyBoard(ValueGuiKeyPad * value);
-    bool isActiveValueGuiKeyBoard(ValueGuiKeyPad * value, int x, int y);
-    
+    void drawValueGuiKeyBoard(ValueGuiKeyBoard * value);
+    bool isActiveValueGuiKeyBoard(ValueGuiKeyBoard * value, int x, int y);
+
     QPixmap * loadImage(const std::string & s);
 };
 

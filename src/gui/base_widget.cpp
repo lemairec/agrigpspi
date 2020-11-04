@@ -156,7 +156,16 @@ void ValueGuiKeyPad::setResize(int x, int y){
 }
 
 int ValueGuiKeyPad::isActive(double x, double y){
-    
+    return 0;
+}
+
+void ValueGuiKeyBoard::setResize(int x, int y){
+    m_x = x;
+    m_y = y;
+}
+
+int ValueGuiKeyBoard::isActive(double x, double y){
+    return 0;
 }
 
 
@@ -388,5 +397,13 @@ bool BaseWidget::isActiveValueGuiKeyPad(ValueGuiKeyPad * value, int x, int y){
 }
 
 
-//void drawValueGuiKeyBoard(ValueGuiKeyPad * value);
-//bool isActiveValueGuiKeyBoard(ValueGuiKeyPad * value, int x, int y);
+void BaseWidget::drawValueGuiKeyBoard(ValueGuiKeyBoard * value){
+    scene->addRect(value->m_x-80, value->m_y-15, 160, 30, m_penBlack, m_brushGreen);
+    drawText(value->m_text, value->m_x, value->m_y, sizeText_medium, true);
+}
+bool BaseWidget::isActiveValueGuiKeyBoard(ValueGuiKeyBoard * value, int x, int y){
+    if(value->m_x-80 < x && x < value->m_x + 80 && value->m_y-15 < y && y <value->m_y+15){
+           return true;
+       }
+       return false;
+}

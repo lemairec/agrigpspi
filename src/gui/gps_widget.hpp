@@ -26,6 +26,7 @@ public:
     MenuWidget m_menuWidget;
     
     KeyPadWidget m_key_pad_widget;
+    KeyBoardWidget m_key_board_widget;
     
     void addButtons();
 

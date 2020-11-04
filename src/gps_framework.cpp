@@ -28,6 +28,7 @@ GpsFramework::GpsFramework(){
     
     std::string dir = ProjectSourceBin + "/job";
     std::string s2 = "mkdir -p "+ dir + ";";
+    INFO(s2);
     if(system( s2.c_str() )){
         WARN("can not execute : " << s2);
     };
@@ -75,7 +76,9 @@ void GpsFramework::initOrLoadConfig(){
     m_curveAB.m_largeur = m_config.m_outil_largeur;
     m_gga = m_config.m_gga;
     
-    //m_line = false;
+    m_curveAB.clearWithoutAB();
+    
+   // m_line = false;
     //m_curveAB.loadABCurve();
     //m_etat = Etat_OK;
 }
@@ -242,6 +245,10 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
     
     file_job_stream << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
     saveInfoFile();
+    
+    if(m_etat == Etat_ParcelleAdd){
+        m_curveAB.addPoint(p);
+    }
 }
 
 

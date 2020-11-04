@@ -52,6 +52,7 @@ GpsWidget::GpsWidget()
 
     m_menuWidget.m_machine_widget.m_key_pad_widget = &m_key_pad_widget;
     m_menuWidget.m_outil_widget.m_key_pad_widget = &m_key_pad_widget;
+    m_parcelleNewWidget.m_key_board_widget = &m_key_board_widget;
 }
 
 void GpsWidget::setSize(int width, int height){
@@ -67,6 +68,7 @@ void GpsWidget::setSize(int width, int height){
     m_parcelleNewWidget.setSize(m_width, m_height);
     m_parcelleLoadWidget.setSize(m_width, m_height);
     m_key_pad_widget.setSize(m_width, m_height);
+    m_key_board_widget.setSize(m_width, m_height);
     
     double temp = 0.05;
     
@@ -487,6 +489,9 @@ void GpsWidget::draw_force(){
     
     if(!m_key_pad_widget.m_close){
         m_key_pad_widget.draw();
+    }
+    if(!m_key_board_widget.m_close){
+        m_key_board_widget.draw();
     }
     
     DEBUG("END");

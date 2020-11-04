@@ -10,6 +10,8 @@ class ParcelleNewWidget : public BaseWidget {
     ButtonGui m_buttonParcelleStart;
     ButtonGui m_buttonParcellePause;
     
+    ValueGuiKeyBoard m_name;
+    
     int m_x = 0;
     int m_lg = 20;
 public:

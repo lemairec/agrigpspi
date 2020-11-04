@@ -36,7 +36,8 @@ struct Tracteur {
 enum Etat {
     Etat_Reset,
     Etat_PointASaved,
-    Etat_OK
+    Etat_OK,
+    Etat_ParcelleAdd
 };
 
 class SurfaceToDraw{
