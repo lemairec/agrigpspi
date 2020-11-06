@@ -328,6 +328,17 @@ void GpsWidget::draw_force(){
         }
     }
     
+    if(f.m_parcelle.m_is_init){
+        QPolygon p;
+        for(auto s: f.m_parcelle.m_contour){
+            double x1, y1;
+            my_projete2(s->m_x, s->m_y, x1, y1);
+            p.push_back(QPoint(x1, y1));
+        }
+        scene->addPolygon(p, m_penNo, m_parcelleBrush);
+                           
+    }
+    
     if(f.m_list.size() >0){
         if(f.m_config.m_debug){
             for(auto p: f.m_list){

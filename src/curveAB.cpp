@@ -489,8 +489,3 @@ void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplace
         m_distance = temp_distance;
     }
 }
-
-
-void Parcelle::addPoint(GpsPoint_ptr p){
-    //m_contour.push_back(p);
-}

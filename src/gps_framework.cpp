@@ -218,7 +218,13 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
        m_angle_correction = angle_max;
    }
     
-    m_pilotModule.run(m_angle_correction, m_time_last_point, m_vitesse);
+    if(m_pilotModule.m_engaged){
+        if(m_vitesse < 1.0){
+            GpsFramework::Instance().addError("desengagement, vitesse trop faible");
+            m_pilotModule.desengage();
+        }
+    }
+    m_pilotModule.run(m_angle_correction, m_time_last_point);
 
     setNewGpsTime();
     
@@ -247,7 +253,7 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
     saveInfoFile();
     
     if(m_etat == Etat_ParcelleAdd){
-        m_curveAB.addPoint(p);
+        m_parcelle.addPoint(p);
     }
 }
 

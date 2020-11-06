@@ -46,13 +46,8 @@ void PilotModule::desengage(){
 }
 
 
-void PilotModule::run(double value, double time, double vitesse){
+void PilotModule::run(double value, double time){
     if(m_engaged){
-        if(vitesse < 1.0){
-            GpsFramework::Instance().addError("desengagement, vitesse trop faible");
-            desengage();
-        }
-        
         double res = value/m_algo2_goto_angle_by_tour;
         m_volant = res;
         

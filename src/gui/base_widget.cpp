@@ -180,6 +180,7 @@ BaseWidget::BaseWidget(){
     m_penBlue2 = QPen(Qt::blue, 5);
     
     m_grayBrush = QBrush (QColor(200,200,200));
+    m_parcelleBrush = QBrush(QColor(133,146,118, 100));
     
     m_brushDarkGray = QBrush (QColor(60,60,60));
     

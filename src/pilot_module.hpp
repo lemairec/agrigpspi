@@ -39,7 +39,7 @@ public:
     std::string m_version_guidage;
     
     PilotModule();
-    void run(double value, double time, double vitesse);
+    void run(double value, double time);
     void initOrLoadConfig(Config & config);
 
     void clear();

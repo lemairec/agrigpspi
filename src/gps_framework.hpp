@@ -8,6 +8,7 @@
 #include "config/config.hpp"
 #include "lineAB.hpp"
 #include "curveAB.hpp"
+#include "parcelle.hpp"
 #include <chrono>
 #include <QThread>
 #include <time.h>
@@ -92,6 +93,7 @@ public:
     Etat m_etat = Etat_OK;
     LineAB m_lineAB;
     CurveAB m_curveAB;
+    Parcelle m_parcelle;
     
     void setEtat(Etat etat);
     void setAB();

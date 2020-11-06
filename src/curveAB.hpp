@@ -68,13 +68,4 @@ public:
     void calculProjetePont(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead);
 };
 
-class Parcelle {
-public:
-    std::string m_name;
-    bool m_is_init = false;
-    
-    std::vector<GpsPoint_ptr> m_contour;
-    void addPoint(GpsPoint_ptr p);
-};
-
 #endif // LINE_AB_H
