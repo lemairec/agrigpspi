@@ -26,12 +26,22 @@ GpsFramework::GpsFramework(){
     //    exit(0);
     }
     
-    std::string dir = ProjectSourceBin + "/job";
-    std::string s2 = "mkdir -p "+ dir + ";";
-    INFO(s2);
-    if(system( s2.c_str() )){
-        WARN("can not execute : " << s2);
-    };
+    {
+        std::string dir = ProjectSourceBin + "/job";
+        std::string s2 = "mkdir -p "+ dir + ";";
+        INFO(s2);
+        if(system( s2.c_str() )){
+            WARN("can not execute : " << s2);
+        };
+    }
+    {
+        std::string dir = ProjectSourceBin + "/parcelle";
+        std::string s2 = "mkdir -p "+ dir + ";";
+        INFO(s2);
+        if(system( s2.c_str() )){
+            WARN("can not execute : " << s2);
+        };
+    }
     
     file_info = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".info";
     
@@ -49,6 +59,7 @@ GpsFramework::GpsFramework(){
     INFO(file_debug_stream.is_open());
     
     m_config.load();
+    m_parcelles.load();
 }
 
 void GpsFramework::initOrLoadConfig(){

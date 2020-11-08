@@ -15,7 +15,16 @@ public:
     void clear();
     void compute();
     void save();
+    void save(std::string path);
     void load();
+};
+
+class Parcelles {
+    public:
+    std::vector<std::string> m_parcelles;
+    void load();
+    void add(Parcelle & p);
+    void save();
 };
 
 #endif // LINE_AB_H

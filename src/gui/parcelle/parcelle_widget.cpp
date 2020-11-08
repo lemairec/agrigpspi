@@ -59,5 +59,10 @@ void ParcelleWidget::onMouse(int x, int y){
         GpsWidget * g = GpsWidget::Instance();
         g->m_parcelleNewWidget.m_close = false;
     }
+    if(m_buttonParcelleLoad.isActive(x, y)){
+        GpsWidget * g = GpsWidget::Instance();
+        g->m_parcelleLoadWidget.open();
+        g->m_parcelleLoadWidget.m_close = false;
+    }
 
 }

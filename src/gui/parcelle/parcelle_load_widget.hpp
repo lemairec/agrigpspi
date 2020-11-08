@@ -7,8 +7,7 @@ class ParcelleLoadWidget : public BaseWidget {
     QPixmap * m_imgOk;
     ButtonGui m_buttonOk;
     
-    ButtonGui m_buttonParcelleNew;
-    ButtonGui m_buttonParcelleLoad;
+    SelectButtonGui m_selectParcelles;
     
     int m_x = 0;
     int m_lg = 20;

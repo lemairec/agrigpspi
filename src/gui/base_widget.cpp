@@ -286,7 +286,7 @@ void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
             } else {
                 drawButtonLabel(select->m_buttons[i], COLOR_OTHER);
             }
-            drawText(select->m_values[i], 0.4*m_width, select->m_buttons[i]->m_y, sizeText_medium);
+            drawText(select->m_values[i], select->m_buttons[i]->m_x+2*select->m_buttonOpen.m_rayon, select->m_buttons[i]->m_y, sizeText_medium);
         }
     }
 }
@@ -404,7 +404,7 @@ void BaseWidget::drawValueGuiKeyBoard(ValueGuiKeyBoard * value){
 }
 bool BaseWidget::isActiveValueGuiKeyBoard(ValueGuiKeyBoard * value, int x, int y){
     if(value->m_x-80 < x && x < value->m_x + 80 && value->m_y-15 < y && y <value->m_y+15){
-           return true;
-       }
-       return false;
+       return true;
+   }
+   return false;
 }

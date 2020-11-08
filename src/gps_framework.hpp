@@ -94,6 +94,7 @@ public:
     LineAB m_lineAB;
     CurveAB m_curveAB;
     Parcelle m_parcelle;
+    Parcelles m_parcelles;
     
     void setEtat(Etat etat);
     void setAB();
