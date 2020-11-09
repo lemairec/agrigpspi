@@ -125,6 +125,7 @@ public:
     double m_pilot_lookahead_d;
     double m_pilot_lookahead_vd;
     void calculAngleCorrection(double lookahead);
+    void calculAngleCorrectionRWP();
     
     //algo rear wheel position
     double m_pilot_rwp_kth = 0.5;
