@@ -357,6 +357,18 @@ double CurveAB::calculCurbature(Lines_ptr line, size_t i){
     double p = (a+b+c)/2;
     double curbature = (4*sqrt(p*(p-a)*(p-b)*(p-c)))/(a*b*c);
     
+    double x_ab = pointB->m_x - pointA->m_x;
+    double y_ab = pointB->m_y - pointA->m_y;
+    double x_bc = pointC->m_x - pointB->m_x;;
+    double y_bc = pointC->m_y - pointB->m_y;
+    
+    
+    double det = x_ab*y_bc-y_ab*x_bc;
+    
+    if(det < 0){
+        curbature = -curbature;
+    }
+    
     return curbature;
 }
 
@@ -636,11 +648,12 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     
     
     double e = ah;
-    double v = vitesse;
+    double v = vitesse*10000.0/3600.0;
     double th_e = angle;//todo;
     double k = calculCurbature(list, list->m_curve_i_min);//todo;
 
     double omega = v * k * cos(th_e) / (1.0 - k * e) - KTH * abs(v) * th_e - KE * v * sin(th_e) * e / th_e;
+    
     
     
     if (th_e == 0.0 || omega == 0.0){
@@ -649,7 +662,14 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
 
     double delta = atan2(L * omega / v, 1.0);
 
-    //std::cout << e <<  " " << cos_a << " "  << th_e << " " << v << " " << th_e << " " << k << " " << omega << " d " << delta << std::endl;
-
+    
+    
+    double x1 = v * k * cos(th_e) / (1.0 - k * e) ;
+    double x2 = KTH * abs(v) * th_e ;
+    double x3 = KE * v * sin(th_e) * e / th_e;
+    
+    //std::cout << e <<  " " << cos_a << " th_e "  << th_e << " " << v << " " << th_e << " " << k << " " << omega << " d " << delta << std::endl;
+    //std::cout << " " << delta << " " << omega << " ++ " << x1 << " "  << x2 << " " << x3 << std::endl;
+    //INFO(omega);
     return delta;
 }
