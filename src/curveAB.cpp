@@ -54,6 +54,8 @@ void CurveAB::addPoint(GpsPoint_ptr p){
 
 double longeur = 0.5;
 
+
+
 void clearLine(std::vector<GpsPoint_ptr> & l){
     auto l2 = l;
     l.clear();
@@ -86,7 +88,7 @@ void addPoints(std::vector<GpsPoint_ptr> & l){
             double dy = p->m_y - old_point->m_y;
             
             double res = dx*dx+dy*dy;
-            if(res > 3*longeur*longeur){
+            if(res > longeur*longeur){
                 GpsPoint_ptr p3(new GpsPoint());
                 p3->m_x = (p->m_x + old_point->m_x)/2;
                 p3->m_y = (p->m_y + old_point->m_y)/2;
@@ -101,6 +103,12 @@ void addPoints(std::vector<GpsPoint_ptr> & l){
         }
     }
     
+}
+
+void verifyLine(std::vector<GpsPoint_ptr> & l){
+    clearLine(l);
+    addPoints(l);
+    addPoints(l);
 }
 
 void CurveAB::addLine(int i){
@@ -165,10 +173,7 @@ void CurveAB::addLine(int i){
         }
         old_point = p;
     }
-    clearLine(m_list[i]->m_points);
-    addPoints(m_list[i]->m_points);
-    addPoints(m_list[i]->m_points);
-    
+    verifyLine(m_list[i]->m_points);
 }
 
 void CurveAB::setCurrent(int i){
@@ -223,6 +228,11 @@ void CurveAB::loadABCurve(){
     }
     savePointB();
     
+    
+    for(size_t i = 0; i < m_list[0]->m_points.size(); ++i){
+        double c = calculCurbature(m_list[0], i);
+        INFO(i << " " << c);
+    }
 }
 
 
@@ -292,8 +302,9 @@ void CurveAB::savePointB(){
         }
         old_point = p;
     }
-    clearLine(m_list[1]->m_points);
-    clearLine(m_list[-1]->m_points);
+    verifyLine(m_list[0]->m_points);
+    verifyLine(m_list[1]->m_points);
+    verifyLine(m_list[-1]->m_points);
     
     for(int i = 2; i < 11; ++i){
         addLine(i);
@@ -302,6 +313,38 @@ void CurveAB::savePointB(){
     
     //saveABCurve();;
     
+}
+
+const double tol = 0.9999999;
+int size_cur = 10;
+
+double CurveAB::calculCurbature(Lines_ptr line, size_t i){
+    if(line->m_points.size() < size_cur){
+        return 0.0;
+    }
+    if(i < size_cur){
+        return 0.0;
+    }
+    if(i > line->m_points.size()-size_cur-1){
+        return 0.0;
+    }
+    auto pointA = line->m_points[i-size_cur];
+    auto pointB = line->m_points[i];
+    auto pointC = line->m_points[i+size_cur];
+    
+    double a = sqrt(pointA->distanceCarre(*pointB));
+    double b = sqrt(pointB->distanceCarre(*pointC));
+    double c = sqrt(pointC->distanceCarre(*pointA));
+    
+    double temp = (a + b)/c;
+    //INFO("      " << temp << " " << a << " " << b << " " << c);
+    if(temp > tol && temp < (1/tol)) {
+        return 0;
+    }
+    double p = (a+b+c)/2;
+    double curbature = (4*sqrt(p*(p-a)*(p-b)*(p-c)))/(a*b*c);
+    
+    return curbature;
 }
 
 void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
@@ -404,6 +447,9 @@ void CurveAB::calculProjetePont(double x_pont, double y_pont, double deplacement
         }
         list->m_curve_i_min2 = list->m_curve_i_min+1;
     }
+    
+    //double curvature = calculCurbature(list, list->m_curve_i_min2);
+    //INFO(curvature);
     
     double x_a = x_pont;
     double y_a = y_pont;

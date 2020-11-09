@@ -59,6 +59,8 @@ public:
     double x_h = 0, y_h = 0;
     double m_distance_pont = 0;
     
+    double calculCurbature(Lines_ptr line, size_t i);
+    
     void calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
     void calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
     
