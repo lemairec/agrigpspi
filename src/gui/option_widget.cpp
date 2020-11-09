@@ -314,7 +314,7 @@ void OptionWidget::onMousePage3(double x, double y){
         f.m_config.m_pilot_lookahead_d = f.m_config.m_pilot_lookahead_d * m_value_gui_lookahead_d.getMultValue(x,y);
         f.m_config.m_pilot_lookahead_vd = f.m_config.m_pilot_lookahead_vd * m_value_gui_lookahead_vd.getMultValue(x,y);
     } else if(f.m_pilot_algo == AlgoPilot::RearWheelPosition){
-        f.m_config.m_pilot_rwp_kte = f.m_config.m_pilot_rwp_kte * m_value_gui_rwp_kth.getMultValue(x,y);
+        f.m_config.m_pilot_rwp_kth = f.m_config.m_pilot_rwp_kth * m_value_gui_rwp_kth.getMultValue(x,y);
         f.m_config.m_pilot_rwp_kte= f.m_config.m_pilot_rwp_kte * m_value_gui_rwp_kte.getMultValue(x,y);
     }
     
