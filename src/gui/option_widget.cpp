@@ -231,22 +231,29 @@ void OptionWidget::onMousePage2(int x, int y){
  */
 
 void OptionWidget::resizePage3(){
-    m_select_pilot_serial.setResize(0.35*m_width,0.3*m_height, m_petit_button);
+    m_select_pilot_serial.setResize(0.35*m_width,0.25*m_height, m_petit_button);
     
     m_select_pilot_baudrates.clear();
-    m_select_pilot_baudrates.setResize(0.35*m_width,0.4*m_height, m_petit_button);
+    m_select_pilot_baudrates.setResize(0.35*m_width,0.35*m_height, m_petit_button);
     m_select_pilot_baudrates.addValueInt("9600", 9600);
     m_select_pilot_baudrates.addValueInt("115200", 115200);
     
     
     m_select_pilot_langage.clear();
-    m_select_pilot_langage.setResize(0.35*m_width,0.5*m_height, m_petit_button);
+    m_select_pilot_langage.setResize(0.35*m_width,0.45*m_height, m_petit_button);
     m_select_pilot_langage.addValue("arduino");
     m_select_pilot_langage.addValue("hadrien");
     
+    m_select_algo.clear();
+    m_select_algo.setResize(0.35*m_width,0.6*m_height, m_petit_button);
+    m_select_algo.addValue("followk_karott");
+    m_select_algo.addValue("followk_karott_v");
+    m_select_algo.addValue("rwp");
+    
     m_value_gui_lookahead_d.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "lookahead ");
-    
-    
+    m_value_gui_lookahead_vd.setResize(0.35*m_width, 0.8*m_height, m_petit_button, "lookahead v ");
+    m_value_gui_rwp_kth.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "kth ");
+    m_value_gui_rwp_kte.setResize(0.35*m_width, 0.8*m_height, m_petit_button, "kte ");
 };
 
 void OptionWidget::drawPage3(){
@@ -257,16 +264,26 @@ void OptionWidget::drawPage3(){
     m_select_pilot_baudrates.setValueInt(f.m_config.m_baudratePilot);
     m_select_pilot_serial.setValueString(f.m_config.m_inputPilot);
     m_select_pilot_langage.m_selectedValue = f.m_config.m_pilot_langage;
+    m_select_algo.m_selectedValue = f.m_config.m_pilot_algo;
     
     drawSelectButtonGuiClose(&m_select_pilot_langage);
     drawSelectButtonGuiClose(&m_select_pilot_baudrates);
     drawSelectButtonGuiClose(&m_select_pilot_serial);
+    drawSelectButtonGuiClose(&m_select_algo);
     
-    drawValueGui(&m_value_gui_lookahead_d, f.m_config.m_pilot_lookahead_d);
-    
+    if(f.m_pilot_algo == AlgoPilot::FollowKarott){
+        drawValueGui(&m_value_gui_lookahead_d, f.m_config.m_pilot_lookahead_d);
+    } else if(f.m_pilot_algo == AlgoPilot::FollowKarottVitesse){
+        drawValueGui(&m_value_gui_lookahead_d, f.m_config.m_pilot_lookahead_d);
+        drawValueGui(&m_value_gui_lookahead_vd, f.m_config.m_pilot_lookahead_vd);
+    } else if(f.m_pilot_algo == AlgoPilot::RearWheelPosition){
+        drawValueGui(&m_value_gui_rwp_kth, f.m_config.m_pilot_rwp_kth);
+        drawValueGui(&m_value_gui_rwp_kte, f.m_config.m_pilot_rwp_kte);
+    }
     drawSelectButtonGuiOpen(&m_select_pilot_serial);
     drawSelectButtonGuiOpen(&m_select_pilot_langage);
     drawSelectButtonGuiOpen(&m_select_pilot_baudrates);
+    drawSelectButtonGuiOpen(&m_select_algo);
     
 }
 
@@ -285,7 +302,22 @@ void OptionWidget::onMousePage3(double x, double y){
         f.m_config.m_pilot_langage = m_select_pilot_langage.m_selectedValue;
     }
     
-    f.m_config.m_pilot_lookahead_d = f.m_config.m_pilot_lookahead_d * m_value_gui_lookahead_d.getMultValue(x,y);
+    if(onMouseSelectButton(&m_select_algo, x, y)){
+        f.m_config.m_pilot_algo = m_select_algo.m_selectedValue;
+    }
+    
+    
+    
+    if(f.m_pilot_algo == AlgoPilot::FollowKarott){
+        f.m_config.m_pilot_lookahead_d = f.m_config.m_pilot_lookahead_d * m_value_gui_lookahead_d.getMultValue(x,y);
+    } else if(f.m_pilot_algo == AlgoPilot::FollowKarottVitesse){
+        f.m_config.m_pilot_lookahead_d = f.m_config.m_pilot_lookahead_d * m_value_gui_lookahead_d.getMultValue(x,y);
+        f.m_config.m_pilot_lookahead_vd = f.m_config.m_pilot_lookahead_vd * m_value_gui_lookahead_vd.getMultValue(x,y);
+    } else if(f.m_pilot_algo == AlgoPilot::RearWheelPosition){
+        f.m_config.m_pilot_rwp_kte = f.m_config.m_pilot_rwp_kte * m_value_gui_rwp_kth.getMultValue(x,y);
+        f.m_config.m_pilot_rwp_kte= f.m_config.m_pilot_rwp_kte * m_value_gui_rwp_kte.getMultValue(x,y);
+    }
+    
     f.initOrLoadConfig();
     
 }

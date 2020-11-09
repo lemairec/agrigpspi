@@ -10,11 +10,45 @@
 #include "environnement.hpp"
 #include "gps_framework.hpp"
 
+Parcelle::Parcelle(){
+    clear();
+}
+
 void Parcelle::clear(){
     m_contour.clear();
     m_is_init = false;
     m_name = "";
+    m_bounding_rect_x = 0;
+    m_bounding_rect_y = 0;
+    m_bounding_rect_width = 0;
+    m_bounding_rect_height = 0;
+    m_center_x = 0;
+    m_center_y = 0;
 };
+
+void Parcelle::compute(){
+    clear();
+    double x_min = 0, y_min, x_max, y_max;
+    for(auto p : m_contour){
+        if(x_min == 0){
+            x_min = p->m_x;
+            x_max = p->m_x;
+            y_min = p->m_y;
+            y_max = p->m_y;
+        }
+        if(x_min < p->m_x){ x_min = p->m_x; }
+        if(x_max > p->m_x){ x_max = p->m_x; }
+        if(y_min < p->m_y){ y_min = p->m_y; }
+        if(y_max < p->m_y){ y_max = p->m_y; }
+    }
+    m_bounding_rect_x = x_min;
+    m_bounding_rect_y = y_min;
+    m_bounding_rect_width = x_max - x_min;
+    m_bounding_rect_height = y_max - y_min;
+    
+    m_center_x = m_bounding_rect_x+m_bounding_rect_width/2;
+    m_center_y = m_bounding_rect_y+m_bounding_rect_height/2;
+}
 
 
 void Parcelle::addPoint(GpsPoint_ptr p){
@@ -71,9 +105,7 @@ void Parcelle::loadParcelle(std::string name){
     }
 }
 
-void Parcelle::compute(){
-    
-};
+
 
 
 void Parcelles::load(){

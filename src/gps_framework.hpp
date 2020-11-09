@@ -41,6 +41,12 @@ enum Etat {
     Etat_ParcelleAdd
 };
 
+enum AlgoPilot {
+    FollowKarott = 0,
+    FollowKarottVitesse = 1,
+    RearWheelPosition = 2
+};
+
 class SurfaceToDraw{
 public:
     bool m_isClose = false;
@@ -112,10 +118,17 @@ public:
     double m_distanceAB = 0.0;
     int m_ledAB = 0;
     
+    AlgoPilot m_pilot_algo = FollowKarott;
+    double m_angle_correction;
+    
     //algo follow carott
     double m_pilot_lookahead_d;
-    double m_angle_correction;
-    void calculAngleCorrection();
+    double m_pilot_lookahead_vd;
+    void calculAngleCorrection(double lookahead);
+    
+    //algo rear wheel position
+    double m_pilot_rwp_kth = 0.5;
+    double m_pilot_rwp_kte = 0.5;
     
     //surface
     double m_surface = 0;

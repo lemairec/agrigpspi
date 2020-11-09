@@ -64,10 +64,13 @@ public:
     void calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
     void calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
     
+    double calculRearWheelPosition(double p_x, double p_y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
+
+    
     double x_h_pont = 0, y_h_pont = 0;
     double x_h_lookhead = 0, y_h_lookhead = 0;
     double m_angle = 0;
-    void calculProjetePont(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead);
+    double followKarott(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead);
 };
 
 #endif // LINE_AB_H

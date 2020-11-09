@@ -35,7 +35,11 @@ public:
     double m_motor_vitesse_agressivite = 3;
     int m_pilot_time = 20;
     
-    double m_pilot_lookahead_d = 10;
+    int m_pilot_algo = 0;
+    double m_pilot_lookahead_d = 5;
+    double m_pilot_lookahead_vd = 0.1;
+    double m_pilot_rwp_kth = 1;
+    double m_pilot_rwp_kte = 0.5;
     
     double m_volant_pas_by_tour = 4500;
     double m_volant_angle_by_tour = 35;

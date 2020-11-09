@@ -51,7 +51,11 @@ void Config::save(){
     settings.setValue("m_pilot_encoder_inverse", m_pilot_encoder_inverse);
     settings.setValue("m_pilot_langage", m_pilot_langage);
     
+    settings.setValue("m_pilot_algo", m_pilot_algo);
     settings.setValue("m_pilot_lookahead_d", m_pilot_lookahead_d);
+    settings.setValue("m_pilot_lookahead_vd", m_pilot_lookahead_vd);
+    settings.setValue("m_pilot_rwp_kth", m_pilot_rwp_kth);
+    settings.setValue("m_pilot_rwp_kte", m_pilot_rwp_kte);
     
     settings.setValue("m_volant_pas_by_tour", m_volant_pas_by_tour);
     settings.setValue("m_volant_angle_by_tour", m_volant_angle_by_tour);
@@ -138,11 +142,23 @@ void Config::load(){
     if(settings.contains("m_pilot_langage")){
         m_pilot_langage = settings.value("m_pilot_langage").toInt();
     }
-    
 
+    if(settings.contains("m_pilot_algo")){
+        m_pilot_algo = settings.value("m_pilot_algo").toInt();
+    }
     if(settings.contains("m_pilot_lookahead_d")){
         m_pilot_lookahead_d = settings.value("m_pilot_lookahead_d").toDouble();
     }
+    if(settings.contains("m_pilot_lookahead_vd")){
+        m_pilot_lookahead_vd = settings.value("m_pilot_lookahead_vd").toDouble();
+    }
+    if(settings.contains("m_pilot_rwp_kth")){
+        m_pilot_rwp_kth = settings.value("m_pilot_rwp_kth").toDouble();
+    }
+    if(settings.contains("m_pilot_rwp_kte")){
+        m_pilot_rwp_kte = settings.value("m_pilot_rwp_kte").toDouble();
+    }
+    
     
     if(settings.contains("m_volant_pas_by_tour")){
         m_volant_pas_by_tour = settings.value("m_volant_pas_by_tour").toDouble();

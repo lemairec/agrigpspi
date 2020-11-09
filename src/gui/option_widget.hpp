@@ -65,7 +65,11 @@ public:
     SelectButtonGui m_select_pilot_baudrates;
     SelectButtonGui m_select_pilot_langage;
     
+    SelectButtonGui m_select_algo;
     ValueGui m_value_gui_lookahead_d;
+    ValueGui m_value_gui_lookahead_vd;
+    ValueGui m_value_gui_rwp_kth;
+    ValueGui m_value_gui_rwp_kte;
     
     void resizePage3();
     void onMousePage3(double x, double y);

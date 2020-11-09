@@ -415,10 +415,10 @@ void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplac
     }
 }
 
-void CurveAB::calculProjetePont(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead){
+double CurveAB::followKarott(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead){
     Lines_ptr list = getCurrentLine();
     if(list == NULL || list->m_points.size() < 5){
-        return;
+        return 0;
     }
     list->m_curve_i_min = 0;
     list->m_curve_i_min2 = 0;
@@ -506,6 +506,8 @@ void CurveAB::calculProjetePont(double x_pont, double y_pont, double deplacement
         m_angle = -m_angle;
     }
     
+    return m_angle;
+    
 }
 
 void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
@@ -534,4 +536,103 @@ void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplace
         y_h = temp_y_h;
         m_distance = temp_distance;
     }
+}
+
+
+double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
+    
+    Lines_ptr list = getCurrentLine();
+    if(list == NULL || list->m_points.size() < 5){
+        return 0.0;
+    }
+    list->m_curve_i_min = 0;
+    list->m_curve_i_min2 = 0;
+    double dist_min = 10000;
+    
+    
+    
+    for(int i = 0; i < (int)list->m_points.size(); ++i){
+        double d = list->m_points[i]->distanceCarre(p_x, p_y);
+        if(d < dist_min){
+            dist_min = d;
+            list->m_curve_i_min = i;
+        }
+    }
+    if(list->m_curve_i_min == 0){
+        list->m_curve_i_min2 = 1;
+    } else if(list->m_curve_i_min == ((int)list->m_points.size())-1){
+        list->m_curve_i_min2 = list->m_points.size()-2;
+    } else {
+        
+        double d1 = list->m_points[list->m_curve_i_min-1]->distanceCarre(p_x, p_y);
+        double d2 = list->m_points[list->m_curve_i_min+1]->distanceCarre(p_x, p_y);
+        
+        if(d1 < d2){
+            list->m_curve_i_min = list->m_curve_i_min-1;
+        }
+        list->m_curve_i_min2 = list->m_curve_i_min+1;
+    }
+    
+    double x_a = p_x;
+    double y_a = p_y;
+    
+    double x_b = list->m_points[list->m_curve_i_min]->m_x;
+    double y_b = list->m_points[list->m_curve_i_min]->m_y;
+    double x_m = list->m_points[list->m_curve_i_min2]->m_x;
+    double y_m = list->m_points[list->m_curve_i_min2]->m_y;
+
+    //https://fr.wikipedia.org/wiki/Projection_orthogonale
+    double x_v = x_m-x_b;
+    double y_v = y_m-y_b;
+    double d_v = sqrt(x_v*x_v + y_v*y_v);
+    x_v = x_v/d_v;
+    y_v = y_v/d_v;
+    
+    
+    
+    double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
+    x_h = x_b + bh*x_v;
+    y_h = y_b + bh*y_v;
+    
+    
+    double ah = sqrt((x_h-x_a)*(x_h-x_a) + (y_h-y_a)*(y_h-y_a));
+    m_distance = ah;
+    
+    
+    
+    
+    double x_segment = x_m - x_b;
+    double y_segment = y_m - y_b;
+    
+    double cos_a = (deplacement_x*x_segment+deplacement_y*y_segment)/(sqrt(x_segment*x_segment+y_segment*y_segment)*sqrt(deplacement_x*deplacement_x+deplacement_y*deplacement_y));
+    
+    double angle = acos(cos_a);
+
+    double x_ab = x_b-x_a;
+    double y_ab = y_b-y_a;
+    
+    double det = x_ab*deplacement_y-y_ab*deplacement_x;
+    
+    if(det < 0){
+        angle = -angle;
+    }
+    
+    
+    
+    
+    
+    double e = ah;
+    double v = vitesse;
+    double th_e = angle;//todo;
+    double k = calculCurbature(list, list->m_curve_i_min);//todo;
+
+    double omega = v * k * cos(th_e) / (1.0 - k * e) - KTH * abs(v) * th_e - KE * v * sin(th_e) * e / th_e;
+
+    if (th_e == 0.0 || omega == 0.0){
+        return 0.0;
+    }
+
+    double delta = atan2(L * omega / v, 1.0);
+
+    return delta;
 }

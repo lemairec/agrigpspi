@@ -79,7 +79,11 @@ void GpsFramework::initOrLoadConfig(){
     m_reloadConfig = true;
     m_debug_log = m_config.m_debug_log;
     
+    m_pilot_algo = (AlgoPilot)m_config.m_pilot_algo;
     m_pilot_lookahead_d = m_config.m_pilot_lookahead_d;
+    m_pilot_lookahead_vd = m_config.m_pilot_lookahead_vd;
+    m_pilot_rwp_kth = m_config.m_pilot_rwp_kth;
+    m_pilot_rwp_kte = m_config.m_pilot_rwp_kte;
     
     m_tracteur.m_antenne_essieu_avant = m_config.m_tracteur_empatement - m_config.m_tracteur_antenne_pont_arriere;
     m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_antenne_pont_arriere;
@@ -210,12 +214,31 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
            double dist = m_curveAB.m_distance;
            setDistance(dist);
            
-           m_curveAB.calculProjetePont(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
-           m_angle_correction = m_curveAB.m_angle;
+           if(m_pilot_algo == AlgoPilot::FollowKarott){
+               m_angle_correction = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+           } else if(m_pilot_algo == AlgoPilot::FollowKarottVitesse){
+               double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
+               m_angle_correction = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, pilot_lookahead );
+           } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
+               m_curveAB.calculRearWheelPosition(m_tracteur.m_x_antenne, m_tracteur.m_y_antenne, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+           } else {
+               m_angle_correction = 0;
+           }
+           
+           
+           
        } else {
            double dist = m_lineAB.distance(p->m_x, p->m_y, m_config.m_outil_largeur);
            setDistance(dist);
-           calculAngleCorrection();
+           
+           if(m_pilot_algo == AlgoPilot::FollowKarott){
+               calculAngleCorrection(m_pilot_lookahead_d);
+           } else if(m_pilot_algo == AlgoPilot::FollowKarottVitesse){
+               double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
+               calculAngleCorrection(pilot_lookahead);
+           } else {
+               m_angle_correction = 0;
+           }
        }
    } else {
        setDistance(0);
@@ -679,7 +702,7 @@ void GpsFramework::calculSurface(){
 
 
 // pure pousuite
-void GpsFramework::calculAngleCorrection(){
+void GpsFramework::calculAngleCorrection(double lookahead){
     //naif
     //m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
    
@@ -693,7 +716,7 @@ void GpsFramework::calculAngleCorrection(){
     }
     //INFO(angleABDeplacement/3.14*180);
     
-    double angle_followKarott = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_pilot_lookahead_d);
+    double angle_followKarott = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, lookahead);
     m_angle_correction = angle_followKarott + angleABDeplacement;
     //INFO(m_angle_correction);
     //m_angle_correction = ;
