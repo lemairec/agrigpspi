@@ -14,9 +14,8 @@ public:
     
     void clear();
     void compute();
-    void save();
-    void save(std::string path);
-    void load();
+    void saveParcelle(std::string name);
+    void loadParcelle(std::string name);
 };
 
 class Parcelles {

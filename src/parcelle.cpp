@@ -11,7 +11,9 @@
 #include "gps_framework.hpp"
 
 void Parcelle::clear(){
-    
+    m_contour.clear();
+    m_is_init = false;
+    m_name = "";
 };
 
 
@@ -19,16 +21,8 @@ void Parcelle::addPoint(GpsPoint_ptr p){
     m_contour.push_back(p);
 }
 
-void Parcelle::save(){
-    std::string file_job = ProjectSourceBin + "/parcelle.job";
-    std::ofstream file;
-    file.open(file_job, std::ios::out);
-    for(auto p : m_contour){
-        file << std::setprecision(11) << p->m_latitude << " " << p->m_longitude << std::endl;
-    }
-}
-
-void Parcelle::save(std::string path){
+void Parcelle::saveParcelle(std::string name){
+    std::string path = ProjectSourceBin + "/parcelle/" + name + ".txt";
     std::ofstream file;
     file.open(path, std::ios::out);
     for(auto p : m_contour){
@@ -37,39 +31,44 @@ void Parcelle::save(std::string path){
 }
 
 
-void Parcelle::load(){
-    std::string file_job = ProjectSourceBin + "/parcelle.job";
+void Parcelle::loadParcelle(std::string name){
+    clear();
+    std::string file_job = ProjectSourceBin + "/parcelle/" + name + ".txt";
     std::ifstream file(file_job);
     std::string line;
     bool init = false;
-    
-    
-    GpsFramework & f = GpsFramework::Instance();
-    
-    while (std::getline(file, line))
-    {
-        std::istringstream iss(line);
-        float a, b;
-        if (!(iss >> a >> b)) {
-            INFO("error");
-            break;
+    if(file.is_open()){
+        INFO(file_job << " is open");
+        GpsFramework & f = GpsFramework::Instance();
+        
+        while (std::getline(file, line))
+        {
+            std::istringstream iss(line);
+            float a, b;
+            if (!(iss >> a >> b)) {
+                INFO("error");
+                break;
+                
+            } // error
+            INFO(a << " " << b);
+            GpsPoint_ptr p = GpsPoint_ptr(new GpsPoint());
+            p->m_latitude = a;
+            p->m_longitude = b;
             
-        } // error
-        INFO(a << " " << b);
-        GpsPoint_ptr p = GpsPoint_ptr(new GpsPoint());
-        p->m_latitude = a;
-        p->m_longitude = b;
-        
-        if(!init){
-            f.setRef(a, b);
-            init = true;
+            if(!init){
+                f.setRef(a, b);
+                init = true;
+            }
+            f.m_gpsModule.setXY(*p);
+            
+            addPoint(p);
+            // process pair (a,b)
         }
-        f.m_gpsModule.setXY(*p);
-        
-        addPoint(p);
-        // process pair (a,b)
+        m_name = name;
+        m_is_init = true;
+    } else {
+        INFO(file_job << " is close");
     }
-    
 }
 
 void Parcelle::compute(){
@@ -104,9 +103,7 @@ void Parcelles::add(Parcelle & p){
     GpsFramework & f = GpsFramework::Instance();
     if(p.m_name.size() > 2){
         m_parcelles.push_back(p.m_name);
-        std::string file_parcelle = ProjectSourceBin + "/parcelle/" + p.m_name + ".txt";
-        
-        p.save(file_parcelle);
+        p.saveParcelle(p.m_name);
         save();
     } else {
         f.addError("parcelle nom trop petit");

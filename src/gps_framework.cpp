@@ -89,7 +89,7 @@ void GpsFramework::initOrLoadConfig(){
     
     m_curveAB.clearWithoutAB();
     
-   // m_line = false;
+    //m_line = false;
     //m_curveAB.loadABCurve();
     //m_etat = Etat_OK;
 }
