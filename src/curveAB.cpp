@@ -55,6 +55,19 @@ void CurveAB::addPoint(GpsPoint_ptr p){
 double longeur = 0.5;
 
 
+double my_acos(double a){
+    double res = acos(a);
+    
+    if(res>3.14/2){
+        res = res-3.14;
+    }
+    if(res < -3.14/2){
+        res = res+3.14;
+    }
+    
+    return res;
+}
+
 
 void clearLine(std::vector<GpsPoint_ptr> & l){
     auto l2 = l;
@@ -606,7 +619,8 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     
     double cos_a = (deplacement_x*x_segment+deplacement_y*y_segment)/(sqrt(x_segment*x_segment+y_segment*y_segment)*sqrt(deplacement_x*deplacement_x+deplacement_y*deplacement_y));
     
-    double angle = acos(cos_a);
+    double angle = my_acos(cos_a);
+    
 
     double x_ab = x_b-x_a;
     double y_ab = y_b-y_a;
@@ -627,12 +641,15 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     double k = calculCurbature(list, list->m_curve_i_min);//todo;
 
     double omega = v * k * cos(th_e) / (1.0 - k * e) - KTH * abs(v) * th_e - KE * v * sin(th_e) * e / th_e;
-
+    
+    
     if (th_e == 0.0 || omega == 0.0){
         return 0.0;
     }
 
     double delta = atan2(L * omega / v, 1.0);
+
+    //std::cout << e <<  " " << cos_a << " "  << th_e << " " << v << " " << th_e << " " << k << " " << omega << " d " << delta << std::endl;
 
     return delta;
 }
