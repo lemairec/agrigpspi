@@ -56,7 +56,7 @@ void ParcelleNewWidget::onMouse(int x, int y){
         m_close = true;
         f.m_etat = Etat_OK;
         f.m_parcelle.m_name = m_name.m_text;
-        f.m_parcelle.m_is_init = true;
+        f.m_parcelle.compute();
         f.m_parcelles.add(f.m_parcelle);
         
     }

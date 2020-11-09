@@ -135,6 +135,8 @@ public:
     //surface
     double m_surface = 0;
     double m_surface_h = 0;
+    
+    bool m_pilot_auto = false;
      
     //contour_exterieur;
     double m_surface_exterieur = 0;

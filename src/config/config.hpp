@@ -34,6 +34,8 @@ public:
     double m_motor_vitesse_min = 40;
     double m_motor_vitesse_agressivite = 3;
     int m_pilot_time = 20;
+    int m_pilot_auto_deactive = -1;
+    int m_pilot_auto_active = -1;
     
     int m_pilot_algo = 0;
     double m_pilot_lookahead_d = 5;

@@ -56,6 +56,8 @@ void Config::save(){
     settings.setValue("m_pilot_lookahead_vd", m_pilot_lookahead_vd);
     settings.setValue("m_pilot_rwp_kth", m_pilot_rwp_kth);
     settings.setValue("m_pilot_rwp_kte", m_pilot_rwp_kte);
+    settings.setValue("m_pilot_auto_deactive", m_pilot_auto_deactive);
+    settings.setValue("m_pilot_auto_active", m_pilot_auto_active);
     
     settings.setValue("m_volant_pas_by_tour", m_volant_pas_by_tour);
     settings.setValue("m_volant_angle_by_tour", m_volant_angle_by_tour);
@@ -158,7 +160,12 @@ void Config::load(){
     if(settings.contains("m_pilot_rwp_kte")){
         m_pilot_rwp_kte = settings.value("m_pilot_rwp_kte").toDouble();
     }
-    
+    if(settings.contains("m_pilot_auto_active")){
+        m_pilot_auto_active = settings.value("m_pilot_auto_active").toInt();
+    }
+    if(settings.contains("m_pilot_auto_deactive")){
+        m_pilot_auto_deactive = settings.value("m_pilot_auto_deactive").toInt();
+    }
     
     if(settings.contains("m_volant_pas_by_tour")){
         m_volant_pas_by_tour = settings.value("m_volant_pas_by_tour").toDouble();

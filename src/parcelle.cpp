@@ -26,8 +26,11 @@ void Parcelle::clear(){
     m_center_y = 0;
 };
 
+double cp2(GpsPoint & a, GpsPoint &  b){ //returns cross product
+    return a.m_x*b.m_y-a.m_y*b.m_x;
+}
+
 void Parcelle::compute(){
-    clear();
     double x_min = 0, y_min, x_max, y_max;
     for(auto p : m_contour){
         if(x_min == 0){
@@ -48,6 +51,16 @@ void Parcelle::compute(){
     
     m_center_x = m_bounding_rect_x+m_bounding_rect_width/2;
     m_center_y = m_bounding_rect_y+m_bounding_rect_height/2;
+    
+    m_is_init = true;
+    
+    int n = m_contour.size();
+    double sum=0.0;
+    for(int i=0; i<n; i++){
+        sum+=cp2(*m_contour[i], *m_contour[(i+1)%n]); //%n is for last triangle
+    }
+    INFO(n);
+    m_surface_ha = abs(sum)/2.0/10000;
 }
 
 
@@ -99,7 +112,7 @@ void Parcelle::loadParcelle(std::string name){
             // process pair (a,b)
         }
         m_name = name;
-        m_is_init = true;
+        compute();
     } else {
         INFO(file_job << " is close");
     }
@@ -142,3 +155,16 @@ void Parcelles::add(Parcelle & p){
     }
 }
 
+double Parcelle::distance(GpsPoint_ptr p){
+    double d = 0;
+    for(auto p2 : m_contour){
+        double dist = p2->distanceCarre(*p);
+        if(d == 0){
+            d = dist;
+        }
+        if(dist < d){
+            d = dist;
+        }
+    }
+    return sqrt(d);
+}

@@ -97,6 +97,10 @@ public:
     ValueGui m_button_algo2_goto_angle_by_tour;
     ValueGui m_button_algo2_goto_rel_s;
     
+    ValueGui m_button_auto_deactive;
+    ValueGui m_button_auto_active;
+       
+    
     void resizePage5();
     void onMousePage5(double x, double y);
     void drawPage5();

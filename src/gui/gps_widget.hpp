@@ -48,6 +48,8 @@ public:
     QPixmap * m_imgVolantBlanc;
     QPixmap * m_imgVolantRouge;
     QPixmap * m_imgVolantVert;
+    QPixmap * m_imgVolantAutoGris;
+    QPixmap * m_imgVolantAutoVert;
     QPixmap * m_imgOk;
     
     ButtonGui m_buttonSat;
@@ -60,6 +62,7 @@ public:
     
     ButtonGui m_buttonChamp;
     ButtonGui m_buttonVolant;
+    ButtonGui m_buttonVolantAuto;
     
     QBrush m_brushTractor;
     QBrush m_brushOutil;

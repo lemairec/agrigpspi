@@ -404,6 +404,9 @@ void OptionWidget::resizePage5(){
     m_button_algo2_goto_pas_by_tour.setResize(0.35*m_width, 0.5*m_height, m_petit_button, "goto pas by tour ");
     m_button_algo2_goto_angle_by_tour.setResize(0.35*m_width, 0.55*m_height, m_petit_button, "goto angle by tour ");
     m_button_algo2_goto_rel_s.setResize(0.35*m_width, 0.6*m_height, m_petit_button, "goto rel ");
+    
+    m_button_auto_deactive.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "auto deactive ");
+    m_button_auto_active.setResize(0.35*m_width, 0.75*m_height, m_petit_button, "auto active ");
 };
 
 
@@ -434,6 +437,9 @@ void OptionWidget::drawPage5(){
     drawValueGui(&m_button_algo2_goto_pas_by_tour, f.m_config.m_volant_pas_by_tour);
     drawValueGui(&m_button_algo2_goto_angle_by_tour, f.m_config.m_volant_angle_by_tour);
     drawValueGui(&m_button_algo2_goto_rel_s, f.m_config.m_volant_derive);
+    
+    drawValueGui(&m_button_auto_deactive, f.m_config.m_pilot_auto_deactive);
+    drawValueGui(&m_button_auto_active, f.m_config.m_pilot_auto_active);
 }
 
 void OptionWidget::onMousePage5(double x, double y){
@@ -464,6 +470,8 @@ void OptionWidget::onMousePage5(double x, double y){
     f.m_config.m_motor_vitesse_agressivite = f.m_config.m_motor_vitesse_agressivite * m_motor_vitesse_agressivite.getMultValue(x,y);
     
     
+    f.m_config.m_pilot_auto_active += 2*m_button_auto_active.getIntValue(x,y);
+    f.m_config.m_pilot_auto_deactive += 2*m_button_auto_deactive.getIntValue(x,y);
     
     
     f.m_config.m_volant_pas_by_tour = f.m_config.m_volant_pas_by_tour * m_button_algo2_goto_pas_by_tour.getMultValue(x,y);

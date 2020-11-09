@@ -5,11 +5,12 @@
 #include <vector>
 
 class Parcelle {
+    bool m_is_init = false;
 public:
     Parcelle();
     
     std::string m_name;
-    bool m_is_init = false;
+    double m_surface_ha = 0;
     
     std::vector<GpsPoint_ptr> m_contour;
     
@@ -18,10 +19,15 @@ public:
     
     void addPoint(GpsPoint_ptr p);
     
+    bool isInit(){
+        return m_is_init;
+    }
     void clear();
     void compute();
     void saveParcelle(std::string name);
     void loadParcelle(std::string name);
+    
+    double distance(GpsPoint_ptr p);
 };
 
 class Parcelles {

@@ -47,6 +47,8 @@ GpsWidget::GpsWidget()
     m_imgVolantRouge = loadImage("/images/volant_rouge.png");
     m_imgVolantVert = loadImage("/images/volant_vert.png");
     m_imgVolantBlanc = loadImage("/images/volant_blanc.png");
+    m_imgVolantAutoGris = loadImage("/images/volant_auto_gris.png");
+    m_imgVolantAutoVert = loadImage("/images/volant_auto_vert.png");
     
     m_imgFleche = loadImage("/images/fleche.png");
 
@@ -91,8 +93,9 @@ void GpsWidget::setSize(int width, int height){
         
     }
     
-    m_buttonChamp.setResize((1-temp)*m_width, 0.4*m_height, m_gros_gros_button);
-    m_buttonVolant.setResize((1-temp)*m_width, 0.6*m_height, m_gros_gros_button);
+    m_buttonChamp.setResize((1-temp)*m_width, 0.35*m_height, m_gros_gros_button);
+    m_buttonVolant.setResize((1-temp)*m_width, 0.55*m_height, m_gros_gros_button);
+    m_buttonVolantAuto.setResize((1-temp)*m_width, 0.65*m_height, m_gros_gros_button);
     
     m_buttonErrorOk.setResize((0.5)*m_width, 0.8*m_height, m_gros_button);
 //    onValueChangeSlot(true);
@@ -328,7 +331,7 @@ void GpsWidget::draw_force(){
         }
     }
     
-    if(f.m_parcelle.m_is_init){
+    if(f.m_parcelle.isInit()){
         QPolygon p;
         for(auto s: f.m_parcelle.m_contour){
             double x1, y1;
@@ -1024,8 +1027,17 @@ void GpsWidget::addButtons(){
         } else {
             drawButtonImage(&m_buttonVolant, *m_imgVolantBlanc);
         }
+        
+        
     } else {
         drawButtonImage(&m_buttonVolant, *m_imgVolantRouge);
+    }
+    if(f.m_config.m_pilot_auto_deactive > 0){
+        if(f.m_pilot_auto){
+            drawButtonImage(&m_buttonVolantAuto, *m_imgVolantAutoVert);
+        } else {
+            drawButtonImage(&m_buttonVolantAuto, *m_imgVolantAutoGris);
+        }
     }
 }
 
@@ -1063,6 +1075,8 @@ void GpsWidget::onMouse(int x, int y){
         GpsFramework::Instance().changeDraw();
     } else if(m_buttonVolant.isActive(x2, y2)){
         GpsFramework::Instance().setVolantEngaged(!GpsFramework::Instance().getVolantEngaged());
+    } else if(f.m_config.m_pilot_auto_deactive > 0 && m_buttonVolantAuto.isActive(x2, y2)){
+        GpsFramework::Instance().m_pilot_auto = !GpsFramework::Instance().m_pilot_auto;
     }
     draw();
 }
