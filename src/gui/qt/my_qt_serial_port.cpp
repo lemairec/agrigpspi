@@ -150,9 +150,11 @@ void MyQTSerialPorts::writePilotSerialDAndWait(std::vector<unsigned char> & l){
 
 void MyQTSerialPorts::writePilotSerialS(const std::string & l){
     DEBUG("begin");
-    QByteArray b;
-    b.append(l.c_str());
-    m_serialPortPilot.write(b);
+    if(m_serialPortPilot.isOpen()){
+        QByteArray b;
+        b.append(l.c_str());
+        m_serialPortPilot.write(b);
+    }
     DEBUG("end");
 }
 
