@@ -8,7 +8,7 @@
 #include <iomanip>
 
 #include "environnement.hpp"
-
+#include "util/util.hpp"
 
 void CurveAB::clearAll(){
     m_list.clear();
@@ -53,20 +53,6 @@ void CurveAB::addPoint(GpsPoint_ptr p){
 }
 
 double longeur = 0.5;
-
-
-double my_acos(double a){
-    double res = acos(a);
-    
-    if(res>3.14/2){
-        res = res-3.14;
-    }
-    if(res < -3.14/2){
-        res = res+3.14;
-    }
-    
-    return res;
-}
 
 
 void clearLine(std::vector<GpsPoint_ptr> & l){
@@ -514,9 +500,8 @@ double CurveAB::followKarott(double x_pont, double y_pont, double deplacement_x,
     double x_segment = x_h_lookhead - x_pont;
     double y_segment = y_h_lookhead - y_pont;
     
-    double cos_a = (deplacement_x*x_segment+deplacement_y*y_segment)/(sqrt(x_segment*x_segment+y_segment*y_segment)*sqrt(deplacement_x*deplacement_x+deplacement_y*deplacement_y));
-    
-    m_angle = acos(cos_a);
+    double m_angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
+    m_angle = angleBetweenPI2(m_angle);
     
     double ah = sqrt((x_h-x_a)*(x_h-x_a) + (y_h-y_a)*(y_h-y_a));
     m_distance_pont = ah;
@@ -629,9 +614,8 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     double x_segment = x_m - x_b;
     double y_segment = y_m - y_b;
     
-    double cos_a = (deplacement_x*x_segment+deplacement_y*y_segment)/(sqrt(x_segment*x_segment+y_segment*y_segment)*sqrt(deplacement_x*deplacement_x+deplacement_y*deplacement_y));
-    
-    double angle = my_acos(cos_a);
+    double angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
+    angle = angleBetweenPI2(angle);
     
 
     double x_ab = x_b-x_a;
