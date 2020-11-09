@@ -39,12 +39,12 @@ double LineAB::calculRearWheelPosition(double p_x, double p_y, double lg, double
     double distance = this->distance(p_x, p_y, lg);
     
     
-    double e = distance;
+    double e = -distance;
     double v = vitesse*10000.0/3600.0;
     double k = 0;//todo;
-    double th_e = angle;//todo;
+    double th_e = -angle;//todo;
 
-    double omega = KTH * abs(v) * th_e + KE * v * sin(th_e) * e / th_e;
+    double omega = - KTH * abs(v) * th_e - KE * v * sin(th_e) * e / th_e;
     
     
     
