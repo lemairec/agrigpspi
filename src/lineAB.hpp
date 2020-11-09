@@ -24,8 +24,8 @@ public:
     
     double distance(double x, double y, double lg);
     
-    double anglefollowTheCarrot(double x, double y, double lg, double lk);
-    
+    double anglefollowTheCarrot(double x, double y, double lg, double angleDeplacement, double lk);
+
     double calculRearWheelPosition(double p_x, double p_y, double lg, double angle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
 };
 

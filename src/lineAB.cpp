@@ -30,21 +30,50 @@ double LineAB::distance(double x, double y, double lg){
 }
 
 
-double LineAB::anglefollowTheCarrot(double x, double y, double lg, double lk){
+double LineAB::anglefollowTheCarrot(double x, double y, double lg, double angleDeplacement, double lk){
+    double angleABDeplacement = m_angleAB - angleDeplacement;
+    //INFO(angleABDeplacement/3.14*180);
+
     double distance = this->distance(x, y, lg);
-    return atan(distance/lk);
+    
+    double angle_followKarott =  atan(distance/lk);
+    double angle = angle_followKarott + angleABDeplacement;
+    
+    
+    if(angle>3.14/2){
+        angle = angle-3.14;
+    }
+    if(angle>3.14/2){
+        angle = angle-3.14;
+    }
+    if(angle < -3.14/2){
+        angle = angle+3.14;
+    }
+    if(angle < -3.14/2){
+        angle = angle+3.14;
+    }
+    return angle;
 }
 
-double LineAB::calculRearWheelPosition(double p_x, double p_y, double lg, double angle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
+double LineAB::calculRearWheelPosition(double p_x, double p_y, double lg, double deplacementAngle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
+    
+    double angleABDeplacement = m_angleAB - deplacementAngle;
+    if(angleABDeplacement>3.14/2){
+        angleABDeplacement = angleABDeplacement-3.14;
+    }
+    if(angleABDeplacement < -3.14/2){
+        angleABDeplacement = angleABDeplacement+3.14;
+    }
+    
     double distance = this->distance(p_x, p_y, lg);
     
     
     double e = -distance;
     double v = vitesse*10000.0/3600.0;
     double k = 0;//todo;
-    double th_e = -angle;//todo;
+    double th_e = -angleABDeplacement;//todo;
 
-    double omega = - KTH * abs(v) * th_e - KE * v * sin(th_e) * e / th_e;
+    double omega = v * k * cos(th_e) / (1.0 - k * e) - KTH * abs(v) * th_e - KE * v * sin(th_e) * e / th_e;
     
     
     

@@ -87,6 +87,7 @@ void GpsFramework::initOrLoadConfig(){
     
     m_tracteur.m_antenne_essieu_avant = m_config.m_tracteur_empatement - m_config.m_tracteur_antenne_pont_arriere;
     m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_antenne_pont_arriere;
+    m_tracteur.m_empatement = m_config.m_tracteur_empatement;
     
     m_curveAB.m_largeur = m_config.m_outil_largeur;
     m_gga = m_config.m_gga;
@@ -190,6 +191,8 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     }
 }
 
+
+
 void GpsFramework::onNewPoint(GpsPoint_ptr p){
     if(m_gpsModule.m_latitudeRef == 0){
         setRef(p->m_latitude, p->m_longitude);
@@ -232,12 +235,12 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
            setDistance(dist);
            
            if(m_pilot_algo == AlgoPilot::FollowKarott){
-               calculAngleCorrection(m_pilot_lookahead_d);
+               m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
            } else if(m_pilot_algo == AlgoPilot::FollowKarottVitesse){
                double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
-               calculAngleCorrection(pilot_lookahead);
+               m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, pilot_lookahead);
            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-               calculAngleCorrectionRWP();
+               m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_x_antenne, m_tracteur.m_y_antenne, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
            } else {
                m_angle_correction = 0;
            }
@@ -609,6 +612,8 @@ void GpsFramework::calculDeplacement(){
             m_tracteur.m_y_antenne = point1->m_y;
             m_tracteur.m_x_essieu_avant = point1->m_x + sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             m_tracteur.m_y_essieu_avant = point1->m_y + cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
+            m_tracteur.m_x_essieu_arriere = point1->m_x - sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
+            m_tracteur.m_x_essieu_arriere = point1->m_y - cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
             
             if(m_gga && m_time_last_point > 0 ){
                 m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
@@ -700,57 +705,6 @@ void GpsFramework::calculSurface(){
         
     }*/
 }
-
-
-
-// pure pousuite
-void GpsFramework::calculAngleCorrection(double lookahead){
-    //naif
-    //m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
-   
-    //follow karott
-    double angleABDeplacement = m_lineAB.m_angleAB - m_deplacementAngle;
-    if(angleABDeplacement>3.14/2){
-        angleABDeplacement = angleABDeplacement-3.14;
-    }
-    if(angleABDeplacement < -3.14/2){
-        angleABDeplacement = angleABDeplacement+3.14;
-    }
-    //INFO(angleABDeplacement/3.14*180);
-    
-    double angle_followKarott = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, lookahead);
-    m_angle_correction = angle_followKarott + angleABDeplacement;
-    //INFO(m_angle_correction);
-    //m_angle_correction = ;
-    //m_angle_correction = -3.14/6;
-    
-}
-
-
-void GpsFramework::calculAngleCorrectionRWP(){
-    //naif
-    //m_angle_correction = atan(m_distanceAB/m_algo_lookahead_d);
-   
-    //follow karott
-    double angleABDeplacement = m_lineAB.m_angleAB - m_deplacementAngle;
-    if(angleABDeplacement>3.14/2){
-        angleABDeplacement = angleABDeplacement-3.14;
-    }
-    if(angleABDeplacement < -3.14/2){
-        angleABDeplacement = angleABDeplacement+3.14;
-    }
-    //INFO(angleABDeplacement/3.14*180);
-    
-    m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_x_antenne, m_tracteur.m_y_antenne, m_config.m_outil_largeur, angleABDeplacement, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-    
-    //double angle_followKarott = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, lookahead);
-    //m_angle_correction = angle_followKarott + angleABDeplacement;
-    //INFO(m_angle_correction);
-    //m_angle_correction = ;
-    //m_angle_correction = -3.14/6;
-    
-}
-
 
 int orientation(GpsPoint & p, GpsPoint & q, GpsPoint & r)
 {
