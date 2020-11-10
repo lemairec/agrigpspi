@@ -24,9 +24,48 @@ void ParcelleLoadWidget::setSize(int width, int height){
 }
 
 
+void ParcelleLoadWidget::my_projete(double x, double y, double & x_res, double & y_res){
+    /*double x1_temp = (x - m_xref)*m_zoom;
+    double y1_temp = (y - m_yref)*m_zoom;
+    
+    double h00 = m_cosA, h01 = m_sinA;//, h02 = 1;
+    double h10 = -m_sinA, h11 = m_cosA;// h12 = 1;
+    //double h20 = -m_sinA, h21 = m_cosA, h22 = 1;
+    
+    x_res = m_width/2 + x1_temp*h00 + y1_temp*h01;
+    y_res  = m_height/2 - x1_temp*h10  - y1_temp*h11;*/
+}
+
+void ParcelleLoadWidget::drawParcelle(){
+    GpsFramework & f = GpsFramework::Instance();
+    Parcelle & parcelle = f.m_parcelle;
+    
+    double zoom = m_width*0.6/parcelle.m_bounding_rect_width*0.8;
+    double zoom2 = m_height*0.9/parcelle.m_bounding_rect_height*0.8;
+    if(zoom2 <zoom){
+        zoom = zoom2;
+    }
+    
+    QPolygon poly;
+    for(auto p : parcelle.m_contour){
+        double x = (p->m_x-parcelle.m_center_x)*zoom + m_width*0.7;
+        double y = (p->m_y-parcelle.m_center_y)*zoom + m_height/2;
+        poly.push_back(QPoint(x, y));
+    }
+    scene->addPolygon(poly, m_penNo, m_brushDarkGray);
+    
+}
+
 void ParcelleLoadWidget::draw(){
-    scene->addRect(m_x, m_height*0.1, m_lg, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
+    scene->addRect(m_x, 0, m_width, m_height, m_penBlack, m_brushWhite);
+    
+    scene->addRect(m_width*0.4, m_height*0.05, m_width*0.6-m_height*0.05, m_height*0.9, m_penBlack, m_parcelleBrush);
     //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
+    
+    GpsFramework & f = GpsFramework::Instance();
+    f.m_parcelle.loadParcelle(m_selectParcelles.getValueString());
+    drawParcelle();
+    
     
     {
         QString s = "Load parcelles";

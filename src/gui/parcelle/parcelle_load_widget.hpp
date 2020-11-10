@@ -18,6 +18,9 @@ public:
     
     void setSize(int width, int height);
     
+    void my_projete(double x, double y, double & x_res, double & y_res);
+    void drawParcelle();
+        
     virtual void draw();
     virtual void onMouse(int x, int y);
     
