@@ -7,7 +7,7 @@
 
 ParcelleLoadWidget::ParcelleLoadWidget(){
     m_imgOk = loadImage("/images/ok.png");
-    m_imgCancel = loadImage("/images/ok.png");
+    m_imgCancel = loadImage("/images/cancel.png");
 }
 
 
@@ -48,12 +48,14 @@ void ParcelleLoadWidget::drawParcelle(){
     
     QPolygon poly;
     for(auto p : parcelle.m_contour){
-        double x = (p->m_x-parcelle.m_center_x)*zoom + m_width*0.7;
+        double x = -(p->m_x-parcelle.m_center_x)*zoom + m_width*0.7;
         double y = (p->m_y-parcelle.m_center_y)*zoom + m_height/2;
         poly.push_back(QPoint(x, y));
     }
     scene->addPolygon(poly, m_penNo, m_brushDarkGray);
     
+    QString s = QString::number(parcelle.m_surface_ha)+" ha";
+    drawQText(s, m_width*0.45, m_height*0.1);
 }
 
 void ParcelleLoadWidget::draw(){
@@ -77,7 +79,7 @@ void ParcelleLoadWidget::draw(){
     
     
     drawButtonImage(&m_buttonOk, *m_imgOk);
-    drawButton(&m_buttonCancel);
+    drawButtonImage(&m_buttonCancel, *m_imgCancel);
     
 }
 void ParcelleLoadWidget::onMouse(int x, int y){

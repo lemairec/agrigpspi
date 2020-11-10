@@ -271,11 +271,18 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     if(m_listSurfaceToDraw.size()>0 && !m_pauseDraw){
         m_listSurfaceToDraw.front()->m_lastPoint = p;
     }
+    
+    if(m_etat == Etat_ParcelleAdd){
+        m_parcelle.addPoint(p);
+    }
+    
     if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) < m_distance_cap_vitesse*m_distance_cap_vitesse){
         return;
     } else {
         onNewImportantPoint(p);
     }
+    
+    
 }
 
 void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
@@ -291,9 +298,7 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
     file_job_stream << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
     saveInfoFile();
     
-    if(m_etat == Etat_ParcelleAdd){
-        m_parcelle.addPoint(p);
-    }
+    
     
     if(m_parcelle.isInit() && m_pilot_auto){
         double dist = m_parcelle.distance(p);

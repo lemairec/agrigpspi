@@ -18,6 +18,7 @@ public:
     
     void setSize(int width, int height);
     
+    void drawParcelle();
     virtual void draw();
     virtual void onMouse(int x, int y);
     

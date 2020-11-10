@@ -44,13 +44,13 @@ void Parcelle::compute(){
         if(y_min > p->m_y){ y_min = p->m_y; }
         if(y_max < p->m_y){ y_max = p->m_y; }
     }
-    INFO(x_min << " " << x_max << " "<< y_min << " " << y_max);
+    //INFO(x_min << " " << x_max << " "<< y_min << " " << y_max);
     m_bounding_rect_x = x_min;
     m_bounding_rect_y = y_min;
     m_bounding_rect_width = x_max - x_min;
     m_bounding_rect_height = y_max - y_min;
     
-    INFO(m_bounding_rect_x << " " << m_bounding_rect_y << " ("<< m_bounding_rect_width << " " << m_bounding_rect_height << ")");
+    //INFO(m_bounding_rect_x << " " << m_bounding_rect_y << " ("<< m_bounding_rect_width << " " << m_bounding_rect_height << ")");
     m_center_x = m_bounding_rect_x+m_bounding_rect_width/2;
     m_center_y = m_bounding_rect_y+m_bounding_rect_height/2;
     
@@ -61,7 +61,7 @@ void Parcelle::compute(){
     for(int i=0; i<n; i++){
         sum+=cp2(*m_contour[i], *m_contour[(i+1)%n]); //%n is for last triangle
     }
-    INFO(n);
+    //INFO(n);
     m_surface_ha = abs(sum)/2.0/10000;
 }
 
