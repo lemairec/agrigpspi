@@ -5,9 +5,11 @@
 #include "base_widget.hpp"
 #include "option_widget.hpp"
 #include "sat_widget.hpp"
-#include "guidage_widget.hpp"
 #include "machine_widget.hpp"
 #include "menu_widget.hpp"
+#include "line/line_widget.hpp"
+#include "line/line_new_widget.hpp"
+#include "line/line_load_widget.hpp"
 #include "parcelle/parcelle_widget.hpp"
 #include "parcelle/parcelle_new_widget.hpp"
 #include "parcelle/parcelle_load_widget.hpp"
@@ -19,11 +21,15 @@ public:
     static GpsWidget * Instance();
     
     SatWidget m_satWidget;
-    GuidageWidget m_guidWidget;
+    
     ParcelleWidget m_parcelleWidget;
     ParcelleNewWidget m_parcelleNewWidget;
     ParcelleLoadWidget m_parcelleLoadWidget;
+    LineWidget m_lineWidget;
+    LineNewWidget m_lineNewWidget;
+    LineLoadWidget m_lineLoadWidget;
     MenuWidget m_menuWidget;
+    std::vector<BaseWidget *> m_widgets;
     
     KeyPadWidget m_key_pad_widget;
     KeyBoardWidget m_key_board_widget;

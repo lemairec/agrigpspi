@@ -120,6 +120,19 @@ void Parcelle::loadParcelle(std::string name){
     }
 }
 
+double Parcelle::distance(GpsPoint_ptr p){
+    double d = 0;
+    for(auto p2 : m_contour){
+        double dist = p2->distanceCarre(*p);
+        if(d == 0){
+            d = dist;
+        }
+        if(dist < d){
+            d = dist;
+        }
+    }
+    return sqrt(d);
+}
 
 
 
@@ -157,16 +170,3 @@ void Parcelles::add(Parcelle & p){
     }
 }
 
-double Parcelle::distance(GpsPoint_ptr p){
-    double d = 0;
-    for(auto p2 : m_contour){
-        double dist = p2->distanceCarre(*p);
-        if(d == 0){
-            d = dist;
-        }
-        if(dist < d){
-            d = dist;
-        }
-    }
-    return sqrt(d);
-}

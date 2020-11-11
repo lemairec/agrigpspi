@@ -52,25 +52,34 @@ GpsWidget::GpsWidget()
     
     m_imgFleche = loadImage("/images/fleche.png");
 
+    m_widgets.push_back(&m_satWidget);
+    m_widgets.push_back(&m_lineWidget);
+    m_widgets.push_back(&m_lineNewWidget);
+    m_widgets.push_back(&m_lineLoadWidget);
+    m_widgets.push_back(&m_parcelleWidget);
+    m_widgets.push_back(&m_parcelleNewWidget);
+    m_widgets.push_back(&m_parcelleLoadWidget);
+    m_widgets.push_back(&m_menuWidget);
+    m_widgets.push_back(&m_key_pad_widget);
+    m_widgets.push_back(&m_key_board_widget);
+    
     m_menuWidget.m_machine_widget.m_key_pad_widget = &m_key_pad_widget;
     m_menuWidget.m_outil_widget.m_key_pad_widget = &m_key_pad_widget;
     m_parcelleNewWidget.m_key_board_widget = &m_key_board_widget;
+    m_lineNewWidget.m_key_board_widget = &m_key_board_widget;
 }
 
 void GpsWidget::setSize(int width, int height){
     BaseWidget::setSize(width, height);
-    m_menuWidget.setSize(width, height);
-    
+     
     m_widthMax = m_width/2-50;
     m_heightMax = m_height/2-50;
-
-    m_satWidget.setSize(m_width, m_height);
-    m_guidWidget.setSize(m_width, m_height);
-    m_parcelleWidget.setSize(m_width, m_height);
-    m_parcelleNewWidget.setSize(m_width, m_height);
-    m_parcelleLoadWidget.setSize(m_width, m_height);
-    m_key_pad_widget.setSize(m_width, m_height);
-    m_key_board_widget.setSize(m_width, m_height);
+    
+    for(auto p : m_widgets){
+        p->setSize(m_width, m_height);
+    }
+    /*m_key_pad_widget.setSize(m_width, m_height);
+    m_key_board_widget.setSize(m_width, m_height);*/
     
     double temp = 0.05;
     
@@ -108,7 +117,11 @@ GpsWidget * GpsWidget::Instance(){
 
 void GpsWidget::setScene(QGraphicsScene * s){
     BaseWidget::setScene(s);
-    m_menuWidget.setScene(s);
+    for(auto p : m_widgets){
+        p->setScene(s);
+    }
+    /*m_key_pad_widget.setScene(s);
+    m_key_board_widget.setScene(s);*/
 }
 
 
@@ -479,34 +492,18 @@ void GpsWidget::draw_force(){
     
     drawError();
     
-
-    if(!m_satWidget.m_close){
-        m_satWidget.draw();
-    }
-    if(!m_guidWidget.m_close){
-        m_guidWidget.draw();
-    }
-    if(!m_parcelleWidget.m_close){
-        m_parcelleWidget.draw();
-    }
-    if(!m_parcelleNewWidget.m_close){
-        m_parcelleNewWidget.draw();
-    }
-    if(!m_parcelleLoadWidget.m_close){
-        m_parcelleLoadWidget.draw();
+    for(auto p : m_widgets){
+        if(!p->m_close){
+            p->draw();
+        }
     }
     
-    
-    if(!m_menuWidget.m_close){
-        m_menuWidget.draw();
-    }
-    
-    if(!m_key_pad_widget.m_close){
+    /*if(!m_key_pad_widget.m_close){
         m_key_pad_widget.draw();
     }
     if(!m_key_board_widget.m_close){
         m_key_board_widget.draw();
-    }
+    }*/
     
     DEBUG("END");
     
@@ -1043,9 +1040,21 @@ void GpsWidget::addButtons(){
 
 
 void GpsWidget::onMouse(int x, int y){
-    if(!m_menuWidget.m_close){
-        m_menuWidget.onMouse(x, y);
+    size_t n = m_widgets.size();
+    for(size_t i = 0; i < n; ++i){
+        auto p = m_widgets[n-i-1];
+        if(!p->m_close){
+            p->onMouse(x, y);
+            return;
+        }
     }
+    
+    /*if(!m_key_pad_widget.m_close){
+        m_key_pad_widget.onMouse(x, y);;
+    }
+    if(!m_key_board_widget.m_close){
+        m_key_board_widget.onMouse(x, y);;
+    }*/
     
     double x2 = x;
     double y2 = y;
@@ -1063,8 +1072,8 @@ void GpsWidget::onMouse(int x, int y){
         m_zoom /= 1.2;
         m_zoom = std::round(m_zoom*10.0)/10.0;
     } else if(m_buttonGuidage.isActive(x2, y2)){
-        m_guidWidget.open();
-        m_guidWidget.m_close = false;
+        //m_parcelleWidget.open();
+        m_lineWidget.m_close = false;
     } else if(m_buttonParcelle.isActive(x2, y2)){
         m_parcelleWidget.m_close = false;
     } else if(m_buttonOption.isActive(x2, y2)){

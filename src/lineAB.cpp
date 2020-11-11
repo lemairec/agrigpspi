@@ -3,6 +3,14 @@
 #include "logging.hpp"
 #include "util/util.hpp"
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+
+#include "environnement.hpp"
+#include "gps_framework.hpp"
+
 double LineAB::distance(double x, double y, double lg){
     if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
         double dist = (m_a * x + m_b * y + m_c)/m_sqrt_m_a_m_b;
@@ -69,3 +77,52 @@ double LineAB::calculRearWheelPosition(double p_x, double p_y, double lg, double
     return delta;
     
 }
+
+
+
+void LineCurves::load(){
+    std::string file_parcelles = ProjectSourceBin + "/parcelle/parcelles.txt";
+    std::ifstream file(file_parcelles);
+    std::string line;
+    /*while (std::getline(file, line))
+    {
+        m_parcelles.push_back(line);
+    }
+    INFO("parcelles "  << m_parcelles.size());*/
+     
+}
+
+void LineCurves::save(){
+    std::ofstream file;
+    std::string file_parcelles = ProjectSourceBin + "/parcelle/parcelles.txt";
+    file.open(file_parcelles, std::ios::out);
+    /*for(auto p : m_parcelles){
+        file << p << std::endl;
+    }
+    INFO("parcelles "  << m_parcelles.size());*/
+     
+}
+
+
+void LineCurves::add(LineAB & p){
+    GpsFramework & f = GpsFramework::Instance();
+    /*if(p.m_name.size() > 2){
+        m_parcelles.push_back(p.m_name);
+        p.saveParcelle(p.m_name);
+        save();
+    } else {
+        f.addError("parcelle nom trop petit");
+    }*+
+}
+
+void LineCurves::add(CurveAB & p){
+    GpsFramework & f = GpsFramework::Instance();
+    /*if(p.m_name.size() > 2){
+        m_parcelles.push_back(p.m_name);
+        p.saveParcelle(p.m_name);
+        save();
+    } else {
+        f.addError("parcelle nom trop petit");
+    }
+}
+

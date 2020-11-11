@@ -161,7 +161,7 @@ public:
     virtual void onButton(const ButtonGui & button){};
     
     virtual void onMouse(int x, int y){};
-    void setSize(int width, int height);
+    virtual void setSize(int width, int height);
     
     void drawButton(ButtonGui * button, int color = 0);
     void drawButtonLabel(ButtonGui * button, int color = 0);

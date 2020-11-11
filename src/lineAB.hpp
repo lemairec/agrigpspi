@@ -2,6 +2,7 @@
 #define LINE_AB_H
 
 #include "gps_module.hpp"
+#include "curveAB.hpp"
 
 class LineAB{
 public:
@@ -29,5 +30,13 @@ public:
     double calculRearWheelPosition(double p_x, double p_y, double lg, double angle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
 };
 
+class LineCurves {
+public:
+    std::vector<std::string> m_lines_curves;
+    void load();
+    void add(LineAB & p);
+    void add(CurveAB & p);
+    void save();
+};
 
 #endif // LINE_AB_H

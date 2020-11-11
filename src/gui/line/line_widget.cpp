@@ -1,16 +1,16 @@
 
-#include "parcelle_widget.hpp"
+#include "line_widget.hpp"
 
 #include "../../gps_framework.hpp"
 #include "../gps_widget.hpp"
 
 
-ParcelleWidget::ParcelleWidget(){
+LineWidget::LineWidget(){
     m_imgOk = loadImage("/images/ok.png");
 }
 
 
-void ParcelleWidget::setSize(int width, int height){
+void LineWidget::setSize(int width, int height){
     BaseWidget::setSize(width, height);
     m_x = 0;
     m_lg = 0.30*m_width;
@@ -21,12 +21,12 @@ void ParcelleWidget::setSize(int width, int height){
 }
 
 
-void ParcelleWidget::draw(){
+void LineWidget::draw(){
     scene->addRect(m_x, m_height*0.1, m_lg, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
     //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
     
     {
-        QString s = "Parcelles";
+        QString s = "Line";
         drawQText(s, m_lg/2, 0.15*m_height, sizeText_big, true);
     }
     
@@ -43,10 +43,8 @@ void ParcelleWidget::draw(){
     
     {
         GpsFramework & f = GpsFramework::Instance();
-        QString s = "Pas de parcelle\nselectionne";
-        if(f.m_parcelle.isInit()){
-            s = QString::fromStdString(f.m_parcelle.m_name) + "\nsurface : \n" + QString::number(f.m_parcelle.m_surface_ha) + " ha";
-        }
+        QString s = "Pas de lines\nselectionne";
+        
         drawQText(s, m_x + m_lg/2, m_height*0.5, sizeText_big, true);
     }
     
@@ -54,18 +52,18 @@ void ParcelleWidget::draw(){
     drawButtonImage(&m_buttonOk, *m_imgOk);
     
 }
-void ParcelleWidget::onMouse(int x, int y){
+void LineWidget::onMouse(int x, int y){
     if(m_buttonOk.isActive(x, y)){
         m_close = true;
     }
     if(m_buttonParcelleNew.isActive(x, y)){
         GpsWidget * g = GpsWidget::Instance();
-        g->m_parcelleNewWidget.m_close = false;
+        g->m_lineNewWidget.m_close = false;
     }
     if(m_buttonParcelleLoad.isActive(x, y)){
         GpsWidget * g = GpsWidget::Instance();
-        g->m_parcelleLoadWidget.open();
-        g->m_parcelleLoadWidget.m_close = false;
+        g->m_lineLoadWidget.open();
+        g->m_lineLoadWidget.m_close = false;
     }
 
 }

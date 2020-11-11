@@ -78,6 +78,7 @@ void ParcelleNewWidget::draw(){
         QString s = "Nom de la parcelle : ";
         drawQText(s, m_x+30, 0.25*m_height, sizeText_big, false);
     }
+    drawValueGuiKeyBoard(&m_name);
     {
         QString s = "Play";
         if(f.m_etat == Etat_ParcelleAdd){
@@ -89,7 +90,7 @@ void ParcelleNewWidget::draw(){
     }
     
     drawButtonImage(&m_buttonOk, *m_imgOk);
-    drawValueGuiKeyBoard(&m_name);
+    
 }
 void ParcelleNewWidget::onMouse(int x, int y){
     GpsFramework & f = GpsFramework::Instance();

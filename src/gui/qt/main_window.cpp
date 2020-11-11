@@ -21,14 +21,6 @@ void View::setupUi(){
     
     m_gpsWidget = GpsWidget::Instance();
     m_gpsWidget->setScene(scene);
-    m_gpsWidget->m_satWidget.setScene(scene);
-    m_gpsWidget->m_guidWidget.setScene(scene);
-    m_gpsWidget->m_parcelleWidget.setScene(scene);
-    m_gpsWidget->m_parcelleNewWidget.setScene(scene);
-    m_gpsWidget->m_parcelleLoadWidget.setScene(scene);
-    m_gpsWidget->m_key_pad_widget.setScene(scene);
-    m_gpsWidget->m_key_board_widget.setScene(scene);
-    
     
     
     DEBUG("end");
@@ -39,26 +31,7 @@ void View::mouseReleaseEvent ( QMouseEvent * event ){
     int x = event->x()-5;
     int y = event->y()-5;
     
-    if(!m_gpsWidget->m_key_pad_widget.m_close){
-        m_gpsWidget->m_key_pad_widget.onMouse(x, y);
-    } else if(!m_gpsWidget->m_key_board_widget.m_close){
-        m_gpsWidget->m_key_board_widget.onMouse(x, y);
-    } else {
-        
-        if(!m_gpsWidget->m_satWidget.m_close){
-            m_gpsWidget->m_satWidget.onMouse(x, y);
-        } else if(!m_gpsWidget->m_guidWidget.m_close){
-            m_gpsWidget->m_guidWidget.onMouse(x, y);
-        } else if(!m_gpsWidget->m_parcelleNewWidget.m_close){
-            m_gpsWidget->m_parcelleNewWidget.onMouse(x, y);
-        } else if(!m_gpsWidget->m_parcelleLoadWidget.m_close){
-            m_gpsWidget->m_parcelleLoadWidget.onMouse(x, y);
-        } else if(!m_gpsWidget->m_parcelleWidget.m_close){
-            m_gpsWidget->m_parcelleWidget.onMouse(x, y);
-        } else {
-            m_gpsWidget->onMouse(x, y);//TODO
-        }
-    }
+    m_gpsWidget->onMouse(x, y);
     
     m_gpsWidget->draw_force();
 }
