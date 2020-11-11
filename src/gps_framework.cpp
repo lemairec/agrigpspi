@@ -470,22 +470,7 @@ void GpsFramework::setAB(){
     
     //m_pointA.m_x = 1; m_pointA.m_y = 1;
     setRef((m_lineAB.m_pointA.m_latitude + m_lineAB.m_pointB.m_latitude)/2, (m_lineAB.m_pointA.m_longitude + m_lineAB.m_pointB.m_longitude)/2);
-    m_lineAB.m_ab_x = m_lineAB.m_pointB.m_x - m_lineAB.m_pointA.m_x;
-    m_lineAB.m_ab_y = m_lineAB.m_pointB.m_y - m_lineAB.m_pointA.m_y;
-    
-    
-    m_lineAB.m_a = -(m_lineAB.m_pointB.m_y - m_lineAB.m_pointA.m_y);
-    m_lineAB.m_b = m_lineAB.m_pointB.m_x - m_lineAB.m_pointA.m_x;
-    m_lineAB.m_c = -m_lineAB.m_a * m_lineAB.m_pointA.m_x - m_lineAB.m_b *  m_lineAB.m_pointA.m_y;
-    m_lineAB.m_sqrt_m_a_m_b = sqrt(m_lineAB.m_a*m_lineAB.m_a + m_lineAB.m_b*m_lineAB.m_b);
-    
-    if(m_lineAB.m_ab_y != 0 && m_lineAB.m_ab_x != 0){
-        m_lineAB.m_angleAB = atan(m_lineAB.m_ab_x/m_lineAB.m_ab_y);
-    } else {
-        m_lineAB.m_angleAB = 0;
-    }
-    INFO("yb  " << std::fixed << m_lineAB.m_pointB.m_y << " ya " << m_lineAB.m_pointA.m_y << " xb " << m_lineAB.m_pointB.m_x << " xa " << m_lineAB.m_pointA.m_x);
-    INFO(m_lineAB.m_a << "*x + " << m_lineAB.m_b << "*y + " << m_lineAB.m_c << " = 0; " << m_lineAB.m_sqrt_m_a_m_b);
+    m_lineAB.setAB();
 }
 
 /*void GpsFramework::calculDeplacement(){

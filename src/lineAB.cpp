@@ -11,6 +11,26 @@
 #include "environnement.hpp"
 #include "gps_framework.hpp"
 
+void LineAB::setAB(){
+    m_ab_x = m_pointB.m_x - m_pointA.m_x;
+    m_ab_y = m_pointB.m_y - m_pointA.m_y;
+    
+    
+    m_a = -(m_pointB.m_y - m_pointA.m_y);
+    m_b = m_pointB.m_x - m_pointA.m_x;
+    m_c = -m_a * m_pointA.m_x - m_b *  m_pointA.m_y;
+    m_sqrt_m_a_m_b = sqrt(m_a*m_a + m_b*m_b);
+    
+    if(m_ab_y != 0 && m_ab_x != 0){
+        m_angleAB = atan(m_ab_x/m_ab_y);
+    } else {
+        m_angleAB = 0;
+    }
+    INFO("yb  " << std::fixed << m_pointB.m_y << " ya " << m_pointA.m_y << " xb " << m_pointB.m_x << " xa " << m_pointA.m_x);
+    INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
+}
+
+
 double LineAB::distance(double x, double y, double lg){
     if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
         double dist = (m_a * x + m_b * y + m_c)/m_sqrt_m_a_m_b;
@@ -112,7 +132,7 @@ void LineCurves::add(LineAB & p){
         save();
     } else {
         f.addError("parcelle nom trop petit");
-    }*+
+    }*/
 }
 
 void LineCurves::add(CurveAB & p){
@@ -123,6 +143,6 @@ void LineCurves::add(CurveAB & p){
         save();
     } else {
         f.addError("parcelle nom trop petit");
-    }
+    }*/
 }
 

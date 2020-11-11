@@ -23,6 +23,8 @@ public:
     
     double m_current_line = 0;
     
+    void setAB();
+    
     double distance(double x, double y, double lg);
     
     double anglefollowTheCarrot(double x, double y, double lg, double angleDeplacement, double lk);
