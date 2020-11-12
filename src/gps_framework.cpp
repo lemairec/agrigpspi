@@ -432,7 +432,7 @@ void GpsFramework::savePointA(){
 }
 
 void GpsFramework::savePointB(){
-    if(!m_list.empty()){
+    if(m_line && !m_list.empty()){
         m_lineAB.m_pointB = *(*m_list.begin());
     }
     
@@ -462,6 +462,9 @@ void GpsFramework::setAB(){
         setRef((m_lineAB.m_pointA.m_latitude + m_lineAB.m_pointB.m_latitude)/2, (m_lineAB.m_pointA.m_longitude + m_lineAB.m_pointB.m_longitude)/2);
         m_lineAB.setAB();
     } else {
+        m_curveAB.m_pointA = *(m_curveAB.m_listAB[0]);
+        m_curveAB.m_pointB = *(m_curveAB.m_listAB[m_curveAB.m_listAB.size()-1]);
+        
         setRef((m_curveAB.m_pointA.m_latitude + m_curveAB.m_pointB.m_latitude)/2, (m_curveAB.m_pointA.m_longitude + m_curveAB.m_pointB.m_longitude)/2);
         m_curveAB.savePointB();
     }

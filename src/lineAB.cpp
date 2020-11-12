@@ -161,11 +161,9 @@ void LineCurves::loadCurveOrLine(std::string name){
         } else {
             f.m_line = false;
             f.m_curveAB.clearAll();
-            f.m_curveAB.m_pointA = *(l[0]);
             for(auto p : l){
                 f.m_curveAB.m_listAB.push_back(p);
             }
-            f.m_curveAB.m_pointB = *(l[l.size()-1]);
             f.setAB();
             //m_etat = Etat_OK;
             
