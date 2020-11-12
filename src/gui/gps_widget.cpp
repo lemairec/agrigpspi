@@ -253,16 +253,20 @@ void GpsWidget::drawLines(){
 void GpsWidget::drawLineCurve(){
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_line){
-        if(f.m_lineAB.m_pointA.m_isOk && f.m_lineAB.m_pointB.m_isOk){
+        if(f.m_lineAB.m_pointA.m_isOk){
             double xA, yA;
             my_projete2(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, xA, yA);
-            double xB, yB;
-            my_projete2(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, xB, yB);
-            
-            scene->addLine(xA, yA, xB, yB, m_penRed);
+            scene->addEllipse(xA-3, yA-3, 6, 6, m_penRed, m_brushNo);
+            if(f.m_lineAB.m_pointB.m_isOk){
+                double xB, yB;
+                my_projete2(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, xB, yB);
+                scene->addEllipse(xB-3, yB-3, 6, 6, m_penRed, m_brushNo);
+                
+                scene->addLine(xA, yA, xB, yB, m_penRed);
+            }
         }
-        drawLines();
         
+        drawLines();
     } else {
         if(f.m_etat == Etat_OK){
             auto list = f.m_curveAB.getCurrentLine();
@@ -404,6 +408,7 @@ void GpsWidget::draw_force(){
     DEBUG("BEGIN");
     auto begin = std::chrono::system_clock::now();
     GpsFramework & f = GpsFramework::Instance();
+    
     m_widthMax = m_width/2+f.m_config.m_outil_largeur*m_zoom/2;
     m_heightMax = m_height/2+f.m_config.m_outil_largeur*m_zoom/2;
     m_debug = f.m_config.m_debug;
@@ -433,19 +438,6 @@ void GpsWidget::draw_force(){
     }
     drawSurfaceToDraw();
     
-    
-    
-    if(f.m_lineAB.m_pointA.m_isOk){
-        double xA, yA;
-        my_projete2(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, xA, yA);
-        scene->addEllipse(xA, yA, 5, 5, m_penRed, m_brushNo);
-    }
-    if(f.m_lineAB.m_pointB.m_isOk){
-        double xB, yB;
-        my_projete2(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, xB, yB);
-        scene->addEllipse(xB, yB, 5, 5, m_penRed, m_brushNo);
-    }
-    
     drawContour();
     drawTracteur();
     drawTop();
@@ -453,11 +445,6 @@ void GpsWidget::draw_force(){
     
     addButtons();
     
-    for(auto p : m_widgets){
-        if(!p->m_close){
-            p->draw();
-        }
-    }
     
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> diff2 = end - begin;
@@ -489,6 +476,11 @@ void GpsWidget::draw_force(){
     
     drawError();
     
+    for(auto p : m_widgets){
+        if(!p->m_close){
+            p->draw();
+        }
+    }
     
    
     DEBUG("END");

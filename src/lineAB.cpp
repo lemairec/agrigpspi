@@ -121,26 +121,98 @@ void LineCurves::save(){
     INFO("lines_curves "  << m_lines_curves.size());
 }
 
+void LineCurves::loadCurveOrLine(std::string name){
+    GpsFramework & f = GpsFramework::Instance();
+    
+    std::string file_job = ProjectSourceBin + "/line/" + name + ".txt";
+    std::ifstream file(file_job);
+    std::string line;
+    bool init = false;
+    if(file.is_open()){
+        
+        std::getline(file, line);
+        if(line == "LINE"){
+            
+        }
+        
+        std::vector<GpsPoint_ptr> l;
+        while (std::getline(file, line))
+        {
+            std::istringstream iss(line);
+            float a, b;
+            if (!(iss >> a >> b)) {
+                INFO("error");
+                break;
+                
+            } // error
+            INFO(a << " " << b);
+            GpsPoint_ptr p = GpsPoint_ptr(new GpsPoint());
+            p->m_latitude = a;
+            p->m_longitude = b;
+            l.push_back(p);
+            // process pair (a,b)
+        }
+        
+        if(l.size() == 2){
+            INFO("line");
+            f.m_lineAB.m_pointA = *(l[0]);
+            f.m_lineAB.m_pointB = *(l[1]);
+            f.setAB();
+        } else {
+            f.m_line = false;
+            f.m_curveAB.clearAll();
+            f.m_curveAB.m_pointA = *(l[0]);
+            for(auto p : l){
+                f.m_curveAB.m_listAB.push_back(p);
+            }
+            f.m_curveAB.m_pointB = *(l[l.size()-1]);
+            f.setAB();
+            //m_etat = Etat_OK;
+            
+        }
+        /*m_name = name;
+        compute();*/
+    } else {
+        INFO(file_job << " is close");
+    }
+}
+
+
 
 void LineCurves::add(LineAB & p){
     GpsFramework & f = GpsFramework::Instance();
     if(p.m_name.size() > 2){
-        m_lines_curves.push_back(p.m_name);
-        //p.saveParcelle(p.m_name);
+        std::string name = "line_" + p.m_name;
+        m_lines_curves.push_back(name);
+        
+        std::string path = ProjectSourceBin + "/line/" + name + ".txt";
+        std::ofstream file;
+        file.open(path, std::ios::out);
+        file << "LINE" << std::endl;
+        file << std::setprecision(11) << p.m_pointA.m_latitude << " " << p.m_pointA.m_longitude << std::endl;
+        file << std::setprecision(11) << p.m_pointB.m_latitude << " " << p.m_pointB.m_longitude << std::endl;
         save();
     } else {
-        f.addError("parcelle nom trop petit");
+        f.addError("line nom trop petit");
     }
 }
 
 void LineCurves::add(CurveAB & p){
     GpsFramework & f = GpsFramework::Instance();
     if(p.m_name.size() > 2){
-        m_lines_curves.push_back(p.m_name);
-        //p.saveParcelle(p.m_name);
+        std::string name = "curve_" + p.m_name;
+        m_lines_curves.push_back(name);
+        
+        std::string path = ProjectSourceBin + "/line/" + name + ".txt";
+        std::ofstream file;
+        file.open(path, std::ios::out);
+        file << "CURVE" << std::endl;
+        for(auto p : f.m_curveAB.m_listAB){
+            file << std::setprecision(11) << p->m_latitude << " " << p->m_longitude << std::endl;
+        }
         save();
     } else {
-        f.addError("parcelle nom trop petit");
+        f.addError("curve nom trop petit");
     }
 }
 

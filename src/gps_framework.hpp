@@ -102,6 +102,8 @@ public:
     Etat m_etat = Etat_OK;
     LineAB m_lineAB;
     CurveAB m_curveAB;
+    LineCurves m_lines;
+    
     Parcelle m_parcelle;
     Parcelles m_parcelles;
     

@@ -38,6 +38,7 @@ class LineCurves {
 public:
     std::vector<std::string> m_lines_curves;
     void load();
+    void loadCurveOrLine(std::string name);
     void add(LineAB & p);
     void add(CurveAB & p);
     void save();

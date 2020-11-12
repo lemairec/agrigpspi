@@ -180,61 +180,6 @@ void CurveAB::setCurrent(int i){
     m_i_current = i;
 }
 
-
-void CurveAB::saveABCurve(){
-    std::string file_job = ProjectSourceBin + "/curveAB.job";
-    std::ofstream file;
-    file.open(file_job, std::ios::out);
-    for(auto p : m_list[0]->m_points){
-        file << std::setprecision(11) << p->m_latitude << " " << p->m_longitude << std::endl;
-    }
-}
-
-#include "gps_framework.hpp"
-
-void CurveAB::loadABCurve(){
-    std::string file_job = ProjectSourceBin + "/curveAB.job";
-    std::ifstream file(file_job);
-    std::string line;
-    bool init = false;
-    clearAll();
-    
-    
-    GpsFramework & f = GpsFramework::Instance();
-    
-    while (std::getline(file, line))
-    {
-        std::istringstream iss(line);
-        float a, b;
-        if (!(iss >> a >> b)) {
-            INFO("error");
-            break;
-            
-        } // error
-        INFO(a << " " << b);
-        GpsPoint_ptr p = GpsPoint_ptr(new GpsPoint());
-        p->m_latitude = a;
-        p->m_longitude = b;
-        
-        if(!init){
-            f.setRef(a, b);
-            init = true;
-        }
-        f.m_gpsModule.setXY(*p);
-        
-        addPoint(p);
-        // process pair (a,b)
-    }
-    savePointB();
-    
-    
-    for(size_t i = 0; i < m_list[0]->m_points.size(); ++i){
-        double c = calculCurbature(m_list[0], i);
-        INFO(i << " " << c);
-    }
-}
-
-
 void CurveAB::savePointB(){
     INFO(m_listAB.size());
     clearLine(m_listAB);

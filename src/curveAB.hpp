@@ -51,10 +51,6 @@ public:
     double distance(double x, double y, double lg);
     void addPoint(GpsPoint_ptr p);
     
-    void loadABCurve();
-    void saveABCurve();
-    
-    
     void savePointB();
     
     double m_distance = 0;

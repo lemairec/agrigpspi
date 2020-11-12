@@ -56,10 +56,23 @@ void LineNewWidget::draw(){
     
 }
 void LineNewWidget::onMouse(int x, int y){
+    GpsFramework & f = GpsFramework::Instance();
+    
     if(m_buttonOk.isActive(x, y)){
+        if(m_name.m_text.size() > 2){
+            if(f.m_line){
+                f.m_lineAB.m_name = m_name.m_text;
+                f.m_lines.add(f.m_lineAB);
+            } else {
+                f.m_curveAB.m_name = m_name.m_text;
+                f.m_lines.add(f.m_curveAB);
+            }
+        }
+        
+        
+        
         m_close = true;
     }
-    GpsFramework & f = GpsFramework::Instance();
     
     if(m_buttonAB.isActive(x, y)){
         if(f.m_etat == Etat_Reset){

@@ -56,6 +56,8 @@ GpsFramework::GpsFramework(){
     
     m_config.load();
     m_parcelles.load();
+    m_lines.load();
+    
 }
 
 void GpsFramework::initOrLoadConfig(){
@@ -66,12 +68,7 @@ void GpsFramework::initOrLoadConfig(){
     m_fileModule.initOrLoad(m_config);
     
     m_distance_cap_vitesse = 3;
-    m_lineAB.m_pointA.m_latitude = m_config.m_a_lat;
-    m_lineAB.m_pointA.m_longitude = m_config.m_a_lon;
-    m_lineAB.m_pointB.m_latitude = m_config.m_b_lat;
-    m_lineAB.m_pointB.m_longitude = m_config.m_b_lon;
     file_job_stream << "[config]\n";
-    setAB();
     m_reloadConfig = true;
     m_debug_log = m_config.m_debug_log;
     
@@ -90,9 +87,7 @@ void GpsFramework::initOrLoadConfig(){
     
     m_curveAB.clearWithoutAB();
     
-    //m_line = false;
-    //m_curveAB.loadABCurve();
-    //m_etat = Etat_OK;
+    //m_lines.loadCurveOrLine("curve_TEST");
 }
 
 void GpsFramework::saveInfoFile(){
@@ -135,8 +130,16 @@ void GpsFramework::setRef(double latitude, double longitude){
            m_gpsModule.setXY(*l2);
        }
     }
-    m_gpsModule.setXY(m_lineAB.m_pointA);
-    m_gpsModule.setXY(m_lineAB.m_pointB);
+    if(m_line){
+        m_gpsModule.setXY(m_lineAB.m_pointA);
+        m_gpsModule.setXY(m_lineAB.m_pointB);
+    } else {
+        m_gpsModule.setXY(m_curveAB.m_pointA);
+        m_gpsModule.setXY(m_curveAB.m_pointB);
+        for(auto p : m_curveAB.m_listAB){
+            m_gpsModule.setXY(*p);
+        }
+    }
 }
 
 
@@ -433,14 +436,8 @@ void GpsFramework::savePointB(){
         m_lineAB.m_pointB = *(*m_list.begin());
     }
     
-    INFO(m_lineAB.m_pointB.m_time << " " << m_lineAB.m_pointB.m_latitude << " " << m_lineAB.m_pointB.m_longitude);
-    if(m_lineAB.m_pointA.m_isOk!=0 && m_lineAB.m_pointB.m_isOk!=0){
-        setAB();
-    }
+    setAB();
     file_job_stream << "[savePointB]\n";
-    
-    m_etat = Etat_OK;
-    m_curveAB.savePointB();
 }
 
 void GpsFramework::setEtat(Etat etat){
@@ -457,16 +454,18 @@ void GpsFramework::setEtat(Etat etat){
     }
 }
 
+
+
+
 void GpsFramework::setAB(){
-    m_config.m_a_lat = m_lineAB.m_pointA.m_latitude;
-    m_config.m_a_lon = m_lineAB.m_pointA.m_longitude;
-    m_config.m_b_lat = m_lineAB.m_pointB.m_latitude;
-    m_config.m_b_lon = m_lineAB.m_pointB.m_longitude;
-    m_config.save();
-    
-    //m_pointA.m_x = 1; m_pointA.m_y = 1;
-    setRef((m_lineAB.m_pointA.m_latitude + m_lineAB.m_pointB.m_latitude)/2, (m_lineAB.m_pointA.m_longitude + m_lineAB.m_pointB.m_longitude)/2);
-    m_lineAB.setAB();
+    if(m_line){
+        setRef((m_lineAB.m_pointA.m_latitude + m_lineAB.m_pointB.m_latitude)/2, (m_lineAB.m_pointA.m_longitude + m_lineAB.m_pointB.m_longitude)/2);
+        m_lineAB.setAB();
+    } else {
+        setRef((m_curveAB.m_pointA.m_latitude + m_curveAB.m_pointB.m_latitude)/2, (m_curveAB.m_pointA.m_longitude + m_curveAB.m_pointB.m_longitude)/2);
+        m_curveAB.savePointB();
+    }
+    m_etat = Etat_OK;
 }
 
 /*void GpsFramework::calculDeplacement(){
