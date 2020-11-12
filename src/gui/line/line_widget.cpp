@@ -58,6 +58,7 @@ void LineWidget::onMouse(int x, int y){
     }
     if(m_buttonParcelleNew.isActive(x, y)){
         GpsWidget * g = GpsWidget::Instance();
+        g->m_lineNewWidget.open();
         g->m_lineNewWidget.m_close = false;
     }
     if(m_buttonParcelleLoad.isActive(x, y)){

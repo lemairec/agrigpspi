@@ -79,10 +79,15 @@ public:
     bool m_debug = false;
     
     void setScene(QGraphicsScene * s);
-    void drawCourbe(double l);
-    void drawLine(Lines_ptr l, QPen & pen);
+    
+    void drawCurve(Lines_ptr l, QPen & pen);
     bool addligne(double l, int i);
     void drawLines();
+    void drawLineCurve();
+    
+    void drawParcelle();
+    void drawSurfaceToDraw();
+    
     void drawTracteur();
     void drawBottom();
     void drawTop();
@@ -110,11 +115,6 @@ public:
     void my_projete(double x, double y, double & x_res, double & y_res);
     void my_projete2(double x, double y, double & x_res, double & y_res);
     bool must_be_draw(double x, double y);
-    
-    //courbe
-    double m_la;
-    double m_lb;
-    double m_lc;
     
     void setSize(int width, int height);
     

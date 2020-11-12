@@ -28,6 +28,8 @@ public:
     double m_largeur = 10;
     bool m_sensAB = true;
     
+    std::string m_name;
+    
     std::vector<GpsPoint_ptr> m_listAB;
     
     int m_i_min = 0;

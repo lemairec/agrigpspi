@@ -101,48 +101,46 @@ double LineAB::calculRearWheelPosition(double p_x, double p_y, double lg, double
 
 
 void LineCurves::load(){
-    std::string file_parcelles = ProjectSourceBin + "/parcelle/parcelles.txt";
+    std::string file_parcelles = ProjectSourceBin + "/line/lines.txt";
     std::ifstream file(file_parcelles);
     std::string line;
-    /*while (std::getline(file, line))
+    while (std::getline(file, line))
     {
-        m_parcelles.push_back(line);
+        m_lines_curves.push_back(line);
     }
-    INFO("parcelles "  << m_parcelles.size());*/
-     
+    INFO("lines_curves "  << m_lines_curves.size());
 }
 
 void LineCurves::save(){
     std::ofstream file;
-    std::string file_parcelles = ProjectSourceBin + "/parcelle/parcelles.txt";
+    std::string file_parcelles = ProjectSourceBin + "/line/lines.txt";
     file.open(file_parcelles, std::ios::out);
-    /*for(auto p : m_parcelles){
+    for(auto p : m_lines_curves){
         file << p << std::endl;
     }
-    INFO("parcelles "  << m_parcelles.size());*/
-     
+    INFO("lines_curves "  << m_lines_curves.size());
 }
 
 
 void LineCurves::add(LineAB & p){
     GpsFramework & f = GpsFramework::Instance();
-    /*if(p.m_name.size() > 2){
-        m_parcelles.push_back(p.m_name);
-        p.saveParcelle(p.m_name);
+    if(p.m_name.size() > 2){
+        m_lines_curves.push_back(p.m_name);
+        //p.saveParcelle(p.m_name);
         save();
     } else {
         f.addError("parcelle nom trop petit");
-    }*/
+    }
 }
 
 void LineCurves::add(CurveAB & p){
     GpsFramework & f = GpsFramework::Instance();
-    /*if(p.m_name.size() > 2){
-        m_parcelles.push_back(p.m_name);
-        p.saveParcelle(p.m_name);
+    if(p.m_name.size() > 2){
+        m_lines_curves.push_back(p.m_name);
+        //p.saveParcelle(p.m_name);
         save();
     } else {
         f.addError("parcelle nom trop petit");
-    }*/
+    }
 }
 

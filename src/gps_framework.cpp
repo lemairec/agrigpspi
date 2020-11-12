@@ -16,6 +16,15 @@ std::ofstream file_job_stream;
 std::ofstream file_debug_stream;
 std::string date_str;
 
+void makedir(std::string dir2){
+    std::string dir = ProjectSourceBin + dir2;
+    std::string s2 = "mkdir -p "+ dir + ";";
+    INFO(s2);
+    if(system( s2.c_str() )){
+        WARN("can not execute : " << s2);
+    };
+}
+
 GpsFramework::GpsFramework(){
     QDateTime date = QDateTime::currentDateTime();
     QString s = date.toString("yyyyMMddThhmm");
@@ -26,22 +35,9 @@ GpsFramework::GpsFramework(){
     //    exit(0);
     }
     
-    {
-        std::string dir = ProjectSourceBin + "/job";
-        std::string s2 = "mkdir -p "+ dir + ";";
-        INFO(s2);
-        if(system( s2.c_str() )){
-            WARN("can not execute : " << s2);
-        };
-    }
-    {
-        std::string dir = ProjectSourceBin + "/parcelle";
-        std::string s2 = "mkdir -p "+ dir + ";";
-        INFO(s2);
-        if(system( s2.c_str() )){
-            WARN("can not execute : " << s2);
-        };
-    }
+    makedir("/job");
+    makedir("/parcelle");
+    makedir("/line");
     
     file_info = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".info";
     

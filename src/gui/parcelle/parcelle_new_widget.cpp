@@ -7,6 +7,7 @@
 
 ParcelleNewWidget::ParcelleNewWidget(){
     m_imgOk = loadImage("/images/ok.png");
+    m_imgCancel = loadImage("/images/cancel.png");
 }
 
 
@@ -15,7 +16,8 @@ void ParcelleNewWidget::setSize(int width, int height){
     
     m_x = 0;
     m_lg = 0.30*m_width;
-    m_buttonOk.setResize(m_lg/2.0, 0.8*m_height, m_petit_button);
+    m_buttonOk.setResize(m_lg*2.0/3.0, 0.8*m_height, m_petit_button);
+    m_buttonCancel.setResize(m_lg/3.0, 0.8*m_height, m_petit_button);
     
     m_name.setResize(m_x + m_lg*3/4, 0.35*m_height);
     m_buttonParcelleStartPause.setResize(m_lg*1/4, 0.5*m_height, m_petit_button);
@@ -90,10 +92,15 @@ void ParcelleNewWidget::draw(){
     }
     
     drawButtonImage(&m_buttonOk, *m_imgOk);
+    drawButtonImage(&m_buttonCancel, *m_imgCancel);
     
 }
 void ParcelleNewWidget::onMouse(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
+    if(m_buttonCancel.isActive(x, y)){
+        m_close = true;
+        f.m_etat = Etat_OK;
+    }
     if(m_buttonOk.isActive(x, y)){
         m_close = true;
         f.m_etat = Etat_OK;

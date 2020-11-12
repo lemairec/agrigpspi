@@ -11,6 +11,8 @@ public:
     
     bool m_sensAB = true;
     
+    std::string m_name;
+    
     double m_a = 0;
     double m_b = 0;
     double m_c = 0;
