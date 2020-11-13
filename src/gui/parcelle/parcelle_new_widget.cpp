@@ -18,9 +18,9 @@ void ParcelleNewWidget::setSize(int width, int height){
     m_lg = 0.30*m_width;
     m_buttonOk.setResize(m_lg*2.0/3.0, 0.8*m_height, m_petit_button);
     m_buttonCancel.setResize(m_lg/3.0, 0.8*m_height, m_petit_button);
-    
-    m_name.setResize(m_x + m_lg*3/4, 0.35*m_height);
+    m_name.setResize(m_x + 0.15*m_width, 0.20*m_width);
     m_buttonParcelleStartPause.setResize(m_lg*1/4, 0.5*m_height, m_petit_button);
+    m_buttonFlag.setResize(m_lg*1/4, 0.6*m_height, m_petit_button);
     
 }
 
@@ -65,20 +65,17 @@ void ParcelleNewWidget::drawParcelle(){
 
 void ParcelleNewWidget::draw(){
     GpsFramework & f = GpsFramework::Instance();
-    scene->addRect(m_x, 0, m_width, m_height, m_penBlack, m_brushWhite);
-    
-    scene->addRect(m_width*0.4, m_height*0.05, m_width*0.6-m_height*0.05, m_height*0.9, m_penBlack, m_parcelleBrush);
-    drawParcelle();
+    scene->addRect(m_x, m_height*0.1, m_lg, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
     //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
     
     {
-        QString s = "Nouvelle Parcelle";
+        QString s = "nouvelle parcelle";
         drawQText(s, m_lg/2, 0.15*m_height, sizeText_big, true);
     }
     
     {
         QString s = "Nom de la parcelle : ";
-        drawQText(s, m_x+30, 0.25*m_height, sizeText_big, false);
+        drawQText(s, m_lg/2, 0.25*m_height, sizeText_big, true);
     }
     drawValueGuiKeyBoard(&m_name);
     {
@@ -90,10 +87,15 @@ void ParcelleNewWidget::draw(){
         drawButton(&m_buttonParcelleStartPause);
         
     }
+    {
+        QString s = "Flag";
+        drawQText(s, m_buttonFlag.m_x+30, m_buttonParcelleStartPause.m_y, sizeText_big, false);
+        drawButton(&m_buttonFlag);
+        
+    }
     
     drawButtonImage(&m_buttonOk, *m_imgOk);
     drawButtonImage(&m_buttonCancel, *m_imgCancel);
-    
 }
 void ParcelleNewWidget::onMouse(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
@@ -115,6 +117,9 @@ void ParcelleNewWidget::onMouse(int x, int y){
         } else {
             f.m_etat = Etat_ParcelleAdd;
         }
+    }
+    if(m_buttonFlag.isActive(x, y)){
+        f.m_parcelle.addFlag();
     }
     if(isActiveValueGuiKeyBoard(&m_name,x,y)){
         m_key_board_widget->m_close = false;

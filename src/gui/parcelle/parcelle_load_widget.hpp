@@ -10,6 +10,8 @@ class ParcelleLoadWidget : public BaseWidget {
     ButtonGui m_buttonCancel;
     
     SelectButtonGui m_selectParcelles;
+    SelectButtonGui m_selectLine;
+    int m_parcelleSelected = 0;
     
     int m_x = 0;
     int m_lg = 20;

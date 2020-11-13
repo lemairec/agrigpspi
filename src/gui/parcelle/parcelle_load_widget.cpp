@@ -20,6 +20,7 @@ void ParcelleLoadWidget::setSize(int width, int height){
     m_buttonCancel.setResize(m_lg/3.0, 0.8*m_height, m_petit_button);
       
     m_selectParcelles.setResize(m_x+30, 0.25*m_height, m_petit_button);
+    m_selectLine.setResize(m_x+30, 0.5*m_height, m_petit_button);
     //m_buttonParcelleLoad.setResize(m_x+30, 0.35*m_height, m_petit_button);
 }
 
@@ -47,12 +48,75 @@ void ParcelleLoadWidget::drawParcelle(){
     }
     
     QPolygon poly;
+   
+    /*double x_min = 0, y_min, x_max, y_max;
     for(auto p : parcelle.m_contour){
-        double x = -(p->m_x-parcelle.m_center_x)*zoom + m_width*0.7;
-        double y = (p->m_y-parcelle.m_center_y)*zoom + m_height/2;
+        if(x_min == 0){
+            x_min = p->m_x;
+            x_max = p->m_x;
+            y_min = p->m_y;
+            y_max = p->m_y;
+        }
+        if(x_min > p->m_x){ x_min = p->m_x; }
+        if(x_max < p->m_x){ x_max = p->m_x; }
+        if(y_min > p->m_y){ y_min = p->m_y; }
+        if(y_max < p->m_y){ y_max = p->m_y; }
+    }
+    INFO(x_min << " " << x_max << " "<< y_min << " " << y_max);
+    {
+        double x = m_width*0.7 - (x_min-parcelle.m_center_x)*zoom;
+        double y = m_height/2 + (y_min-parcelle.m_center_y)*zoom;
+        scene->addEllipse(x, y, 3,3, m_penRed);
+    }
+    {
+        double x = m_width*0.7 - (x_max-parcelle.m_center_x)*zoom;
+        double y = m_height/2 + (y_max-parcelle.m_center_y)*zoom;
+        scene->addEllipse(x, y, 3,3, m_penRed);
+    }
+    double w = (parcelle.m_bounding_rect_width)*zoom;
+    double h = (parcelle.m_bounding_rect_height)*zoom;
+    scene->addRect(m_width*0.7-w/2,  m_height/2-h/2, w,h, m_penBlack);
+    */
+    
+    
+    for(auto p : parcelle.m_contour){
+        double x = m_width*0.7 - (p->m_x-parcelle.m_center_x)*zoom;
+        double y = m_height/2 + (p->m_y-parcelle.m_center_y)*zoom;
         poly.push_back(QPoint(x, y));
     }
+    
+    
+    
+    
+    
+    
     scene->addPolygon(poly, m_penNo, m_brushDarkGray);
+    
+    
+    for(auto f : parcelle.m_flag){
+        auto p = parcelle.m_contour[f];
+        double x = m_width*0.7 - (p->m_x-parcelle.m_center_x)*zoom;
+        double y = m_height/2 + (p->m_y-parcelle.m_center_y)*zoom;
+        scene->addEllipse(x-2, y-2, 4, 4, m_penRed);
+    }
+    
+    if(m_selectLine.m_selectedValue != 0){
+        int i = m_selectLine.m_selectedValue-1;
+        if(parcelle.m_flag.size()>2){
+            int debut = parcelle.m_flag[i%parcelle.m_flag.size()];
+            int fin = parcelle.m_flag[(i+1)%parcelle.m_flag.size()];
+            
+            auto p1 = parcelle.m_contour[debut];
+            auto p2 = parcelle.m_contour[fin];
+            
+            double x1 = m_width*0.7 - (p1->m_x-parcelle.m_center_x)*zoom;
+            double y1 = m_height/2 + (p1->m_y-parcelle.m_center_y)*zoom;
+            double x2 = m_width*0.7 - (p2->m_x-parcelle.m_center_x)*zoom;
+            double y2 = m_height/2 + (p2->m_y-parcelle.m_center_y)*zoom;
+            scene->addLine(x1, y1, x2, y2, m_penRed);
+            
+        }
+    }
     
     QString s = QString::number(parcelle.m_surface_ha)+" ha";
     drawQText(s, m_width*0.45, m_height*0.1);
@@ -71,28 +135,71 @@ void ParcelleLoadWidget::draw(){
     
     {
         QString s = "Load parcelles";
-        drawQText(s, m_lg/2, 0.15*m_height, sizeText_big, true);
+        drawQText(s, m_lg/5, 0.15*m_height, sizeText_big, false);
     }
     
     drawSelectButtonGuiClose(&m_selectParcelles);
-    drawSelectButtonGuiOpen(&m_selectParcelles);
+    
+    if(m_parcelleSelected != 0){
+        {
+            QString s = "Load lines";
+            drawQText(s, m_lg/5, 0.4*m_height, sizeText_big, false);
+        }
+        drawSelectButtonGuiClose(&m_selectLine);
+    }
+    
     
     
     drawButtonImage(&m_buttonOk, *m_imgOk);
     drawButtonImage(&m_buttonCancel, *m_imgCancel);
+    
+    drawSelectButtonGuiOpen(&m_selectParcelles);
+    if(m_parcelleSelected != 0){
+        drawSelectButtonGuiOpen(&m_selectLine);
+    }
+    
     
 }
 void ParcelleLoadWidget::onMouse(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
     if(m_buttonOk.isActive(x, y)){
         f.m_parcelle.loadParcelle(m_selectParcelles.getValueString());
+        
+        
+        if(m_selectLine.m_selectedValue != 0){
+           int i = m_selectLine.m_selectedValue-1;
+           if(f.m_parcelle.m_flag.size()>2){
+               int debut = f.m_parcelle.m_flag[i%f.m_parcelle.m_flag.size()];
+               int fin = f.m_parcelle.m_flag[(i+1)%f.m_parcelle.m_flag.size()];
+               
+               auto p1 = f.m_parcelle.m_contour[debut];
+               auto p2 = f.m_parcelle.m_contour[fin];
+               
+               f.m_line = true;
+               f.m_lineAB.m_pointA = *p1;
+               f.m_lineAB.m_pointB = *p2;
+               f.setAB();
+           }
+        }
         m_close = true;
     }
     if(m_buttonCancel.isActive(x, y)){
         m_close = true;
     }
     onMouseSelectButton(&m_selectParcelles, x, y);
-
+    if(m_parcelleSelected != m_selectParcelles.m_selectedValue){
+        m_parcelleSelected = m_selectParcelles.m_selectedValue;
+        m_selectLine.clear();
+        m_selectLine.addValue("aucune");
+        f.m_parcelle.loadParcelle(m_selectParcelles.getValueString());
+        for(size_t i=0; i<f.m_parcelle.m_flag.size(); ++i){
+            m_selectLine.addValue("line");
+        }
+    }
+    
+    if(m_parcelleSelected != 0){
+        onMouseSelectButton(&m_selectLine, x, y);
+    }
 }
 
 void ParcelleLoadWidget::open(){
@@ -102,5 +209,4 @@ void ParcelleLoadWidget::open(){
     for(auto n : f.m_parcelles.m_parcelles){
         m_selectParcelles.addValue(n);
     }
-
 }

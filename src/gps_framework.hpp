@@ -34,6 +34,10 @@ struct Tracteur {
     
     double m_x_outil_arriere = 0;
     double m_y_outil_arriere = 0;
+    double m_x_outil_arriere_gauche = 0;
+    double m_y_outil_arriere_gauche = 0;
+    double m_x_outil_arriere_droite = 0;
+    double m_y_outil_arriere_droite = 0;
     
 };
 
@@ -48,6 +52,11 @@ enum AlgoPilot {
     FollowKarott = 0,
     FollowKarottVitesse = 1,
     RearWheelPosition = 2
+};
+
+struct OutilPosition {
+    GpsPoint_ptr m_point_right;
+    GpsPoint_ptr m_point_left;
 };
 
 class SurfaceToDraw{

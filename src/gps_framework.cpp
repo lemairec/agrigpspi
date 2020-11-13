@@ -130,6 +130,9 @@ void GpsFramework::setRef(double latitude, double longitude){
            m_gpsModule.setXY(*l2);
        }
     }
+    for(auto l: m_parcelle.m_contour){
+        m_gpsModule.setXY(*l);
+    }
     if(m_line){
         m_gpsModule.setXY(m_lineAB.m_pointA);
         m_gpsModule.setXY(m_lineAB.m_pointB);
@@ -613,7 +616,20 @@ void GpsFramework::calculDeplacement(){
             m_tracteur.m_x_essieu_avant = point1->m_x + sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             m_tracteur.m_y_essieu_avant = point1->m_y + cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             m_tracteur.m_x_essieu_arriere = point1->m_x - sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
-            m_tracteur.m_x_essieu_arriere = point1->m_y - cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
+            m_tracteur.m_y_essieu_arriere = point1->m_y - cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
+            
+            m_tracteur.m_x_outil_arriere = point1->m_x - sin(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1);
+            m_tracteur.m_y_outil_arriere = point1->m_y - cos(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1);
+            
+            m_tracteur.m_x_outil_arriere_droite = point1->m_x - sin(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1)
+                + cos(m_deplacementAngle)*m_config.m_outil_largeur/2;
+            m_tracteur.m_y_outil_arriere_droite = point1->m_y - cos(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1)
+                - sin(m_deplacementAngle)*m_config.m_outil_largeur/2;
+            
+            m_tracteur.m_x_outil_arriere_gauche = point1->m_x - sin(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1)
+                - cos(m_deplacementAngle)*m_config.m_outil_largeur/2;
+            m_tracteur.m_y_outil_arriere_gauche = point1->m_y - cos(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1)
+                + sin(m_deplacementAngle)*m_config.m_outil_largeur/2;
             
             if(m_gga && m_time_last_point > 0 ){
                 m_vitesse = m_distance_last_point/1000.0/m_time_last_point;

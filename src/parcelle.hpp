@@ -13,11 +13,13 @@ public:
     double m_surface_ha = 0;
     
     std::vector<GpsPoint_ptr> m_contour;
+    std::vector<int> m_flag;
     
     double m_bounding_rect_x, m_bounding_rect_y, m_bounding_rect_width, m_bounding_rect_height;
     double m_center_x, m_center_y;
     
     void addPoint(GpsPoint_ptr p);
+    void addFlag();
     
     bool isInit(){
         return m_is_init;

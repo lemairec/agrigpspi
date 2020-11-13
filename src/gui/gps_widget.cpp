@@ -283,16 +283,20 @@ void GpsWidget::drawLineCurve(){
 
 
 
-void GpsWidget::drawParcelle(){
+void GpsWidget::drawParcelle(bool force){
     GpsFramework & f = GpsFramework::Instance();
-    if(f.m_parcelle.isInit()){
+    if(force || f.m_parcelle.isInit()){
         QPolygon p;
         for(auto s: f.m_parcelle.m_contour){
             double x1, y1;
             my_projete2(s->m_x, s->m_y, x1, y1);
             p.push_back(QPoint(x1, y1));
         }
-        scene->addPolygon(p, m_penNo, m_parcelleBrush);
+        if(force){
+            scene->addPolygon(p, m_penBlack, m_parcelleBrush);
+        } else {
+            scene->addPolygon(p, m_penNo, m_parcelleBrush);
+        }
         
     }
 }
@@ -426,24 +430,30 @@ void GpsWidget::draw_force(){
     
     scene->clear();
     
-    drawParcelle();
-    drawLineCurve();
-    
-    if(f.m_config.m_debug){
-        for(auto p: f.m_list){
-            double x1, y1;
-            my_projete2(p->m_x, p->m_y, x1, y1);
-            scene->addEllipse(x1, y1, 1, 1, m_penBlack, m_brushNo);
+    if(f.m_etat == Etat_ParcelleAdd){
+        drawTracteur();
+        drawParcelle(true);
+    } else {
+        
+        drawParcelle();
+        drawLineCurve();
+        
+        if(f.m_config.m_debug){
+            for(auto p: f.m_list){
+                double x1, y1;
+                my_projete2(p->m_x, p->m_y, x1, y1);
+                scene->addEllipse(x1, y1, 1, 1, m_penBlack, m_brushNo);
+            }
         }
+        drawSurfaceToDraw();
+        
+        drawContour();
+        drawTracteur();
+        drawTop();
+        drawBottom();
+        
+        addButtons();
     }
-    drawSurfaceToDraw();
-    
-    drawContour();
-    drawTracteur();
-    drawTop();
-    drawBottom();
-    
-    addButtons();
     
     
     auto end = std::chrono::system_clock::now();
@@ -586,6 +596,12 @@ void GpsWidget::drawTracteur(){
         
         
         scene->addEllipse(w/2 - 0.10*m_zoom, h/2 - 0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
+        
+        
+        my_projete2(f.m_tracteur.m_x_outil_arriere, f.m_tracteur.m_y_outil_arriere, x, y);
+        scene->addEllipse(x-3, y-3, 6, 6, m_penRed, m_brushGreen);
+        my_projete2(f.m_tracteur.m_x_outil_arriere_droite, f.m_tracteur.m_y_outil_arriere_droite, x, y);
+        scene->addEllipse(x-2, y-2, 4, 4, m_penRed, m_brushGreen);
         
     } else {
         QPolygon polygon;

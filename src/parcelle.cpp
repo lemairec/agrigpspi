@@ -16,6 +16,7 @@ Parcelle::Parcelle(){
 
 void Parcelle::clear(){
     m_contour.clear();
+    m_flag.clear();
     m_is_init = false;
     m_name = "";
     m_bounding_rect_x = 0;
@@ -44,13 +45,13 @@ void Parcelle::compute(){
         if(y_min > p->m_y){ y_min = p->m_y; }
         if(y_max < p->m_y){ y_max = p->m_y; }
     }
-    //INFO(x_min << " " << x_max << " "<< y_min << " " << y_max);
+    INFO(x_min << " " << x_max << " "<< y_min << " " << y_max);
     m_bounding_rect_x = x_min;
     m_bounding_rect_y = y_min;
     m_bounding_rect_width = x_max - x_min;
     m_bounding_rect_height = y_max - y_min;
     
-    //INFO(m_bounding_rect_x << " " << m_bounding_rect_y << " ("<< m_bounding_rect_width << " " << m_bounding_rect_height << ")");
+    INFO(m_bounding_rect_x << " " << m_bounding_rect_y << " ("<< m_bounding_rect_width << " " << m_bounding_rect_height << ")");
     m_center_x = m_bounding_rect_x+m_bounding_rect_width/2;
     m_center_y = m_bounding_rect_y+m_bounding_rect_height/2;
     
@@ -70,12 +71,21 @@ void Parcelle::addPoint(GpsPoint_ptr p){
     m_contour.push_back(p);
 }
 
+void Parcelle::addFlag(){
+    m_flag.push_back(m_contour.size());
+}
+
 void Parcelle::saveParcelle(std::string name){
     std::string path = ProjectSourceBin + "/parcelle/" + name + ".txt";
     std::ofstream file;
     file.open(path, std::ios::out);
+    file << "CONTOUR" << std::endl;
     for(auto p : m_contour){
         file << std::setprecision(11) << p->m_latitude << " " << p->m_longitude << std::endl;
+    }
+    file << "FLAG" << std::endl;
+    for(auto p : m_flag){
+        file << p << std::endl;
     }
 }
 
@@ -90,16 +100,20 @@ void Parcelle::loadParcelle(std::string name){
         INFO(file_job << " is open");
         GpsFramework & f = GpsFramework::Instance();
         
+        std::getline(file, line);
         while (std::getline(file, line))
         {
             std::istringstream iss(line);
+            if(line == "FLAG"){
+                break;
+            }
             float a, b;
             if (!(iss >> a >> b)) {
-                INFO("error");
+                INFO("error " << line);
                 break;
                 
             } // error
-            INFO(a << " " << b);
+            //INFO(a << " " << b);
             GpsPoint_ptr p = GpsPoint_ptr(new GpsPoint());
             p->m_latitude = a;
             p->m_longitude = b;
@@ -113,6 +127,18 @@ void Parcelle::loadParcelle(std::string name){
             addPoint(p);
             // process pair (a,b)
         }
+        
+        while (std::getline(file, line)){
+           std::istringstream iss(line);
+           int a;
+           if (!(iss >> a)) {
+               INFO("error2" << line);
+               break;
+               
+           }
+            m_flag.push_back(a);
+           // process pair (a,b)
+       }
         m_name = name;
         compute();
     } else {

@@ -7,6 +7,7 @@ class ParcelleNewWidget : public BaseWidget {
     QPixmap * m_imgOk;
     QPixmap * m_imgCancel;
     ButtonGui m_buttonOk;
+    ButtonGui m_buttonFlag;
     ButtonGui m_buttonCancel;
     
     ButtonGui m_buttonParcelleStartPause;

@@ -85,7 +85,7 @@ public:
     void drawLines();
     void drawLineCurve();
     
-    void drawParcelle();
+    void drawParcelle(bool force = false);
     void drawSurfaceToDraw();
     
     void drawTracteur();
