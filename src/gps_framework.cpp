@@ -211,7 +211,26 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     calculDeplacement();
 
     if(m_etat == Etat_OK){
-       if(m_line == false){
+       if(m_line){
+           if(m_lineAB.m_ab_x != 0 || m_lineAB.m_ab_y != 0){
+               double det = m_lineAB.m_a*m_deplacementY - m_lineAB.m_b*m_deplacementX;
+               //m_deplacementAngle = m_deplacementAngle+3.14;
+               m_lineAB.m_sensAB = (det < 0);
+           }
+           double dist = m_lineAB.distance(p->m_x, p->m_y, m_config.m_outil_largeur);
+           setDistance(dist);
+           
+           if(m_pilot_algo == AlgoPilot::FollowKarott){
+               m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
+           } else if(m_pilot_algo == AlgoPilot::FollowKarottVitesse){
+               double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
+               m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, pilot_lookahead);
+           } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
+               m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_x_antenne, m_tracteur.m_y_antenne, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+           } else {
+               m_angle_correction = 0;
+           }
+       } else {
            m_curveAB.calculProjete(p, m_deplacementX, m_deplacementY);
            double dist = m_curveAB.m_distance;
            setDistance(dist);
@@ -226,26 +245,10 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
            } else {
                m_angle_correction = 0;
            }
-           
-           
-           
-       } else {
-           double dist = m_lineAB.distance(p->m_x, p->m_y, m_config.m_outil_largeur);
-           setDistance(dist);
-           
-           if(m_pilot_algo == AlgoPilot::FollowKarott){
-               m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
-           } else if(m_pilot_algo == AlgoPilot::FollowKarottVitesse){
-               double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
-               m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, pilot_lookahead);
-           } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-               m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_x_antenne, m_tracteur.m_y_antenne, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-           } else {
-               m_angle_correction = 0;
-           }
        }
    } else {
        setDistance(0);
+       m_angle_correction = 0;
    }
     
    double angle_max = 0.5;
@@ -410,11 +413,11 @@ void GpsFramework::onFrame(const std::string &frame){
 void GpsFramework::setDistance(double distance){
     m_distanceAB = distance;
     
-    double coeff = m_config.m_outil_largeur/(2*6);
+    double coeff = m_config.m_outil_largeur/(2*10);
     if(m_distanceAB < 0.0){
-        m_ledAB = round(-m_distanceAB/coeff) + 1;
+        m_ledAB = round(-m_distanceAB/coeff);
     } else {
-        m_ledAB = -round(m_distanceAB/coeff) - 1;
+        m_ledAB = -round(m_distanceAB/coeff);
     }
 }
 
@@ -599,12 +602,6 @@ void GpsFramework::calculDeplacement(){
                 }
                 //int perc = temp/m_deplacementAngle*100;
                 //INFO(perc << " " << temp/3.14*180 << " " << m_deplacementAngle/3.14*180);
-            }
-            
-            if(m_lineAB.m_ab_x != 0 || m_lineAB.m_ab_y != 0){
-                double det = m_lineAB.m_a*m_deplacementY - m_lineAB.m_b*m_deplacementX;
-                //m_deplacementAngle = m_deplacementAngle+3.14;
-                m_lineAB.m_sensAB = (det < 0);
             }
             
             

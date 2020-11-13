@@ -99,7 +99,7 @@ public:
     bool m_reloadConfig = true;
     
     bool m_line = true;
-    Etat m_etat = Etat_OK;
+    Etat m_etat = Etat_Reset;
     LineAB m_lineAB;
     CurveAB m_curveAB;
     LineCurves m_lines;

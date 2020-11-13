@@ -139,7 +139,7 @@ public:
     QBrush m_brushLightGrayDebug;
     
 public:
-    void setScene(QGraphicsScene * s){
+    virtual void setScene(QGraphicsScene * s){
         scene = s;
     }
 public:
