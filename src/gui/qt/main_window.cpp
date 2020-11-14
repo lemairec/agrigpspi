@@ -77,12 +77,13 @@ void MainWindow::setupUi(){
     m_view->setupUi();
     this->setCentralWidget(m_view);
     
-#ifdef APPLE
-    creerMenu();
-    //showMaximized();
-#else
-    showFullScreen();
-#endif
+    
+    GpsFramework & f = GpsFramework::Instance();
+    if(f.m_config.m_fullscreen){
+        showFullScreen();
+    } else {
+        creerMenu();
+    }
     
     //showMaximized();
     //showFullScreen();

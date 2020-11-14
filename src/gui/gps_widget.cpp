@@ -556,36 +556,42 @@ void GpsWidget::drawTracteur(){
     if(m_a){
         y = h/2;
         
-        double l2 = f.m_tracteur.m_antenne_essieu_arriere*m_zoom/2;
+        double l2 = f.m_tracteur.m_antenne_essieu_arriere*m_zoom;
         
         double y_arriere = y+l2;
         
         //outil
-        scene->addRect(w/2 - 1.5*m_zoom, y_arriere + 1.5*m_zoom, 3.0*m_zoom, 0.5*m_zoom, m_penNo, m_brushOutil);
-        scene->addRect(w/2 - 0.1*m_zoom, y_arriere, 0.2*m_zoom, 1.5*m_zoom, m_penNo, m_brushOutil);
+        double l_outil = f.m_tracteur.m_outil_distance;
+        double lg_outil = f.m_tracteur.m_outil_largeur;
+        scene->addRect(w/2 - lg_outil*0.5*m_zoom, y_arriere + (l_outil-0.5)*m_zoom, lg_outil*m_zoom, 0.5*m_zoom, m_penNo, m_brushOutil);
+        scene->addRect(w/2 - 0.1*m_zoom, y_arriere, 0.2*m_zoom, (l_outil)*m_zoom, m_penNo, m_brushOutil);
         
         
         double voie = 1.8*m_zoom;
-        double l_roue = 1.5*m_zoom/2;
+        double l_roue = 1.7*m_zoom/2;
         scene->addLine(w/2 - voie/2, y_arriere, w/2 + voie/2, y_arriere, m_penTractorEssieu);
         scene->addLine(w/2 - voie/2, y_arriere-l_roue, w/2 - voie/2, y_arriere+l_roue, m_penTractorRoue);
         scene->addLine(w/2 + voie/2, y_arriere-l_roue, w/2 + voie/2, y_arriere+l_roue, m_penTractorRoue);
         //scene->addRect(w/2, y_arriere - voie/2, y-4*l2, l2, 4*l2, m_penBlue);
         
+        //scene->addRect(w/2 - voie/2, y_arriere-f.m_tracteur.m_empatement*m_zoom, voie, f.m_tracteur.m_empatement*m_zoom, m_penTractorEssieu);
+        
         
         //scene->addRect(w/2 - l2/2, y-4*l2, l2, 4*l2, m_penTractorEssieu, m_brushTractor);
         
         //cabine
-        scene->addRect(w/2 - 1.5*m_zoom/2, y_arriere-1*m_zoom, 1.5*m_zoom, 1.5*m_zoom, m_penNo, m_brushTractor);
+        double l_cabine = 1.6*m_zoom;
+        scene->addRect(w/2 - l_cabine/2, y_arriere-1.2*m_zoom, l_cabine, l_cabine, m_penNo, m_brushTractor);
         
         //capot
-        double lg_capot = 0.9*m_zoom;
+        
+        double lg_capot = 1*m_zoom;
         double l_capot = (f.m_tracteur.m_antenne_essieu_avant+0.2)*m_zoom;
         scene->addRect(w/2 - lg_capot/2, y-l_capot, lg_capot, l_capot, m_penNo, m_brushTractor);
         
         double y_direction = y-f.m_tracteur.m_antenne_essieu_avant*m_zoom;
         scene->addLine(w/2 - voie/2, y_direction, w/2 + voie/2, y_direction, m_penTractorEssieu);
-        double l_roue2 = 0.8*m_zoom/2;
+        double l_roue2 = 1.1*m_zoom/2;
         
         for(int i = -1; i<=1; i+=2){
             int x=m_width/2+i*voie/2;

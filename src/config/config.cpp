@@ -29,6 +29,8 @@ void Config::save(){
     
     settings.setValue("menu_vertical", m_menu_vertical);
     settings.setValue("debug_log", m_debug_log);
+    settings.setValue("fullscreen", m_fullscreen);
+    
     
     QString input_gps = QString::fromStdString(m_input_gps);
     settings.setValue("input_gps", input_gps);
@@ -94,6 +96,9 @@ void Config::load(){
     }
     if(settings.contains("debug_log")){
         m_debug_log = settings.value("debug_log").toBool();
+    }
+    if(settings.contains("fullscreen")){
+        m_fullscreen = settings.value("fullscreen").toBool();
     }
     
     if(settings.contains("input_gps")){

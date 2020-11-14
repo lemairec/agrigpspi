@@ -81,6 +81,8 @@ void GpsFramework::initOrLoadConfig(){
     m_tracteur.m_antenne_essieu_avant = m_config.m_tracteur_empatement - m_config.m_tracteur_antenne_pont_arriere;
     m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_antenne_pont_arriere;
     m_tracteur.m_empatement = m_config.m_tracteur_empatement;
+    m_tracteur.m_outil_distance = m_config.m_outil_distance;
+    m_tracteur.m_outil_largeur = m_config.m_outil_largeur;
     
     m_curveAB.m_largeur = m_config.m_outil_largeur;
     m_gga = m_config.m_gga;
@@ -618,17 +620,19 @@ void GpsFramework::calculDeplacement(){
             m_tracteur.m_x_essieu_arriere = point1->m_x - sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
             m_tracteur.m_y_essieu_arriere = point1->m_y - cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
             
-            m_tracteur.m_x_outil_arriere = point1->m_x - sin(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1);
-            m_tracteur.m_y_outil_arriere = point1->m_y - cos(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1);
             
-            m_tracteur.m_x_outil_arriere_droite = point1->m_x - sin(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1)
+            double d_antenne_outil = m_tracteur.m_antenne_essieu_arriere+m_tracteur.m_outil_distance;
+            m_tracteur.m_x_outil_arriere = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil);
+            m_tracteur.m_y_outil_arriere = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil);
+            
+            m_tracteur.m_x_outil_arriere_droite = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
                 + cos(m_deplacementAngle)*m_config.m_outil_largeur/2;
-            m_tracteur.m_y_outil_arriere_droite = point1->m_y - cos(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1)
+            m_tracteur.m_y_outil_arriere_droite = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
                 - sin(m_deplacementAngle)*m_config.m_outil_largeur/2;
             
-            m_tracteur.m_x_outil_arriere_gauche = point1->m_x - sin(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1)
+            m_tracteur.m_x_outil_arriere_gauche = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
                 - cos(m_deplacementAngle)*m_config.m_outil_largeur/2;
-            m_tracteur.m_y_outil_arriere_gauche = point1->m_y - cos(m_deplacementAngle)*(m_tracteur.m_antenne_essieu_arriere+1)
+            m_tracteur.m_y_outil_arriere_gauche = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
                 + sin(m_deplacementAngle)*m_config.m_outil_largeur/2;
             
             if(m_gga && m_time_last_point > 0 ){
