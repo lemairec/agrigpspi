@@ -72,7 +72,11 @@ void Parcelle::addPoint(GpsPoint_ptr p){
 }
 
 void Parcelle::addFlag(){
-    m_flag.push_back(m_contour.size());
+    if(m_contour.size() > 0){
+        m_flag.push_back(m_contour.size()-1);
+    } else {
+        m_flag.push_back(0);
+    }
 }
 
 void Parcelle::saveParcelle(std::string name){

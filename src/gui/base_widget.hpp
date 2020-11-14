@@ -133,6 +133,7 @@ public:
     QBrush m_parcelleBrush;
     
     QBrush m_brushGreen;
+    QBrush m_brushRed;
     QBrush m_grayBrush;
     QBrush m_greenBrush;
     QBrush m_brushDarkGray;

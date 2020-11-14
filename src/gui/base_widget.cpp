@@ -179,6 +179,7 @@ BaseWidget::BaseWidget(){
     m_penBlue = QPen(Qt::blue);
     m_penBlue2 = QPen(Qt::blue, 5);
     
+    
     m_grayBrush = QBrush (QColor(200,200,200));
     m_parcelleBrush = QBrush(QColor(133,146,118, 100));
     
@@ -198,6 +199,7 @@ BaseWidget::BaseWidget(){
     m_brushWhiteAlpha =QBrush(white);
     m_brushGreen = QBrush(QColor(0, 150, 0, 100));
     m_penNo.setColor(QColor(0, 250, 0, 0));
+    m_brushRed = QBrush(Qt::red);
 }
 
 

@@ -8,6 +8,9 @@
 ParcelleNewWidget::ParcelleNewWidget(){
     m_imgOk = loadImage("/images/ok.png");
     m_imgCancel = loadImage("/images/cancel.png");
+    m_imgFlag = loadImage("/images/flag.png");
+    m_imgRecord = loadImage("/images/record.png");
+    m_imgPause = loadImage("/images/pause.png");
 }
 
 
@@ -79,18 +82,21 @@ void ParcelleNewWidget::draw(){
     }
     drawValueGuiKeyBoard(&m_name);
     {
+        QPixmap & p = *m_imgRecord;
         QString s = "Play";
         if(f.m_etat == Etat_ParcelleAdd){
             s = "Pause";
+            p = *m_imgPause;
         }
         drawQText(s, m_buttonParcelleStartPause.m_x+30, m_buttonParcelleStartPause.m_y, sizeText_big, false);
-        drawButton(&m_buttonParcelleStartPause);
+        drawButtonImage(&m_buttonParcelleStartPause, p);
         
     }
     {
         QString s = "Flag";
-        drawQText(s, m_buttonFlag.m_x+30, m_buttonParcelleStartPause.m_y, sizeText_big, false);
-        drawButton(&m_buttonFlag);
+        drawQText(s, m_buttonFlag.m_x+30, m_buttonFlag.m_y, sizeText_big, false);
+        drawButtonImage(&m_buttonFlag, *m_imgFlag);
+        
         
     }
     

@@ -294,6 +294,12 @@ void GpsWidget::drawParcelle(bool force){
         }
         if(force){
             scene->addPolygon(p, m_penBlack, m_parcelleBrush);
+            for(auto i: f.m_parcelle.m_flag){
+                double x, y;
+                auto p = f.m_parcelle.m_contour[i];
+                my_projete2(p->m_x, p->m_y, x, y);
+                scene->addEllipse(x-3, y-3, 6, 6, m_penBlack, m_brushRed);
+            }
         } else {
             scene->addPolygon(p, m_penNo, m_parcelleBrush);
         }
