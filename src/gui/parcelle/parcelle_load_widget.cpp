@@ -97,7 +97,7 @@ void ParcelleLoadWidget::drawParcelle(){
         auto p = parcelle.m_contour[f];
         double x = m_width*0.7 - (p->m_x-parcelle.m_center_x)*zoom;
         double y = m_height/2 + (p->m_y-parcelle.m_center_y)*zoom;
-        scene->addEllipse(x-2, y-2, 4, 4, m_penRed);
+        scene->addEllipse(x-3, y-3, 6, 6, m_penBlack, m_brushRed);
     }
     
     if(m_selectLine.m_selectedValue != 0){
