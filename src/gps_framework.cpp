@@ -568,7 +568,10 @@ void GpsFramework::setAB(){
 }*/
 
 void GpsFramework::calculDeplacement(){
-    
+    m_tracteur.m_pt_outil_arriere = nullptr;
+    m_tracteur.m_pt_outil_arriere_droite = nullptr;
+    m_tracteur.m_pt_outil_arriere_gauche = nullptr;
+        
     
     if(m_list.size() > 3){
         GpsPoint_ptr point1 = m_list.front();
@@ -622,18 +625,25 @@ void GpsFramework::calculDeplacement(){
             
             
             double d_antenne_outil = m_tracteur.m_antenne_essieu_arriere+m_tracteur.m_outil_distance;
-            m_tracteur.m_x_outil_arriere = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil);
-            m_tracteur.m_y_outil_arriere = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil);
+            m_tracteur.m_pt_outil_arriere = GpsPoint_ptr(new GpsPoint);
+            m_tracteur.m_pt_outil_arriere->m_x = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil);
+            m_tracteur.m_pt_outil_arriere->m_y = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil);
             
-            m_tracteur.m_x_outil_arriere_droite = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
+            m_tracteur.m_pt_outil_arriere_droite = GpsPoint_ptr(new GpsPoint);
+            m_tracteur.m_pt_outil_arriere_droite->m_x = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
                 + cos(m_deplacementAngle)*m_config.m_outil_largeur/2;
-            m_tracteur.m_y_outil_arriere_droite = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
+             m_tracteur.m_pt_outil_arriere_droite->m_y = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
                 - sin(m_deplacementAngle)*m_config.m_outil_largeur/2;
             
-            m_tracteur.m_x_outil_arriere_gauche = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
+            m_tracteur.m_pt_outil_arriere_gauche = GpsPoint_ptr(new GpsPoint);
+            m_tracteur.m_pt_outil_arriere_gauche->m_x = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
                 - cos(m_deplacementAngle)*m_config.m_outil_largeur/2;
-            m_tracteur.m_y_outil_arriere_gauche = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
+            m_tracteur.m_pt_outil_arriere_gauche->m_y = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
                 + sin(m_deplacementAngle)*m_config.m_outil_largeur/2;
+            
+            m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere));
+            m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere_gauche));
+            m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere_droite));
             
             if(m_gga && m_time_last_point > 0 ){
                 m_vitesse = m_distance_last_point/1000.0/m_time_last_point;

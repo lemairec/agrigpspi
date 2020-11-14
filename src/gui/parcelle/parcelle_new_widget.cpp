@@ -82,14 +82,14 @@ void ParcelleNewWidget::draw(){
     }
     drawValueGuiKeyBoard(&m_name);
     {
-        QPixmap & p = *m_imgRecord;
+        QPixmap * p = m_imgRecord;
         QString s = "Play";
         if(f.m_etat == Etat_ParcelleAdd){
             s = "Pause";
-            p = *m_imgPause;
+            p = m_imgPause;
         }
         drawQText(s, m_buttonParcelleStartPause.m_x+30, m_buttonParcelleStartPause.m_y, sizeText_big, false);
-        drawButtonImage(&m_buttonParcelleStartPause, p);
+        drawButtonImage(&m_buttonParcelleStartPause, *p);
         
     }
     {
@@ -119,7 +119,7 @@ void ParcelleNewWidget::onMouse(int x, int y){
     }
     if(m_buttonParcelleStartPause.isActive(x, y)){
         if(f.m_etat == Etat_ParcelleAdd){
-            f.m_etat = Etat_OK;
+            f.m_etat = Etat_ParcellePause;
         } else {
             f.m_etat = Etat_ParcelleAdd;
         }
@@ -131,4 +131,9 @@ void ParcelleNewWidget::onMouse(int x, int y){
         m_key_board_widget->m_close = false;
         m_key_board_widget->setValueGuiKeyBoard(&m_name);
     }
+}
+
+void ParcelleNewWidget::open(){
+    GpsFramework & f = GpsFramework::Instance();
+    f.m_etat = Etat_ParcellePause;
 }

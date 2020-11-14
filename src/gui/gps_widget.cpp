@@ -148,6 +148,10 @@ void GpsWidget::my_projete2(double x, double y, double & x_res, double & y_res){
     y_res  = m_height/2 - x1_temp*h10  - y1_temp*h11;
 }
 
+void GpsWidget::my_projete2_pt(GpsPoint_ptr pt, double & x_res, double & y_res){
+    my_projete2(pt->m_x, pt->m_y, x_res, y_res);
+}
+
 bool GpsWidget::must_be_draw(double x, double y){
     double x_temp = (x - m_xref)*m_zoom;
     double y_temp = (y - m_yref)*m_zoom;
@@ -436,7 +440,7 @@ void GpsWidget::draw_force(){
     
     scene->clear();
     
-    if(f.m_etat == Etat_ParcelleAdd){
+    if(f.m_etat == Etat_ParcelleAdd || f.m_etat == Etat_ParcellePause){
         drawTracteur();
         drawParcelle(true);
     } else {
@@ -610,9 +614,9 @@ void GpsWidget::drawTracteur(){
         scene->addEllipse(w/2 - 0.10*m_zoom, h/2 - 0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
         
         
-        my_projete2(f.m_tracteur.m_x_outil_arriere, f.m_tracteur.m_y_outil_arriere, x, y);
+        my_projete2_pt(f.m_tracteur.m_pt_outil_arriere, x, y);
         scene->addEllipse(x-3, y-3, 6, 6, m_penRed, m_brushGreen);
-        my_projete2(f.m_tracteur.m_x_outil_arriere_droite, f.m_tracteur.m_y_outil_arriere_droite, x, y);
+        my_projete2_pt(f.m_tracteur.m_pt_outil_arriere_droite, x, y);
         scene->addEllipse(x-2, y-2, 4, 4, m_penRed, m_brushGreen);
         
     } else {

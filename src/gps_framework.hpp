@@ -33,12 +33,9 @@ struct Tracteur {
     double m_x_essieu_arriere = 0;
     double m_y_essieu_arriere = 0;
     
-    double m_x_outil_arriere = 0;
-    double m_y_outil_arriere = 0;
-    double m_x_outil_arriere_gauche = 0;
-    double m_y_outil_arriere_gauche = 0;
-    double m_x_outil_arriere_droite = 0;
-    double m_y_outil_arriere_droite = 0;
+    GpsPoint_ptr m_pt_outil_arriere;
+    GpsPoint_ptr m_pt_outil_arriere_gauche;
+    GpsPoint_ptr m_pt_outil_arriere_droite;
     
 };
 
@@ -46,7 +43,8 @@ enum Etat {
     Etat_Reset,
     Etat_PointASaved,
     Etat_OK,
-    Etat_ParcelleAdd
+    Etat_ParcelleAdd,
+    Etat_ParcellePause
 };
 
 enum AlgoPilot {

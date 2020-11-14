@@ -60,6 +60,7 @@ public:
     void readFrame(const std::string & frame);
     void readChar(char c);
     
+    void SetLatLong(GpsPoint & gpsPoint);
     void setXY(GpsPoint & gpsPoint);
     void setRef(double latitude, double longitude);
     
@@ -82,6 +83,7 @@ private:
     void parseGGA();
     void parseRMC();
     
+    void SetLatLongSpherique(GpsPoint & gpsPoint);
     void SetXYSpherique(GpsPoint & gpsPoint);
     
     bool isEqual(const char * c, size_t size);

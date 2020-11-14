@@ -355,6 +355,20 @@ void GpsModule::SetXYSpherique(GpsPoint & gpsPoint){
     gpsPoint.m_y = a * lat;
 }
 
+#include <iomanip>
+
+void GpsModule::SetLatLongSpherique(GpsPoint & gpsPoint){
+    
+    double lonRel = gpsPoint.m_x/m_acosLatRef;
+    double latRel = gpsPoint.m_y/a;
+    
+    gpsPoint.m_longitude = m_longitudeRef + RAD2DEG(lonRel);
+    gpsPoint.m_latitude = m_latitudeRef + RAD2DEG(latRel);
+    
+    //INFO(std::setprecision(11) << lon << " " << gpsPoint.m_longitude);
+    //INFO(std::setprecision(11) << lat << " " << gpsPoint.m_latitude);
+}
+
 /**
  * Mercator
  *
@@ -381,6 +395,11 @@ void GpsModule::setRef(double latitude, double longitude){
 void GpsModule::setXY(GpsPoint & gpsPoint){
     //__YGCoordinatesTransform(gpsPoint, E_CLARK_IGN, lambert_n[LAMBERT], lambert_c[LAMBERT], LON_MERID_GREENWICH, 0.0, 0.0);
     SetXYSpherique(gpsPoint);
+    //SetLatLongSpherique(gpsPoint);
+}
+
+void GpsModule::SetLatLong(GpsPoint & gpsPoint){
+    SetLatLongSpherique(gpsPoint);
 }
 
 
