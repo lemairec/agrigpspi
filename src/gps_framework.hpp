@@ -18,6 +18,14 @@ public:
     virtual void onNewPoint() = 0;
 };
 
+struct OutilPosition {
+    GpsPoint_ptr m_point_right;
+    GpsPoint_ptr m_point_center;
+    GpsPoint_ptr m_point_left;
+};
+
+typedef std::shared_ptr<OutilPosition> OutilPosition_ptr;
+
 struct Tracteur {
     double m_antenne_essieu_avant = 1.5;
     double m_antenne_essieu_arriere = 1.2;
@@ -59,17 +67,13 @@ enum AlgoPilot {
     RearWheelPosition = 2
 };
 
-struct OutilPosition {
-    GpsPoint_ptr m_point_right;
-    GpsPoint_ptr m_point_left;
-};
+
 
 class SurfaceToDraw{
 public:
     bool m_isClose = false;
-    std::list<GpsPoint_ptr> m_points;
-    GpsPoint_ptr m_lastPointOk = nullptr;
-    GpsPoint_ptr m_lastPoint = nullptr;
+    std::list<OutilPosition_ptr> m_points;
+    OutilPosition_ptr m_lastPoint = nullptr;
 };
 
 typedef std::shared_ptr<SurfaceToDraw> SurfaceToDraw_ptr;

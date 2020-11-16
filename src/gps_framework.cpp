@@ -126,10 +126,14 @@ void GpsFramework::setRef(double latitude, double longitude){
         m_gpsModule.setXY(*l);
     }
     for(auto l: m_listSurfaceToDraw){
-        m_gpsModule.setXY(*l->m_lastPoint);
+        m_gpsModule.setXY(*l->m_lastPoint->m_point_left);
+        m_gpsModule.setXY(*l->m_lastPoint->m_point_right);
+        m_gpsModule.setXY(*l->m_lastPoint->m_point_center);
         //m_gpsModule.setXY(*l->m_lastPointOk);
         for(auto l2: l->m_points){
-           m_gpsModule.setXY(*l2);
+            m_gpsModule.setXY(*l2->m_point_left);
+            m_gpsModule.setXY(*l2->m_point_right);
+            m_gpsModule.setXY(*l2->m_point_center);
        }
     }
     for(auto l: m_parcelle.m_contour){
@@ -277,7 +281,12 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     
     m_lastPoint = p;
     if(m_listSurfaceToDraw.size()>0 && !m_pauseDraw){
-        m_listSurfaceToDraw.front()->m_lastPoint = m_tracteur.m_pt_outil_arriere;
+        OutilPosition_ptr p2(new OutilPosition());
+        p2->m_point_center = m_tracteur.m_pt_outil_arriere;
+        p2->m_point_left = m_tracteur.m_pt_outil_arriere_gauche;
+        p2->m_point_right = m_tracteur.m_pt_outil_arriere_droite;
+        
+        m_listSurfaceToDraw.front()->m_lastPoint = p2;
     }
     
     if(m_etat == Etat_ParcelleAdd){
@@ -683,17 +692,18 @@ void GpsFramework::changeDraw(){
 
 void GpsFramework::calculDraw(GpsPoint_ptr p){
     if(m_listSurfaceToDraw.size()==0){
-        SurfaceToDraw_ptr s(new SurfaceToDraw());
-        m_listSurfaceToDraw.push_front(s);
-        s->m_points.push_front(p);
-        return;
+        SurfaceToDraw_ptr s2(new SurfaceToDraw());
+        m_listSurfaceToDraw.push_front(s2);
     }
+    SurfaceToDraw_ptr s = m_listSurfaceToDraw.front();
     if(m_pauseDraw){
         return;
     }
-    
-    auto s = m_listSurfaceToDraw.front();
-    s->m_points.push_front(p);
+    OutilPosition_ptr p2(new OutilPosition());
+    p2->m_point_center = m_tracteur.m_pt_outil_arriere;
+    p2->m_point_left = m_tracteur.m_pt_outil_arriere_gauche;
+    p2->m_point_right = m_tracteur.m_pt_outil_arriere_droite;
+    s->m_points.push_front(p2);
 }
 
 //surface
@@ -707,13 +717,13 @@ void GpsFramework::calculSurface(){
     //INFO("****");
     for(auto s : m_listSurfaceToDraw){
         if(s->m_points.size()>0){
-            auto last_frame = s->m_lastPoint;
+            auto last_frame = s->m_lastPoint->m_point_center;
             double x1 = last_frame->m_x;
             double y1 = last_frame->m_y;
             for(auto it = s->m_points.begin(); it != s->m_points.end(); ++it){
                 auto frame = (*it);
-                double x0 = frame->m_x;
-                double y0 = frame->m_y;
+                double x0 = frame->m_point_center->m_x;
+                double y0 = frame->m_point_center->m_y;
                 double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
                 
                 double surface = std::sqrt(dist)*m_config.m_outil_largeur/10000.0;

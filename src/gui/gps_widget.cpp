@@ -144,8 +144,8 @@ void GpsWidget::my_projete2(double x, double y, double & x_res, double & y_res){
     double h10 = -m_sinA, h11 = m_cosA;// h12 = 1;
     //double h20 = -m_sinA, h21 = m_cosA, h22 = 1;
     
-    x_res = m_width/2 + x1_temp*h00 + y1_temp*h01;
-    y_res  = m_height/2 - x1_temp*h10  - y1_temp*h11;
+    x_res = round(m_width/2 + x1_temp*h00 + y1_temp*h01);
+    y_res  = round(m_height/2 - x1_temp*h10  - y1_temp*h11);
 }
 
 void GpsWidget::my_projete2_pt(GpsPoint_ptr pt, double & x_res, double & y_res){
@@ -292,9 +292,12 @@ void GpsWidget::drawParcelle(bool force){
     if(force || f.m_parcelle.isInit()){
         QPolygon p;
         for(auto s: f.m_parcelle.m_contour){
-            double x1, y1;
-            my_projete2(s->m_x, s->m_y, x1, y1);
-            p.push_back(QPoint(x1, y1));
+            double x, y;
+            my_projete2(s->m_x, s->m_y, x, y);
+            if(m_debug){
+                scene->addEllipse(x-2, y-2, 4, 4, m_penBlack);
+            }
+            p.push_back(QPoint(x, y));
         }
         if(force){
             scene->addPolygon(p, m_penBlack, m_parcelleBrush);
@@ -318,70 +321,41 @@ void GpsWidget::drawSurfaceToDraw(){
     
     for(auto s: f.m_listSurfaceToDraw){
         if(s->m_points.size() > 0 && s->m_lastPoint){
-            double x1, y1;
-            my_projete(s->m_lastPoint->m_x, s->m_lastPoint->m_y, x1, y1);
-            
             double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
+            my_projete2(s->m_lastPoint->m_point_left->m_x, s->m_lastPoint->m_point_left->m_y, xA1, yA1);
+            my_projete2(s->m_lastPoint->m_point_right->m_x, s->m_lastPoint->m_point_right->m_y, xB1, yB1);
             
-            double l = f.m_config.m_outil_largeur*m_zoom/2;
+            
             int j = 0;
-            int init = 0;
+            int init = 1;
             
             for(auto it = s->m_points.begin(); it != s->m_points.end(); ++it){
                 auto frame = (*it);
                 
-                double x0, y0;
-                my_projete(frame->m_x, frame->m_y, x0, y0);
+                double xA = 0, yA = 0, xB = 0, yB = 0;
+                my_projete2(frame->m_point_left->m_x, frame->m_point_left->m_y, xA, yA);
+                my_projete2(frame->m_point_right->m_x, frame->m_point_right->m_y, xB, yB);
                 
-                if(x0 < -m_widthMax || x0 > m_widthMax || y0 < -m_heightMax || y0 > m_heightMax ){
+                if(false ){
                     init = 0;
-                    x1 = x0;
-                    y1 = y0;
+                    //x1 = x0;
+                    //y1 = y0;
                     continue;
-                }
-                //double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
-                if(y1 != y0){
-                    double res = (x1-x0)/(y1-y0);
-                    double i = 1.0;
-                    if(y1-y0 > 0){
-                        i = -1.0;
-                    }
-                    double xA = x0+ i*l/sqrt(1+res*res);
-                    double yA = y0-(xA-x0)*res;
-                    double xB = x0- i*l/sqrt(1+res*res);
-                    double yB = y0-(xB-x0)*res;
-                    
+                } else {
                     if(init != 0){
                         QPolygon polygon;
-                        polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
-                        scene->addPolygon(polygon, m_penNo, m_brushGreen);
-                    } else if(init == 0) {
-                        double res = (x1-x0)/(y1-y0);
-                        double i = 1.0;
-                        if(y1-y0 > 0){
-                            i = -1.0;
+                        polygon << QPoint(xA, yA) << QPoint(xB, yB) << QPoint(xB1, yB1)<< QPoint(xA1, yA1);
+                        if(m_debug){
+                            scene->addPolygon(polygon, m_penBlack, m_brushGreen);
+                        } else {
+                            scene->addPolygon(polygon, m_penNo, m_brushGreen);
                         }
-                        double xA1 = x1+ i*l/sqrt(1+res*res);
-                        double yA1 = y1-(xA1-x1)*res;
-                        double xB1 = x1- i*l/sqrt(1+res*res);
-                        double yB1 = y1-(xB1-x1)*res;
-                        QPolygon polygon;
-                        polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + xB, h/2 - yB) << QPoint(w/2 + xB1, h/2 - yB1)<< QPoint(w/2 + xA1, h/2 - yA1);
-                        scene->addPolygon(polygon, m_penNo, m_brushGreen);
                     }
                     xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
-                    x1 = x0;
-                    y1 = y0;
-                    ++init;
-                    
-                    //scene->addEllipse(w/2 + xA, h/2 - yA, 1, 1, m_penRed, m_brushNo);
-                    //scene->addEllipse(w/2 + xB, h/2 - yB, 1, 1, m_penRed, m_brushNo);
-                    
-                    //scene->addEllipse(w/2 + xB, h/2 - yB, 20, 20, m_penRed, m_brushGreen);
-                    
+                    init = 1;
                 }
                 if(f.m_config.m_debug){
-                    scene->addEllipse(w/2 + x0, h/2 - y0, 2, 2, m_penBlack, m_brushNo);
+                    //scene->addEllipse(w/2 + x0, h/2 - y0, 2, 2, m_penBlack, m_brushNo);
                 }
                 j ++;
             }
@@ -614,11 +588,12 @@ void GpsWidget::drawTracteur(){
         scene->addEllipse(w/2 - 0.10*m_zoom, h/2 - 0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
         
         
-        my_projete2_pt(f.m_tracteur.m_pt_outil_arriere, x, y);
-        scene->addEllipse(x-3, y-3, 6, 6, m_penRed, m_brushGreen);
-        my_projete2_pt(f.m_tracteur.m_pt_outil_arriere_droite, x, y);
-        scene->addEllipse(x-2, y-2, 4, 4, m_penRed, m_brushGreen);
-        
+        if(m_debug){
+            /*my_projete2_pt(f.m_tracteur.m_pt_outil_arriere, x, y);
+            scene->addEllipse(x-3, y-3, 6, 6, m_penRed, m_brushGreen);
+            my_projete2_pt(f.m_tracteur.m_pt_outil_arriere_droite, x, y);
+            scene->addEllipse(x-2, y-2, 4, 4, m_penRed, m_brushGreen);*/
+        }
     } else {
         QPolygon polygon;
         polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + x2, h/2 - y2) << QPoint(w/2 - xA, h/2 + yA)<< QPoint(w/2 + x, h/2 - y);
