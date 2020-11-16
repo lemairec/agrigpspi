@@ -26,6 +26,8 @@ public:
     }
     void clear();
     void compute();
+    void calculSurface();
+    
     void saveParcelle(std::string name);
     void loadParcelle(std::string name);
     

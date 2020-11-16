@@ -19,57 +19,23 @@ void ParcelleNewWidget::setSize(int width, int height){
     
     m_x = 0;
     m_lg = 0.30*m_width;
-    m_buttonOk.setResize(m_lg*2.0/3.0, 0.8*m_height, m_petit_button);
-    m_buttonCancel.setResize(m_lg/3.0, 0.8*m_height, m_petit_button);
     m_name.setResize(m_x + 0.15*m_width, 0.20*m_width);
     m_buttonParcelleStartPause.setResize(m_lg*1/4, 0.5*m_height, m_petit_button);
     m_buttonFlag.setResize(m_lg*1/4, 0.6*m_height, m_petit_button);
     
+    m_buttonParcellePoint.setResize(m_lg*1/4, 0.7*m_height, m_petit_button);
+    m_buttonOk.setResize(m_lg*2.0/3.0, 0.85*m_height, m_petit_button);
+    m_buttonCancel.setResize(m_lg/3.0, 0.85*m_height, m_petit_button);
+    
+    
 }
-
-void ParcelleNewWidget::drawParcelle(){
-    GpsFramework & f = GpsFramework::Instance();
-    Parcelle & parcelle = f.m_parcelle;
-    parcelle.compute();
-    
-    double zoom = m_width*0.6/parcelle.m_bounding_rect_width*0.8;
-    double zoom2 = m_height*0.9/parcelle.m_bounding_rect_height*0.8;
-    if(zoom2 <zoom){
-        zoom = zoom2;
-    }
-    if (zoom>4){
-        zoom = 4;
-    }
-    
-    QPolygon poly;
-    for(auto p : parcelle.m_contour){
-        double x = -(p->m_x-parcelle.m_center_x)*zoom + m_width*0.7;
-        double y = (p->m_y-parcelle.m_center_y)*zoom + m_height/2;
-        poly.push_back(QPoint(x, y));
-    }
-    scene->addPolygon(poly, m_penBlack, m_brushDarkGray);
-    
-    QString s = QString::number(parcelle.m_surface_ha)+" ha";
-    drawQText(s, m_width*0.45, m_height*0.1);
-}
-
-/*void GpsWidget::my_projete2(double x, double y, double & x_res, double & y_res){
-    double x1_temp = (x - m_xref)*m_zoom;
-    double y1_temp = (y - m_yref)*m_zoom;
-    
-    double h00 = m_cosA, h01 = m_sinA;//, h02 = 1;
-    double h10 = -m_sinA, h11 = m_cosA;// h12 = 1;
-    //double h20 = -m_sinA, h21 = m_cosA, h22 = 1;
-    
-    x_res = m_width/2 + x1_temp*h00 + y1_temp*h01;
-    y_res  = m_height/2 - x1_temp*h10  - y1_temp*h11;
-}*/
-
 
 void ParcelleNewWidget::draw(){
     GpsFramework & f = GpsFramework::Instance();
     scene->addRect(m_x, m_height*0.1, m_lg, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
     //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
+    
+    
     
     {
         QString s = "nouvelle parcelle";
@@ -100,8 +66,34 @@ void ParcelleNewWidget::draw(){
         
     }
     
+    {
+        QString s = "Middle";
+        if(f.m_parcellePoint == ParcellePointLeft){
+            s = "Left";
+        } else if(f.m_parcellePoint == ParcellePointRight){
+            s = "Right";
+        }
+        drawQText(s, m_buttonParcellePoint.m_x+30, m_buttonParcellePoint.m_y, sizeText_big, false);
+        drawButton(&m_buttonParcellePoint);
+        
+        
+    }
+    
+    
     drawButtonImage(&m_buttonOk, *m_imgOk);
     drawButtonImage(&m_buttonCancel, *m_imgCancel);
+    
+    int x2 = m_width-m_lg;
+    scene->addRect(m_width-m_lg, m_height*0.1, m_lg, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
+    {
+        f.m_parcelle.calculSurface();
+        double surf = round(f.m_parcelle.m_surface_ha*100)/100.0;
+        QString s = "Surface :\n "+QString::number(surf)+" ha";
+        drawQText(s, x2+30, m_buttonFlag.m_y, sizeText_big, false);
+        drawButtonImage(&m_buttonFlag, *m_imgFlag);
+        
+        
+    }
 }
 void ParcelleNewWidget::onMouse(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
@@ -126,6 +118,10 @@ void ParcelleNewWidget::onMouse(int x, int y){
     }
     if(m_buttonFlag.isActive(x, y)){
         f.m_parcelle.addFlag();
+    }
+    if(m_buttonParcellePoint.isActive(x, y)){
+        int i = ((int)(f.m_parcellePoint) + 1)%3;
+        f.m_parcellePoint = (ParcellePoint)i;
     }
     if(isActiveValueGuiKeyBoard(&m_name,x,y)){
         m_key_board_widget->m_close = false;

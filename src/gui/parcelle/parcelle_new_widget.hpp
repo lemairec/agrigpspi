@@ -12,6 +12,7 @@ class ParcelleNewWidget : public BaseWidget {
     ButtonGui m_buttonOk;
     ButtonGui m_buttonFlag;
     ButtonGui m_buttonCancel;
+    ButtonGui m_buttonParcellePoint;
     
     ButtonGui m_buttonParcelleStartPause;
     

@@ -47,6 +47,12 @@ enum Etat {
     Etat_ParcellePause
 };
 
+enum ParcellePoint {
+    ParcellePointMiddle = 0,
+    ParcellePointLeft = 1,
+    ParcellePointRight = 2
+};
+
 enum AlgoPilot {
     FollowKarott = 0,
     FollowKarottVitesse = 1,
@@ -112,6 +118,7 @@ public:
     CurveAB m_curveAB;
     LineCurves m_lines;
     
+    ParcellePoint m_parcellePoint = ParcellePointMiddle;
     Parcelle m_parcelle;
     Parcelles m_parcelles;
     

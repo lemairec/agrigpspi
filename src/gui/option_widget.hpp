@@ -41,7 +41,6 @@ public:
     
     
     //page1
-    ButtonGui m_button_shudown;
     ButtonGui m_button_p1add1;
     ButtonGui m_button_p1add2;
     ButtonGui m_button_p1minus1;
@@ -52,8 +51,6 @@ public:
     void drawPage1();
     
     //page2
-    ButtonGui m_button_p3add1;
-    ButtonGui m_button_p3minus1;
     SelectButtonGui m_select_gps_serial;
     SelectButtonGui m_select_gps_baudrates;
     void resizePage2();

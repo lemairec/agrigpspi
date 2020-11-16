@@ -274,13 +274,21 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
 
     setNewGpsTime();
     
+    
     m_lastPoint = p;
     if(m_listSurfaceToDraw.size()>0 && !m_pauseDraw){
-        m_listSurfaceToDraw.front()->m_lastPoint = p;
+        m_listSurfaceToDraw.front()->m_lastPoint = m_tracteur.m_pt_outil_arriere;
     }
     
     if(m_etat == Etat_ParcelleAdd){
-        m_parcelle.addPoint(p);
+        if(m_parcellePoint == ParcellePointMiddle){
+            m_parcelle.addPoint(m_tracteur.m_pt_outil_arriere);
+        } else if(m_parcellePoint == ParcellePointLeft){
+            m_parcelle.addPoint(m_tracteur.m_pt_outil_arriere_gauche);
+        } else if(m_parcellePoint == ParcellePointRight){
+            m_parcelle.addPoint(m_tracteur.m_pt_outil_arriere_droite);
+        }
+        
     }
     
     if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) < m_distance_cap_vitesse*m_distance_cap_vitesse){
@@ -300,8 +308,9 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
     m_lastImportantPoint = p;
     calculSurface();
     DEBUG("draw");
-    calculDraw(p);
-    
+    if(m_tracteur.m_pt_outil_arriere){
+        calculDraw(m_tracteur.m_pt_outil_arriere);
+    }
     file_job_stream << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
     saveInfoFile();
     
@@ -653,7 +662,6 @@ void GpsFramework::calculDeplacement(){
             }
             
         }
-        
             
         
         

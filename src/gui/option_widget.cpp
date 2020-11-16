@@ -159,8 +159,7 @@ void OptionWidget::drawPage1(){
 }
 
 void OptionWidget::onMousePage1(int x, int y){
-    if(m_button_shudown.isActive(x, y)){
-    } else if(m_button_p1add1.isActive(x,y)){
+    if(m_button_p1add1.isActive(x,y)){
         GpsFramework & f = GpsFramework::Instance();
         f.m_config.m_outil_largeur += 0.1;
         f.initOrLoadConfig();

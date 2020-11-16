@@ -57,6 +57,11 @@ void Parcelle::compute(){
     
     m_is_init = true;
     
+    
+}
+
+void Parcelle::calculSurface(){
+    m_surface_ha = 0;
     int n = m_contour.size();
     double sum=0.0;
     for(int i=0; i<n; i++){
@@ -64,6 +69,9 @@ void Parcelle::compute(){
     }
     //INFO(n);
     m_surface_ha = abs(sum)/2.0/10000;
+    if(m_surface_ha < 0.01){
+        m_surface_ha = 0;
+    }
 }
 
 
