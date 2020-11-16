@@ -61,6 +61,27 @@ void MyQTSerialPorts::initOrLoad(Config & config){
             }
         }
     }
+    
+    /*if(config.m_imu_input != "none"){
+        if(m_imu_serial_input == config.m_imu_input && m_serialPortImu.isOpen()){
+            INFO("pilot port already open");
+        } else {
+            //INFO("ici");
+            if(m_serialPortImu.isOpen()){
+                m_serialPortImu.close();
+            }
+            m_serialPortImu.close();
+            m_imu_serial_input = config.m_imu_input;
+            m_serialPortImu.setPortName(QString::fromStdString(m_imu_serial_input));
+            m_serialPortImu.setBaudRate(config.m_imu_baudrate);
+            if (!m_serialPortImu.open(QIODevice::ReadWrite)) {
+                std::ostringstream oss;
+                oss << "Failed to open pilot port " << m_imu_serial_input << ", error:" << m_serialPortImu.errorString().toUtf8().constData();
+                GpsFramework::Instance().addError(oss.str());
+                //standardOutput << QObject::tr("Failed to open port %1, error: %2").arg(serialPortName).arg(serialPort.errorString()) << endl;//
+            }
+        }
+    }*/
     m_timerPilot.stop();
     m_timerPilot.start(config.m_pilot_time);
     DEBUG("end");

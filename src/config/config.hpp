@@ -15,6 +15,10 @@ public:
     std::string m_inputPilot = "none";
     int m_baudratePilot = 115200;
     
+    std::string m_imu_input = "none";
+    int m_imu_baudrate = 115200;
+    
+    
     double m_a_lat = 0;
     double m_a_lon = 0;
     double m_b_lat = 0;

@@ -16,9 +16,11 @@ class MyQTSerialPorts : public QObject{
     
     std::string m_gps_serial_input;
     std::string m_pilot_serial_input;
+    std::string m_imu_serial_input;
     
     QSerialPort m_serialPortGps;
     QSerialPort m_serialPortPilot;
+    QSerialPort m_serialPortImu;
 
     std::vector<std::string> m_serials;
     
