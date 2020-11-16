@@ -153,10 +153,12 @@ void GpsWidget::my_projete2_pt(GpsPoint_ptr pt, double & x_res, double & y_res){
 }
 
 bool GpsWidget::must_be_draw(double x, double y){
-    double x_temp = (x - m_xref)*m_zoom;
-    double y_temp = (y - m_yref)*m_zoom;
-    double l = m_width/2;
-    return (-l < x_temp && x_temp < l && -l < y_temp && y_temp < l);
+    double x_temp = (x - m_xref);
+    double y_temp = (y - m_yref);
+    double res = x_temp*x_temp+y_temp*y_temp;
+    
+    double l = m_width/m_zoom*0.9;
+    return res<l*l;
 }
 
 
@@ -183,7 +185,7 @@ void GpsWidget::drawCurve(Lines_ptr l, QPen & pen){
     }
 }
 
-bool GpsWidget::addligne(double l, int i){
+bool GpsWidget::addligne(double l, int i, QPen & pen){
     GpsFramework & f = GpsFramework::Instance();
     
     double a = f.m_lineAB.m_a;
@@ -212,18 +214,14 @@ bool GpsWidget::addligne(double l, int i){
         return false;
     }
     
-    QString s = QString::number(i);
+    /*QString s = QString::number(i);
     auto textItem = scene->addText(s);
     auto mBounds = textItem->boundingRect();
     textItem->setPos(m_width/2 + (x12+x02)/2 - mBounds.width()/2, m_height/2 - (y12+y02)/2  - mBounds.height()/2);
-    //INFO(x1 << " " << x0);
+    //INFO(x1 << " " << x0);*/
     
     
-    if(i%10 == 0){
-        scene->addLine(m_width/2 + x02, m_height/2 - y02, m_width/2 + x12, m_height/2 - y12, m_penBlue);
-    } else {
-        scene->addLine(m_width/2 + x02, m_height/2 - y02, m_width/2 + x12, m_height/2 - y12, m_penBlack);
-    }
+    scene->addLine(m_width/2 + x02, m_height/2 - y02, m_width/2 + x12, m_height/2 - y12, pen);
     
     return true;
 }
@@ -242,13 +240,14 @@ void GpsWidget::drawLines(){
     
     
     int i0 = round(l/f.m_config.m_outil_largeur);
-    for(int i = 0; i < 100; ++i){
-        if(! addligne((i0 + i)*f.m_config.m_outil_largeur, -(i0 + i))){
+    addligne((i0)*f.m_config.m_outil_largeur, -(i0), m_penBlack);
+    for(int i = 1; i < 5; ++i){
+        if(! addligne((i0 + i)*f.m_config.m_outil_largeur, -(i0 + i), m_penGray)){
             break;
         }
     }
-    for(int i = 1; i < 100; ++i){
-        if(! addligne((i0 - i)*f.m_config.m_outil_largeur, -(i0 - i))){
+    for(int i = 1; i < 5; ++i){
+        if(! addligne((i0 - i)*f.m_config.m_outil_largeur, -(i0 - i), m_penGray)){
             break;
         }
     }
@@ -336,7 +335,7 @@ void GpsWidget::drawSurfaceToDraw(){
                 my_projete2(frame->m_point_left->m_x, frame->m_point_left->m_y, xA, yA);
                 my_projete2(frame->m_point_right->m_x, frame->m_point_right->m_y, xB, yB);
                 
-                if(false ){
+                if(!must_be_draw(frame->m_point_center->m_x, frame->m_point_center->m_y)){
                     init = 0;
                     //x1 = x0;
                     //y1 = y0;
@@ -351,9 +350,10 @@ void GpsWidget::drawSurfaceToDraw(){
                             scene->addPolygon(polygon, m_penNo, m_brushGreen);
                         }
                     }
-                    xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
                     init = 1;
                 }
+                xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
+                
                 if(f.m_config.m_debug){
                     //scene->addEllipse(w/2 + x0, h/2 - y0, 2, 2, m_penBlack, m_brushNo);
                 }
