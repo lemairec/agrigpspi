@@ -87,8 +87,7 @@ void ParcelleNewWidget::draw(){
     scene->addRect(m_width-m_lg, m_height*0.1, m_lg, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
     {
         f.m_parcelle.calculSurface();
-        double surf = round(f.m_parcelle.m_surface_ha*100)/100.0;
-        QString s = "Surface :\n "+QString::number(surf)+" ha";
+        QString s = "Surface :\n "+QString::number(f.m_parcelle.m_surface_ha)+" ha";
         drawQText(s, x2+30, m_buttonFlag.m_y, sizeText_big, false);
         drawButtonImage(&m_buttonFlag, *m_imgFlag);
         

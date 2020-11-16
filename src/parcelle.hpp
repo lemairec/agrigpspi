@@ -25,6 +25,10 @@ public:
         return m_is_init;
     }
     void clear();
+    
+    
+    void addContours();
+    void clearContours();
     void compute();
     void calculSurface();
     

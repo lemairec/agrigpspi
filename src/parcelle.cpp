@@ -31,6 +31,55 @@ double cp2(GpsPoint & a, GpsPoint &  b){ //returns cross product
     return a.m_x*b.m_y-a.m_y*b.m_x;
 }
 
+double longueur2 = 10;
+
+void Parcelle::clearContours(){
+    auto l2 = m_contour;
+    m_contour.clear();
+    GpsPoint_ptr old_point = nullptr;
+    for(auto p : l2){
+        if(old_point){
+            double dx = p->m_x - old_point->m_x;
+            double dy = p->m_y - old_point->m_y;
+            
+            double res = dx*dx+dy*dy;
+            if(res > longueur2*longueur2){
+                m_contour.push_back(p);
+                old_point = p;
+            }
+        } else {
+            m_contour.push_back(p);
+            old_point = p;
+        }
+    }
+}
+
+void Parcelle::addContours(){
+    auto l2 = m_contour;
+    m_contour.clear();
+    GpsPoint_ptr old_point = nullptr;
+    for(auto p : l2){
+        if(old_point){
+            double dx = p->m_x - old_point->m_x;
+            double dy = p->m_y - old_point->m_y;
+            
+            double res = dx*dx+dy*dy;
+            if(res > longueur2*longueur2){
+                GpsPoint_ptr p3(new GpsPoint());
+                p3->m_x = (p->m_x + old_point->m_x)/2;
+                p3->m_y = (p->m_y + old_point->m_y)/2;
+                
+                m_contour.push_back(p3);
+                m_contour.push_back(p);
+                old_point = p;
+            }
+        } else {
+            m_contour.push_back(p);
+            old_point = p;
+        }
+    }
+}
+
 void Parcelle::compute(){
     double x_min = 0, y_min, x_max, y_max;
     for(auto p : m_contour){
@@ -56,8 +105,10 @@ void Parcelle::compute(){
     m_center_y = m_bounding_rect_y+m_bounding_rect_height/2;
     
     m_is_init = true;
+    //clearContours();
+    //addContours();
     
-    
+    calculSurface();
 }
 
 void Parcelle::calculSurface(){
@@ -69,9 +120,7 @@ void Parcelle::calculSurface(){
     }
     //INFO(n);
     m_surface_ha = abs(sum)/2.0/10000;
-    if(m_surface_ha < 0.01){
-        m_surface_ha = 0;
-    }
+    m_surface_ha = round(m_surface_ha*100)/100.0;
 }
 
 
