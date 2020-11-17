@@ -331,9 +331,6 @@ void GpsWidget::drawSurfaceToDraw(){
             for(auto it = s->m_points.begin(); it != s->m_points.end(); ++it){
                 auto frame = (*it);
                 
-                double xA = 0, yA = 0, xB = 0, yB = 0;
-                my_projete2(frame->m_point_left->m_x, frame->m_point_left->m_y, xA, yA);
-                my_projete2(frame->m_point_right->m_x, frame->m_point_right->m_y, xB, yB);
                 
                 if(!must_be_draw(frame->m_point_center->m_x, frame->m_point_center->m_y)){
                     init = 0;
@@ -341,6 +338,9 @@ void GpsWidget::drawSurfaceToDraw(){
                     //y1 = y0;
                     continue;
                 } else {
+                    double xA = 0, yA = 0, xB = 0, yB = 0;
+                    my_projete2(frame->m_point_left->m_x, frame->m_point_left->m_y, xA, yA);
+                    my_projete2(frame->m_point_right->m_x, frame->m_point_right->m_y, xB, yB);
                     if(init != 0){
                         QPolygon polygon;
                         polygon << QPoint(xA, yA) << QPoint(xB, yB) << QPoint(xB1, yB1)<< QPoint(xA1, yA1);
@@ -351,8 +351,9 @@ void GpsWidget::drawSurfaceToDraw(){
                         }
                     }
                     init = 1;
+                    xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
+                    
                 }
-                xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
                 
                 if(f.m_config.m_debug){
                     //scene->addEllipse(w/2 + x0, h/2 - y0, 2, 2, m_penBlack, m_brushNo);
