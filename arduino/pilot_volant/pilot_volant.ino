@@ -20,7 +20,7 @@ int state_B;
 int motor_max = 150;
 
 void version(){
-    Serial.println("$PILOT_0_0_4");
+    Serial.println("$PILOT_0_0_5");
 }
 
 void printPosition(){
@@ -263,7 +263,6 @@ void parseBuffer(){
 
 void setup(){
   Serial.begin(115200);
-  version();
   pinMode (ENCODER_A,INPUT);
   pinMode (ENCODER_B,INPUT);
   pinMode(MOTOR_PIN1, OUTPUT);
@@ -271,7 +270,7 @@ void setup(){
   pinMode(MOTOR_ENABLE_PIN, OUTPUT);
   
   encoder_last_state_A = digitalRead(ENCODER_A); 
-  
+  version();
 }
 
 

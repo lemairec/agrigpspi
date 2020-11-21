@@ -22,12 +22,13 @@ void SatWidget::setSize(int width, int height){
 
 
 void SatWidget::draw(){
-    auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
+    GpsFramework & f =  GpsFramework::Instance();
+    auto last_frame = f.m_lastGGAFrame;
     scene->addRect(x, m_height*0.1, m_width-x, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
     //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
     
     int x2 = x+30;
-    if(!m_debug){
+    if(m_type == 0){
         {
             QString s = "Satellite";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -68,19 +69,31 @@ void SatWidget::draw(){
         }
     } else {
         {
-            QString s = "Debug";
+            QString s = "Pilot";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
         }
+        if(f.m_serialModule.pilotIsOpen()){
+            drawText("open", x2, 0.25*m_height, sizeText_medium, false);
+        } else {
+            drawText("close", x2, 0.25*m_height, sizeText_medium, false);
+        }
+        {
+            drawText("version", x2, 0.35*m_height, sizeText_medium, false);
+        }
+        {
+            drawText(f.m_pilotModule.m_version_guidage, x2, 0.40*m_height, sizeText_medium, false);
+        }
+        
+        {
+            drawText(f.m_pilot_last_error, x2, 0.50*m_height, sizeText_medium, false);
+        }
+              
         
     }
     
     drawButtonImage(&m_buttonOk, *m_imgOk);
     
-    if(m_debug){
-       drawButton(&m_buttonDebug, COLOR_CHECK);
-    } else {
-        drawButton(&m_buttonDebug);
-    }
+    drawButton(&m_buttonDebug);
     
 }
 void SatWidget::onMouse(int x, int y){
@@ -88,6 +101,6 @@ void SatWidget::onMouse(int x, int y){
         m_close = true;
     }
     if(m_buttonDebug.isActive(x, y)){
-        m_debug = !m_debug;
+        m_type = (m_type+1)%3;
     }
 }

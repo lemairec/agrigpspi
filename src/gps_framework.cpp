@@ -690,6 +690,17 @@ void GpsFramework::changeDraw(){
     }
 }
 
+void GpsFramework::changeDrawBool(bool b){
+    if(b){
+        m_pauseDraw = true;
+    } else {
+        SurfaceToDraw_ptr p(new SurfaceToDraw());
+        m_listSurfaceToDraw.push_front(p);
+        m_pauseDraw = false;
+        onNewImportantPoint(m_lastPoint);
+    }
+}
+
 void GpsFramework::calculDraw(GpsPoint_ptr p){
     if(m_listSurfaceToDraw.size()==0){
         SurfaceToDraw_ptr s2(new SurfaceToDraw());
@@ -834,11 +845,11 @@ void GpsFramework::setVolantEngaged(bool value){
     if(value){
         file_job_stream << "[engage]\n";
         m_pilotModule.engage();
-        m_pauseDraw = false;
+        changeDrawBool(false);
     } else {
         file_job_stream << "[desengage]\n";
         m_pilotModule.desengage();
-        m_pauseDraw = true;
+        changeDrawBool(true);
     }
 }
 

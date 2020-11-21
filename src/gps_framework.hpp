@@ -183,6 +183,8 @@ public:
     std::chrono::system_clock::time_point m_last_gps_received;
    
     void setNewPilotTime();
+    
+    std::string m_pilot_last_error;
     std::list<int> m_pilot_times;
     double m_pilot_time_moy;
     double m_pilot_time_et;
@@ -194,6 +196,7 @@ public:
     
      
     void changeDraw();
+    void changeDrawBool(bool b);
     bool m_pauseDraw = false;
          
     void setVolantEngaged(bool value);

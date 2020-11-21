@@ -33,6 +33,7 @@ public:
     
     void writeGpsSerialS(const std::string & l);
     
+    bool pilotIsOpen(){return m_serialPortPilot.isOpen();};
     void writePilotSerialD(std::vector<unsigned char> & l);
     void writePilotSerialDAndWait(std::vector<unsigned char> & l);
     void writePilotSerialS(const std::string & l);
