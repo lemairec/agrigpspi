@@ -7,7 +7,7 @@
 
 #include "environnement.hpp"
 
-#define FILE_TIME 100
+#define FILE_TIME 50
 
 MyQTFile::MyQTFile(){
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(handleLineFile()));

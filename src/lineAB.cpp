@@ -12,6 +12,21 @@
 #include "gps_framework.hpp"
 
 void LineAB::setAB(){
+    m_pointA = m_point_origin_A;
+    m_pointB = m_point_origin_B;
+    
+    double dAB = sqrt(m_pointA.distanceCarre(m_pointB));
+    double xAB = (m_pointA.m_x -  m_pointB.m_x)/dAB;
+    double yAB = (m_pointA.m_y -  m_pointB.m_y)/dAB;
+    INFO(xAB << " " << yAB);
+    
+    double deplacemnt = 2;
+    m_pointA.m_x += yAB*deplacemnt;
+    m_pointA.m_y += -xAB*deplacemnt;
+    
+    m_pointB.m_x += yAB*deplacemnt;
+    m_pointB.m_y += -xAB*deplacemnt;
+       
     m_ab_x = m_pointB.m_x - m_pointA.m_x;
     m_ab_y = m_pointB.m_y - m_pointA.m_y;
     
@@ -155,8 +170,8 @@ void LineCurves::loadCurveOrLine(std::string name){
         
         if(l.size() == 2){
             INFO("line");
-            f.m_lineAB.m_pointA = *(l[0]);
-            f.m_lineAB.m_pointB = *(l[1]);
+            f.m_lineAB.m_point_origin_A = *(l[0]);
+            f.m_lineAB.m_point_origin_B = *(l[1]);
             f.setAB();
         } else {
             f.m_line = false;
@@ -187,8 +202,8 @@ void LineCurves::add(LineAB & p){
         std::ofstream file;
         file.open(path, std::ios::out);
         file << "LINE" << std::endl;
-        file << std::setprecision(11) << p.m_pointA.m_latitude << " " << p.m_pointA.m_longitude << std::endl;
-        file << std::setprecision(11) << p.m_pointB.m_latitude << " " << p.m_pointB.m_longitude << std::endl;
+        file << std::setprecision(11) << p.m_point_origin_A.m_latitude << " " << p.m_point_origin_A.m_longitude << std::endl;
+        file << std::setprecision(11) << p.m_point_origin_B.m_latitude << " " << p.m_point_origin_B.m_longitude << std::endl;
         save();
     } else {
         f.addError("line nom trop petit");

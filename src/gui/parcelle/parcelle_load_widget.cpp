@@ -176,8 +176,8 @@ void ParcelleLoadWidget::onMouse(int x, int y){
                auto p2 = f.m_parcelle.m_contour[fin];
                
                f.m_line = true;
-               f.m_lineAB.m_pointA = *p1;
-               f.m_lineAB.m_pointB = *p2;
+               f.m_lineAB.m_point_origin_A = *p1;
+               f.m_lineAB.m_point_origin_B = *p2;
                f.setAB();
            }
         }

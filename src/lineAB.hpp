@@ -6,6 +6,8 @@
 
 class LineAB{
 public:
+    GpsPoint m_point_origin_A;
+    GpsPoint m_point_origin_B;
     GpsPoint m_pointA;
     GpsPoint m_pointB;
     

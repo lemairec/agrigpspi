@@ -140,8 +140,8 @@ void GpsFramework::setRef(double latitude, double longitude){
         m_gpsModule.setXY(*l);
     }
     if(m_line){
-        m_gpsModule.setXY(m_lineAB.m_pointA);
-        m_gpsModule.setXY(m_lineAB.m_pointB);
+        m_gpsModule.setXY(m_lineAB.m_point_origin_A);
+        m_gpsModule.setXY(m_lineAB.m_point_origin_B);
     } else {
         m_gpsModule.setXY(m_curveAB.m_pointA);
         m_gpsModule.setXY(m_curveAB.m_pointB);
@@ -446,12 +446,12 @@ void GpsFramework::setDistance(double distance){
 
 void GpsFramework::savePointA(){
     if(!m_list.empty()){
-        m_lineAB.m_pointA = *(*m_list.begin());
+        m_lineAB.m_point_origin_A = *(*m_list.begin());
     }
-    setRef(m_lineAB.m_pointA.m_latitude, m_lineAB.m_pointA.m_longitude);
+    setRef(m_lineAB.m_point_origin_A.m_latitude, m_lineAB.m_point_origin_A.m_longitude);
     
     file_job_stream << "[savePointA]\n";
-    INFO(m_lineAB.m_pointA.m_time << " " << m_lineAB.m_pointA.m_latitude << " " << m_lineAB.m_pointA.m_longitude);
+    INFO(m_lineAB.m_point_origin_A.m_time << " " << m_lineAB.m_point_origin_A.m_latitude << " " << m_lineAB.m_point_origin_A.m_longitude);
     clearSurface();
     
     m_etat = Etat_PointASaved;
@@ -485,7 +485,7 @@ void GpsFramework::setEtat(Etat etat){
 
 void GpsFramework::setAB(){
     if(m_line){
-        setRef((m_lineAB.m_pointA.m_latitude + m_lineAB.m_pointB.m_latitude)/2, (m_lineAB.m_pointA.m_longitude + m_lineAB.m_pointB.m_longitude)/2);
+        setRef((m_lineAB.m_point_origin_A.m_latitude + m_lineAB.m_point_origin_B.m_latitude)/2, (m_lineAB.m_point_origin_A.m_longitude + m_lineAB.m_point_origin_B.m_longitude)/2);
         m_lineAB.setAB();
     } else {
         m_curveAB.m_pointA = *(m_curveAB.m_listAB[0]);
@@ -824,7 +824,7 @@ void GpsFramework::calculContourExterieur(){
         } while (p != l);  // Whil
         m_contour.push_back(m_contour[0]);
         m_surface_exterieur = polygonArea(m_contour)/10000.0;
-        m_surface_exterieur_h = m_surface_exterieur/(m_list.front()->m_timeHour - m_lineAB.m_pointA.m_timeHour);
+        m_surface_exterieur_h = m_surface_exterieur/(m_list.front()->m_timeHour - m_lineAB.m_point_origin_A.m_timeHour);
     }
 }
 
