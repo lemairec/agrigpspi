@@ -11,6 +11,7 @@ public:
 
     std::deque<int> m_list;
     
+    void print(int i);
     void remove(int i);
     void run();
     void addIChar(int c);

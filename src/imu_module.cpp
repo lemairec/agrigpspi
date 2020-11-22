@@ -10,6 +10,13 @@ void ImuModule::remove(int s){
     }
 }
 
+void ImuModule::print(int s){
+    std::cout << "     ";
+    for(int i= 0; i < s; ++i){
+        std::cout << std::hex << m_list[i];
+    }
+}
+
 void ImuModule::run(){
     if(m_list.size() < 20){
         return;
@@ -30,7 +37,8 @@ void ImuModule::run(){
             unsigned char tl = m_list[8];
             unsigned char th = m_list[9];
             unsigned char sum = m_list[10];*/
-            INFO("51" << std::hex << m_list[0] << std::hex << m_list[1] << std::hex << m_list[2] << std::hex << m_list[3] << std::hex << m_list[4] << std::hex << m_list[5] << std::hex << m_list[6] << std::hex << m_list[7] << std::hex << m_list[8] << std::hex << m_list[9] << std::hex << m_list[10]);
+            INFO("51");
+            print(11);
             remove(11);
             
         } else if(c ==  0x52){
@@ -43,7 +51,8 @@ void ImuModule::run(){
             char tl = m_list[8];
             char th = m_list[9];
             char sum = m_list[10];*/
-            INFO("52" << std::hex << m_list[0] << std::hex << m_list[1] << std::hex << m_list[2] << std::hex << m_list[3] << std::hex << m_list[4] << std::hex << m_list[5] << std::hex << m_list[6] << std::hex << m_list[7] << std::hex << m_list[8] << std::hex << m_list[9] << std::hex << m_list[10]);
+            INFO("52");
+            print(11);
             remove(11);
         } else if(c ==  0x53){
             /*char wxl = m_list[2];
@@ -55,7 +64,8 @@ void ImuModule::run(){
             char tl = m_list[8];
             char th = m_list[9];
             char sum = m_list[10];*/
-            INFO("53" << std::hex << m_list[0] << std::hex << m_list[1] << std::hex << m_list[2] << std::hex << m_list[3] << std::hex << m_list[4] << std::hex << m_list[5] << std::hex << m_list[6] << std::hex << m_list[7] << std::hex << m_list[8] << std::hex << m_list[9] << std::hex << m_list[10]);
+            INFO("53");
+            print(11);
             remove(11);
         } else if(c ==  0x54){
             /*char hxl = m_list[2];
@@ -67,7 +77,8 @@ void ImuModule::run(){
             char tl = m_list[8];
             char th = m_list[9];
             char sum = m_list[10];*/
-            INFO("54" << std::hex << m_list[0] << std::hex << m_list[1] << std::hex << m_list[2] << std::hex << m_list[3] << std::hex << m_list[4] << std::hex << m_list[5] << std::hex << m_list[6] << std::hex << m_list[7] << std::hex << m_list[8] << std::hex << m_list[9] << std::hex << m_list[10]);
+            INFO("54");
+            print(11);
             remove(11);
         } else if(c ==  0x56){
             /*char p0 = m_list[2];
@@ -79,7 +90,8 @@ void ImuModule::run(){
             char h2 = m_list[8];
             char h3 = m_list[9];
             char sum = m_list[10];*/
-            INFO("56" << std::hex << m_list[0] << std::hex << m_list[1] << std::hex << m_list[2] << std::hex << m_list[3] << std::hex << m_list[4] << std::hex << m_list[5] << std::hex << m_list[6] << std::hex << m_list[7] << std::hex << m_list[8] << std::hex << m_list[9] << std::hex << m_list[10]);
+            INFO("56");
+            print(11);
             remove(11);
         }
     }
