@@ -194,20 +194,24 @@ void MyQTSerialPorts::handleErrorImu(QSerialPort::SerialPortError error){
 
 
 void MyQTSerialPorts::writeGpsSerialS(const std::string & l){
-    QByteArray b;
-    b.append(l.c_str());
-    m_serialPortGps.write(b);
+    if(m_serialPortGps.isOpen()){
+        QByteArray b;
+        b.append(l.c_str());
+        m_serialPortGps.write(b);
+    }
 }
 
 
 void MyQTSerialPorts::writePilotSerialD(std::vector<unsigned char> & l){
     DEBUG("begin");
-    QByteArray b;
-    for(long unsigned int i = 0; i < l.size(); ++i){
-        b.append(l[i]);
+    if(m_serialPortPilot.isOpen()){
+        QByteArray b;
+        for(long unsigned int i = 0; i < l.size(); ++i){
+            b.append(l[i]);
+        }
+        m_serialPortPilot.write(b);
+        QString hex(b.toHex());
     }
-    m_serialPortPilot.write(b);
-    QString hex(b.toHex());
     
     DEBUG("end");
 }
