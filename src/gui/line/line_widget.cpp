@@ -42,7 +42,6 @@ void LineWidget::draw(){
     }
     
     {
-        GpsFramework & f = GpsFramework::Instance();
         QString s = "Pas de lines\nselectionne";
         
         drawQText(s, m_x + m_lg/2, m_height*0.5, sizeText_big, true);
