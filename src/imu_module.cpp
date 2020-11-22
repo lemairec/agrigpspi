@@ -15,6 +15,7 @@ void ImuModule::print(int s){
     for(int i= 0; i < s; ++i){
         std::cout << std::hex << m_list[i] << " ";
     }
+    std::cout << std::endl;
 }
 
 void ImuModule::run(){
@@ -28,7 +29,7 @@ void ImuModule::run(){
     } else {
         int c = m_list[1];
         if(c ==  0x51){
-            print(11);
+            //print(11);
             /*unsigned char axl = m_list[2];
             unsigned char axh = m_list[3];
             unsigned char ayl = m_list[4];
@@ -38,11 +39,11 @@ void ImuModule::run(){
             unsigned char tl = m_list[8];
             unsigned char th = m_list[9];
             unsigned char sum = m_list[10];*/
-            INFO("51");
+            //INFO("51");
             remove(11);
             
         } else if(c ==  0x52){
-            print(11);
+            //print(11);
             /*char wxl = m_list[2];
             char wxh = m_list[3];
             char wyl = m_list[4];
@@ -52,10 +53,10 @@ void ImuModule::run(){
             char tl = m_list[8];
             char th = m_list[9];
             char sum = m_list[10];*/
-            INFO("52");
+            //INFO("52");
             remove(11);
         } else if(c ==  0x53){
-            print(11);
+            //print(11);
             /*char wxl = m_list[2];
             char wxh = m_list[3];
             char wyl = m_list[4];
@@ -65,10 +66,10 @@ void ImuModule::run(){
             char tl = m_list[8];
             char th = m_list[9];
             char sum = m_list[10];*/
-            INFO("53");
+            //INFO("53");
             remove(11);
         } else if(c ==  0x54){
-            print(11);
+            //print(11);
             int hxl = m_list[2];
             int hxh = m_list[3];
             int hyl = m_list[4];
@@ -77,19 +78,28 @@ void ImuModule::run(){
             int hzh = m_list[7];
             int tl = m_list[8];
             int th = m_list[9];
-            int sum = m_list[10];
+            //int sum = m_list[10];
             
             int axis_x = ((hxh<<8)|hxl);
             m_axis_x = ((double)axis_x)/32768.0*180.0;
+            if(m_axis_x > 180){
+                m_axis_x = m_axis_x-360.0;
+            }
             
             int axis_y = ((hyh<<8)|hyl);
             m_axis_y = ((double)axis_y)/32768.0*180.0;
+            if(m_axis_y > 180){
+                m_axis_y = m_axis_y-360.0;
+            }
             
             int axis_z = ((hzh<<8)|hzl);
             m_axis_z = ((double)axis_z)/32768.0*180.0;
+            if(m_axis_z > 180){
+                m_axis_z = m_axis_z-360.0;
+            }
             
-            int sum_ = 0x55 + 0x54 + hxl + hxh + hyl + hyh + hzl + hzh + tl + th;
-            INFO("54 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
+            //int sum_ = 0x55 + 0x54 + hxl + hxh + hyl + hyh + hzl + hzh + tl + th;
+            //INFO("54 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
             remove(11);
         } else if(c ==  0x56){
             print(11);

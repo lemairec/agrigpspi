@@ -99,6 +99,11 @@ void SatWidget::draw(){
         } else {
             drawText("close", x2, 0.25*m_height, sizeText_medium, false);
         }
+        
+        {
+            QString s = "axis_x "+QString::number(f.m_imuModule.m_axis_x)+"\naxis_y "+QString::number(f.m_imuModule.m_axis_y)+"\naxis_z "+QString::number(f.m_imuModule.m_axis_z);
+            drawQText(s, x2, 0.4*m_height, sizeText_little, false);
+        }
     }
           
     
