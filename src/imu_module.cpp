@@ -66,10 +66,7 @@ void ImuModule::run(){
             char tl = m_list[8];
             char th = m_list[9];
             char sum = m_list[10];*/
-            //INFO("53");
-            remove(11);
-        } else if(c ==  0x54){
-            //print(11);
+            
             int hxl = m_list[2];
             int hxh = m_list[3];
             int hyl = m_list[4];
@@ -97,6 +94,11 @@ void ImuModule::run(){
             if(m_axis_z > 180){
                 m_axis_z = m_axis_z-360.0;
             }
+            //INFO("53");
+            remove(11);
+        } else if(c ==  0x54){
+            //print(11);
+            
             
             //int sum_ = 0x55 + 0x54 + hxl + hxh + hyl + hyh + hzl + hzh + tl + th;
             //INFO("54 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
