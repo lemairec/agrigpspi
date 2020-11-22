@@ -38,6 +38,8 @@ public:
     void writePilotSerialDAndWait(std::vector<unsigned char> & l);
     void writePilotSerialS(const std::string & l);
     
+    bool imuIsOpen(){return m_serialPortImu.isOpen();};
+    
     void addSerialPorts(std::string s);
     std::vector<std::string> & getAvailablePorts();
 private slots:

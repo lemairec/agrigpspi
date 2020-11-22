@@ -67,7 +67,7 @@ void SatWidget::draw(){
             QString s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
             drawQText(s, x2, 0.60*m_height, sizeText_medium, false);
         }
-    } else {
+    } else if (m_type == 1){
         {
             QString s = "Pilot";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -85,11 +85,23 @@ void SatWidget::draw(){
         }
         
         {
-            drawText(f.m_pilot_last_error, x2, 0.50*m_height, sizeText_medium, false);
+            drawText(f.m_pilot_last_error, x2, 0.50*m_height, sizeText_little, false);
         }
               
         
+    } else {
+        {
+            QString s = "IMU";
+            drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
+        }
+        if(f.m_serialModule.imuIsOpen()){
+            drawText("open", x2, 0.25*m_height, sizeText_medium, false);
+        } else {
+            drawText("close", x2, 0.25*m_height, sizeText_medium, false);
+        }
     }
+          
+    
     
     drawButtonImage(&m_buttonOk, *m_imgOk);
     

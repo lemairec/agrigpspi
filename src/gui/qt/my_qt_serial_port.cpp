@@ -63,7 +63,7 @@ void MyQTSerialPorts::initOrLoad(Config & config){
         }
     }
     
-    /*if(config.m_imu_input != "none"){
+    if(config.m_imu_input != "none"){
         if(m_imu_serial_input == config.m_imu_input && m_serialPortImu.isOpen()){
             INFO("pilot port already open");
         } else {
@@ -82,7 +82,7 @@ void MyQTSerialPorts::initOrLoad(Config & config){
                 //standardOutput << QObject::tr("Failed to open port %1, error: %2").arg(serialPortName).arg(serialPort.errorString()) << endl;//
             }
         }
-    }*/
+    }
     m_timerPilot.stop();
     m_timerPilot.start(config.m_pilot_time);
     DEBUG("end");
@@ -93,6 +93,10 @@ void MyQTSerialPorts::closeAll(){
     if(m_serialPortGps.isOpen()){
         INFO("close gps");
         m_serialPortGps.close();
+    }
+    if(m_serialPortImu.isOpen()){
+        INFO("close imu");
+        m_serialPortImu.close();
     }
     if(m_serialPortPilot.isOpen()){
         INFO("close pilot");

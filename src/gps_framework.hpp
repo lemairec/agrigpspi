@@ -78,6 +78,44 @@ public:
 
 typedef std::shared_ptr<SurfaceToDraw> SurfaceToDraw_ptr;
 
+class TimeObserver{
+    std::list<int> m_values;
+    std::chrono::system_clock::time_point m_last_time_received;
+public:
+    double m_moy;
+    double m_et;
+    
+    void setNewTime(){
+        auto begin = std::chrono::system_clock::now();
+        std::chrono::duration<double> diff = begin - m_last_time_received;
+
+        double seconds = diff.count()*1000;
+        addNewValue(seconds);
+    }
+    
+    
+    void addNewValue(double value){
+        m_values.push_front(value);
+        while(m_values.size()>10){
+            m_values.pop_back();
+        }
+        
+        double sum = 0;
+        for(auto c : m_values){
+            sum += c;
+        }
+        double moy = sum/m_values.size();
+        
+        
+        double sum2 = 0;
+        for(auto c : m_values){
+            sum2 += (moy-c)*(moy-c);
+        }
+        m_et = std::sqrt(sum2/m_values.size());
+        m_moy = moy;
+    }
+};
+
 class GpsFramework {
     GpsFramework();
     

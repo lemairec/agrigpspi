@@ -16,8 +16,9 @@ class OptionWidget : public BaseWidget {
     QPixmap * m_imgOutilGris;
     QPixmap * m_imgOptionBlanc;
     QPixmap * m_imgOptionGris;
-    QPixmap * m_imgShutDown;
-      
+    QPixmap * m_imgImuBlanc;
+    QPixmap * m_imgImuGris;
+    
     ButtonGui m_button_close;
     
     ButtonGui m_button_p1;
@@ -69,7 +70,7 @@ public:
     ValueGui m_value_gui_rwp_kte;
     
     void resizePage3();
-    void onMousePage3(double x, double y);
+    void onMousePage3(int x, int y);
     void drawPage3();
     
     //page4
@@ -79,7 +80,7 @@ public:
     ButtonGui m_button_menu_vertical;
     
     void resizePage4();
-    void onMousePage4(double x, double y);
+    void onMousePage4(int x, int y);
     void drawPage4();
     
     //page5
@@ -99,7 +100,7 @@ public:
        
     
     void resizePage5();
-    void onMousePage5(double x, double y);
+    void onMousePage5(int x, int y);
     void drawPage5();
     
     ButtonGui m_button_p6connect;
@@ -112,8 +113,12 @@ public:
     
     ButtonGui m_button_p6test1;
     
+    
+    //page_imu
+    SelectButtonGui m_select_imu_serial;
+    SelectButtonGui m_select_imu_baudrates;
     void resizePage6();
-    void onMousePage6(double x, double y);
+    void onMousePage6(int x, int y);
     void drawPage6();
     
     void open();
