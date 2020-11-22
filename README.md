@@ -8,18 +8,9 @@ AgriGpsPi is licensed under the Creative Commons - Attribution - Non Commercial
 
 This included software and 3d piece
 
-
-
-[env:atmelavr_arduino_uno_board]
-platform = atmelavr
-board = uno
-framework = arduino
-
-[env:nanoatmega328]
-platform = atmelavr
-board = uno
-framework = arduino
-
+nano possible :
+nanoatmega168
+nanoatmega328
 
 ## wifi
 https://deb.trendtechcn.com/
