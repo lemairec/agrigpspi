@@ -78,8 +78,17 @@ void ImuModule::run(){
             int th = m_list[9];
             int sum = m_list[10];
             
+            int axis_x = ((hxh<<8)|hxl);
+            m_axis_x = ((double)axis_x)/32768.0*180.0;
+            
+            int axis_y = ((hyh<<8)|hyl);
+            m_axis_y = ((double)axis_y)/32768.0*180.0;
+            
+            int axis_z = ((hzh<<8)|hzl);
+            m_axis_z = ((double)axis_z)/32768.0*180.0;
+            
             int sum_ = 0x55 + 0x54 + hxl + hxh + hyl + hyh + hzl + hzh + tl + th;
-            INFO("54 " << std::hex << sum_);
+            INFO("54 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
             print(11);
             remove(11);
         } else if(c ==  0x56){
