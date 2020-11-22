@@ -13,7 +13,7 @@ void ImuModule::remove(int s){
 void ImuModule::print(int s){
     std::cout << "     ";
     for(int i= 0; i < s; ++i){
-        std::cout << std::hex << m_list[i];
+        std::cout << std::hex << m_list[i] << " ";
     }
 }
 
@@ -68,16 +68,18 @@ void ImuModule::run(){
             print(11);
             remove(11);
         } else if(c ==  0x54){
-            /*char hxl = m_list[2];
-            char hxh = m_list[3];
-            char hyl = m_list[4];
-            char hyh = m_list[5];
-            char hzl = m_list[6];
-            char hzh = m_list[7];
-            char tl = m_list[8];
-            char th = m_list[9];
-            char sum = m_list[10];*/
-            INFO("54");
+            int hxl = m_list[2];
+            int hxh = m_list[3];
+            int hyl = m_list[4];
+            int hyh = m_list[5];
+            int hzl = m_list[6];
+            int hzh = m_list[7];
+            int tl = m_list[8];
+            int th = m_list[9];
+            int sum = m_list[10];
+            
+            int sum_ = 0x55 + 0x54 + hxl + hxh + hyl + hyh + hzl + hzh + tl + th;
+            INFO("54 " << std::hex << sum_);
             print(11);
             remove(11);
         } else if(c ==  0x56){
