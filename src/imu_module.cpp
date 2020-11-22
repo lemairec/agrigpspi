@@ -19,7 +19,7 @@ void ImuModule::run(){
         m_list.pop_front();
         
     } else {
-        unsigned char c = m_list[1];
+        int c = m_list[1];
         if(c ==  0x51){
             /*unsigned char axl = m_list[2];
             unsigned char axh = m_list[3];
@@ -85,7 +85,7 @@ void ImuModule::run(){
     }
 }
 
-void ImuModule::addUChar(unsigned char c){
+void ImuModule::addIChar(int c){
     m_list.push_back(c);
     run();
 }

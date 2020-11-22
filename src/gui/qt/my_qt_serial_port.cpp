@@ -179,7 +179,7 @@ void MyQTSerialPorts::handleReadyReadImu(){
     GpsFramework & f = GpsFramework::Instance();
     for(int i = 0; i < b.size(); ++i){
         int j = data[i];
-        f.m_imuModule.addUChar(j);
+        f.m_imuModule.addIChar(j);
         std::cout << std::hex << j << " ";
     }
     std::cout << std::endl;
