@@ -12,6 +12,7 @@
 #include <chrono>
 #include <QThread>
 #include <time.h>
+#include "logging.hpp"
 
 class IGpsObserver {
 public:
@@ -91,10 +92,14 @@ public:
 
         double seconds = diff.count()*1000;
         addNewValue(seconds);
+        m_last_time_received = begin;
     }
     
     
     void addNewValue(double value){
+        if(value > 10000){
+            return;
+        }
         m_values.push_front(value);
         while(m_values.size()>10){
             m_values.pop_back();
@@ -215,19 +220,11 @@ public:
     GGAFrame m_lastGGAFrame;
     RMCFrame_ptr m_lastRMCFrame;
     
-    void setNewGpsTime();
-    std::list<int> m_gps_times;
-    double m_gps_time_moy;
-    double m_gps_time_et;
-    std::chrono::system_clock::time_point m_last_gps_received;
-   
-    void setNewPilotTime();
-    
     std::string m_pilot_last_error;
-    std::list<int> m_pilot_times;
-    double m_pilot_time_moy;
-    double m_pilot_time_et;
-    std::chrono::system_clock::time_point m_last_pilot_received;
+    
+    TimeObserver m_gps_time;
+    TimeObserver m_pilot_time;
+    TimeObserver m_draw_time;
     
     bool isGpsConnected();
     bool isPilotConnected();

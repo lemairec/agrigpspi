@@ -280,8 +280,7 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     }
     m_pilotModule.run(m_angle_correction, m_time_last_point);
 
-    setNewGpsTime();
-    
+    m_gps_time.setNewTime();
     
     m_lastPoint = p;
     if(m_listSurfaceToDraw.size()>0 && !m_pauseDraw){
@@ -346,84 +345,26 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
 }
 
 
-void GpsFramework::setNewGpsTime(){
-    auto begin = std::chrono::system_clock::now();
-    std::chrono::duration<double> diff = begin - m_last_gps_received;
-
-    double seconds = diff.count()*1000;
-    m_last_gps_received = begin;
-    
-    m_gps_times.push_front(seconds);
-    while(m_gps_times.size()>10){
-        m_gps_times.pop_back();
-    }
-    
-    double sum = 0;
-    for(auto c : m_gps_times){
-        sum += c;
-    }
-    double moy = sum/m_gps_times.size();
-    
-    
-    double sum2 = 0;
-    for(auto c : m_gps_times){
-        sum2 += (moy-c)*(moy-c);
-    }
-    double error = std::sqrt(sum2/m_gps_times.size());
-    
-    m_gps_time_moy = moy;
-    m_gps_time_et = error;
-}
-
 bool GpsFramework::isGpsConnected(){
-    auto begin = std::chrono::system_clock::now();
+    /*auto begin = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = begin - m_last_gps_received;
 
     if(diff.count() < 2.0){
         return true;
     } else {
         return false;
-    }
-}
-
-void GpsFramework::setNewPilotTime(){
-    auto begin = std::chrono::system_clock::now();
-    std::chrono::duration<double> diff = begin - m_last_pilot_received;
-
-    double seconds = diff.count()*1000;
-    m_last_pilot_received = begin;
-    
-    m_pilot_times.push_front(seconds);
-    while(m_pilot_times.size()>10){
-        m_pilot_times.pop_back();
-    }
-    
-    double sum = 0;
-    for(auto c : m_pilot_times){
-        sum += c;
-    }
-    double moy = sum/m_pilot_times.size();
-    
-    
-    double sum2 = 0;
-    for(auto c : m_pilot_times){
-        sum2 += (moy-c)*(moy-c);
-    }
-    double error = std::sqrt(sum2/m_pilot_times.size());
-    
-    m_pilot_time_moy = moy;
-    m_pilot_time_et = error;
+    }*///TODO
 }
 
 bool GpsFramework::isPilotConnected(){
-    auto begin = std::chrono::system_clock::now();
+     /*auto begin = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = begin - m_last_pilot_received;
 
     if(diff.count() < 2.0){
         return true;
     } else {
         return false;
-    }
+    }*///TODO
 }
 
 

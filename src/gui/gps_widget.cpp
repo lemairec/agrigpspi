@@ -456,12 +456,12 @@ void GpsWidget::draw_force(){
         }
         {
             std::ostringstream oss;
-            oss << "gps " << round(f.m_gps_time_moy) << " ms " << round(f.m_gps_time_et);
+            oss << "gps " << round(f.m_gps_time.m_moy) << " ms " << round(f.m_gps_time.m_et);
             drawText(oss.str(), x+10, y+30, sizeText_little, false);
         }
         {
             std::ostringstream oss;
-            oss << "pil " << round(f.m_pilot_time_moy) << " ms " << round(f.m_pilot_time_et);
+            oss << "pil " << round(f.m_pilot_time.m_moy) << " ms " << round(f.m_pilot_time.m_et);
             drawText(oss.str(), x+10, y+50, sizeText_little, false);
         }
         //drawText(f.m_pilotModule.m_version_guidage, x+10, y+30, 10, false);
