@@ -60,6 +60,10 @@ GpsFramework::GpsFramework(){
     
 }
 
+GpsFramework::~GpsFramework(){
+    m_serialModule.closeAll();
+}
+
 void GpsFramework::initOrLoadConfig(){
     m_config.save();
     

@@ -29,7 +29,7 @@ public:
     MyQTSerialPorts();
     
     void initOrLoad(Config & config);
-    void open();
+    void closeAll();
     
     void writeGpsSerialS(const std::string & l);
     

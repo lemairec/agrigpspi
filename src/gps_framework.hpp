@@ -88,6 +88,7 @@ class GpsFramework {
     void saveInfoFile();
 public:
     static GpsFramework & Instance();
+    ~GpsFramework();
     void initOrLoadConfig();
 
     std::string m_messages_errors;

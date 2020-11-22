@@ -88,6 +88,18 @@ void MyQTSerialPorts::initOrLoad(Config & config){
     DEBUG("end");
 };
 
+void MyQTSerialPorts::closeAll(){
+    INFO("###close all");
+    if(m_serialPortGps.isOpen()){
+        INFO("close gps");
+        m_serialPortGps.close();
+    }
+    if(m_serialPortPilot.isOpen()){
+        INFO("close pilot");
+        m_serialPortPilot.close();
+    }
+}
+
 void MyQTSerialPorts::handleReadyReadGps(){
     DEBUG("begin");
     std::string s = "";
