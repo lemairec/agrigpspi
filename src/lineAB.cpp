@@ -142,7 +142,7 @@ void LineCurves::loadCurveOrLine(std::string name){
     std::string file_job = ProjectSourceBin + "/line/" + name + ".txt";
     std::ifstream file(file_job);
     std::string line;
-    bool init = false;
+    
     if(file.is_open()){
         
         std::getline(file, line);

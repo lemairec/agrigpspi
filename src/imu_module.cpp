@@ -19,17 +19,17 @@ void ImuModule::run(){
         m_list.pop_front();
         
     } else {
-        char c = m_list[1];
+        unsigned char c = m_list[1];
         if(c ==  0x51){
-            /*char axl = m_list[2];
-            char axh = m_list[3];
-            char ayl = m_list[4];
-            char ayh = m_list[5];
-            char azl = m_list[6];
-            char azh = m_list[7];
-            char tl = m_list[8];
-            char th = m_list[9];
-            char sum = m_list[10];*/
+            /*unsigned char axl = m_list[2];
+            unsigned char axh = m_list[3];
+            unsigned char ayl = m_list[4];
+            unsigned char ayh = m_list[5];
+            unsigned char azl = m_list[6];
+            unsigned char azh = m_list[7];
+            unsigned char tl = m_list[8];
+            unsigned char th = m_list[9];
+            unsigned char sum = m_list[10];*/
             INFO("51" << std::hex << m_list[0] << std::hex << m_list[1] << std::hex << m_list[2] << std::hex << m_list[3] << std::hex << m_list[4] << std::hex << m_list[5] << std::hex << m_list[6] << std::hex << m_list[7] << std::hex << m_list[8] << std::hex << m_list[9] << std::hex << m_list[10]);
             remove(11);
             
@@ -79,13 +79,13 @@ void ImuModule::run(){
             char h2 = m_list[8];
             char h3 = m_list[9];
             char sum = m_list[10];*/
-            INFO("54" << std::hex << m_list[0] << std::hex << m_list[1] << std::hex << m_list[2] << std::hex << m_list[3] << std::hex << m_list[4] << std::hex << m_list[5] << std::hex << m_list[6] << std::hex << m_list[7] << std::hex << m_list[8] << std::hex << m_list[9] << std::hex << m_list[10]);
+            INFO("56" << std::hex << m_list[0] << std::hex << m_list[1] << std::hex << m_list[2] << std::hex << m_list[3] << std::hex << m_list[4] << std::hex << m_list[5] << std::hex << m_list[6] << std::hex << m_list[7] << std::hex << m_list[8] << std::hex << m_list[9] << std::hex << m_list[10]);
             remove(11);
         }
     }
 }
 
-void ImuModule::addChar(char c){
+void ImuModule::addUChar(unsigned char c){
     m_list.push_back(c);
     run();
 }

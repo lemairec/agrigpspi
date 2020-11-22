@@ -315,8 +315,6 @@ void GpsWidget::drawParcelle(bool force){
 
 void GpsWidget::drawSurfaceToDraw(){
     GpsFramework & f = GpsFramework::Instance();
-    double h = m_height;
-    double w = m_width;
     
     for(auto s: f.m_listSurfaceToDraw){
         if(s->m_points.size() > 0 && s->m_lastPoint){

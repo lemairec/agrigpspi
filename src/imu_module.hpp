@@ -9,11 +9,11 @@ class ImuModule {
 public:
     ImuModule();
 
-    std::deque<char> m_list;
+    std::deque<unsigned char> m_list;
     
     void remove(int i);
     void run();
-    void addChar(char c);
+    void addUChar(unsigned char c);
 };
 
 #endif //GPS_H
