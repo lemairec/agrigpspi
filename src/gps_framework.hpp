@@ -12,6 +12,7 @@
 #include <chrono>
 #include <QThread>
 #include <time.h>
+#include <math.h>
 #include "logging.hpp"
 
 class IGpsObserver {
