@@ -40,6 +40,12 @@ void Config::save(){
     QString inputPilot = QString::fromStdString(m_inputPilot);
     settings.setValue("inputPilot", inputPilot);
     settings.setValue("baudratePilot", m_baudratePilot);
+    
+    QString inputImu = QString::fromStdString(m_imu_input);
+    settings.setValue("inputImu", inputImu);
+    settings.setValue("baudrateImu", m_imu_baudrate);
+    
+    
     settings.setValue("motor_vitesse_min", m_motor_vitesse_min);
     settings.setValue("motor_vitesse_max", m_motor_vitesse_max);
     settings.setValue("motor_vitesse_agressivite", m_motor_vitesse_agressivite);
@@ -117,6 +123,14 @@ void Config::load(){
     if(settings.contains("baudratePilot")){
         m_baudratePilot = settings.value("baudratePilot").toInt();
     }
+    
+    if(settings.contains("inputImu")){
+        m_imu_input = settings.value("inputImu").toString().toUtf8().constData();
+    }
+    if(settings.contains("baudrateImu")){
+        m_imu_baudrate = settings.value("baudrateImu").toInt();
+    }
+    
     if(settings.contains("motor_vitesse_min")){
         m_motor_vitesse_min = settings.value("motor_vitesse_min").toDouble();
     }
