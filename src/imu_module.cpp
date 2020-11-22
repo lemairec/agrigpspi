@@ -28,6 +28,7 @@ void ImuModule::run(){
     } else {
         int c = m_list[1];
         if(c ==  0x51){
+            print(11);
             /*unsigned char axl = m_list[2];
             unsigned char axh = m_list[3];
             unsigned char ayl = m_list[4];
@@ -38,10 +39,10 @@ void ImuModule::run(){
             unsigned char th = m_list[9];
             unsigned char sum = m_list[10];*/
             INFO("51");
-            print(11);
             remove(11);
             
         } else if(c ==  0x52){
+            print(11);
             /*char wxl = m_list[2];
             char wxh = m_list[3];
             char wyl = m_list[4];
@@ -52,9 +53,9 @@ void ImuModule::run(){
             char th = m_list[9];
             char sum = m_list[10];*/
             INFO("52");
-            print(11);
             remove(11);
         } else if(c ==  0x53){
+            print(11);
             /*char wxl = m_list[2];
             char wxh = m_list[3];
             char wyl = m_list[4];
@@ -65,9 +66,9 @@ void ImuModule::run(){
             char th = m_list[9];
             char sum = m_list[10];*/
             INFO("53");
-            print(11);
             remove(11);
         } else if(c ==  0x54){
+            print(11);
             int hxl = m_list[2];
             int hxh = m_list[3];
             int hyl = m_list[4];
@@ -89,9 +90,9 @@ void ImuModule::run(){
             
             int sum_ = 0x55 + 0x54 + hxl + hxh + hyl + hyh + hzl + hzh + tl + th;
             INFO("54 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
-            print(11);
             remove(11);
         } else if(c ==  0x56){
+            print(11);
             /*char p0 = m_list[2];
             char p1 = m_list[3];
             char p2 = m_list[4];
@@ -102,7 +103,6 @@ void ImuModule::run(){
             char h3 = m_list[9];
             char sum = m_list[10];*/
             INFO("56");
-            print(11);
             remove(11);
         }
     }
