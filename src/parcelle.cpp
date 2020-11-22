@@ -81,7 +81,7 @@ void Parcelle::addContours(){
 }
 
 void Parcelle::compute(){
-    double x_min = 0, y_min, x_max, y_max;
+    double x_min = 0, y_min = 0, x_max = 0, y_max = 0;
     for(auto p : m_contour){
         if(x_min == 0){
             x_min = p->m_x;

@@ -84,8 +84,8 @@ void OptionWidget::draw(){
         drawButtonImage(&m_button_p4, *m_imgVolantGris);
     }
     
-    GpsFramework & f = GpsFramework::Instance();
-    if(f.m_config.m_debug){
+    //GpsFramework & f = GpsFramework::Instance();
+    //if(f.m_config.m_debug){
         if(m_page == 5){
             drawButtonImage(&m_button_p5, *m_imgVolantBlanc);
             drawPage5();
@@ -99,7 +99,7 @@ void OptionWidget::draw(){
         } else {
             drawButtonImage(&m_button_p6, *m_imgImuGris, 0.5);
         }
-    }
+    //}
 }
 
 void OptionWidget::onMouse(int x, int y){
