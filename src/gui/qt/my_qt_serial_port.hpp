@@ -49,6 +49,9 @@ private slots:
     void handleReadyReadPilot();
     void handleErrorPilot(QSerialPort::SerialPortError error);
 
+    void handleReadyReadImu();
+    void handleErrorImu(QSerialPort::SerialPortError error);
+
 private:
     QTimer m_timerPilot;
 private slots:

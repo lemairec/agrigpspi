@@ -14,6 +14,9 @@ MyQTSerialPorts::MyQTSerialPorts(){
     connect(&m_serialPortPilot, SIGNAL(readyRead()), this, SLOT(handleReadyReadPilot()));
     connect(&m_serialPortPilot, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
             this, &MyQTSerialPorts::handleErrorPilot);
+    connect(&m_serialPortImu, SIGNAL(readyRead()), this, SLOT(handleReadyReadImu()));
+    connect(&m_serialPortImu, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
+            this, &MyQTSerialPorts::handleErrorImu);
     
     connect(&m_timerPilot, SIGNAL(timeout()), this, SLOT(handlePilot()));
       
@@ -160,6 +163,35 @@ void MyQTSerialPorts::handleErrorPilot(QSerialPort::SerialPortError error){
     }
     DEBUG("end");
 }
+
+/**
+ IMU
+ */
+
+void MyQTSerialPorts::handleReadyReadImu(){
+    DEBUG("begin");
+    QByteArray b = m_serialPortImu.readAll();
+    QString hex(b.toHex());
+    std::string s = hex.toUtf8().constData();
+    
+    char * data = b.data();
+    INFO(data);
+    DEBUG("end");
+}
+void MyQTSerialPorts::handleErrorImu(QSerialPort::SerialPortError error){
+    DEBUG("begin");
+    if(error != 0){
+        std::ostringstream oss;
+        //auto error_s = std::string(QMetaEnum::fromType<QSerialPort::SerialPortError>().valueToKey(error));
+        auto error_s = "fix";
+        oss << "handleErrorPilot " << error << " " << error_s << ", error:" << m_serialPortPilot.errorString().toUtf8().constData();
+        //GpsFramework::Instance().addError(oss.str());
+        WARN(error);
+    }
+    DEBUG("end");
+}
+
+
 
 void MyQTSerialPorts::writeGpsSerialS(const std::string & l){
     QByteArray b;
