@@ -179,7 +179,7 @@ void MyQTSerialPorts::handleReadyReadImu(){
     
     for(int i = 0; i < b.size(); ++i){
         int j = data[i];
-        std::cout << j << " ";
+        std::cout << std::hex << j << " ";
     }
     std::cout << std::endl;
     DEBUG("end");
