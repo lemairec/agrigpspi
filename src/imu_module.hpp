@@ -11,9 +11,9 @@ public:
 
     std::deque<int> m_list;
     
-    double m_axis_x = 0;
-    double m_axis_y = 0;
-    double m_axis_z = 0;
+    double m_roll_x_deg = 0;
+    double m_pitch_y_deg = 0;
+    double m_yaw_z_deg = 0;
     
     void print(int i);
     void remove(int i);

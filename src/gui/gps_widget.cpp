@@ -538,23 +538,27 @@ void GpsWidget::drawTracteur(){
     
     if(m_a){
         y = h/2;
+        double x_tracteur, y_tracteur;
+        my_projete2(f.m_tracteur.m_pt_antenne_corrige->m_x, f.m_tracteur.m_pt_antenne_corrige->m_y, x_tracteur, y_tracteur);
+        
         
         double l2 = f.m_tracteur.m_antenne_essieu_arriere*m_zoom;
         
         double y_arriere = y+l2;
         
+        
         //outil
         double l_outil = f.m_tracteur.m_outil_distance;
         double lg_outil = f.m_tracteur.m_outil_largeur;
-        scene->addRect(w/2 - lg_outil*0.5*m_zoom, y_arriere + (l_outil-0.5)*m_zoom, lg_outil*m_zoom, 0.5*m_zoom, m_penNo, m_brushOutil);
-        scene->addRect(w/2 - 0.1*m_zoom, y_arriere, 0.2*m_zoom, (l_outil)*m_zoom, m_penNo, m_brushOutil);
+        scene->addRect(x_tracteur - lg_outil*0.5*m_zoom, y_arriere + (l_outil-0.5)*m_zoom, lg_outil*m_zoom, 0.5*m_zoom, m_penNo, m_brushOutil);
+        scene->addRect(x_tracteur - 0.1*m_zoom, y_arriere, 0.2*m_zoom, (l_outil)*m_zoom, m_penNo, m_brushOutil);
         
         
         double voie = 1.8*m_zoom;
         double l_roue = 1.7*m_zoom/2;
-        scene->addLine(w/2 - voie/2, y_arriere, w/2 + voie/2, y_arriere, m_penTractorEssieu);
-        scene->addLine(w/2 - voie/2, y_arriere-l_roue, w/2 - voie/2, y_arriere+l_roue, m_penTractorRoue);
-        scene->addLine(w/2 + voie/2, y_arriere-l_roue, w/2 + voie/2, y_arriere+l_roue, m_penTractorRoue);
+        scene->addLine(x_tracteur - voie/2, y_arriere, x_tracteur + voie/2, y_arriere, m_penTractorEssieu);
+        scene->addLine(x_tracteur - voie/2, y_arriere-l_roue, x_tracteur - voie/2, y_arriere+l_roue, m_penTractorRoue);
+        scene->addLine(x_tracteur + voie/2, y_arriere-l_roue, x_tracteur + voie/2, y_arriere+l_roue, m_penTractorRoue);
         //scene->addRect(w/2, y_arriere - voie/2, y-4*l2, l2, 4*l2, m_penBlue);
         
         //scene->addRect(w/2 - voie/2, y_arriere-f.m_tracteur.m_empatement*m_zoom, voie, f.m_tracteur.m_empatement*m_zoom, m_penTractorEssieu);
@@ -564,30 +568,31 @@ void GpsWidget::drawTracteur(){
         
         //cabine
         double l_cabine = 1.6*m_zoom;
-        scene->addRect(w/2 - l_cabine/2, y_arriere-1.2*m_zoom, l_cabine, l_cabine, m_penNo, m_brushTractor);
+        scene->addRect(x_tracteur - l_cabine/2, y_arriere-1.2*m_zoom, l_cabine, l_cabine, m_penNo, m_brushTractor);
         
         //capot
         
         double lg_capot = 1*m_zoom;
         double l_capot = (f.m_tracteur.m_antenne_essieu_avant+0.2)*m_zoom;
-        scene->addRect(w/2 - lg_capot/2, y-l_capot, lg_capot, l_capot, m_penNo, m_brushTractor);
+        scene->addRect(x_tracteur - lg_capot/2, y-l_capot, lg_capot, l_capot, m_penNo, m_brushTractor);
         
         double y_direction = y-f.m_tracteur.m_antenne_essieu_avant*m_zoom;
-        scene->addLine(w/2 - voie/2, y_direction, w/2 + voie/2, y_direction, m_penTractorEssieu);
+        scene->addLine(x_tracteur - voie/2, y_direction, x_tracteur + voie/2, y_direction, m_penTractorEssieu);
         double l_roue2 = 1.1*m_zoom/2;
         
         for(int i = -1; i<=1; i+=2){
-            int x=m_width/2+i*voie/2;
+            int x=x_tracteur+i*voie/2;
             int dx = -l_roue2*sin(f.m_angle_correction);
             int dy = l_roue2*cos(f.m_angle_correction);
             scene->addLine(x-dx, y_direction-dy, x+dx, y_direction+dy, m_penTractorRoue);
         }
         
         
-        scene->addEllipse(w/2 - 0.10*m_zoom, h/2 - 0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
+        scene->addEllipse(x_tracteur - 0.10*m_zoom, h/2 - 0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
         
         
         if(m_debug){
+            scene->addEllipse(w/2 - 0.05*m_zoom, h/2 - 0.05*m_zoom, 0.10*m_zoom, 0.10*m_zoom, m_penBlack, m_brushRed);
             /*my_projete2_pt(f.m_tracteur.m_pt_outil_arriere, x, y);
             scene->addEllipse(x-3, y-3, 6, 6, m_penRed, m_brushGreen);
             my_projete2_pt(f.m_tracteur.m_pt_outil_arriere_droite, x, y);

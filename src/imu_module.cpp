@@ -56,55 +56,45 @@ void ImuModule::run(){
             //INFO("52");
             remove(11);
         } else if(c ==  0x53){
-            //print(11);
-            /*char wxl = m_list[2];
-            char wxh = m_list[3];
-            char wyl = m_list[4];
-            char wyh = m_list[5];
-            char wzl = m_list[6];
-            char wzh = m_list[7];
-            char tl = m_list[8];
-            char th = m_list[9];
-            char sum = m_list[10];*/
-            
-            int hxl = m_list[2];
-            int hxh = m_list[3];
-            int hyl = m_list[4];
-            int hyh = m_list[5];
-            int hzl = m_list[6];
-            int hzh = m_list[7];
-            int tl = m_list[8];
-            int th = m_list[9];
+            int wxl = m_list[2];
+            int wxh = m_list[3];
+            int wyl = m_list[4];
+            int wyh = m_list[5];
+            int wzl = m_list[6];
+            int wzh = m_list[7];
+            //int vl = m_list[8];
+            //int vh = m_list[9];
             //int sum = m_list[10];
+            //int sum_ = 0x55 + 0x54 + wxl + wxh + wyl + wyh + wzl + wzh + vl + vh;
             
-            int axis_x = ((hxh<<8)|hxl);
-            m_axis_x = ((double)axis_x)/32768.0*180.0;
-            if(m_axis_x > 180){
-                m_axis_x = m_axis_x-360.0;
+            int axis_x = ((wxh<<8)|wxl);
+            m_roll_x_deg = ((double)axis_x)/32768.0*180.0;
+            if(m_roll_x_deg > 180){
+                m_roll_x_deg = m_roll_x_deg-360.0;
             }
             
-            int axis_y = ((hyh<<8)|hyl);
-            m_axis_y = ((double)axis_y)/32768.0*180.0;
-            if(m_axis_y > 180){
-                m_axis_y = m_axis_y-360.0;
+            int axis_y = ((wyh<<8)|wyl);
+            m_pitch_y_deg = ((double)axis_y)/32768.0*180.0;
+            if(m_pitch_y_deg > 180){
+                m_pitch_y_deg = m_pitch_y_deg-360.0;
             }
             
-            int axis_z = ((hzh<<8)|hzl);
-            m_axis_z = ((double)axis_z)/32768.0*180.0;
-            if(m_axis_z > 180){
-                m_axis_z = m_axis_z-360.0;
+            int axis_z = ((wzh<<8)|wzl);
+            m_yaw_z_deg = ((double)axis_z)/32768.0*180.0;
+            if(m_yaw_z_deg > 180){
+                m_yaw_z_deg = m_yaw_z_deg-360.0;
             }
-            //INFO("53");
+             
+            //print(11);
+            //INFO("53 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
             remove(11);
         } else if(c ==  0x54){
             //print(11);
             
             
-            //int sum_ = 0x55 + 0x54 + hxl + hxh + hyl + hyh + hzl + hzh + tl + th;
-            //INFO("54 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
             remove(11);
         } else if(c ==  0x56){
-            print(11);
+            //print(11);
             /*char p0 = m_list[2];
             char p1 = m_list[3];
             char p2 = m_list[4];
@@ -114,7 +104,7 @@ void ImuModule::run(){
             char h2 = m_list[8];
             char h3 = m_list[9];
             char sum = m_list[10];*/
-            INFO("56");
+            //INFO("56");
             remove(11);
         }
     }

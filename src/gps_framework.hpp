@@ -33,12 +33,17 @@ struct Tracteur {
     double m_antenne_essieu_avant = 1.5;
     double m_antenne_essieu_arriere = 1.2;
     double m_empatement = 2.7;
+    double m_hauteur_antenne = 2;
     double m_outil_distance = 2;
     double m_outil_largeur = 2;
        
     double m_x_antenne = 0;
     double m_y_antenne = 0;
     
+    
+    double m_correction_lateral = 0;
+    GpsPoint_ptr m_pt_antenne_corrige;
+     
     double m_x_essieu_avant = 0;
     double m_y_essieu_avant = 0;
     double m_x_essieu_arriere = 0;

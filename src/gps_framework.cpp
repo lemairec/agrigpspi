@@ -85,6 +85,7 @@ void GpsFramework::initOrLoadConfig(){
     m_tracteur.m_antenne_essieu_avant = m_config.m_tracteur_empatement - m_config.m_tracteur_antenne_pont_arriere;
     m_tracteur.m_antenne_essieu_arriere = m_config.m_tracteur_antenne_pont_arriere;
     m_tracteur.m_empatement = m_config.m_tracteur_empatement;
+    m_tracteur.m_hauteur_antenne = m_config.m_tracteur_hauteur;
     m_tracteur.m_outil_distance = m_config.m_outil_distance;
     m_tracteur.m_outil_largeur = m_config.m_outil_largeur;
     
@@ -230,7 +231,7 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
                //m_deplacementAngle = m_deplacementAngle+3.14;
                m_lineAB.m_sensAB = (det < 0);
            }
-           double dist = m_lineAB.distance(p->m_x, p->m_y, m_config.m_outil_largeur);
+           double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, m_config.m_outil_largeur);
            setDistance(dist);
            
            if(m_pilot_algo == AlgoPilot::FollowKarott){
@@ -239,12 +240,12 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
                double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
                m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, pilot_lookahead);
            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-               m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_x_antenne, m_tracteur.m_y_antenne, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+               m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
            } else {
                m_angle_correction = 0;
            }
        } else {
-           m_curveAB.calculProjete(p, m_deplacementX, m_deplacementY);
+           m_curveAB.calculProjete(m_tracteur.m_pt_antenne_corrige, m_deplacementX, m_deplacementY);
            double dist = m_curveAB.m_distance;
            setDistance(dist);
            
@@ -254,7 +255,7 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
                double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
                m_angle_correction = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, pilot_lookahead );
            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-               m_angle_correction = m_curveAB.calculRearWheelPosition(m_tracteur.m_x_antenne, m_tracteur.m_y_antenne, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+               m_angle_correction = m_curveAB.calculRearWheelPosition(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
            } else {
                m_angle_correction = 0;
            }
@@ -579,29 +580,37 @@ void GpsFramework::calculDeplacement(){
             m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
             
+            m_tracteur.m_correction_lateral = tan(m_imuModule.m_pitch_y_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
+            
             m_tracteur.m_x_antenne = point1->m_x;
             m_tracteur.m_y_antenne = point1->m_y;
-            m_tracteur.m_x_essieu_avant = point1->m_x + sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
-            m_tracteur.m_y_essieu_avant = point1->m_y + cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
-            m_tracteur.m_x_essieu_arriere = point1->m_x - sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
-            m_tracteur.m_y_essieu_arriere = point1->m_y - cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
+            
+            m_tracteur.m_pt_antenne_corrige = GpsPoint_ptr(new GpsPoint);
+            m_tracteur.m_pt_antenne_corrige->m_x = point1->m_x + cos(m_deplacementAngle)*m_tracteur.m_correction_lateral;
+            m_tracteur.m_pt_antenne_corrige->m_y = point1->m_y - sin(m_deplacementAngle)*m_tracteur.m_correction_lateral;
+            
+            m_tracteur.m_x_essieu_avant = m_tracteur.m_pt_antenne_corrige->m_x + sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
+            m_tracteur.m_y_essieu_avant = m_tracteur.m_pt_antenne_corrige->m_y + cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
+            
+            m_tracteur.m_x_essieu_arriere = m_tracteur.m_pt_antenne_corrige->m_x - sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
+            m_tracteur.m_y_essieu_arriere = m_tracteur.m_pt_antenne_corrige->m_y - cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
             
             
             double d_antenne_outil = m_tracteur.m_antenne_essieu_arriere+m_tracteur.m_outil_distance;
             m_tracteur.m_pt_outil_arriere = GpsPoint_ptr(new GpsPoint);
-            m_tracteur.m_pt_outil_arriere->m_x = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil);
-            m_tracteur.m_pt_outil_arriere->m_y = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil);
+            m_tracteur.m_pt_outil_arriere->m_x = m_tracteur.m_pt_antenne_corrige->m_x - sin(m_deplacementAngle)*(d_antenne_outil);
+            m_tracteur.m_pt_outil_arriere->m_y = m_tracteur.m_pt_antenne_corrige->m_y - cos(m_deplacementAngle)*(d_antenne_outil);
             
             m_tracteur.m_pt_outil_arriere_droite = GpsPoint_ptr(new GpsPoint);
-            m_tracteur.m_pt_outil_arriere_droite->m_x = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
+            m_tracteur.m_pt_outil_arriere_droite->m_x = m_tracteur.m_pt_antenne_corrige->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
                 + cos(m_deplacementAngle)*m_config.m_outil_largeur/2;
-             m_tracteur.m_pt_outil_arriere_droite->m_y = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
+             m_tracteur.m_pt_outil_arriere_droite->m_y = m_tracteur.m_pt_antenne_corrige->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
                 - sin(m_deplacementAngle)*m_config.m_outil_largeur/2;
             
             m_tracteur.m_pt_outil_arriere_gauche = GpsPoint_ptr(new GpsPoint);
-            m_tracteur.m_pt_outil_arriere_gauche->m_x = point1->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
+            m_tracteur.m_pt_outil_arriere_gauche->m_x = m_tracteur.m_pt_antenne_corrige->m_x - sin(m_deplacementAngle)*(d_antenne_outil)
                 - cos(m_deplacementAngle)*m_config.m_outil_largeur/2;
-            m_tracteur.m_pt_outil_arriere_gauche->m_y = point1->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
+            m_tracteur.m_pt_outil_arriere_gauche->m_y = m_tracteur.m_pt_antenne_corrige->m_y - cos(m_deplacementAngle)*(d_antenne_outil)
                 + sin(m_deplacementAngle)*m_config.m_outil_largeur/2;
             
             m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere));

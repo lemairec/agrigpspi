@@ -101,8 +101,13 @@ void SatWidget::draw(){
         }
         
         {
-            QString s = "axis_x "+QString::number(f.m_imuModule.m_axis_x)+"\naxis_y "+QString::number(f.m_imuModule.m_axis_y)+"\naxis_z "+QString::number(f.m_imuModule.m_axis_z);
+            QString s = "roll_x "+QString::number(f.m_imuModule.m_roll_x_deg)+"°\npitch_y "+QString::number(f.m_imuModule.m_pitch_y_deg)+"°\nyaw_z "+QString::number(f.m_imuModule.m_yaw_z_deg)+"°";
             drawQText(s, x2, 0.4*m_height, sizeText_little, false);
+        }
+        
+        {
+            QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral*1000)/10.0)+" cm";
+            drawQText(s, x2, 0.6*m_height, sizeText_little, false);
         }
     }
           
