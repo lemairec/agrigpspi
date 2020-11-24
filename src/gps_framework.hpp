@@ -102,6 +102,17 @@ public:
         m_last_time_received = begin;
     }
     
+    bool isConnected(){
+        auto begin = std::chrono::system_clock::now();
+        std::chrono::duration<double> diff = begin - m_last_time_received;
+
+        if(diff.count() < 2.0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     
     void addNewValue(double value){
         if(value > 10000){

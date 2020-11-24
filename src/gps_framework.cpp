@@ -347,25 +347,11 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
 
 
 bool GpsFramework::isGpsConnected(){
-    /*auto begin = std::chrono::system_clock::now();
-    std::chrono::duration<double> diff = begin - m_last_gps_received;
-
-    if(diff.count() < 2.0){
-        return true;
-    } else {
-        return false;
-    }*///TODO
+    return m_gps_time.isConnected();
 }
 
 bool GpsFramework::isPilotConnected(){
-     /*auto begin = std::chrono::system_clock::now();
-    std::chrono::duration<double> diff = begin - m_last_pilot_received;
-
-    if(diff.count() < 2.0){
-        return true;
-    } else {
-        return false;
-    }*///TODO
+    return m_pilot_time.isConnected();
 }
 
 

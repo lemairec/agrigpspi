@@ -260,7 +260,7 @@ void CurveAB::savePointB(){
 }
 
 const double tol = 0.9999999;
-int size_cur = 10;
+size_t size_cur = 10;
 
 double CurveAB::calculCurbature(Lines_ptr line, size_t i){
     if(line->m_points.size() < size_cur){
