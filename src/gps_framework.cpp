@@ -324,7 +324,7 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
     if(m_tracteur.m_pt_outil_arriere){
         calculDraw(m_tracteur.m_pt_outil_arriere);
     }
-    file_job_stream << p->m_time << "," << std::setprecision(11) << p->m_latitude << "," << p->m_longitude << std::endl;
+    file_job_stream << p->m_time << "," << std::setprecision(14) << p->m_latitude << "," << p->m_longitude << std::endl;
     saveInfoFile();
     
     
@@ -391,7 +391,7 @@ void GpsFramework::savePointA(){
 
 void GpsFramework::savePointB(){
     if(m_line && !m_list.empty()){
-        m_lineAB.m_pointB = *(*m_list.begin());
+        m_lineAB.m_point_origin_B = *(*m_list.begin());
     }
     
     setAB();

@@ -102,7 +102,7 @@ void ParcelleLoadWidget::drawParcelle(){
     
     if(m_selectLine.m_selectedValue != 0){
         int i = m_selectLine.m_selectedValue-1;
-        if(parcelle.m_flag.size()>2){
+        if(parcelle.m_flag.size()>1){
             int debut = parcelle.m_flag[i%parcelle.m_flag.size()];
             int fin = parcelle.m_flag[(i+1)%parcelle.m_flag.size()];
             
@@ -168,7 +168,7 @@ void ParcelleLoadWidget::onMouse(int x, int y){
         
         if(m_selectLine.m_selectedValue != 0){
            int i = m_selectLine.m_selectedValue-1;
-           if(f.m_parcelle.m_flag.size()>2){
+           if(f.m_parcelle.m_flag.size()>1){
                int debut = f.m_parcelle.m_flag[i%f.m_parcelle.m_flag.size()];
                int fin = f.m_parcelle.m_flag[(i+1)%f.m_parcelle.m_flag.size()];
                

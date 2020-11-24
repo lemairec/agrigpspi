@@ -202,8 +202,8 @@ void LineCurves::add(LineAB & p){
         std::ofstream file;
         file.open(path, std::ios::out);
         file << "LINE" << std::endl;
-        file << std::setprecision(11) << p.m_point_origin_A.m_latitude << " " << p.m_point_origin_A.m_longitude << std::endl;
-        file << std::setprecision(11) << p.m_point_origin_B.m_latitude << " " << p.m_point_origin_B.m_longitude << std::endl;
+        file << std::setprecision(14) << p.m_point_origin_A.m_latitude << " " << p.m_point_origin_A.m_longitude << std::endl;
+        file << std::setprecision(14) << p.m_point_origin_B.m_latitude << " " << p.m_point_origin_B.m_longitude << std::endl;
         save();
     } else {
         f.addError("line nom trop petit");
@@ -221,7 +221,7 @@ void LineCurves::add(CurveAB & p){
         file.open(path, std::ios::out);
         file << "CURVE" << std::endl;
         for(auto p : f.m_curveAB.m_listAB){
-            file << std::setprecision(11) << p->m_latitude << " " << p->m_longitude << std::endl;
+            file << std::setprecision(14) << p->m_latitude << " " << p->m_longitude << std::endl;
         }
         save();
     } else {

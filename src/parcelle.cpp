@@ -142,7 +142,7 @@ void Parcelle::saveParcelle(std::string name){
     file.open(path, std::ios::out);
     file << "CONTOUR" << std::endl;
     for(auto p : m_contour){
-        file << std::setprecision(11) << p->m_latitude << " " << p->m_longitude << std::endl;
+        file << std::setprecision(14) << p->m_latitude << " " << p->m_longitude << std::endl;
     }
     file << "FLAG" << std::endl;
     for(auto p : m_flag){
