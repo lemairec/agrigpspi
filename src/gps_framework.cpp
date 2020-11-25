@@ -403,7 +403,7 @@ void GpsFramework::setEtat(Etat etat){
     if(etat == Etat_Reset){
         m_surface = 0;
         m_lastPoint = nullptr;
-        m_listSurfaceToDraw.clear();
+        //m_listSurfaceToDraw.clear();
         m_ledAB = 0;
         m_list.clear();
         m_contour.clear();
