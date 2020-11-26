@@ -10,6 +10,8 @@
 #include "environnement.hpp"
 #include "gps_framework.hpp"
 
+#include <QDateTime>
+
 Parcelle::Parcelle(){
     clear();
 }
@@ -140,16 +142,21 @@ void Parcelle::saveParcelle(std::string name){
     std::string path = ProjectSourceBin + "/parcelle/" + name + ".txt";
     std::ofstream file;
     file.open(path, std::ios::out);
-    file << "CONTOUR" << std::endl;
+    
+    QDateTime dt = QDateTime::currentDateTime();
+    dt.setTimeSpec(Qt::UTC);
+    std::string s = QDateTime::currentDateTime().toString(Qt::ISODate).toUtf8().constData();
+    file << "DATE " << s << std::endl;
+    file << "SURFACE " << m_surface_ha << std::endl;
+    file << "[CONTOUR]" << std::endl;
     for(auto p : m_contour){
         file << std::setprecision(14) << p->m_latitude << " " << p->m_longitude << std::endl;
     }
-    file << "FLAG" << std::endl;
+    file << "[FLAG]" << std::endl;
     for(auto p : m_flag){
         file << p << std::endl;
     }
 }
-
 
 void Parcelle::loadParcelle(std::string name){
     clear();
@@ -157,22 +164,27 @@ void Parcelle::loadParcelle(std::string name){
     std::ifstream file(file_job);
     std::string line;
     bool init = false;
+
     if(file.is_open()){
         INFO(file_job << " is open");
         GpsFramework & f = GpsFramework::Instance();
         
         std::getline(file, line);
+        
+        std::getline(file, line);
+        std::getline(file, line);
+        
+        //points
         while (std::getline(file, line))
         {
             std::istringstream iss(line);
-            if(line == "FLAG"){
+            if(line == "[FLAG]"){
                 break;
             }
             float a, b;
             if (!(iss >> a >> b)) {
-                INFO("error " << line);
+                INFO("error1 " << line);
                 break;
-                
             } // error
             //INFO(a << " " << b);
             GpsPoint_ptr p = GpsPoint_ptr(new GpsPoint());
@@ -195,7 +207,6 @@ void Parcelle::loadParcelle(std::string name){
            if (!(iss >> a)) {
                INFO("error2" << line);
                break;
-               
            }
             m_flag.push_back(a);
            // process pair (a,b)
