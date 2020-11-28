@@ -206,7 +206,7 @@ BaseWidget::BaseWidget(){
 void BaseWidget::setSize(int width, int height){
     m_gros_button = 0.05*height;
     m_petit_button = 0.035*height;
-    m_gros_gros_button = 0.07*height;
+    m_gros_gros_button = 0.1*height;
     m_width = width;
     m_height = height;
 }
