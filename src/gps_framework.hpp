@@ -114,6 +114,7 @@ public:
     
     
     void addNewValue(double value){
+        std::list<int> m_values;
         if(value > 10000){
             return;
         }

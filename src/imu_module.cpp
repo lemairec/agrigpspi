@@ -84,6 +84,21 @@ void ImuModule::run(){
             if(m_yaw_z_deg > 180){
                 m_yaw_z_deg = m_yaw_z_deg-360.0;
             }
+            
+            if(m_imu_moy>0){
+                m_values.push_front(m_pitch_y_deg);
+                while(m_values.size()>m_imu_moy){
+                    m_values.pop_back();
+                }
+                
+                double sum = 0;
+                for(auto c : m_values){
+                    sum += c;
+                }
+                m_moy_corr_deg = sum/m_values.size();
+            } else {
+                m_moy_corr_deg = m_pitch_y_deg;
+            }
              
             //print(11);
             //INFO("53 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);

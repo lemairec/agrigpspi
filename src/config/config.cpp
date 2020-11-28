@@ -44,16 +44,11 @@ void Config::save(){
     QString inputImu = QString::fromStdString(m_imu_input);
     settings.setValue("inputImu", inputImu);
     settings.setValue("baudrateImu", m_imu_baudrate);
-    
+    settings.setValue("m_imu_moy", m_imu_moy);
     
     settings.setValue("motor_vitesse_min", m_motor_vitesse_min);
     settings.setValue("motor_vitesse_max", m_motor_vitesse_max);
     settings.setValue("motor_vitesse_agressivite", m_motor_vitesse_agressivite);
-    
-    settings.setValue("a_lat", m_a_lat);
-    settings.setValue("a_lon", m_a_lon);
-    settings.setValue("b_lat", m_b_lat);
-    settings.setValue("b_lon", m_b_lon);
     
     settings.setValue("m_pilot_motor_inverse", m_pilot_motor_inverse);
     settings.setValue("m_pilot_encoder_inverse", m_pilot_encoder_inverse);
@@ -130,6 +125,9 @@ void Config::load(){
     if(settings.contains("baudrateImu")){
         m_imu_baudrate = settings.value("baudrateImu").toInt();
     }
+    if(settings.contains("m_imu_moy")){
+        m_imu_moy = settings.value("m_imu_moy").toDouble();
+    }
     
     if(settings.contains("motor_vitesse_min")){
         m_motor_vitesse_min = settings.value("motor_vitesse_min").toDouble();
@@ -141,18 +139,6 @@ void Config::load(){
         m_motor_vitesse_agressivite = settings.value("motor_vitesse_agressivite").toDouble();
     }
     
-    if(settings.contains("a_lat")){
-        m_a_lat = settings.value("a_lat").toDouble();
-    }
-    if(settings.contains("a_lon")){
-        m_a_lon = settings.value("a_lon").toDouble();
-    }
-    if(settings.contains("b_lat")){
-        m_b_lat = settings.value("b_lat").toDouble();
-    }
-    if(settings.contains("b_lon")){
-        m_b_lon = settings.value("b_lon").toDouble();
-    }
     
     if(settings.contains("m_pilot_motor_inverse")){
         m_pilot_motor_inverse = settings.value("m_pilot_motor_inverse").toBool();

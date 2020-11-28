@@ -4,6 +4,7 @@
 #include <memory>
 #include <deque>
 
+#include <list>
 
 class ImuModule {
 public:
@@ -14,6 +15,10 @@ public:
     double m_roll_x_deg = 0;
     double m_pitch_y_deg = 0;
     double m_yaw_z_deg = 0;
+    
+    std::list<int> m_values;
+    int m_imu_moy = 100;
+    double m_moy_corr_deg = 0;
     
     void print(int i);
     void remove(int i);

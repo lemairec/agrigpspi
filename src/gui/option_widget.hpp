@@ -117,6 +117,7 @@ public:
     //page_imu
     SelectButtonGui m_select_imu_serial;
     SelectButtonGui m_select_imu_baudrates;
+    ValueGui m_value_imu_moy;
     void resizePage6();
     void onMousePage6(int x, int y);
     void drawPage6();

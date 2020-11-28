@@ -70,6 +70,7 @@ void GpsFramework::initOrLoadConfig(){
     m_pilotModule.initOrLoadConfig(m_config);
     m_serialModule.initOrLoad(m_config);
     m_fileModule.initOrLoad(m_config);
+    m_imuModule.m_imu_moy = m_config.m_imu_moy;
     
     m_distance_cap_vitesse = 3;
     file_job_stream << "[config]\n";
@@ -255,7 +256,7 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
                double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
                m_angle_correction = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, pilot_lookahead );
            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-               m_angle_correction = m_curveAB.calculRearWheelPosition(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+               m_angle_correction = m_curveAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
            } else {
                m_angle_correction = 0;
            }
@@ -566,7 +567,7 @@ void GpsFramework::calculDeplacement(){
             m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
             
-            m_tracteur.m_correction_lateral = tan(m_imuModule.m_pitch_y_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
+            m_tracteur.m_correction_lateral = tan(m_imuModule.m_moy_corr_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
             
             m_tracteur.m_x_antenne = point1->m_x;
             m_tracteur.m_y_antenne = point1->m_y;

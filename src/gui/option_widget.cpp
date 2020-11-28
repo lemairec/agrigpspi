@@ -513,6 +513,7 @@ void OptionWidget::resizePage6(){
     m_select_imu_baudrates.setResize(0.35*m_width,0.4*m_height, m_petit_button);
     m_select_imu_baudrates.addValueInt("9600", 9600);
     m_select_imu_baudrates.addValueInt("115200", 115200);
+    m_value_imu_moy.setResize(0.35*m_width,0.7*m_height, m_petit_button, "moy ");
 }
 
 void OptionWidget::drawPage6(){
@@ -526,6 +527,8 @@ void OptionWidget::drawPage6(){
     drawSelectButtonGuiClose(&m_select_imu_serial);
     drawSelectButtonGuiClose(&m_select_imu_baudrates);
     
+    drawValueGui(&m_value_imu_moy, f.m_config.m_imu_moy);
+    
     drawSelectButtonGuiOpen(&m_select_imu_serial);
     drawSelectButtonGuiOpen(&m_select_imu_baudrates);
     
@@ -537,6 +540,9 @@ void OptionWidget::onMousePage6(int x, int y){
     if(onMouseSelectButton(&m_select_imu_serial, x, y)){
         f.m_config.m_imu_input = m_select_imu_serial.getValueString();
     };
+    
+    f.m_config.m_imu_moy += 5*m_value_imu_moy.getIntValue(x,y);
+       
     
     if(onMouseSelectButton(&m_select_imu_baudrates, x, y)){
         f.m_config.m_imu_baudrate = m_select_imu_baudrates.getValueInt();

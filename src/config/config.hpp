@@ -17,13 +17,9 @@ public:
     
     std::string m_imu_input = "none";
     int m_imu_baudrate = 115200;
+    int m_imu_moy = 10;
     
     
-    double m_a_lat = 0;
-    double m_a_lon = 0;
-    double m_b_lat = 0;
-    double m_b_lon = 0;
-
     bool m_gga = false;
    
     bool m_sensDraw = false;
