@@ -92,6 +92,10 @@ void GpsWidget::setSize(int width, int height){
     m_buttonOption.setResize(40, m_height-30, m_gros_button);
     m_buttonGuidage.setResize(100, m_height-30, m_gros_button);
     m_buttonParcelle.setResize(160, m_height-30, m_gros_button);
+    m_buttonChamp.setResize(m_width - 160, m_height-30, m_gros_gros_button);
+    m_buttonVolant.setResize(m_width - 40, m_height-30, m_gros_gros_button);
+    m_buttonVolantAuto.setResize(m_width - 100, m_height-30, m_gros_gros_button);
+    
     if(GpsFramework::Instance().m_config.m_menu_vertical){
         m_imgGuidage = loadImage("/images/guidage2.png");
         m_imgParcelle = loadImage("/images/parcelle2.png");
@@ -99,12 +103,11 @@ void GpsWidget::setSize(int width, int height){
         m_buttonOption.setResize(temp*m_width, 0.20*m_height, m_gros_button);
         m_buttonGuidage.setResize(temp*m_width, 0.30*m_height, m_gros_button);
         m_buttonParcelle.setResize(temp*m_width, 0.40*m_height, m_gros_button);
-        
+        m_buttonChamp.setResize((1-temp)*m_width, 0.35*m_height, m_gros_gros_button);
+        m_buttonVolant.setResize((1-temp)*m_width, 0.55*m_height, m_gros_gros_button);
+        m_buttonVolantAuto.setResize((1-temp)*m_width, 0.65*m_height, m_gros_gros_button);
     }
     
-    m_buttonChamp.setResize((1-temp)*m_width, 0.35*m_height, m_gros_gros_button);
-    m_buttonVolant.setResize((1-temp)*m_width, 0.55*m_height, m_gros_gros_button);
-    m_buttonVolantAuto.setResize((1-temp)*m_width, 0.65*m_height, m_gros_gros_button);
     
     m_buttonErrorOk.setResize((0.5)*m_width, 0.8*m_height, m_gros_button);
     //    onValueChangeSlot(true);
