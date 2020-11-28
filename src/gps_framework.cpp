@@ -578,9 +578,9 @@ void GpsFramework::calculDeplacement(){
             m_tracteur.m_x_essieu_avant = m_tracteur.m_pt_antenne_corrige->m_x + sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             m_tracteur.m_y_essieu_avant = m_tracteur.m_pt_antenne_corrige->m_y + cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             
-            m_tracteur.m_x_essieu_arriere = m_tracteur.m_pt_antenne_corrige->m_x - sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
-            m_tracteur.m_y_essieu_arriere = m_tracteur.m_pt_antenne_corrige->m_y - cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
-            
+            m_tracteur.m_pt_essieu_arriere = GpsPoint_ptr(new GpsPoint);
+            m_tracteur.m_pt_essieu_arriere->m_x = m_tracteur.m_pt_antenne_corrige->m_x - sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
+            m_tracteur.m_pt_essieu_arriere->m_y = m_tracteur.m_pt_antenne_corrige->m_y - cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_arriere;
             
             double d_antenne_outil = m_tracteur.m_antenne_essieu_arriere+m_tracteur.m_outil_distance;
             m_tracteur.m_pt_outil_arriere = GpsPoint_ptr(new GpsPoint);

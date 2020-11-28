@@ -43,11 +43,10 @@ struct Tracteur {
     
     double m_correction_lateral = 0;
     GpsPoint_ptr m_pt_antenne_corrige;
+    GpsPoint_ptr m_pt_essieu_arriere;
      
     double m_x_essieu_avant = 0;
     double m_y_essieu_avant = 0;
-    double m_x_essieu_arriere = 0;
-    double m_y_essieu_arriere = 0;
     
     GpsPoint_ptr m_pt_outil_arriere;
     GpsPoint_ptr m_pt_outil_arriere_gauche;
