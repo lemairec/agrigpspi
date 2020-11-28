@@ -20,12 +20,12 @@ void LineAB::setAB(){
     double yAB = (m_pointA.m_y -  m_pointB.m_y)/dAB;
     INFO(xAB << " " << yAB);
     
-    double deplacemnt = 2;
+    /*double deplacemnt = 2;
     m_pointA.m_x += yAB*deplacemnt;
     m_pointA.m_y += -xAB*deplacemnt;
     
     m_pointB.m_x += yAB*deplacemnt;
-    m_pointB.m_y += -xAB*deplacemnt;
+    m_pointB.m_y += -xAB*deplacemnt;*/
        
     m_ab_x = m_pointB.m_x - m_pointA.m_x;
     m_ab_y = m_pointB.m_y - m_pointA.m_y;
