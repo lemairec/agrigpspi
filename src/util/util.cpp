@@ -42,5 +42,5 @@ bool isNotEqualDoubles2 (double a, double b, double epsilon)
 {
    double diff = a - b;
    INFO(diff << " " << epsilon);
-   return (diff > epsilon) || (-diff < -epsilon);
+   return (diff > epsilon) || (diff < -epsilon);
 }
