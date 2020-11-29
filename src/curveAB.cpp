@@ -441,24 +441,27 @@ double CurveAB::followKarott(double x_pont, double y_pont, double deplacement_x,
         y_h_lookhead = y_h_pont - y_v*lookhead;
         
     }
+    //INFO(x_h_pont << " " << x_v << " " <<  lookhead);
+    
     
     double x_segment = x_h_lookhead - x_pont;
     double y_segment = y_h_lookhead - y_pont;
     
+    //INFO(x_h_lookhead << " " << x_pont << " " <<  y_h_lookhead << " " <<  y_pont);
+    //INFO(deplacement_x << " " << deplacement_y << " " <<  x_segment << " " <<  y_segment);
     double m_angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
     m_angle = angleBetweenPI2(m_angle);
     
-    double ah = sqrt((x_h-x_a)*(x_h-x_a) + (y_h-y_a)*(y_h-y_a));
+    double ha_x = x_h_pont-x_a;
+    double ha_y = y_h_pont-y_a;
+    
+    double ah = sqrt((ha_x)*(ha_x) + (ha_y)*(ha_y));
     m_distance_pont = ah;
     
-    double x_ab = x_b-x_a;
-    double y_ab = y_b-y_a;
-    
-    double det = x_ab*deplacement_y-y_ab*deplacement_x;
+    double det = x_segment*ha_y-y_segment*ha_x;
     
     if(det < 0){
         m_distance_pont = -m_distance_pont;
-        m_angle = -m_angle;
     }
     
     return m_angle;
@@ -567,16 +570,10 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
 
     double det = x_segment*ha_y-y_segment*ha_x;
     
-    
     if(det > 0){
-        std::cout << "det "<< std::endl;
         ah = -ah;
     }
-    
-    
-    
-    
-    
+
     double e = -ah;
     double v = vitesse*10000.0/3600.0;
     double k = 0;//todo;

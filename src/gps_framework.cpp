@@ -2,6 +2,7 @@
 #include "logging.hpp"
 #include "config/config.hpp"
 #include "environnement.hpp"
+#include "util/util.hpp"
 
 #include <QDateTime>
 #include <math.h>
@@ -243,6 +244,11 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
            
            if(m_pilot_algo == AlgoPilot::FollowKarott){
                m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
+               /*double a = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+               INFO(a << " " << m_angle_correction);
+               if(isNotEqualDoubles2(a, m_angle_correction, 0.00001)){
+                   INFO("error");
+               }*/
            } else if(m_pilot_algo == AlgoPilot::FollowKarottVitesse){
                double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
                m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, pilot_lookahead);
