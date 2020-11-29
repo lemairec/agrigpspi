@@ -80,7 +80,7 @@ void GpsFramework::initOrLoadConfig(){
     
     m_pilot_algo = (AlgoPilot)m_config.m_pilot_algo;
     m_pilot_lookahead_d = m_config.m_pilot_lookahead_d;
-    m_pilot_lookahead_vd = m_config.m_pilot_lookahead_vd;
+    m_pilot_adaptive_vitesse = m_config.m_pilot_adaptive_vitesse;
     m_pilot_rwp_kth = m_config.m_pilot_rwp_kth;
     m_pilot_rwp_kte = m_config.m_pilot_rwp_kte;
     
@@ -249,9 +249,6 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
                if(isNotEqualDoubles2(a, m_angle_correction, 0.00001)){
                    INFO("error");
                }*/
-           } else if(m_pilot_algo == AlgoPilot::FollowKarottVitesse){
-               double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
-               m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, pilot_lookahead);
            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
                m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
            } else if(m_pilot_algo == AlgoPilot::RWPAndFK){
@@ -272,9 +269,6 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
            
            if(m_pilot_algo == AlgoPilot::FollowKarott){
                m_angle_correction = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
-           } else if(m_pilot_algo == AlgoPilot::FollowKarottVitesse){
-               double pilot_lookahead = m_pilot_lookahead_d + m_pilot_lookahead_vd*m_vitesse;
-               m_angle_correction = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, pilot_lookahead );
            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
                m_angle_correction = m_curveAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
            } else {
@@ -285,6 +279,10 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
        setDistance(0);
        m_angle_correction = 0;
    }
+    
+    if(m_pilot_adaptive_vitesse){
+        m_angle_correction = m_angle_correction*8.0/m_vitesse;
+    }
     
    double angle_max = 0.5;
    if(m_angle_correction < -angle_max){

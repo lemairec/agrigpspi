@@ -56,7 +56,7 @@ void Config::save(){
     
     settings.setValue("m_pilot_algo", m_pilot_algo);
     settings.setValue("m_pilot_lookahead_d", m_pilot_lookahead_d);
-    settings.setValue("m_pilot_lookahead_vd", m_pilot_lookahead_vd);
+    settings.setValue("m_pilot_adaptive_vitesse", m_pilot_adaptive_vitesse);
     settings.setValue("m_pilot_rwp_kth", m_pilot_rwp_kth);
     settings.setValue("m_pilot_rwp_kte", m_pilot_rwp_kte);
     settings.setValue("m_pilot_auto_deactive", m_pilot_auto_deactive);
@@ -157,8 +157,8 @@ void Config::load(){
     if(settings.contains("m_pilot_lookahead_d")){
         m_pilot_lookahead_d = settings.value("m_pilot_lookahead_d").toDouble();
     }
-    if(settings.contains("m_pilot_lookahead_vd")){
-        m_pilot_lookahead_vd = settings.value("m_pilot_lookahead_vd").toDouble();
+    if(settings.contains("m_pilot_adaptive_vitesse")){
+        m_pilot_adaptive_vitesse = settings.value("m_pilot_adaptive_vitesse").toDouble();
     }
     if(settings.contains("m_pilot_rwp_kth")){
         m_pilot_rwp_kth = settings.value("m_pilot_rwp_kth").toDouble();

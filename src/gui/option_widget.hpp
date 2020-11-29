@@ -65,9 +65,10 @@ public:
     
     SelectButtonGui m_select_algo;
     ValueGui m_value_gui_lookahead_d;
-    ValueGui m_value_gui_lookahead_vd;
     ValueGui m_value_gui_rwp_kth;
     ValueGui m_value_gui_rwp_kte;
+    
+    ButtonGui m_button_adaptive_vitesse;
     
     void resizePage3();
     void onMousePage3(int x, int y);

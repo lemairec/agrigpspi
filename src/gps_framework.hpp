@@ -73,9 +73,8 @@ enum ParcellePoint {
 
 enum AlgoPilot {
     FollowKarott = 0,
-    FollowKarottVitesse = 1,
-    RearWheelPosition = 2,
-    RWPAndFK = 3,
+    RearWheelPosition = 1,
+    RWPAndFK = 2,
     
 };
 
@@ -215,7 +214,7 @@ public:
     
     //algo follow carott
     double m_pilot_lookahead_d;
-    double m_pilot_lookahead_vd;
+    int m_pilot_adaptive_vitesse;
     
     //algo rear wheel position
     double m_pilot_rwp_kth = 0.5;

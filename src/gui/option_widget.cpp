@@ -264,17 +264,17 @@ void OptionWidget::resizePage3(){
     m_select_pilot_langage.addValue("arduino");
     m_select_pilot_langage.addValue("hadrien");
     
+    m_button_adaptive_vitesse.setResize(0.35*m_width, 0.55*m_height, m_petit_button);
+    
     m_select_algo.clear();
-    m_select_algo.setResize(0.35*m_width,0.6*m_height, m_petit_button);
+    m_select_algo.setResize(0.35*m_width,0.65*m_height, m_petit_button);
     m_select_algo.addValue("followk_karott");
-    m_select_algo.addValue("followk_karott_v");
     m_select_algo.addValue("rear_wheel_position");
     m_select_algo.addValue("rwp_fk");
     
-    m_value_gui_lookahead_d.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "lookahead ");
-    m_value_gui_lookahead_vd.setResize(0.35*m_width, 0.8*m_height, m_petit_button, "lookahead v ");
-    m_value_gui_rwp_kth.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "kth ");
-    m_value_gui_rwp_kte.setResize(0.35*m_width, 0.8*m_height, m_petit_button, "kte ");
+    m_value_gui_lookahead_d.setResize(0.35*m_width, 0.75*m_height, m_petit_button, "lookahead ");
+    m_value_gui_rwp_kth.setResize(0.35*m_width, 0.75*m_height, m_petit_button, "kth ");
+    m_value_gui_rwp_kte.setResize(0.35*m_width, 0.82*m_height, m_petit_button, "kte ");
 };
 
 void OptionWidget::drawPage3(){
@@ -294,15 +294,20 @@ void OptionWidget::drawPage3(){
     
     if(f.m_pilot_algo == AlgoPilot::FollowKarott){
         drawValueGui(&m_value_gui_lookahead_d, f.m_config.m_pilot_lookahead_d);
-    } else if(f.m_pilot_algo == AlgoPilot::FollowKarottVitesse){
-        drawValueGui(&m_value_gui_lookahead_d, f.m_config.m_pilot_lookahead_d);
-        drawValueGui(&m_value_gui_lookahead_vd, f.m_config.m_pilot_lookahead_vd);
     } else if(f.m_pilot_algo == AlgoPilot::RearWheelPosition){
         drawValueGui(&m_value_gui_rwp_kth, f.m_config.m_pilot_rwp_kth);
         drawValueGui(&m_value_gui_rwp_kte, f.m_config.m_pilot_rwp_kte);
     } else if(f.m_pilot_algo == AlgoPilot::RWPAndFK){
         
     }
+    
+    drawText("adaptative vitesse", 0.4*m_width, m_button_adaptive_vitesse.m_y, sizeText_medium, false);
+    if(f.m_config.m_pilot_adaptive_vitesse > 0.5){
+        drawButton(&m_button_adaptive_vitesse, COLOR_CHECK);
+    } else {
+        drawButton(&m_button_adaptive_vitesse);
+    }
+    
     drawSelectButtonGuiOpen(&m_select_pilot_serial);
     drawSelectButtonGuiOpen(&m_select_pilot_langage);
     drawSelectButtonGuiOpen(&m_select_pilot_baudrates);
@@ -329,13 +334,12 @@ void OptionWidget::onMousePage3(int x, int y){
         f.m_config.m_pilot_algo = m_select_algo.m_selectedValue;
     }
     
-    
+    if(m_button_adaptive_vitesse.isActive(x, y)){
+        f.m_config.m_pilot_adaptive_vitesse = !f.m_config.m_pilot_adaptive_vitesse;
+    }
     
     if(f.m_pilot_algo == AlgoPilot::FollowKarott){
         f.m_config.m_pilot_lookahead_d = f.m_config.m_pilot_lookahead_d * m_value_gui_lookahead_d.getMultValue(x,y);
-    } else if(f.m_pilot_algo == AlgoPilot::FollowKarottVitesse){
-        f.m_config.m_pilot_lookahead_d = f.m_config.m_pilot_lookahead_d * m_value_gui_lookahead_d.getMultValue(x,y);
-        f.m_config.m_pilot_lookahead_vd = f.m_config.m_pilot_lookahead_vd * m_value_gui_lookahead_vd.getMultValue(x,y);
     } else if(f.m_pilot_algo == AlgoPilot::RearWheelPosition){
         f.m_config.m_pilot_rwp_kth += m_value_gui_rwp_kth.getIntValue(x,y)*0.1;
         f.m_config.m_pilot_rwp_kte += m_value_gui_rwp_kte.getIntValue(x,y)*0.1;

@@ -181,9 +181,7 @@ void CurveAB::setCurrent(int i){
 }
 
 void CurveAB::savePointB(){
-    INFO(m_listAB.size());
     clearLine(m_listAB);
-    INFO(m_listAB.size());
     m_list.clear();
     GpsPoint_ptr old_point = nullptr;
     
