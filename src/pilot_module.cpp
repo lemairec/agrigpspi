@@ -68,14 +68,13 @@ void PilotModule::myGotoVolant2(double res){
 }
 
 void PilotModule::setPasMotorVolant(int pas){
-    GpsFramework::Instance().m_pilot_time.setNewTime();
-    
     double res = pas/m_algo2_goto_pas_by_tour;
     setVolant(res);
     update();
 }
 
 void PilotModule::setVolant(double vol){
+    GpsFramework::Instance().m_pilot_time.setNewTime();
     if(!m_pilot_encoder_inverse){
         m_volantMesured = vol;
     } else {
