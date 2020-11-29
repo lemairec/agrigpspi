@@ -167,19 +167,19 @@ void ParcelleLoadWidget::onMouse(int x, int y){
         
         
         if(m_selectLine.m_selectedValue != 0){
-           int i = m_selectLine.m_selectedValue-1;
-           if(f.m_parcelle.m_flag.size()>1){
-               int debut = f.m_parcelle.m_flag[i%f.m_parcelle.m_flag.size()];
-               int fin = f.m_parcelle.m_flag[(i+1)%f.m_parcelle.m_flag.size()];
-               
-               auto p1 = f.m_parcelle.m_contour[debut];
-               auto p2 = f.m_parcelle.m_contour[fin];
-               
-               f.m_line = true;
-               f.m_lineAB.m_point_origin_A = *p1;
-               f.m_lineAB.m_point_origin_B = *p2;
-               f.setAB();
-           }
+            int i = m_selectLine.m_selectedValue-1;
+            if(f.m_parcelle.m_flag.size()>1){
+                int debut = f.m_parcelle.m_flag[i%f.m_parcelle.m_flag.size()];
+                int fin = f.m_parcelle.m_flag[(i+1)%f.m_parcelle.m_flag.size()];
+                
+                auto p1 = f.m_parcelle.m_contour[debut];
+                auto p2 = f.m_parcelle.m_contour[fin];
+                
+                f.m_line = true;
+                f.m_lineAB.m_point_origin_A = *p1;
+                f.m_lineAB.m_point_origin_B = *p2;
+                f.setAB();
+            }
         }
         m_close = true;
     }
