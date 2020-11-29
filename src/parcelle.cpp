@@ -146,6 +146,7 @@ void Parcelle::saveParcelle(std::string name){
     QDateTime dt = QDateTime::currentDateTime();
     dt.setTimeSpec(Qt::UTC);
     std::string s = QDateTime::currentDateTime().toString(Qt::ISODate).toUtf8().constData();
+    file << "[PARCELLE]" << std::endl;
     file << "DATE " << s << std::endl;
     file << "SURFACE " << m_surface_ha << std::endl;
     file << "[CONTOUR]" << std::endl;
@@ -170,7 +171,7 @@ void Parcelle::loadParcelle(std::string name){
         GpsFramework & f = GpsFramework::Instance();
         
         std::getline(file, line);
-        
+        std::getline(file, line);
         std::getline(file, line);
         std::getline(file, line);
         
