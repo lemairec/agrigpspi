@@ -83,9 +83,12 @@ void SatWidget::draw(){
         {
             drawText(f.m_pilotModule.m_version_guidage, x2, 0.40*m_height, sizeText_medium, false);
         }
+        {
+            drawText(f.m_pilot_algo_str, x2, 0.50*m_height, sizeText_medium, false);
+        }
         
         {
-            drawText(f.m_pilot_last_error, x2, 0.50*m_height, sizeText_little, false);
+            drawText(f.m_pilot_last_error, x2, 0.60*m_height, sizeText_little, false);
         }
               
         
@@ -110,7 +113,7 @@ void SatWidget::draw(){
             drawQText(s, x2, 0.6*m_height, sizeText_little, false);
         }
         {
-            QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral*1000)/10.0)+" cm";
+            QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral_imu*1000)/10.0)+" cm";
             drawQText(s, x2, 0.7*m_height, sizeText_little, false);
         }
     }

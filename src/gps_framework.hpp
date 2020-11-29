@@ -43,6 +43,7 @@ struct Tracteur {
     double m_y_antenne = 0;
     
     
+    double m_correction_lateral_imu = 0;
     double m_correction_lateral = 0;
     GpsPoint_ptr m_pt_antenne_corrige;
     GpsPoint_ptr m_pt_essieu_arriere;
@@ -208,6 +209,7 @@ public:
     double m_distanceAB = 0.0;
     int m_ledAB = 0;
     
+    std::string m_pilot_algo_str = "none";
     AlgoPilot m_pilot_algo = FollowKarott;
     double m_angle_correction;
     

@@ -95,7 +95,6 @@ void GpsFramework::initOrLoadConfig(){
     } else {
         m_tracteur.m_antenne_lateral = m_config.m_tracteur_antenne_lateral;
     }
-    INFO("lateral " << m_tracteur.m_antenne_lateral);
     
     m_curveAB.m_largeur = m_config.m_outil_largeur;
     m_gga = m_config.m_gga;
@@ -251,10 +250,10 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
                m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
            } else if(m_pilot_algo == AlgoPilot::RWPAndFK){
                if(dist > 0.3 || dist < -0.3){
-                   //INFO("FK");
+                   m_pilot_algo_str = "rwp_fk_fk";
                    m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
                } else {
-                   //INFO("RWP");
+                   m_pilot_algo_str = "rwp_fk_rwp";
                    m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
                }
            } else {
@@ -582,14 +581,15 @@ void GpsFramework::calculDeplacement(){
             m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
             
-            m_tracteur.m_correction_lateral = tan(m_imuModule.m_moy_corr_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
+            m_tracteur.m_correction_lateral_imu = tan(m_imuModule.m_moy_corr_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
+            m_tracteur.m_correction_lateral = m_tracteur.m_correction_lateral_imu + m_tracteur.m_antenne_lateral;
             
             m_tracteur.m_x_antenne = point1->m_x;
             m_tracteur.m_y_antenne = point1->m_y;
             
             m_tracteur.m_pt_antenne_corrige = GpsPoint_ptr(new GpsPoint);
-            m_tracteur.m_pt_antenne_corrige->m_x = point1->m_x + cos(m_deplacementAngle)*(m_tracteur.m_correction_lateral + m_tracteur.m_antenne_lateral);
-            m_tracteur.m_pt_antenne_corrige->m_y = point1->m_y - sin(m_deplacementAngle)*(m_tracteur.m_correction_lateral + m_tracteur.m_antenne_lateral);
+            m_tracteur.m_pt_antenne_corrige->m_x = point1->m_x + cos(m_deplacementAngle)*m_tracteur.m_correction_lateral;
+            m_tracteur.m_pt_antenne_corrige->m_y = point1->m_y - sin(m_deplacementAngle)*m_tracteur.m_correction_lateral;
             
             m_tracteur.m_x_essieu_avant = m_tracteur.m_pt_antenne_corrige->m_x + sin(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
             m_tracteur.m_y_essieu_avant = m_tracteur.m_pt_antenne_corrige->m_y + cos(m_deplacementAngle)*m_tracteur.m_antenne_essieu_avant;
@@ -685,25 +685,27 @@ void GpsFramework::calculSurface(){
     for(auto s : m_listSurfaceToDraw){
         if(s->m_points.size()>0){
             auto last_frame = s->m_lastPoint->m_point_center;
-            double x1 = last_frame->m_x;
-            double y1 = last_frame->m_y;
-            for(auto it = s->m_points.begin(); it != s->m_points.end(); ++it){
-                auto frame = (*it);
-                double x0 = frame->m_point_center->m_x;
-                double y0 = frame->m_point_center->m_y;
-                double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
-                
-                double surface = std::sqrt(dist)*m_config.m_outil_largeur/10000.0;
-                m_surface += surface;
-                /*if(m_surface_h == 0){
-                    if(last_frame->m_timeHour!=frame->m_timeHour){
-                        m_surface_h = m_surface/(last_frame->m_timeHour-frame->m_timeHour);
-                                
-                    }
-                }*/
-                
-                x1 = x0;
-                y1 = y0;
+            if(s->m_lastPoint && last_frame){
+                double x1 = last_frame->m_x;
+                double y1 = last_frame->m_y;
+                for(auto it = s->m_points.begin(); it != s->m_points.end(); ++it){
+                    auto frame = (*it);
+                    double x0 = frame->m_point_center->m_x;
+                    double y0 = frame->m_point_center->m_y;
+                    double dist = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+                    
+                    double surface = std::sqrt(dist)*m_config.m_outil_largeur/10000.0;
+                    m_surface += surface;
+                    /*if(m_surface_h == 0){
+                        if(last_frame->m_timeHour!=frame->m_timeHour){
+                            m_surface_h = m_surface/(last_frame->m_timeHour-frame->m_timeHour);
+                                    
+                        }
+                    }*/
+                    
+                    x1 = x0;
+                    y1 = y0;
+                }
             }
         }
     }
