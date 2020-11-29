@@ -550,26 +550,26 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     y_h = y_b + bh*y_v;
     
     
-    double ah = sqrt((x_h-x_a)*(x_h-x_a) + (y_h-y_a)*(y_h-y_a));
+    double ha_x = x_h-x_a;
+    double ha_y = y_h-y_a;
+    
+    double ah = sqrt((ha_x)*(ha_x) + (ha_y)*(ha_y));
     m_distance = ah;
-    
-    
     
     
     double x_segment = x_m - x_b;
     double y_segment = y_m - y_b;
     
+    
     double angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
     angle = angleBetweenPI2(angle);
     
 
-    double x_ab = x_b-x_a;
-    double y_ab = y_b-y_a;
+    double det = x_segment*ha_y-y_segment*ha_x;
     
-    double det = x_ab*deplacement_y-y_ab*deplacement_x;
     
-    if(det < 0){
-        angle = -angle;
+    if(det > 0){
+        std::cout << "det "<< std::endl;
         ah = -ah;
     }
     
@@ -579,12 +579,15 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     
     double e = -ah;
     double v = vitesse*10000.0/3600.0;
-    double k = -calculCurbature(list, list->m_curve_i_min);//todo;
+    double k = 0;//todo;
     double th_e = -angle;//todo;
 
     double x1 = v * k * cos(th_e) / (1.0 - k * e) ;
     double x2 = KTH * abs(v) * th_e ;
     double x3 = KE * v * sin(th_e) * e / th_e;
+    
+    std::cout << "c  e " << e << "  th_e " << th_e << std::endl;
+    std::cout << "c    " << x2 << " " << x3 << std::endl;
     
     double omega = x1 - x2 - x3;
 

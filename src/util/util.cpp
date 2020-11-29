@@ -1,4 +1,5 @@
 #include "util.hpp"
+#include "../logging.hpp"
 
 #include <math.h>
 
@@ -37,8 +38,9 @@ double angleBetweenPI2(double a){
     return angle;
 }
 
-bool isEqualDoubles2 (double a, double b, double epsilon)
+bool isNotEqualDoubles2 (double a, double b, double epsilon)
 {
    double diff = a - b;
+   INFO(diff << " " << epsilon);
    return (diff > epsilon) || (-diff < -epsilon);
 }
