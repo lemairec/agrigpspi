@@ -71,7 +71,9 @@ enum ParcellePoint {
 enum AlgoPilot {
     FollowKarott = 0,
     FollowKarottVitesse = 1,
-    RearWheelPosition = 2
+    RearWheelPosition = 2,
+    RWPAndFK = 3,
+    
 };
 
 

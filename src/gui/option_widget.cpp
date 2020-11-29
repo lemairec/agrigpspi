@@ -268,7 +268,8 @@ void OptionWidget::resizePage3(){
     m_select_algo.setResize(0.35*m_width,0.6*m_height, m_petit_button);
     m_select_algo.addValue("followk_karott");
     m_select_algo.addValue("followk_karott_v");
-    m_select_algo.addValue("rwp");
+    m_select_algo.addValue("rear_wheel_position");
+    m_select_algo.addValue("rwp_fk");
     
     m_value_gui_lookahead_d.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "lookahead ");
     m_value_gui_lookahead_vd.setResize(0.35*m_width, 0.8*m_height, m_petit_button, "lookahead v ");
@@ -299,6 +300,8 @@ void OptionWidget::drawPage3(){
     } else if(f.m_pilot_algo == AlgoPilot::RearWheelPosition){
         drawValueGui(&m_value_gui_rwp_kth, f.m_config.m_pilot_rwp_kth);
         drawValueGui(&m_value_gui_rwp_kte, f.m_config.m_pilot_rwp_kte);
+    } else if(f.m_pilot_algo == AlgoPilot::RWPAndFK){
+        
     }
     drawSelectButtonGuiOpen(&m_select_pilot_serial);
     drawSelectButtonGuiOpen(&m_select_pilot_langage);
@@ -336,7 +339,10 @@ void OptionWidget::onMousePage3(int x, int y){
     } else if(f.m_pilot_algo == AlgoPilot::RearWheelPosition){
         f.m_config.m_pilot_rwp_kth = f.m_config.m_pilot_rwp_kth * m_value_gui_rwp_kth.getMultValue(x,y);
         f.m_config.m_pilot_rwp_kte= f.m_config.m_pilot_rwp_kte * m_value_gui_rwp_kte.getMultValue(x,y);
-    }
+    } else if(f.m_pilot_algo == AlgoPilot::RWPAndFK){
+       f.m_config.m_pilot_rwp_kth = f.m_config.m_pilot_rwp_kth * m_value_gui_rwp_kth.getMultValue(x,y);
+       f.m_config.m_pilot_rwp_kte= f.m_config.m_pilot_rwp_kte * m_value_gui_rwp_kte.getMultValue(x,y);
+   }
     
     f.initOrLoadConfig();
     
