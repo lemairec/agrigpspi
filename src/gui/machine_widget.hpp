@@ -16,6 +16,7 @@ public:
     ValueGuiKeyPad m_valueA;
     ValueGuiKeyPad m_valueB;
     ValueGuiKeyPad m_valueC;
+    ValueGuiKeyPad m_valueD;
     
     void setSize(int width, int height);
     

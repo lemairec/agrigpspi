@@ -21,6 +21,7 @@ void MachineWidget::setSize(int width, int height){
     m_valueA.setResize(0.25*m_width, 0.75*m_height);
     m_valueB.setResize(0.5*m_width, 0.75*m_height);
     m_valueC.setResize(0.75*m_width, 0.75*m_height);
+    m_valueD.setResize(0.75*m_width, 0.85*m_height);
 //    m_buttonDebug.setResize((m_width+x)/2-m_width/12, 0.8*m_height, m_petit_button);
 }
 
@@ -32,6 +33,10 @@ void MachineWidget::open(){
     m_valueB.m_label = "B :";
     m_valueC.m_value = f.m_config.m_tracteur_antenne_pont_arriere;
     m_valueC.m_label = "C :";
+    m_valueC.m_value = f.m_config.m_tracteur_antenne_pont_arriere;
+    m_valueC.m_label = "C :";
+    m_valueD.m_value = f.m_config.m_tracteur_antenne_lateral;
+    m_valueD.m_label = "D :";
     
 }
 
@@ -52,6 +57,7 @@ void MachineWidget::draw(){
     drawValueGuiKeyPad(&m_valueA);
     drawValueGuiKeyPad(&m_valueB);
     drawValueGuiKeyPad(&m_valueC);
+    drawValueGuiKeyPad(&m_valueD);
     
 }
 void MachineWidget::onMouse(int x, int y){
@@ -63,6 +69,7 @@ void MachineWidget::onMouse(int x, int y){
         f.m_config.m_tracteur_hauteur = m_valueA.m_value;
         f.m_config.m_tracteur_empatement = m_valueB.m_value;
         f.m_config.m_tracteur_antenne_pont_arriere = m_valueC.m_value;
+        f.m_config.m_tracteur_antenne_lateral = m_valueD.m_value;
         f.initOrLoadConfig();
                
         m_close = true;
@@ -77,7 +84,10 @@ void MachineWidget::onMouse(int x, int y){
     } else if(this->isActiveValueGuiKeyPad(&m_valueC,x,y)){
         m_key_pad_widget->m_close = false;
         m_key_pad_widget->setValueGuiKeyPad(&m_valueC);
-    }
+    } else if(this->isActiveValueGuiKeyPad(&m_valueD,x,y)){
+       m_key_pad_widget->m_close = false;
+       m_key_pad_widget->setValueGuiKeyPad(&m_valueD);
+   }
         
     
 }

@@ -71,6 +71,7 @@ void Config::save(){
     settings.setValue("tracteur_antenne_pont_arriere", m_tracteur_antenne_pont_arriere);
     settings.setValue("tracteur_empatement", m_tracteur_empatement);
     settings.setValue("tracteur_hauteur", m_tracteur_hauteur);
+    settings.setValue("tracteur_antenne_lateral", m_tracteur_antenne_lateral);
     
     settings.setValue("outil_largeur", m_outil_largeur);
     settings.setValue("outil_distance", m_outil_distance);
@@ -193,6 +194,9 @@ void Config::load(){
     }
     if(settings.contains("tracteur_hauteur")){
         m_tracteur_hauteur = settings.value("tracteur_hauteur").toDouble();
+    }
+    if(settings.contains("tracteur_antenne_lateral")){
+        m_tracteur_antenne_lateral = settings.value("tracteur_antenne_lateral").toDouble();
     }
 
     if(settings.contains("outil_largeur")){

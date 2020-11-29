@@ -57,6 +57,8 @@ public:
     double m_tracteur_antenne_pont_arriere = 1;
     double m_tracteur_empatement = 2.75;
     double m_tracteur_hauteur = 2.75;
+    double m_tracteur_antenne_lateral = 0;
+    
     double m_outil_distance = 1.5;
     double m_outil_largeur = 3.0;
     

@@ -89,6 +89,13 @@ void GpsFramework::initOrLoadConfig(){
     m_tracteur.m_hauteur_antenne = m_config.m_tracteur_hauteur;
     m_tracteur.m_outil_distance = m_config.m_outil_distance;
     m_tracteur.m_outil_largeur = m_config.m_outil_largeur;
+    if(m_config.m_tracteur_antenne_lateral>2){
+        double d = -m_config.m_tracteur_antenne_lateral+2; //TODO c'est de la grosse merde, a refaire!
+        m_tracteur.m_antenne_lateral = d;
+    } else {
+        m_tracteur.m_antenne_lateral = m_config.m_tracteur_antenne_lateral;
+    }
+    INFO("lateral " << m_tracteur.m_antenne_lateral);
     
     m_curveAB.m_largeur = m_config.m_outil_largeur;
     m_gga = m_config.m_gga;
@@ -575,7 +582,7 @@ void GpsFramework::calculDeplacement(){
             m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
             
-            m_tracteur.m_correction_lateral = tan(m_imuModule.m_moy_corr_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
+            m_tracteur.m_correction_lateral = tan(m_imuModule.m_moy_corr_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne + m_tracteur.m_correction_lateral;
             
             m_tracteur.m_x_antenne = point1->m_x;
             m_tracteur.m_y_antenne = point1->m_y;

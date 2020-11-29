@@ -34,6 +34,8 @@ struct Tracteur {
     double m_antenne_essieu_arriere = 1.2;
     double m_empatement = 2.7;
     double m_hauteur_antenne = 2;
+    double m_antenne_lateral = 0;
+    
     double m_outil_distance = 2;
     double m_outil_largeur = 2;
        
