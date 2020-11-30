@@ -92,7 +92,7 @@ public:
 typedef std::shared_ptr<SurfaceToDraw> SurfaceToDraw_ptr;
 
 class TimeObserver{
-    std::list<int> m_values;
+    std::list<double> m_values;
     std::chrono::system_clock::time_point m_last_time_received;
 public:
     double m_moy;
@@ -120,7 +120,6 @@ public:
     
     
     void addNewValue(double value){
-        std::list<int> m_values;
         if(value > 10000){
             return;
         }
@@ -133,7 +132,8 @@ public:
         for(auto c : m_values){
             sum += c;
         }
-        double moy = sum/m_values.size();
+        double moy = sum/((double)m_values.size());
+        //INFO(moy);
         
         
         double sum2 = 0;
