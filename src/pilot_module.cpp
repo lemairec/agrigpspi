@@ -73,8 +73,19 @@ void PilotModule::setPasMotorVolant(int pas){
     update();
 }
 
+int temp_i = 0;
+
 void PilotModule::setVolant(double vol){
-    GpsFramework::Instance().m_pilot_time.setNewTime();
+    GpsFramework & f = GpsFramework::Instance();
+    f.m_pilot_time.setNewTime();
+    int frequence = f.m_config.m_pilot_frequence;
+    if(frequence > 0){
+        temp_i = (temp_i+1)%frequence;
+        if(temp_i == 0){
+            GpsFramework::Instance().updateWithoutGps();
+        }
+    }
+    
     if(!m_pilot_encoder_inverse){
         m_volantMesured = vol;
     } else {

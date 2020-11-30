@@ -256,6 +256,7 @@ public:
     TimeObserver m_pilot_time;
     TimeObserver m_draw_time;
     TimeObserver m_imu_time;
+    TimeObserver m_virtual_point;
     
     bool isGpsConnected();
     bool isPilotConnected();

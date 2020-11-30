@@ -61,6 +61,8 @@ void Config::save(){
     settings.setValue("m_pilot_rwp_kte", m_pilot_rwp_kte);
     settings.setValue("m_pilot_auto_deactive", m_pilot_auto_deactive);
     settings.setValue("m_pilot_auto_active", m_pilot_auto_active);
+    settings.setValue("m_pilot_frequence", m_pilot_frequence);
+    settings.setValue("m_pilot_virtual_point", m_pilot_virtual_point);
     
     settings.setValue("m_volant_pas_by_tour", m_volant_pas_by_tour);
     settings.setValue("m_volant_angle_by_tour", m_volant_angle_by_tour);
@@ -139,7 +141,12 @@ void Config::load(){
     if(settings.contains("motor_vitesse_agressivite")){
         m_motor_vitesse_agressivite = settings.value("motor_vitesse_agressivite").toDouble();
     }
-    
+    if(settings.contains("m_pilot_frequence")){
+        m_pilot_frequence = settings.value("m_pilot_frequence").toInt();
+    }
+    if(settings.contains("m_pilot_virtual_point")){
+        m_pilot_virtual_point = settings.value("m_pilot_virtual_point").toInt();
+    }
     
     if(settings.contains("m_pilot_motor_inverse")){
         m_pilot_motor_inverse = settings.value("m_pilot_motor_inverse").toBool();

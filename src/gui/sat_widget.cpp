@@ -139,6 +139,12 @@ void SatWidget::draw(){
             QString s =  "imu " + QString::number(round(f.m_imu_time.m_moy)) + " ms " + QString::number(round(f.m_imu_time.m_et));
             drawQText(s, x2, 0.5*m_height, sizeText_little, false);
         }
+        {
+            QString s =  "virtual " + QString::number(round(f.m_virtual_point.m_moy)) + " ms " + QString::number(round(f.m_virtual_point.m_et));
+            drawQText(s, x2, 0.55*m_height, sizeText_little, false);
+        }
+        
+        
     }
           
     

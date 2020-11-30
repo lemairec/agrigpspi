@@ -231,7 +231,9 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     };
     
     calculDeplacement();
-    processPilot(m_deplacementX, m_deplacementY, m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant,  m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y);
+    if(m_tracteur.m_pt_essieu_arriere){
+        processPilot(m_deplacementX, m_deplacementY, m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant,  m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y);
+    }
     
     m_gps_time.setNewTime();
     
@@ -367,6 +369,9 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
 }
 
 void GpsFramework::updateWithoutGps(){
+    m_virtual_point.setNewTime();
+    
+    
     auto begin = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = begin - m_tracteur.m_time_received;
 
