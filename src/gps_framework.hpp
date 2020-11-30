@@ -164,6 +164,10 @@ public:
     
     void onNewPoint(GpsPoint_ptr point);
     void onNewImportantPoint(GpsPoint_ptr point);
+    
+    void processPilot(double deplacementX, double deplacementY
+        , double essieu_avant_x, double essieu_avant_y
+        , double essieu_arriere_x, double essieu_arriere_y);
 
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
