@@ -92,7 +92,7 @@ void SatWidget::draw(){
         }
               
         
-    } else {
+    } else  if (m_type == 2){
         {
             QString s = "IMU";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -116,6 +116,29 @@ void SatWidget::draw(){
             QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral_imu*1000)/10.0)+" cm";
             drawQText(s, x2, 0.7*m_height, sizeText_little, false);
         }
+    } else {
+        {
+            QString s = "Time";
+            drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
+        }
+        
+        {
+            QString s =  "draw " + QString::number(round(f.m_draw_time.m_moy)) + " ms " + QString::number(round(f.m_draw_time.m_et));
+            drawQText(s, x2, 0.3*m_height, sizeText_little, false);
+        }
+        
+        {
+            QString s =  "gps " + QString::number(round(f.m_gps_time.m_moy)) + " ms " + QString::number(round(f.m_gps_time.m_et));
+            drawQText(s, x2, 0.4*m_height, sizeText_little, false);
+        }
+        {
+            QString s =  "pil " + QString::number(round(f.m_pilot_time.m_moy)) + " ms " + QString::number(round(f.m_pilot_time.m_et));
+            drawQText(s, x2, 0.45*m_height, sizeText_little, false);
+        }
+        {
+            QString s =  "imu " + QString::number(round(f.m_imu_time.m_moy)) + " ms " + QString::number(round(f.m_imu_time.m_et));
+            drawQText(s, x2, 0.5*m_height, sizeText_little, false);
+        }
     }
           
     
@@ -130,6 +153,6 @@ void SatWidget::onMouse(int x, int y){
         m_close = true;
     }
     if(m_buttonDebug.isActive(x, y)){
-        m_type = (m_type+1)%3;
+        m_type = (m_type+1)%4;
     }
 }
