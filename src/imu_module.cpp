@@ -1,7 +1,5 @@
 #include "imu_module.hpp"
 #include "logging.hpp"
-#include "gps_framework.hpp"
-
 ImuModule::ImuModule(){
     
 }
@@ -101,7 +99,6 @@ void ImuModule::run(){
             } else {
                 m_moy_corr_deg = m_pitch_y_deg;
             }
-            GpsFramework::Instance().m_imu_time.setNewTime();
              
             //print(11);
             //INFO("53 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);

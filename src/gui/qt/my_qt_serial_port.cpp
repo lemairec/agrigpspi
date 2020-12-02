@@ -87,7 +87,7 @@ void MyQTSerialPorts::initOrLoad(Config & config){
         }
     }
     m_timerPilot.stop();
-    m_timerPilot.start(1000/config.m_pilot_frequence);
+    m_timerPilot.start(config.m_pilot_time);
     DEBUG("end");
 };
 

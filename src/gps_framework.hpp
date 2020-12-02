@@ -30,8 +30,6 @@ struct OutilPosition {
 typedef std::shared_ptr<OutilPosition> OutilPosition_ptr;
 
 struct Tracteur {
-    std::chrono::system_clock::time_point m_time_received;
-
     double m_antenne_essieu_avant = 1.5;
     double m_antenne_essieu_arriere = 1.2;
     double m_empatement = 2.7;
@@ -92,7 +90,7 @@ public:
 typedef std::shared_ptr<SurfaceToDraw> SurfaceToDraw_ptr;
 
 class TimeObserver{
-    std::list<double> m_values;
+    std::list<int> m_values;
     std::chrono::system_clock::time_point m_last_time_received;
 public:
     double m_moy;
@@ -120,6 +118,7 @@ public:
     
     
     void addNewValue(double value){
+        std::list<int> m_values;
         if(value > 10000){
             return;
         }
@@ -132,8 +131,7 @@ public:
         for(auto c : m_values){
             sum += c;
         }
-        double moy = sum/((double)m_values.size());
-        //INFO(moy);
+        double moy = sum/m_values.size();
         
         
         double sum2 = 0;
@@ -166,12 +164,7 @@ public:
     
     void onNewPoint(GpsPoint_ptr point);
     void onNewImportantPoint(GpsPoint_ptr point);
-    
-    void processPilot(double deplacementX, double deplacementY
-        , double essieu_avant_x, double essieu_avant_y
-        , double essieu_arriere_x, double essieu_arriere_y);
-    void updateWithoutGps();
-    
+
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
@@ -255,8 +248,6 @@ public:
     TimeObserver m_gps_time;
     TimeObserver m_pilot_time;
     TimeObserver m_draw_time;
-    TimeObserver m_imu_time;
-    TimeObserver m_virtual_point;
     
     bool isGpsConnected();
     bool isPilotConnected();

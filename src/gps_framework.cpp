@@ -231,9 +231,74 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     };
     
     calculDeplacement();
-    if(m_tracteur.m_pt_essieu_arriere){
-        processPilot(m_deplacementX, m_deplacementY, m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant,  m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y);
+    
+    if(m_etat == Etat_OK){
+        if(m_line){
+            if(m_lineAB.m_ab_x != 0 || m_lineAB.m_ab_y != 0){
+                double det = m_lineAB.m_a*m_deplacementY - m_lineAB.m_b*m_deplacementX;
+                //m_deplacementAngle = m_deplacementAngle+3.14;
+                m_lineAB.m_sensAB = (det < 0);
+            }
+            double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, m_config.m_outil_largeur);
+            setDistance(dist);
+            
+            if(m_pilot_algo == AlgoPilot::FollowKarott){
+                m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
+                /*double a = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+                 INFO(a << " " << m_angle_correction);
+                 if(isNotEqualDoubles2(a, m_angle_correction, 0.00001)){
+                 INFO("error");
+                 }*/
+            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
+                m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+            } else if(m_pilot_algo == AlgoPilot::RWPAndFK){
+                if(dist > 0.3 || dist < -0.3){
+                    m_pilot_algo_str = "rwp_fk_fk";
+                    m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
+                } else {
+                    m_pilot_algo_str = "rwp_fk_rwp";
+                    m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+                }
+            } else {
+                m_angle_correction = 0;
+            }
+        } else {
+            m_curveAB.calculProjete(m_tracteur.m_pt_antenne_corrige, m_deplacementX, m_deplacementY);
+            double dist = m_curveAB.m_distance;
+            setDistance(dist);
+            
+            if(m_pilot_algo == AlgoPilot::FollowKarott){
+                m_angle_correction = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
+                m_angle_correction = m_curveAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+            } else {
+                m_angle_correction = 0;
+            }
+        }
+    } else {
+        setDistance(0);
+        m_angle_correction = 0;
     }
+    
+    if(m_pilot_adaptive_vitesse){
+        m_angle_correction = m_angle_correction*8.0/m_vitesse;
+    }
+    
+    double angle_max = 0.5;
+    if(m_angle_correction < -angle_max){
+        m_angle_correction = -angle_max;
+    }
+    if(m_angle_correction > angle_max){
+        m_angle_correction = angle_max;
+    }
+    
+    if(m_pilotModule.m_engaged){
+        if(m_vitesse < 1.0){
+            GpsFramework::Instance().addError("desengagement, vitesse trop faible");
+            m_pilotModule.desengage();
+        }
+    }
+    m_pilotModule.run(m_angle_correction, m_time_last_point);
     
     m_gps_time.setNewTime();
     
@@ -297,95 +362,6 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
         }
     }
     
-}
-
-
-void GpsFramework::processPilot(double deplacementX, double deplacementY
-                                , double essieu_avant_x, double essieu_avant_y
-                                , double essieu_arriere_x, double essieu_arriere_y){
-    if(m_etat == Etat_OK){
-       if(m_line){
-           
-           double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y
-                                           , m_deplacementX, m_deplacementY, m_config.m_outil_largeur);
-           setDistance(dist);
-           
-           if(m_pilot_algo == AlgoPilot::FollowKarott){
-               m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_avant_x, essieu_avant_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
-               /*double a = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
-                INFO(a << " " << m_angle_correction);
-                if(isNotEqualDoubles2(a, m_angle_correction, 0.00001)){
-                INFO("error");
-                }*/
-           } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-               m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-           } else if(m_pilot_algo == AlgoPilot::RWPAndFK){
-               if(dist > 0.3 || dist < -0.3){
-                   m_pilot_algo_str = "rwp_fk_fk";
-                   m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_avant_x, essieu_avant_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
-               } else {
-                   m_pilot_algo_str = "rwp_fk_rwp";
-                   m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-               }
-           } else {
-               m_angle_correction = 0;
-           }
-       } else {
-           m_curveAB.calculProjete(m_tracteur.m_pt_antenne_corrige, m_deplacementX, m_deplacementY);
-           double dist = m_curveAB.m_distance;
-           setDistance(dist);
-           
-           if(m_pilot_algo == AlgoPilot::FollowKarott){
-               m_angle_correction = m_curveAB.followKarott(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
-           } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-               m_angle_correction = m_curveAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-           } else {
-               m_angle_correction = 0;
-           }
-       }
-    } else {
-       setDistance(0);
-       m_angle_correction = 0;
-    }
-
-    if(m_pilot_adaptive_vitesse){
-       m_angle_correction = m_angle_correction*8.0/m_vitesse;
-    }
-
-    double angle_max = 0.5;
-    if(m_angle_correction < -angle_max){
-       m_angle_correction = -angle_max;
-    }
-    if(m_angle_correction > angle_max){
-       m_angle_correction = angle_max;
-    }
-    if(m_pilotModule.m_engaged){
-        if(m_vitesse < 1.0){
-            GpsFramework::Instance().addError("desengagement, vitesse trop faible");
-            m_pilotModule.desengage();
-        }
-    }
-    m_pilotModule.run(m_angle_correction, m_time_last_point);
-}
-
-void GpsFramework::updateWithoutGps(){
-    m_virtual_point.setNewTime();
-    
-    
-    auto begin = std::chrono::system_clock::now();
-    std::chrono::duration<double> diff = begin - m_tracteur.m_time_received;
-
-    double seconds = diff.count()*1000;
-    double vitesse_m_s = m_vitesse*1000/3600;
-    double deplacement = vitesse_m_s*seconds;
-    
-    double essieu_avant_x = m_tracteur.m_x_essieu_avant + sin(m_deplacementAngle)*deplacement;
-    double essieu_avant_y = m_tracteur.m_y_essieu_avant + cos(m_deplacementAngle)*deplacement;
-    
-    double essieu_arriere_x = m_tracteur.m_pt_essieu_arriere->m_x + sin(m_deplacementAngle)*deplacement;
-    double essieu_arriere_y = m_tracteur.m_pt_essieu_arriere->m_y + cos(m_deplacementAngle)*deplacement;
-    
-    processPilot(m_deplacementX, m_deplacementY, essieu_avant_x, essieu_avant_y, essieu_arriere_x, essieu_arriere_y);
 }
 
 
@@ -472,6 +448,94 @@ void GpsFramework::setAB(){
     m_etat = Etat_OK;
 }
 
+/*void GpsFramework::calculDeplacement(){
+    if(m_list.size() > 3){
+        GpsPoint_ptr point1 = m_list.front();
+        GpsPoint_ptr point2 = NULL;
+        GpsPoint_ptr point3 = NULL;
+        int i = 0;
+        for(auto point : m_list){
+            if(point3 == NULL){
+                point2 = point;
+                
+                double x = point1->m_x - point2->m_x;
+                double y = point1->m_y - point2->m_y;
+                
+                double d = x*x+y*y;
+                if(d>(m_distance_cap_vitesse*m_distance_cap_vitesse)){
+                    point3 = point;
+                }
+            } else {
+                point3 = point;
+                
+                double x = point2->m_x - point3->m_x;
+                double y = point2->m_y - point3->m_y;
+                
+                double d = x*x+y*y;
+                if(d>(m_distance_cap_vitesse*m_distance_cap_vitesse)){
+                    break;
+                }
+            }
+            //point2 = NULL;
+            ++i;
+        }
+        if(point2!=NULL){
+            double x = point1->m_x - point2->m_x;
+            double y = point1->m_y - point2->m_y;
+            
+            m_deplacementX = x;
+            m_deplacementY = y;
+            
+            if(m_deplacementY != 0){
+                double temp = atan(m_deplacementX/m_deplacementY);
+                if(m_deplacementY>0){
+                    m_deplacementAngle = temp;
+                } else {
+                    m_deplacementAngle = temp+3.14;
+                }
+                //int perc = temp/m_deplacementAngle*100;
+                //INFO(perc << " " << temp/3.14*180 << " " << m_deplacementAngle/3.14*180);
+            }
+            
+            if(m_ab_x != 0 || m_ab_y != 0){
+                double det = m_a*m_deplacementY - m_b*m_deplacementX;
+                //m_deplacementAngle = m_deplacementAngle+3.14;
+                m_sensAB = (det < 0);
+            }
+            
+            
+            m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
+            m_time_last_point = point1->m_timeHour - point2->m_timeHour;
+            if(m_time_last_point > 0){
+                m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
+                if(m_vitesse >50){
+                    INFO("erreur");
+                }
+            }
+        }
+        
+        
+        int i2 = 0;
+        GpsPoint_ptr poin1 = point1 ,poin2 = point2,poin3 = point3;
+        
+        if(point3){
+        
+            double num = (poin1->m_x - poin3->m_x)*(poin2->m_x - poin3->m_x) + (poin1->m_y - poin3->m_y)*(poin2->m_y - poin3->m_y);
+            
+            double den1 = std::sqrt((poin1->m_x - poin3->m_x)*(poin1->m_x - poin3->m_x)+(poin1->m_y - poin3->m_y)*(poin1->m_y - poin3->m_y));
+            double den2 = std::sqrt((poin2->m_x - poin3->m_x)*(poin2->m_x - poin3->m_x)+(poin2->m_y - poin3->m_y)*(poin2->m_y - poin3->m_y));
+            
+            double cosa = num/(den1*den2);
+            double a = acos(cosa);
+            double a2 = a/3.14*180;
+            
+            //INFO(a2);
+        }
+        //INFO(deplacementTime << " " << vitesse);
+    }
+    //calculContourExterieur();
+}*/
+
 void GpsFramework::calculDeplacement(){
     m_tracteur.m_pt_outil_arriere = nullptr;
     m_tracteur.m_pt_outil_arriere_droite = nullptr;
@@ -521,7 +585,6 @@ void GpsFramework::calculDeplacement(){
             m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
             
-            m_tracteur.m_time_received = std::chrono::system_clock::now();
             m_tracteur.m_correction_lateral_imu = tan(m_imuModule.m_moy_corr_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
             m_tracteur.m_correction_lateral = m_tracteur.m_correction_lateral_imu + m_tracteur.m_antenne_lateral;
             

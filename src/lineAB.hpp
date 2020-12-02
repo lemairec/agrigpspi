@@ -11,6 +11,8 @@ public:
     GpsPoint m_pointA;
     GpsPoint m_pointB;
     
+    bool m_sensAB = true;
+    
     std::string m_name;
     
     double m_a = 0;
@@ -27,9 +29,9 @@ public:
     
     void setAB();
     
-    double distance(double x, double y, double deplacement_x, double deplacement_y, double lg);
+    double distance(double x, double y, double lg);
     
-    double anglefollowTheCarrot(double x, double y, double lg, double angleDeplacement, double deplacement_x, double deplacement_y, double lk);
+    double anglefollowTheCarrot(double x, double y, double lg, double angleDeplacement, double lk);
 
     double calculRearWheelPosition(double p_x, double p_y, double lg, double angle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
 };

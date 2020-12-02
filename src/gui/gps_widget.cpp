@@ -444,8 +444,29 @@ void GpsWidget::draw_force(){
     
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> diff2 = end - begin;
-    f.m_draw_time.addNewValue(diff2.count()*1000);
     if(f.m_config.m_debug){
+        int x = m_width-200;
+        int y = m_height-40-90-l_bottom;
+        
+        QBrush lightGrayBrush(Qt::lightGray);
+        scene->addRect(x, y, 200, 90, m_penBlack, lightGrayBrush);
+        {
+            std::ostringstream oss;
+            oss << "draw " << round(diff2.count()*1000) << " ms";
+            drawText(oss.str(), x+10, y+10, sizeText_little, false);
+        }
+        {
+            std::ostringstream oss;
+            oss << "gps " << round(f.m_gps_time.m_moy) << " ms " << round(f.m_gps_time.m_et);
+            drawText(oss.str(), x+10, y+30, sizeText_little, false);
+        }
+        {
+            std::ostringstream oss;
+            oss << "pil " << round(f.m_pilot_time.m_moy) << " ms " << round(f.m_pilot_time.m_et);
+            drawText(oss.str(), x+10, y+50, sizeText_little, false);
+        }
+        //drawText(f.m_pilotModule.m_version_guidage, x+10, y+30, 10, false);
+        
         drawDebug();
     }
     
