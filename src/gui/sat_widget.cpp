@@ -140,9 +140,11 @@ void SatWidget::draw(){
             drawQText(s, x2, 0.5*m_height, sizeText_little, false);
         }
         {
-            /*QString s =  "virtual " + QString::number(round(f.m_virtual_point.m_moy*10)/10) + " ms " + QString::number(round(f.m_virtual_point.m_et*10)/10);
-            drawQText(s, x2, 0.55*m_height, sizeText_little, false);*/
+            QString s =  "virtual " + QString::number(round(f.m_virtual_point.m_moy*10)/10) + " ms " + QString::number(round(f.m_virtual_point.m_et*10)/10);
+            drawQText(s, x2, 0.55*m_height, sizeText_little, false);
         }
+        
+        
     }
           
     

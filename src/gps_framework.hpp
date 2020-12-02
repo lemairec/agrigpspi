@@ -30,6 +30,8 @@ struct OutilPosition {
 typedef std::shared_ptr<OutilPosition> OutilPosition_ptr;
 
 struct Tracteur {
+    std::chrono::system_clock::time_point m_time_received;
+
     double m_antenne_essieu_avant = 1.5;
     double m_antenne_essieu_arriere = 1.2;
     double m_empatement = 2.7;
@@ -164,10 +166,12 @@ public:
     
     void onNewPoint(GpsPoint_ptr point);
     void onNewImportantPoint(GpsPoint_ptr point);
+    
     void processPilot(double deplacementX, double deplacementY
-            , double essieu_avant_x, double essieu_avant_y
-            , double essieu_arriere_x, double essieu_arriere_y);
-
+        , double essieu_avant_x, double essieu_avant_y
+        , double essieu_arriere_x, double essieu_arriere_y);
+    void updateWithoutGps();
+    
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
@@ -252,6 +256,7 @@ public:
     TimeObserver m_pilot_time;
     TimeObserver m_draw_time;
     TimeObserver m_imu_time;
+    TimeObserver m_virtual_point;
     
     bool isGpsConnected();
     bool isPilotConnected();

@@ -231,9 +231,11 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     };
     
     calculDeplacement();
-    processPilot(m_deplacementX, m_deplacementY
+    if(m_tracteur.m_pt_essieu_arriere){
+        processPilot(m_deplacementX, m_deplacementY
                  , m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant
                  , m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y);
+    }
     
     m_gps_time.setNewTime();
     
@@ -267,10 +269,41 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     
 }
 
+void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
+    
+    if(m_etat == Etat_PointASaved && !m_line){
+        m_curveAB.addPoint(p);
+    }
+    m_lastImportantPoint = p;
+    calculSurface();
+    DEBUG("draw");
+    if(m_tracteur.m_pt_outil_arriere){
+        calculDraw(m_tracteur.m_pt_outil_arriere);
+    }
+    file_job_stream << p->m_time << "," << std::setprecision(14) << p->m_latitude << "," << p->m_longitude << std::endl;
+    saveInfoFile();
+    
+    
+    
+    if(m_parcelle.isInit() && m_pilot_auto){
+        double dist = m_parcelle.distance(p);
+        if(m_config.m_pilot_auto_deactive > 0 && dist < m_config.m_pilot_auto_deactive){
+            if(m_pilotModule.m_engaged){
+                m_pilotModule.desengage();
+            }
+        }
+        if(m_config.m_pilot_auto_active > 0 && dist > m_config.m_pilot_auto_deactive){
+            if(!m_pilotModule.m_engaged){
+                m_pilotModule.engage();
+            }
+        }
+    }
+    
+}
 
 void GpsFramework::processPilot(double deplacementX, double deplacementY
-                  , double essieu_avant_x, double essieu_avant_y
-                  , double essieu_arriere_x, double essieu_arriere_y){
+                            , double essieu_avant_x, double essieu_avant_y
+                            , double essieu_arriere_x, double essieu_arriere_y){
     if(m_etat == Etat_OK){
         if(m_line){
             double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y,m_deplacementX, m_deplacementY, m_config.m_outil_largeur);
@@ -331,36 +364,24 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
     
 }
 
-void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
-    
-    if(m_etat == Etat_PointASaved && !m_line){
-        m_curveAB.addPoint(p);
-    }
-    m_lastImportantPoint = p;
-    calculSurface();
-    DEBUG("draw");
-    if(m_tracteur.m_pt_outil_arriere){
-        calculDraw(m_tracteur.m_pt_outil_arriere);
-    }
-    file_job_stream << p->m_time << "," << std::setprecision(14) << p->m_latitude << "," << p->m_longitude << std::endl;
-    saveInfoFile();
+void GpsFramework::updateWithoutGps(){
+    m_virtual_point.setNewTime();
     
     
+    auto begin = std::chrono::system_clock::now();
+    std::chrono::duration<double> diff = begin - m_tracteur.m_time_received;
+
+    double seconds = diff.count()*1000;
+    double vitesse_m_s = m_vitesse*1000/3600;
+    double deplacement = vitesse_m_s*seconds;
     
-    if(m_parcelle.isInit() && m_pilot_auto){
-        double dist = m_parcelle.distance(p);
-        if(m_config.m_pilot_auto_deactive > 0 && dist < m_config.m_pilot_auto_deactive){
-            if(m_pilotModule.m_engaged){
-                m_pilotModule.desengage();
-            }
-        }
-        if(m_config.m_pilot_auto_active > 0 && dist > m_config.m_pilot_auto_deactive){
-            if(!m_pilotModule.m_engaged){
-                m_pilotModule.engage();
-            }
-        }
-    }
+    double essieu_avant_x = m_tracteur.m_x_essieu_avant + sin(m_deplacementAngle)*deplacement;
+    double essieu_avant_y = m_tracteur.m_y_essieu_avant + cos(m_deplacementAngle)*deplacement;
     
+    double essieu_arriere_x = m_tracteur.m_pt_essieu_arriere->m_x + sin(m_deplacementAngle)*deplacement;
+    double essieu_arriere_y = m_tracteur.m_pt_essieu_arriere->m_y + cos(m_deplacementAngle)*deplacement;
+    
+    processPilot(m_deplacementX, m_deplacementY, essieu_avant_x, essieu_avant_y, essieu_arriere_x, essieu_arriere_y);
 }
 
 
@@ -496,6 +517,7 @@ void GpsFramework::calculDeplacement(){
             m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
             
+            m_tracteur.m_time_received = std::chrono::system_clock::now();
             m_tracteur.m_correction_lateral_imu = tan(m_imuModule.m_moy_corr_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
             m_tracteur.m_correction_lateral = m_tracteur.m_correction_lateral_imu + m_tracteur.m_antenne_lateral;
             
