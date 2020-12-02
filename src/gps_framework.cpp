@@ -231,69 +231,9 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     };
     
     calculDeplacement();
-    
-    if(m_etat == Etat_OK){
-        if(m_line){
-            double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y,m_deplacementX, m_deplacementY, m_config.m_outil_largeur);
-            setDistance(dist);
-            
-            if(m_pilot_algo == AlgoPilot::FollowKarott){
-                m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant,m_deplacementX, m_deplacementY, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
-                /*double a = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
-                 INFO(a << " " << m_angle_correction);
-                 if(isNotEqualDoubles2(a, m_angle_correction, 0.00001)){
-                 INFO("error");
-                 }*/
-            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-                m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-            } else if(m_pilot_algo == AlgoPilot::RWPAndFK){
-                if(dist > 0.3 || dist < -0.3){
-                    m_pilot_algo_str = "rwp_fk_fk";
-                    m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant,m_deplacementX, m_deplacementY, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
-                } else {
-                    m_pilot_algo_str = "rwp_fk_rwp";
-                    m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-                }
-            } else {
-                m_angle_correction = 0;
-            }
-        } else {
-            m_curveAB.calculProjete(m_tracteur.m_pt_antenne_corrige, m_deplacementX, m_deplacementY);
-            double dist = m_curveAB.m_distance;
-            setDistance(dist);
-            
-            if(m_pilot_algo == AlgoPilot::FollowKarott){
-                m_angle_correction = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
-            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-                m_angle_correction = m_curveAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-            } else {
-                m_angle_correction = 0;
-            }
-        }
-    } else {
-        setDistance(0);
-        m_angle_correction = 0;
-    }
-    
-    if(m_pilot_adaptive_vitesse){
-        m_angle_correction = m_angle_correction*8.0/m_vitesse;
-    }
-    
-    double angle_max = 0.5;
-    if(m_angle_correction < -angle_max){
-        m_angle_correction = -angle_max;
-    }
-    if(m_angle_correction > angle_max){
-        m_angle_correction = angle_max;
-    }
-    
-    if(m_pilotModule.m_engaged){
-        if(m_vitesse < 1.0){
-            GpsFramework::Instance().addError("desengagement, vitesse trop faible");
-            m_pilotModule.desengage();
-        }
-    }
-    m_pilotModule.run(m_angle_correction, m_time_last_point);
+    processPilot(m_deplacementX, m_deplacementY
+                 , m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant
+                 , m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y);
     
     m_gps_time.setNewTime();
     
@@ -324,6 +264,70 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
         onNewImportantPoint(p);
     }
     
+    
+}
+
+
+void GpsFramework::processPilot(double deplacementX, double deplacementY
+                  , double essieu_avant_x, double essieu_avant_y
+                  , double essieu_arriere_x, double essieu_arriere_y){
+    if(m_etat == Etat_OK){
+        if(m_line){
+            double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y,m_deplacementX, m_deplacementY, m_config.m_outil_largeur);
+            setDistance(dist);
+            
+            if(m_pilot_algo == AlgoPilot::FollowKarott){
+                m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
+            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
+                m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+            } else if(m_pilot_algo == AlgoPilot::RWPAndFK){
+                if(dist > 0.3 || dist < -0.3){
+                    m_pilot_algo_str = "rwp_fk_fk";
+                    m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_avant_x, essieu_avant_y,m_deplacementX, m_deplacementY, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
+                } else {
+                    m_pilot_algo_str = "rwp_fk_rwp";
+                    m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+                }
+            } else {
+                m_angle_correction = 0;
+            }
+        } else {
+            m_curveAB.calculProjete(m_tracteur.m_pt_antenne_corrige, m_deplacementX, m_deplacementY);
+            double dist = m_curveAB.m_distance;
+            setDistance(dist);
+            
+            if(m_pilot_algo == AlgoPilot::FollowKarott){
+                m_angle_correction = m_curveAB.followKarott(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+            } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
+                m_angle_correction = m_curveAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
+            } else {
+                m_angle_correction = 0;
+            }
+        }
+    } else {
+        setDistance(0);
+        m_angle_correction = 0;
+    }
+    
+    if(m_pilot_adaptive_vitesse){
+        m_angle_correction = m_angle_correction*8.0/m_vitesse;
+    }
+    
+    double angle_max = 0.5;
+    if(m_angle_correction < -angle_max){
+        m_angle_correction = -angle_max;
+    }
+    if(m_angle_correction > angle_max){
+        m_angle_correction = angle_max;
+    }
+    
+    if(m_pilotModule.m_engaged){
+        if(m_vitesse < 1.0){
+            GpsFramework::Instance().addError("desengagement, vitesse trop faible");
+            m_pilotModule.desengage();
+        }
+    }
+    m_pilotModule.run(m_angle_correction, m_time_last_point);
     
 }
 
