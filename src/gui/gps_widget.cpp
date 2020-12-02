@@ -320,7 +320,7 @@ void GpsWidget::drawSurfaceToDraw(){
     GpsFramework & f = GpsFramework::Instance();
     
     for(auto s: f.m_listSurfaceToDraw){
-        if(s->m_points.size() > 0 && s->m_lastPoint){
+        if(s->m_points.size() > 0 && s->m_lastPoint && s->m_lastPoint->m_point_left && s->m_lastPoint->m_point_right){
             double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
             my_projete2(s->m_lastPoint->m_point_left->m_x, s->m_lastPoint->m_point_left->m_y, xA1, yA1);
             my_projete2(s->m_lastPoint->m_point_right->m_x, s->m_lastPoint->m_point_right->m_y, xB1, yB1);
