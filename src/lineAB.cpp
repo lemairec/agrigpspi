@@ -46,11 +46,19 @@ void LineAB::setAB(){
 }
 
 
-double LineAB::distance(double x, double y, double lg){
+double LineAB::distance(double x, double y, double deplacementX, double deplacementY, double lg){
     if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
         double dist = (m_a * x + m_b * y + m_c)/m_sqrt_m_a_m_b;
         //INFO(dist);
         m_current_line = round(dist/lg);
+        
+        bool m_sensAB = false;
+        if(m_ab_x != 0 || m_ab_y != 0){
+            double det = m_a*deplacementY - m_b*deplacementX;
+            //m_deplacementAngle = m_deplacementAngle+3.14;
+            m_sensAB = (det < 0);
+        }
+        
         if(!m_sensAB){
             dist = -dist;
         }
@@ -74,11 +82,11 @@ double LineAB::distance(double x, double y, double lg){
 }
 
 
-double LineAB::anglefollowTheCarrot(double x, double y, double lg, double angleDeplacement, double lk){
+double LineAB::anglefollowTheCarrot(double x, double y, double deplacementX, double deplacementY, double lg, double angleDeplacement, double lk){
     double angleABDeplacement = m_angleAB - angleDeplacement;
     //INFO(angleABDeplacement/3.14*180);
 
-    double distance = this->distance(x, y, lg);
+    double distance = this->distance(x, y, deplacementX, deplacementY, lg);
     
     double angle_followKarott =  atan(distance/lk);
     double angle = angle_followKarott + angleABDeplacement;
@@ -94,7 +102,7 @@ double LineAB::calculRearWheelPosition(double p_x, double p_y, double lg, double
     double angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
     angle = angleBetweenPI2(angle);
     
-    double distance = this->distance(p_x, p_y, lg);
+    double distance = this->distance(p_x, p_y, deplacement_x, deplacement_y, lg);
     
     double e = -distance;
     double th_e = -angle;//todo;

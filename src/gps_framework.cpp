@@ -234,16 +234,11 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
     
     if(m_etat == Etat_OK){
         if(m_line){
-            if(m_lineAB.m_ab_x != 0 || m_lineAB.m_ab_y != 0){
-                double det = m_lineAB.m_a*m_deplacementY - m_lineAB.m_b*m_deplacementX;
-                //m_deplacementAngle = m_deplacementAngle+3.14;
-                m_lineAB.m_sensAB = (det < 0);
-            }
-            double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, m_config.m_outil_largeur);
+            double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y,m_deplacementX, m_deplacementY, m_config.m_outil_largeur);
             setDistance(dist);
             
             if(m_pilot_algo == AlgoPilot::FollowKarott){
-                m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
+                m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant,m_deplacementX, m_deplacementY, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
                 /*double a = m_curveAB.followKarott(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
                  INFO(a << " " << m_angle_correction);
                  if(isNotEqualDoubles2(a, m_angle_correction, 0.00001)){
@@ -254,7 +249,7 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
             } else if(m_pilot_algo == AlgoPilot::RWPAndFK){
                 if(dist > 0.3 || dist < -0.3){
                     m_pilot_algo_str = "rwp_fk_fk";
-                    m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
+                    m_angle_correction = m_lineAB.anglefollowTheCarrot(m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant,m_deplacementX, m_deplacementY, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
                 } else {
                     m_pilot_algo_str = "rwp_fk_rwp";
                     m_angle_correction = m_lineAB.calculRearWheelPosition(m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
