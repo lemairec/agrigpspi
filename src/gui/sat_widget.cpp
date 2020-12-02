@@ -123,21 +123,25 @@ void SatWidget::draw(){
         }
         
         {
-            QString s =  "draw " + QString::number(round(f.m_draw_time.m_moy)) + " ms " + QString::number(round(f.m_draw_time.m_et));
+            QString s =  "draw " + QString::number(round(f.m_draw_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_draw_time.m_et*10)/10);
             drawQText(s, x2, 0.3*m_height, sizeText_little, false);
         }
         
         {
-            QString s =  "gps " + QString::number(round(f.m_gps_time.m_moy)) + " ms " + QString::number(round(f.m_gps_time.m_et));
+            QString s =  "gps " + QString::number(round(f.m_gps_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_gps_time.m_et*10)/10);
             drawQText(s, x2, 0.4*m_height, sizeText_little, false);
         }
         {
-            QString s =  "pil " + QString::number(round(f.m_pilot_time.m_moy)) + " ms " + QString::number(round(f.m_pilot_time.m_et));
+            QString s =  "pil " + QString::number(round(f.m_pilot_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_pilot_time.m_et*10)/10);
             drawQText(s, x2, 0.45*m_height, sizeText_little, false);
         }
         {
-            QString s =  "imu " + QString::number(round(f.m_imu_time.m_moy)) + " ms " + QString::number(round(f.m_imu_time.m_et));
+            QString s =  "imu " + QString::number(round(f.m_imu_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_imu_time.m_et*10)/10);
             drawQText(s, x2, 0.5*m_height, sizeText_little, false);
+        }
+        {
+            /*QString s =  "virtual " + QString::number(round(f.m_virtual_point.m_moy*10)/10) + " ms " + QString::number(round(f.m_virtual_point.m_et*10)/10);
+            drawQText(s, x2, 0.55*m_height, sizeText_little, false);*/
         }
     }
           
