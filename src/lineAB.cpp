@@ -52,9 +52,14 @@ double LineAB::distance(double x, double y, double deplacementX, double deplacem
         //INFO(dist);
         m_current_line = round(dist/lg);
         
-        double det = m_ab_x*deplacementY - m_ab_y*deplacementX;
+        bool m_sensAB = false;
+        if(m_ab_x != 0 || m_ab_y != 0){
+            double det = m_a*deplacementY - m_b*deplacementX;
+            //m_deplacementAngle = m_deplacementAngle+3.14;
+            m_sensAB = (det < 0);
+        }
         
-        if(det < 0){
+        if(!m_sensAB){
             dist = -dist;
         }
         dist = fmod(dist, lg);
