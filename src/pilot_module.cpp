@@ -307,6 +307,11 @@ void PilotModule::test(){
     add2hex(l, 100);
     runHadrienVolant(l);
     l.clear();
+    
+    int res2 = 100;
+    l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
+    add4hex(l, res2);
+    runHadrienVolant(l);
     /*l = {0x01, 0x06, 0x00, 0x6A};
     l = {0x01, 0x06, 0x00, 0x6A};
     add2hex(l, -100);
