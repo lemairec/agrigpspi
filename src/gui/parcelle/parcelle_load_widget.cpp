@@ -4,10 +4,14 @@
 #include "../../gps_framework.hpp"
 #include "../gps_widget.hpp"
 
+#include <sstream>
 
 ParcelleLoadWidget::ParcelleLoadWidget(){
     m_imgOk = loadImage("/images/ok.png");
     m_imgCancel = loadImage("/images/cancel.png");
+    
+    m_imgLigneAB = loadImage("/images/line_ab.png");
+    m_imgCurveAB = loadImage("/images/curve_ab.png");
 }
 
 
@@ -21,6 +25,8 @@ void ParcelleLoadWidget::setSize(int width, int height){
       
     m_selectParcelles.setResize(m_x+30, 0.25*m_height, m_petit_button);
     m_selectLine.setResize(m_x+30, 0.5*m_height, m_petit_button);
+    m_buttonLigneCurve.setResize(m_x+40, 0.6*m_height, m_petit_button);
+    m_buttonDemiOutil.setResize(m_x+m_lg*2/3.0, 0.6*m_height, m_petit_button);
     //m_buttonParcelleLoad.setResize(m_x+30, 0.35*m_height, m_petit_button);
 }
 
@@ -146,6 +152,20 @@ void ParcelleLoadWidget::draw(){
             drawQText(s, m_lg/5, 0.4*m_height, sizeText_big, false);
         }
         drawSelectButtonGuiClose(&m_selectLine);
+        
+        if(m_selectLine.m_selectedValue != 0){
+            if(m_line){
+                drawButtonImage(&m_buttonLigneCurve, *m_imgLigneAB);
+            } else {
+                drawButtonImage(&m_buttonLigneCurve, *m_imgCurveAB);
+            }
+            if(m_demi_outil){
+                drawButton(&m_buttonDemiOutil, COLOR_CHECK);
+            } else {
+                drawButton(&m_buttonDemiOutil, COLOR_OTHER);
+            }
+            drawText("1/2 outil", m_buttonDemiOutil.m_x+1.5*m_petit_button, m_buttonDemiOutil.m_y);
+        }
     }
     
     
@@ -178,6 +198,10 @@ void ParcelleLoadWidget::onMouse(int x, int y){
                 f.m_line = true;
                 f.m_lineAB.m_point_origin_A = *p1;
                 f.m_lineAB.m_point_origin_B = *p2;
+                f.m_lineAB.m_deplacement = 0;
+                if(m_demi_outil){
+                    f.m_lineAB.m_deplacement = f.m_config.m_outil_largeur/2;
+                }
                 f.setAB();
             }
         }
@@ -193,12 +217,20 @@ void ParcelleLoadWidget::onMouse(int x, int y){
         m_selectLine.addValue("aucune");
         f.m_parcelle.loadParcelle(m_selectParcelles.getValueString());
         for(size_t i=0; i<f.m_parcelle.m_flag.size(); ++i){
-            m_selectLine.addValue("line");
+            std::ostringstream oss;
+            oss << "flag " << i+1 << " => " << ((i+1)%f.m_parcelle.m_flag.size()) +1;
+            m_selectLine.addValue(oss.str());
         }
     }
     
     if(m_parcelleSelected != 0){
         onMouseSelectButton(&m_selectLine, x, y);
+        if(m_buttonDemiOutil.isActive(x, y)){
+            m_demi_outil = !m_demi_outil;
+        }
+        if(m_buttonLigneCurve.isActive(x, y)){
+            //m_line = !m_line;
+        }
     }
 }
 

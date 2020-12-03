@@ -6,12 +6,22 @@
 class ParcelleLoadWidget : public BaseWidget {
     QPixmap * m_imgOk;
     QPixmap * m_imgCancel;
+    QPixmap * m_imgLigneAB;
+    QPixmap * m_imgCurveAB;
+      
     ButtonGui m_buttonOk;
     ButtonGui m_buttonCancel;
     
     SelectButtonGui m_selectParcelles;
     SelectButtonGui m_selectLine;
     int m_parcelleSelected = 0;
+    
+    
+    ButtonGui m_buttonLigneCurve;
+    ButtonGui m_buttonDemiOutil;
+    
+    bool m_line = true;
+    bool m_demi_outil = true;
     
     int m_x = 0;
     int m_lg = 20;

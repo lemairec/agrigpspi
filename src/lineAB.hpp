@@ -8,6 +8,8 @@ class LineAB{
 public:
     GpsPoint m_point_origin_A;
     GpsPoint m_point_origin_B;
+    double m_deplacement = 0;
+    
     GpsPoint m_pointA;
     GpsPoint m_pointB;
     
