@@ -374,7 +374,7 @@ const int pas = 1000;
 
 void PilotModule::hadrienLeftRight(double res){
     std::vector<unsigned char> l;
-   
+    INFO(res);
     if(res>0){
         if(res>vitesse_max){
            res = vitesse_max;
