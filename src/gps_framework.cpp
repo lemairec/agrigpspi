@@ -365,23 +365,25 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
 }
 
 void GpsFramework::updateWithoutGps(){
-    m_virtual_point.setNewTime();
-    
-    
-    auto begin = std::chrono::system_clock::now();
-    std::chrono::duration<double> diff = begin - m_tracteur.m_time_received;
+    if(m_tracteur.m_pt_essieu_arriere){
+        m_virtual_point.setNewTime();
+        
+        
+        auto begin = std::chrono::system_clock::now();
+        std::chrono::duration<double> diff = begin - m_tracteur.m_time_received;
 
-    double seconds = diff.count()*1000;
-    double vitesse_m_s = m_vitesse*1000/3600;
-    double deplacement = vitesse_m_s*seconds;
-    
-    double essieu_avant_x = m_tracteur.m_x_essieu_avant + sin(m_deplacementAngle)*deplacement;
-    double essieu_avant_y = m_tracteur.m_y_essieu_avant + cos(m_deplacementAngle)*deplacement;
-    
-    double essieu_arriere_x = m_tracteur.m_pt_essieu_arriere->m_x + sin(m_deplacementAngle)*deplacement;
-    double essieu_arriere_y = m_tracteur.m_pt_essieu_arriere->m_y + cos(m_deplacementAngle)*deplacement;
-    
-    processPilot(m_deplacementX, m_deplacementY, essieu_avant_x, essieu_avant_y, essieu_arriere_x, essieu_arriere_y);
+        double seconds = diff.count()*1000;
+        double vitesse_m_s = m_vitesse*1000/3600;
+        double deplacement = vitesse_m_s*seconds;
+        
+        double essieu_avant_x = m_tracteur.m_x_essieu_avant + sin(m_deplacementAngle)*deplacement;
+        double essieu_avant_y = m_tracteur.m_y_essieu_avant + cos(m_deplacementAngle)*deplacement;
+        
+        double essieu_arriere_x = m_tracteur.m_pt_essieu_arriere->m_x + sin(m_deplacementAngle)*deplacement;
+        double essieu_arriere_y = m_tracteur.m_pt_essieu_arriere->m_y + cos(m_deplacementAngle)*deplacement;
+        
+        processPilot(m_deplacementX, m_deplacementY, essieu_avant_x, essieu_avant_y, essieu_arriere_x, essieu_arriere_y);
+    }
 }
 
 
