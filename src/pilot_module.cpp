@@ -226,6 +226,9 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
 void PilotModule::engageHadrien(){
     INFO("engageHadrien");
     std::vector<unsigned char> l;
+    l = {0x01, 0x06, 0x00, 0x31, 0x00, 0x07};
+    runHadrienVolant(l);
+    l.clear();
     l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
     runHadrienVolant(l);
     l.clear();
