@@ -309,14 +309,14 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
             double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y,m_deplacementX, m_deplacementY, m_config.m_outil_largeur);
             setDistance(dist);
             
-            if(m_pilot_algo == AlgoPilot::FollowKarott){
+            if(m_pilot_algo == AlgoPilot::FollowCarrot){
                 m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
             } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
                 m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-            } else if(m_pilot_algo == AlgoPilot::RWPAndFK){
+            } else if(m_pilot_algo == AlgoPilot::RWPAndFC){
                 if(dist > 0.3 || dist < -0.3){
                     m_pilot_algo_str = "rwp_fk_fk";
-                    m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_avant_x, essieu_avant_y,m_deplacementX, m_deplacementY, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
+                    m_angle_correction = m_lineAB.anglefollowCarrot(essieu_avant_x, essieu_avant_y,m_deplacementX, m_deplacementY, m_config.m_outil_largeur, m_deplacementAngle, m_pilot_lookahead_d);
                 } else {
                     m_pilot_algo_str = "rwp_fk_rwp";
                     m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_config.m_outil_largeur, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
@@ -329,8 +329,8 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
             double dist = m_curveAB.m_distance;
             setDistance(dist);
             
-            if(m_pilot_algo == AlgoPilot::FollowKarott){
-                m_angle_correction = m_curveAB.followKarott(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+            if(m_pilot_algo == AlgoPilot::FollowCarrot){
+                m_angle_correction = m_curveAB.followCarrot(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
             } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
                 m_angle_correction = m_curveAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
             } else {

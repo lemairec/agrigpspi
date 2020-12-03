@@ -369,7 +369,7 @@ void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplac
     }
 }
 
-double CurveAB::followKarott(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead){
+double CurveAB::followCarrot(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead){
     Lines_ptr list = getCurrentLine();
     if(list == NULL || list->m_points.size() < 5){
         return 0;
@@ -426,6 +426,10 @@ double CurveAB::followKarott(double x_pont, double y_pont, double deplacement_x,
     x_h_pont = x_b + bh*x_v;
     y_h_pont = y_b + bh*y_v;
     
+    /**
+     * Follow carrot PT LOOKHEAD
+     */
+    
     x_h_lookhead = 0;
     y_h_lookhead = 0;
     
@@ -474,26 +478,13 @@ double CurveAB::followKarott(double x_pont, double y_pont, double deplacement_x,
         y_h_lookhead = y_h_pont - lookhead*y_v2;
     }
     
-    
-    
-    
-     /*if(d > 0){
-        x_h_lookhead = x_h_pont + x_v*lookhead;
-        y_h_lookhead = y_h_pont + y_v*lookhead;
-        
-    } else {
-        x_h_lookhead = x_h_pont - x_v*lookhead;
-        y_h_lookhead = y_h_pont - y_v*lookhead;
-        
-    }*/
-    //INFO(x_h_pont << " " << x_v << " " <<  lookhead);
-    
-    
+    /**
+     * Follow carrot CALCUL ANGLE
+     */
+
     double x_segment = x_h_lookhead - x_pont;
     double y_segment = y_h_lookhead - y_pont;
     
-    //INFO(x_h_lookhead << " " << x_pont << " " <<  y_h_lookhead << " " <<  y_pont);
-    //INFO(deplacement_x << " " << deplacement_y << " " <<  x_segment << " " <<  y_segment);
     double m_angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
     m_angle = angleBetweenPI2(m_angle);
     

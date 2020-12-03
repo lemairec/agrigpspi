@@ -87,8 +87,8 @@ double LineAB::anglefollowTheCarrot(double x, double y, double deplacementX, dou
 
     double distance = this->distance(x, y, deplacementX, deplacementY, lg);
     
-    double angle_followKarott =  atan(distance/lk);
-    double angle = angle_followKarott + angleABDeplacement;
+    double angle_followCarrot =  atan(distance/lk);
+    double angle = angle_followCarrot + angleABDeplacement;
     angle = angleBetweenPI2(angle);
     
     return angle;
