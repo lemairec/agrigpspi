@@ -195,14 +195,29 @@ void ParcelleLoadWidget::onMouse(int x, int y){
                 auto p1 = f.m_parcelle.m_contour[debut];
                 auto p2 = f.m_parcelle.m_contour[fin];
                 
-                f.m_line = true;
-                f.m_lineAB.m_point_origin_A = *p1;
-                f.m_lineAB.m_point_origin_B = *p2;
-                f.m_lineAB.m_deplacement = 0;
-                if(m_demi_outil){
-                    f.m_lineAB.m_deplacement = f.m_config.m_outil_largeur/2;
+                if(m_line){
+                    f.m_line = true;
+                    f.m_lineAB.m_point_origin_A = *p1;
+                    f.m_lineAB.m_point_origin_B = *p2;
+                    f.m_lineAB.m_deplacement = 0;
+                    if(m_demi_outil){
+                        f.m_lineAB.m_deplacement = f.m_config.m_outil_largeur/2;
+                    }
+                    f.setAB();
+                } else {
+                    int debut = f.m_parcelle.m_flag[i%f.m_parcelle.m_flag.size()];
+                    int fin = f.m_parcelle.m_flag[(i+1)%f.m_parcelle.m_flag.size()];
+                    
+                    if(debut < fin){
+                        f.m_line = false;
+                        for(int i = debut; i < fin; ++i){
+                            f.m_curveAB.addPoint(f.m_parcelle.m_contour[i]);
+                        }
+                        f.setAB();
+                    } else {
+                        f.addError("pas la derniere courbe :(");
+                    }
                 }
-                f.setAB();
             }
         }
         m_close = true;
@@ -229,7 +244,7 @@ void ParcelleLoadWidget::onMouse(int x, int y){
             m_demi_outil = !m_demi_outil;
         }
         if(m_buttonLigneCurve.isActive(x, y)){
-            //m_line = !m_line;
+            m_line = !m_line;
         }
     }
 }
