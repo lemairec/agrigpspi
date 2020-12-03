@@ -221,6 +221,7 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
     l.push_back(j);
     l.push_back(i);
     GpsFramework::Instance().m_serialModule.writePilotSerialDAndWait(l);
+    printHadrien(l);
 }
 
 void PilotModule::engageHadrien(){
@@ -293,7 +294,6 @@ void PilotModule::test(){
     INFO("engageHadrien");
     std::vector<unsigned char> l;
     l = {0x01, 0x06, 0x00, 0x31, 0x00, 0x07};
-    printHadrien(l);
     runHadrienVolant(l);
     l.clear();
     l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
