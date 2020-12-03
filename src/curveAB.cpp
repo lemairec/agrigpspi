@@ -430,7 +430,54 @@ double CurveAB::followKarott(double x_pont, double y_pont, double deplacement_x,
     y_h_lookhead = 0;
     
     double d = deplacement_x*x_v+deplacement_y*y_v;
-    if(d > 0){
+    double x_v2 = 0;
+    double y_v2 = 0;
+    
+    if(d>0){
+        double d = lookhead;
+        
+        int i_min2 = list->m_curve_i_min2;
+        while(d > 0 && i_min2 < list->m_points.size()-1){
+            double dh = sqrt(list->m_points[i_min2]->distanceCarre(*list->m_points[i_min2+1]));
+            d = d - dh;
+            i_min2++;
+        }
+        
+        auto pt1 = list->m_points[i_min2];
+
+        x_v2 = pt1->m_x-x_h_pont;
+        y_v2 = pt1->m_y-y_h_pont;
+    } else {
+        double d = lookhead;
+        
+        int i_min2 = list->m_curve_i_min2;
+        while(d > 0 && i_min2 > 1){
+            double dh = sqrt(list->m_points[i_min2]->distanceCarre(*list->m_points[i_min2-1]));
+            d = d - dh;
+            i_min2--;
+        }
+        
+        auto pt1 = list->m_points[i_min2];
+
+        x_v2 = pt1->m_x-x_h_pont;
+        y_v2 = pt1->m_y-y_h_pont;
+    }
+    double d_v2 = sqrt(x_v2*x_v2 + y_v2*y_v2);
+    x_v2 = x_v2/d_v2;
+    y_v2 = y_v2/d_v2;
+    double d2 = deplacement_x*x_v2+deplacement_y*y_v2;
+    if(d2 >0){
+        x_h_lookhead = x_h_pont + lookhead*x_v2;
+        y_h_lookhead = y_h_pont + lookhead*y_v2;
+    } else {
+        x_h_lookhead = x_h_pont - lookhead*x_v2;
+        y_h_lookhead = y_h_pont - lookhead*y_v2;
+    }
+    
+    
+    
+    
+     /*if(d > 0){
         x_h_lookhead = x_h_pont + x_v*lookhead;
         y_h_lookhead = y_h_pont + y_v*lookhead;
         
@@ -438,7 +485,7 @@ double CurveAB::followKarott(double x_pont, double y_pont, double deplacement_x,
         x_h_lookhead = x_h_pont - x_v*lookhead;
         y_h_lookhead = y_h_pont - y_v*lookhead;
         
-    }
+    }*/
     //INFO(x_h_pont << " " << x_v << " " <<  lookhead);
     
     
