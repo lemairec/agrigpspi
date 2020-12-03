@@ -370,16 +370,33 @@ void PilotModule::hadrienGoTo(double res){
 }
 
 void PilotModule::hadrienLeftRight(double res){
-    /*int res2 = res*32768;
     std::vector<unsigned char> l;
-    if(res2>0){
+   
+    if(res>0){
+        if(res>100){
+           res = 100;
+        }
+        
+        l = {0x01, 0x06, 0x00, 0x6A};
+        add2hex(l, res);
+        runHadrienVolant(l);
+        l.clear();
+        
         l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
-        add4hex(l, -res2);
+        add4hex(l, -1000);
     } else {
+        if(res<-100){
+           res = -100;
+        }
+        l = {0x01, 0x06, 0x00, 0x6A};
+        add2hex(l, -res);
+        runHadrienVolant(l);
+        l.clear();
+        
         l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
-        add4hex(l, -res2);
+        add4hex(l, 1000);
     }
-    runHadrienVolant(l);*/
+    runHadrienVolant(l);
 }
 
 void PilotModule::setHadrienVolant(double val){
