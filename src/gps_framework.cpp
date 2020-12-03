@@ -372,7 +372,7 @@ void GpsFramework::updateWithoutGps(){
         auto begin = std::chrono::system_clock::now();
         std::chrono::duration<double> diff = begin - m_tracteur.m_time_received;
 
-        double seconds = diff.count()*1000;
+        double seconds = diff.count();
         double vitesse_m_s = m_vitesse*1000/3600;
         double deplacement = vitesse_m_s*seconds;
         
