@@ -302,18 +302,7 @@ void PilotModule::test(){
     printHadrien(l);
     runHadrienVolant(l);
     l.clear();
-    sleep(10);
     l = {0x01, 0x06, 0x00, 0x6A};
-    add2hex(l, 0);
-    printHadrien(l);
-    runHadrienVolant(l);
-    l.clear();
-    sleep(10);
-    l = {0x01, 0x06, 0x00, 0x6A};
-    add2hex(l, -50);
-    printHadrien(l);
-    runHadrienVolant(l);
-    l.clear();
     /*l = {0x01, 0x06, 0x00, 0x6A};
     add2hex(l, -100);
     runHadrienVolant(l);
