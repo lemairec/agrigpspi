@@ -440,7 +440,7 @@ double CurveAB::followCarrot(double x_pont, double y_pont, double deplacement_x,
     if(d>0){
         double d = lookhead;
         
-        int i_min2 = list->m_curve_i_min2;
+        size_t i_min2 = list->m_curve_i_min2;
         while(d > 0 && i_min2 < list->m_points.size()-1){
             double dh = sqrt(list->m_points[i_min2]->distanceCarre(*list->m_points[i_min2+1]));
             d = d - dh;
@@ -454,7 +454,7 @@ double CurveAB::followCarrot(double x_pont, double y_pont, double deplacement_x,
     } else {
         double d = lookhead;
         
-        int i_min2 = list->m_curve_i_min2;
+        size_t i_min2 = list->m_curve_i_min2;
         while(d > 0 && i_min2 > 1){
             double dh = sqrt(list->m_points[i_min2]->distanceCarre(*list->m_points[i_min2-1]));
             d = d - dh;
