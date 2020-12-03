@@ -293,7 +293,7 @@ void add2hex( std::vector<unsigned char> & l, int i){
 void PilotModule::test(){
     INFO("test");
     std::vector<unsigned char> l;
-    l = {0x01, 0x06, 0x00, 0x31, 0x00, 0x07};
+    l = {0x01, 0x06, 0x00, 0x31, 0x00, 0x07}; //controle en vitesse
     runHadrienVolant(l);
     INFO("la");
     l.clear();
@@ -369,12 +369,15 @@ void PilotModule::hadrienGoTo(double res){
     runHadrienVolant(l);
 }
 
+const int vitesse_max = 32000;
+const int pas = 1000;
+
 void PilotModule::hadrienLeftRight(double res){
     std::vector<unsigned char> l;
    
     if(res>0){
-        if(res>10000){
-           res = 10000;
+        if(res>vitesse_max){
+           res = vitesse_max;
         }
         
         l = {0x01, 0x06, 0x00, 0x6A};
@@ -383,10 +386,10 @@ void PilotModule::hadrienLeftRight(double res){
         l.clear();
         
         l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
-        add4hex(l, -1000);
+        add4hex(l, -pas);
     } else {
-        if(res<-10000){
-           res = -10000;
+        if(res<-vitesse_max){
+           res = -vitesse_max;
         }
         l = {0x01, 0x06, 0x00, 0x6A};
         add2hex(l, -res);
@@ -394,7 +397,7 @@ void PilotModule::hadrienLeftRight(double res){
         l.clear();
         
         l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
-        add4hex(l, 1000);
+        add4hex(l, pas);
     }
     runHadrienVolant(l);
 }
