@@ -373,8 +373,8 @@ void PilotModule::hadrienLeftRight(double res){
     std::vector<unsigned char> l;
    
     if(res>0){
-        if(res>100){
-           res = 100;
+        if(res>10000){
+           res = 10000;
         }
         
         l = {0x01, 0x06, 0x00, 0x6A};
@@ -385,8 +385,8 @@ void PilotModule::hadrienLeftRight(double res){
         l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
         add4hex(l, -1000);
     } else {
-        if(res<-100){
-           res = -100;
+        if(res<-10000){
+           res = -10000;
         }
         l = {0x01, 0x06, 0x00, 0x6A};
         add2hex(l, -res);
