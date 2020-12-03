@@ -78,7 +78,7 @@ int temp_i = 0;
 void PilotModule::setVolant(double vol){
     GpsFramework & f = GpsFramework::Instance();
     f.m_pilot_time.setNewTime();
-    int frequence = f.m_config.m_pilot_frequence;
+    int frequence = f.m_config.m_pilot_virtual_point;
     if(frequence > 0){
         temp_i = (temp_i+1)%frequence;
         if(temp_i == 0){
