@@ -370,7 +370,7 @@ void PilotModule::hadrienGoTo(double res){
 }
 
 const int vitesse_max = 32000;
-const int pas = 1000;
+const int pas = 10000;
 
 void PilotModule::hadrienLeftRight(double res){
     std::vector<unsigned char> l;
