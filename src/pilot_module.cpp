@@ -291,20 +291,20 @@ void add2hex( std::vector<unsigned char> & l, int i){
 #include <unistd.h>
 
 void PilotModule::test(){
-    INFO("engageHadrien");
+    INFO("test");
     std::vector<unsigned char> l;
     l = {0x01, 0x06, 0x00, 0x31, 0x00, 0x07};
     runHadrienVolant(l);
+    INFO("la");
     l.clear();
     l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
-    printHadrien(l);
     runHadrienVolant(l);
+    INFO("lo");
     l.clear();
     
     
     l = {0x01, 0x06, 0x00, 0x6A};
     add2hex(l, 100);
-    printHadrien(l);
     runHadrienVolant(l);
     l.clear();
     /*l = {0x01, 0x06, 0x00, 0x6A};
