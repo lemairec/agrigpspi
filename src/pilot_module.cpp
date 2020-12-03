@@ -102,15 +102,6 @@ void PilotModule::update(){
     }
 }
 
-void PilotModule::test(){
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("sbas control enable egnos 0 none\n");
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("saveconfig\n");
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("pdpfilter enable\n");
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("pdpmode relative auto\n");
-    GpsFramework::Instance().m_serialModule.writeGpsSerialS("saveconfig\n");
-}
-
-
 
 /**
     ARDUINO
@@ -192,7 +183,7 @@ void PilotModule::handleArduino(){
    HADRIEN VOLANT
  */
 
-void print(std::vector<u_char> & l){
+void printHadrien(std::vector<u_char> & l){
     for(auto i : l){
         printf("%02" PRIx16 " ", i);
         
@@ -229,7 +220,7 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
     int j = res%256;
     l.push_back(j);
     l.push_back(i);
-    print(l);
+    printHadrien(l);
     GpsFramework::Instance().m_serialModule.writePilotSerialDAndWait(l);
 }
 
@@ -260,6 +251,8 @@ void PilotModule::clearHadrien(){
 }
 
 
+
+
 void add4hex( std::vector<unsigned char> & l, int i){
     u_int u_i = i;
     
@@ -279,6 +272,39 @@ void add4hex( std::vector<unsigned char> & l, int i){
     
 }
 
+void add2hex( std::vector<unsigned char> & l, int i){
+    u_int u_i = i;
+    
+    unsigned char i0 = u_i%256;
+    u_i = u_i/256;
+    unsigned char i1 = u_i%256;
+    u_i = u_i/256;
+    
+    l.push_back(i1);
+    l.push_back(i0);
+    
+}
+
+void PilotModule::test(){
+    INFO("engageHadrien");
+    std::vector<unsigned char> l;
+    l = {0x01, 0x06, 0x00, 0x31, 0x00, 0x07};
+    runHadrienVolant(l);
+    l.clear();
+    l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
+    runHadrienVolant(l);
+    l.clear();
+    
+    
+    l = {0x01, 0x06, 0x00, 0x6A};
+    add2hex(l, 100);
+    runHadrienVolant(l);
+    l.clear();
+    /*l = {0x01, 0x06, 0x00, 0x6A};
+    add2hex(l, -100);
+    runHadrienVolant(l);
+    l.clear();*/
+}
 
 
 /*void PilotModule::myGotoVolant(double res){
