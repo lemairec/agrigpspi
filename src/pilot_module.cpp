@@ -369,7 +369,7 @@ void PilotModule::hadrienGoTo(double res){
     runHadrienVolant(l);
 }
 
-const int vitesse_max = 32000;
+const int vitesse_max = 3200;
 const int pas = 10000;
 
 void PilotModule::hadrienLeftRight(double res){
