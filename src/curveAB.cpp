@@ -612,7 +612,7 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
 
     double e = -ah;
     double v = vitesse*10000.0/3600.0;
-    double k = 0;//todo;
+    double k = -calculCurbature(list, list->m_curve_i_min);//todo;
     double th_e = -angle;//todo;
 
     double x1 = v * k * cos(th_e) / (1.0 - k * e) ;
