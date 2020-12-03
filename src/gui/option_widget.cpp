@@ -343,7 +343,7 @@ void OptionWidget::onMousePage3(int x, int y){
     } else if(f.m_pilot_algo == AlgoPilot::RearWheelPosition){
         f.m_config.m_pilot_rwp_kth += m_value_gui_rwp_kth.getIntValue(x,y)*0.1;
         f.m_config.m_pilot_rwp_kte += m_value_gui_rwp_kte.getIntValue(x,y)*0.1;
-    } else if(f.m_pilot_algo == AlgoPilot::RWPAndFK){
+    } else if(f.m_pilot_algo == AlgoPilot::RWPAndFC){
        f.m_config.m_pilot_rwp_kth = f.m_config.m_pilot_rwp_kth * m_value_gui_rwp_kth.getMultValue(x,y);
        f.m_config.m_pilot_rwp_kte= f.m_config.m_pilot_rwp_kte * m_value_gui_rwp_kte.getMultValue(x,y);
    }
