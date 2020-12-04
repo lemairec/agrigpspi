@@ -102,6 +102,15 @@ void PilotModule::update(){
     }
 }
 
+void PilotModule::test(){
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("sbas control enable egnos 0 none\n");
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("saveconfig\n");
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("pdpfilter enable\n");
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("pdpmode relative auto\n");
+    GpsFramework::Instance().m_serialModule.writeGpsSerialS("saveconfig\n");
+}
+
+
 
 /**
     ARDUINO
@@ -183,7 +192,7 @@ void PilotModule::handleArduino(){
    HADRIEN VOLANT
  */
 
-void printHadrien(std::vector<u_char> & l){
+void print(std::vector<u_char> & l){
     for(auto i : l){
         printf("%02" PRIx16 " ", i);
         
@@ -220,16 +229,13 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
     int j = res%256;
     l.push_back(j);
     l.push_back(i);
+    print(l);
     GpsFramework::Instance().m_serialModule.writePilotSerialDAndWait(l);
-    printHadrien(l);
 }
 
 void PilotModule::engageHadrien(){
     INFO("engageHadrien");
     std::vector<unsigned char> l;
-    l = {0x01, 0x06, 0x00, 0x31, 0x00, 0x07};
-    runHadrienVolant(l);
-    l.clear();
     l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
     runHadrienVolant(l);
     l.clear();
@@ -254,8 +260,6 @@ void PilotModule::clearHadrien(){
 }
 
 
-
-
 void add4hex( std::vector<unsigned char> & l, int i){
     u_int u_i = i;
     
@@ -275,49 +279,6 @@ void add4hex( std::vector<unsigned char> & l, int i){
     
 }
 
-void add2hex( std::vector<unsigned char> & l, int i){
-    u_int u_i = i;
-    
-    unsigned char i0 = u_i%256;
-    u_i = u_i/256;
-    unsigned char i1 = u_i%256;
-    u_i = u_i/256;
-    
-    l.push_back(i1);
-    l.push_back(i0);
-    
-}
-
-#include <unistd.h>
-
-void PilotModule::test(){
-    INFO("test");
-    std::vector<unsigned char> l;
-    l = {0x01, 0x06, 0x00, 0x31, 0x00, 0x07}; //controle en vitesse
-    runHadrienVolant(l);
-    INFO("la");
-    l.clear();
-    l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
-    runHadrienVolant(l);
-    INFO("lo");
-    l.clear();
-    
-    
-    l = {0x01, 0x06, 0x00, 0x6A};
-    add2hex(l, 100);
-    runHadrienVolant(l);
-    l.clear();
-    
-    int res2 = 1000;
-    l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
-    add4hex(l, res2);
-    runHadrienVolant(l);
-    /*l = {0x01, 0x06, 0x00, 0x6A};
-    l = {0x01, 0x06, 0x00, 0x6A};
-    add2hex(l, -100);
-    runHadrienVolant(l);
-    l.clear();*/
-}
 
 
 /*void PilotModule::myGotoVolant(double res){
@@ -369,35 +330,15 @@ void PilotModule::hadrienGoTo(double res){
     runHadrienVolant(l);
 }
 
-const int vitesse_max = 3200;
-const int pas = 10000;
-
 void PilotModule::hadrienLeftRight(double res){
+    int res2 = res*32768;
     std::vector<unsigned char> l;
-    INFO(res);
-    if(res>0){
-        if(res>vitesse_max){
-           res = vitesse_max;
-        }
-        
-        l = {0x01, 0x06, 0x00, 0x6A};
-        add2hex(l, res);
-        runHadrienVolant(l);
-        l.clear();
-        
+    if(res2>0){
         l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
-        add4hex(l, -pas);
+        add4hex(l, -res2);
     } else {
-        if(res<-vitesse_max){
-           res = -vitesse_max;
-        }
-        l = {0x01, 0x06, 0x00, 0x6A};
-        add2hex(l, -res);
-        runHadrienVolant(l);
-        l.clear();
-        
         l = {0x01, 0x10, 0x01, 0x35, 0x00, 0x02, 0x04};
-        add4hex(l, pas);
+        add4hex(l, -res2);
     }
     runHadrienVolant(l);
 }
