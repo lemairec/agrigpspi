@@ -471,6 +471,9 @@ void GpsFramework::setAB(){
 }
 
 void GpsFramework::calculDeplacement(){
+    if(m_vitesse < 0.1){
+        return;
+    }
     m_tracteur.m_pt_outil_arriere = nullptr;
     m_tracteur.m_pt_outil_arriere_droite = nullptr;
     m_tracteur.m_pt_outil_arriere_gauche = nullptr;
