@@ -69,6 +69,14 @@ public:
     double x_h_lookhead = 0, y_h_lookhead = 0;
     double m_angle = 0;
     double followCarrot(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead);
+    
+    double m_d_k;
+    double m_d_angle;
+    double m_d_e;
+    double m_d_xk;
+    double m_d_xe;
+    double m_d_xthe;
+    double m_d_res;
 };
 
 #endif // LINE_AB_H

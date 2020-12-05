@@ -116,7 +116,7 @@ void SatWidget::draw(){
             QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral_imu*1000)/10.0)+" cm";
             drawQText(s, x2, 0.7*m_height, sizeText_little, false);
         }
-    } else {
+    } else  if (m_type == 3) {
         {
             QString s = "Time";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -145,6 +145,24 @@ void SatWidget::draw(){
         }
         
         
+    } else  if (m_type == 4) {
+        {
+            QString s = "Debug";
+            drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
+        }
+        
+        {
+            QString s = "m_d_e "+QString::number(f.m_curveAB.m_d_e)+"\n";
+            s += "m_d_angle "+QString::number(f.m_curveAB.m_d_angle)+"\n";
+            s += "m_d_k "+QString::number(f.m_curveAB.m_d_k)+"\n\n";
+            
+            s += "m_d_xe "+QString::number(f.m_curveAB.m_d_xe)+"\n";
+            s += "m_d_xthe "+QString::number(f.m_curveAB.m_d_xthe)+"\n";
+            s += "m_d_xk "+QString::number(f.m_curveAB.m_d_xk)+"\n\n";
+            
+            s += "m_d_res "+QString::number(f.m_curveAB.m_d_res)+"\n";
+            drawQText(s, x2, 0.3*m_height, sizeText_little, false);
+        }
     }
           
     
@@ -159,6 +177,6 @@ void SatWidget::onMouse(int x, int y){
         m_close = true;
     }
     if(m_buttonDebug.isActive(x, y)){
-        m_type = (m_type+1)%4;
+        m_type = (m_type+1)%5;
     }
 }
