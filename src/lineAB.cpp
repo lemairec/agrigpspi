@@ -108,19 +108,27 @@ double LineAB::calculRearWheelPosition(double p_x, double p_y, double lg, double
     double v = vitesse*10000.0/3600.0;
     double k = 0;//todo;
     
-    double x1 = v * k * cos(th_e) / (1.0 - k * e) ;
-    double x2 = KTH * abs(v) * th_e ;
-    double x3 = KE * v * sin(th_e) * e / th_e;
+    double xk = v * k * cos(th_e) / (1.0 - k * e) ;
+    double xthe = KTH * abs(v) * th_e ;
+    double xe = KE * v * sin(th_e) * e / th_e;
     
     //std::cout << "l  e " << e << "  th_e " << th_e << std::endl;
     //std::cout << "l    " << x2 << " " << x3 << std::endl;
-    double omega = x1 - x2 - x3;
+    double omega = xk - xe - xthe;
     
-    if (th_e == 0.0 || omega == 0.0){
-        return 0.0;
-    }
+    
+    m_d_e = e;
+    m_d_angle = th_e;
+    m_d_k = k;
 
+    m_d_xk = xk;
+    m_d_xthe = -xthe;
+    m_d_xe = -xe;
+    m_d_res = omega;
+  
     double delta = atan2(L * omega / v, 1.0);
+    
+    m_d_delta = delta;
     
     return delta;
     

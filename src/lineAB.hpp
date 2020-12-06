@@ -34,6 +34,15 @@ public:
     double anglefollowTheCarrot(double x, double y, double deplacementX, double deplacementY, double lg, double angleDeplacement, double lk);
 
     double calculRearWheelPosition(double p_x, double p_y, double lg, double angle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
+    
+    double m_d_k;
+    double m_d_angle;
+    double m_d_e;
+    double m_d_xk;
+    double m_d_xe;
+    double m_d_xthe;
+    double m_d_res;
+    double m_d_delta;
 };
 
 class LineCurves {

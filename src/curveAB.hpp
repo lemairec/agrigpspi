@@ -77,6 +77,7 @@ public:
     double m_d_xe;
     double m_d_xthe;
     double m_d_res;
+    double m_d_delta;
 };
 
 #endif // LINE_AB_H

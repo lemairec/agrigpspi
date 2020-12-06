@@ -635,13 +635,9 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     m_d_xe = -xe;
     m_d_res = omega;
     
-    if (th_e == 0.0 || omega == 0.0){
-        return 0.0;
-    }
-
     double delta = atan2(L * omega / v, 1.0);
 
-    
+    m_d_delta = delta;
     
    
     //std::cout << e <<  " " << cos_a << " th_e "  << th_e << " " << v << " " << th_e << " " << k << " " << omega << " d " << delta << std::endl;

@@ -619,7 +619,14 @@ void GpsWidget::drawTop(){
     scene->addRect(0, 0, m_width, 40, m_penBlack, m_brushDarkGray);
     scene->addRect(m_width/2-50, 5, 100, 30, m_penBlack, m_grayBrush);
     QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
-    drawQText(s, m_width/2, 20,sizeText_medium, true);
+    drawQText(s, m_width/2, 23,sizeText_big, true);
+    
+    scene->addRect(m_width/2-60, 40, 120, 40, m_penBlack, m_brushDarkGray);
+    scene->addRect(m_width/2-50, 45, 100, 30, m_penBlack, m_grayBrush);
+    {
+        QString s = QString::number(f.m_angle_correction/3.14*180, 'f', 2) + " °";
+        drawQText(s, m_width/2, 63,sizeText_big, true);
+    }
     
     for(int i = 0; i < 8; ++i){
         scene->addRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20, m_penBlack, m_grayBrush);

@@ -152,16 +152,36 @@ void SatWidget::draw(){
         }
         
         {
-            QString s = "m_d_e "+QString::number(f.m_curveAB.m_d_e)+"\n";
-            s += "m_d_angle "+QString::number(f.m_curveAB.m_d_angle)+"\n";
-            s += "m_d_k "+QString::number(f.m_curveAB.m_d_k)+"\n\n";
-            
-            s += "m_d_xe "+QString::number(f.m_curveAB.m_d_xe)+"\n";
-            s += "m_d_xthe "+QString::number(f.m_curveAB.m_d_xthe)+"\n";
-            s += "m_d_xk "+QString::number(f.m_curveAB.m_d_xk)+"\n\n";
-            
-            s += "m_d_res "+QString::number(f.m_curveAB.m_d_res)+"\n";
-            drawQText(s, x2, 0.3*m_height, sizeText_little, false);
+            if(f.m_line){
+                QString s = "lineAB\n\n";
+                s += "m_d_e "+QString::number(round(f.m_lineAB.m_d_e*10000)/100.0)+" cm\n";
+                s += "m_d_angle "+QString::number(round(f.m_lineAB.m_d_angle/3.14*180*100)/100.0)+" °\n";
+                s += "m_d_k "+QString::number(round(f.m_lineAB.m_d_k*100)/100.0)+"\n\n";
+                
+                s += "m_d_xe (kte) "+QString::number(round(f.m_lineAB.m_d_xe*100)/100.0)+"\n";
+                s += "m_d_xthe (kth) "+QString::number(round(f.m_lineAB.m_d_xthe*100)/100.0)+"\n";
+                s += "m_d_xk "+QString::number(round(f.m_lineAB.m_d_xk*100)/100.0)+"\n\n";
+                
+                s += "m_d_res "+QString::number(round(f.m_lineAB.m_d_res*100)/100.0)+"\n";
+                
+                s += "m_d_delta "+QString::number(round(f.m_lineAB.m_d_delta/3.14*180*100)/100.0)+" °\n\n";
+                
+                drawQText(s, x2, 0.25*m_height, sizeText_little, false);
+            } else {
+                QString s = "curveAB\n\n";
+                s += "m_d_e "+QString::number(round(f.m_curveAB.m_d_e*10000)/100.0)+" cm\n";
+                s += "m_d_angle "+QString::number(round(f.m_curveAB.m_d_angle/3.14*180*100)/100.0)+" °\n";
+                s += "m_d_k "+QString::number(round(f.m_curveAB.m_d_k*100)/100.0)+"\n\n";
+                
+                s += "m_d_xe (kte) "+QString::number(round(f.m_curveAB.m_d_xe*100)/100.0)+"\n";
+                s += "m_d_xthe (kth) "+QString::number(round(f.m_curveAB.m_d_xthe*100)/100.0)+"\n";
+                s += "m_d_xk "+QString::number(round(f.m_curveAB.m_d_xk*100)/100.0)+"\n\n";
+                
+                s += "m_d_res "+QString::number(round(f.m_curveAB.m_d_res*100)/100.0)+"\n";
+                
+                s += "m_d_delta "+QString::number(round(f.m_lineAB.m_d_delta/3.14*180*100)/100.0)+" °\n\n";
+                drawQText(s, x2, 0.25   *m_height, sizeText_little, false);
+            }
         }
     }
           
