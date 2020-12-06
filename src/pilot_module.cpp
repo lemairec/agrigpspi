@@ -331,7 +331,7 @@ void PilotModule::hadrienGoTo(double res){
 }
 
 void PilotModule::hadrienLeftRight(double res){
-    int res2 = res*32768;
+    int res2 = round(res*32768);
     std::vector<unsigned char> l;
     if(res2>0){
         l = {0x01, 0x10, 0x01, 0x36, 0x00, 0x02, 0x04};
