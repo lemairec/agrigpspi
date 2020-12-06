@@ -402,6 +402,9 @@ bool GpsFramework::isPilotConnected(){
 void GpsFramework::onFrame(const std::string &frame){
     if(m_debug_log){
         file_debug_stream << frame << "\n";
+        if(m_imuModule.m_pitch_y_deg != 0){
+            file_debug_stream << "IMU;" << m_imuModule.m_pitch_y_deg << "\n";
+        }
     }
 }
 
