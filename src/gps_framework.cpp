@@ -289,12 +289,12 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
         double dist = m_parcelle.distance(p);
         if(m_config.m_pilot_auto_deactive > 0 && dist < m_config.m_pilot_auto_deactive){
             if(m_pilotModule.m_engaged){
-                m_pilotModule.desengage();
+                setVolantEngaged(false);
             }
         }
         if(m_config.m_pilot_auto_active > 0 && dist > m_config.m_pilot_auto_deactive){
             if(!m_pilotModule.m_engaged){
-                m_pilotModule.engage();
+                setVolantEngaged(true);
             }
         }
     }
