@@ -182,7 +182,7 @@ void Parcelle::loadParcelle(std::string name){
             if(line == "[FLAG]"){
                 break;
             }
-            float a, b;
+            double a, b;
             if (!(iss >> a >> b)) {
                 INFO("error1 " << line);
                 break;

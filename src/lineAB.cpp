@@ -175,7 +175,7 @@ void LineCurves::loadCurveOrLine(std::string name){
         while (std::getline(file, line))
         {
             std::istringstream iss(line);
-            float a, b;
+            double a, b;
             if (!(iss >> a >> b)) {
                 INFO("error");
                 break;
