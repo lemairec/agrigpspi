@@ -297,7 +297,7 @@ void GpsWidget::drawParcelle(bool force){
             double x, y;
             my_projete2(s->m_x, s->m_y, x, y);
             if(m_debug){
-                scene->addEllipse(x-2, y-2, 4, 4, m_penBlack);
+                scene->addEllipse(x, y, 1, 1, m_penBlack);
             }
             p.push_back(QPoint(x, y));
         }

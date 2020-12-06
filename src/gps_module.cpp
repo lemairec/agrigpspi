@@ -364,9 +364,6 @@ void GpsModule::SetLatLongSpherique(GpsPoint & gpsPoint){
     
     gpsPoint.m_longitude = m_longitudeRef + RAD2DEG(lonRel);
     gpsPoint.m_latitude = m_latitudeRef + RAD2DEG(latRel);
-    
-    //INFO(std::setprecision(14) << lon << " " << gpsPoint.m_longitude);
-    //INFO(std::setprecision(14) << lat << " " << gpsPoint.m_latitude);
 }
 
 /**
