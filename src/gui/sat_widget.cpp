@@ -109,8 +109,8 @@ void SatWidget::draw(){
         }
         
         {
-            QString s = "moy "+QString::number(f.m_imuModule.m_moy_corr_deg)+" °";
-            drawQText(s, x2, 0.6*m_height, sizeText_little, false);
+            QString s = "a_x "+QString::number(f.m_imuModule.m_ax)+"\na_y "+QString::number(f.m_imuModule.m_ay)+"\na_z "+QString::number(f.m_imuModule.m_az)+"";
+            drawQText(s, x2, 0.55*m_height, sizeText_little, false);
         }
         {
             QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral_imu*1000)/10.0)+" cm";
