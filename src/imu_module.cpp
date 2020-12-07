@@ -62,13 +62,13 @@ void ImuModule::run(){
                 signed short int axis_z = ((c7<<8)|c6);
                 m_yaw_z_deg = ((double)axis_z)/32768.0*180.0;
             } else if(c1 == 0x54){
-                signed short int  axis_x = ((c3<<8)|c2);
+                signed short int axis_x = ((c3<<8)|c2);
                 m_mag_x = ((double)axis_x);
                 
-                signed short int  axis_y = ((c5<<8)|c4);
+                signed short int axis_y = ((c5<<8)|c4);
                 m_mag_y = ((double)axis_y);
                 
-                signed short int  axis_z = ((c7<<8)|c6);
+                signed short int axis_z = ((c7<<8)|c6);
                 m_mag_z = ((double)axis_z);
             }
         }

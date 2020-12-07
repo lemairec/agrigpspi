@@ -192,7 +192,8 @@ void PilotModule::handleArduino(){
    HADRIEN VOLANT
  */
 
-void print(std::vector<u_char> & l){
+
+void printHexa(std::vector<u_char> & l){
     for(auto i : l){
         printf("%02" PRIx16 " ", i);
         
@@ -223,43 +224,6 @@ uint16_t calculcrc16Modbus(std::vector<unsigned char> & l){
     return crc;
 }
 
-void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
-    uint16_t res = calculcrc16Modbus(l);
-    int i = res/256;
-    int j = res%256;
-    l.push_back(j);
-    l.push_back(i);
-    print(l);
-    GpsFramework::Instance().m_serialModule.writePilotSerialDAndWait(l);
-}
-
-void PilotModule::engageHadrien(){
-    INFO("engageHadrien");
-    std::vector<unsigned char> l;
-    l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
-    runHadrienVolant(l);
-    l.clear();
-    l = {0x01, 0x06, 0x00, 0x6A, 0x00};
-    uint16_t i = m_motor_vitesse_max;
-    l.push_back(i);
-    runHadrienVolant(l);
-}
-void PilotModule::desengageHadrien(){
-    INFO("desengageHadrien");
-    std::vector<unsigned char> l;
-    l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x00};
-    runHadrienVolant(l);
-    l.clear();
-}
-void PilotModule::clearHadrien(){
-    INFO("clearHadrien");
-    std::vector<unsigned char> l;
-    l = {0x01, 0x10, 0x01, 0x31, 0x00, 0x01, 0x02, 0x00, 0x2E};
-    runHadrienVolant(l);
-    l.clear();
-}
-
-
 void add4hex( std::vector<unsigned char> & l, int i){
     u_int u_i = i;
     
@@ -278,6 +242,55 @@ void add4hex( std::vector<unsigned char> & l, int i){
     l.push_back(i2);
     
 }
+
+void add2hex( std::vector<unsigned char> & l, int i){
+    u_int u_i = i;
+
+    unsigned char i0 = u_i%256;
+    u_i = u_i/256;
+    unsigned char i1 = u_i%256;
+    u_i = u_i/256;
+
+    l.push_back(i1);
+    l.push_back(i0);
+}
+
+void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
+    uint16_t res = calculcrc16Modbus(l);
+    int i = res/256;
+    int j = res%256;
+    l.push_back(j);
+    l.push_back(i);
+    printHexa(l);
+    GpsFramework::Instance().m_serialModule.writePilotSerialDAndWait(l);
+}
+
+void PilotModule::engageHadrien(){
+    INFO("engageHadrien");
+    {
+        std::vector<unsigned char> l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
+        runHadrienVolant(l);
+    }
+    {
+        std::vector<unsigned char> l = {0x01, 0x06, 0x00, 0x6A, 0x00};
+        uint16_t i = m_motor_vitesse_max;
+        l.push_back(i);
+        runHadrienVolant(l);
+    }
+}
+void PilotModule::desengageHadrien(){
+    INFO("desengageHadrien");
+    std::vector<unsigned char> l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x00};
+    runHadrienVolant(l);
+}
+void PilotModule::clearHadrien(){
+    INFO("clearHadrien");
+    std::vector<unsigned char> l = {0x01, 0x10, 0x01, 0x31, 0x00, 0x01, 0x02, 0x00, 0x2E};
+    runHadrienVolant(l);
+}
+
+
+
 
 
 
