@@ -536,7 +536,7 @@ void GpsFramework::calculDeplacement(){
             
             m_tracteur.m_pt_antenne_corrige = GpsPoint_ptr(new GpsPoint);
             m_tracteur.m_pt_antenne_corrige->m_x = point1->m_x + cos(m_deplacementAngle)*m_tracteur.m_correction_lateral;
-            m_tracteur.m_pt_antenne_corrige->m_y = point1->m_y + sin(m_deplacementAngle)*m_tracteur.m_correction_lateral;
+            m_tracteur.m_pt_antenne_corrige->m_y = point1->m_y - sin(m_deplacementAngle)*m_tracteur.m_correction_lateral;
             
             if(m_config.m_ekf){
                 m_ekf_module.onNewPoint(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, 0, m_vitesse*1000/3600, m_deplacementAngle, m_imuModule.m_ax, m_imuModule.m_ay, m_imuModule.m_az);
