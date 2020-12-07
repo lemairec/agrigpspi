@@ -428,7 +428,19 @@ void GpsWidget::draw_force(){
             for(auto p: f.m_list){
                 double x1, y1;
                 my_projete2(p->m_x, p->m_y, x1, y1);
-                scene->addEllipse(x1, y1, 1, 1, m_penBlack, m_brushNo);
+                scene->addEllipse(x1-1, y1-1, 2, 2, m_penBlack, m_brushNo);
+            }
+            
+            double x_last = 0, y_last;
+            for(auto p: f.m_list_ekf){
+                double x1, y1;
+                my_projete2(p->m_x, p->m_y, x1, y1);
+                if(x_last != 0){
+                    scene->addLine(x1, y1, x_last, y_last, m_penRed);
+                }
+                x_last = x1;
+                y_last = y1;
+                                        
             }
         }
         drawSurfaceToDraw();

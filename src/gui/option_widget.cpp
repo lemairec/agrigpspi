@@ -145,7 +145,6 @@ void OptionWidget::resizePage1(){
     m_button_debug_file.setResize(0.35*m_width, 0.4*m_height, m_petit_button);
     m_button_menu_vertical.setResize(0.35*m_width, 0.5*m_height, m_petit_button);
     m_button_debug.setResize(0.35*m_width, 0.6*m_height, m_petit_button);
-    
 };
 
 void OptionWidget::drawPage1(){
@@ -213,6 +212,9 @@ void OptionWidget::resizePage2(){
     m_select_gps_baudrates.setResize(0.35*m_width,0.4*m_height, m_petit_button);
     m_select_gps_baudrates.addValueInt("9600", 9600);
     m_select_gps_baudrates.addValueInt("115200", 115200);
+    
+    m_button_ekf.setResize(0.35*m_width, 0.6*m_height, m_petit_button);
+
 }
 
 void OptionWidget::drawPage2(){
@@ -226,8 +228,18 @@ void OptionWidget::drawPage2(){
     drawSelectButtonGuiClose(&m_select_gps_serial);
     drawSelectButtonGuiClose(&m_select_gps_baudrates);
     
+    if(f.m_config.m_ekf){
+        drawButtonLabel(&m_button_ekf, COLOR_CHECK);
+    } else {
+        drawButtonLabel(&m_button_ekf, COLOR_OTHER);
+    }
+    drawText("ekf", 0.4*m_width, m_button_ekf.m_y);
+    
+    
     drawSelectButtonGuiOpen(&m_select_gps_serial);
     drawSelectButtonGuiOpen(&m_select_gps_baudrates);
+    
+    
     
 }
 
@@ -236,10 +248,10 @@ void OptionWidget::onMousePage2(int x, int y){
     
     if(onMouseSelectButton(&m_select_gps_serial, x, y)){
         f.m_config.m_input_gps = m_select_gps_serial.getValueString();
-    };
-    
-    if(onMouseSelectButton(&m_select_gps_baudrates, x, y)){
+    } else if(onMouseSelectButton(&m_select_gps_baudrates, x, y)){
         f.m_config.m_baudrate_gps = m_select_gps_baudrates.getValueInt();
+    } else if(m_button_ekf.isActive(x,y)){
+        f.m_config.m_ekf = !f.m_config.m_ekf;
     }
     f.initOrLoadConfig();
 }

@@ -3,7 +3,7 @@ project(agri_gps_pi)
 
 # The version number.
 set (PROJECT_VERSION_MAJOR 20)
-set (PROJECT_VERSION_MINOR 11)
+set (PROJECT_VERSION_MINOR 12)
 set (PROJECT_VERSION_PATCH 11)
 
 configure_file (

@@ -4,6 +4,7 @@
 #include "gps_module.hpp"
 #include "pilot_module.hpp"
 #include "imu_module.hpp"
+#include "ekf_module.hpp"
 #include "gui/qt/my_qt_serial_port.hpp"
 #include "gui/qt/my_qt_file.hpp"
 #include "config/config.hpp"
@@ -43,7 +44,6 @@ struct Tracteur {
        
     double m_x_antenne = 0;
     double m_y_antenne = 0;
-    
     
     double m_correction_lateral_imu = 0;
     double m_correction_lateral = 0;
@@ -246,6 +246,7 @@ public:
     
     
     std::list<GpsPoint_ptr> m_list;
+    std::list<GpsPoint_ptr> m_list_ekf;
     std::list<SurfaceToDraw_ptr> m_listSurfaceToDraw;
     GGAFrame m_lastGGAFrame;
     RMCFrame_ptr m_lastRMCFrame;
@@ -276,6 +277,7 @@ public:
     MyQTFile m_fileModule;
     PilotModule m_pilotModule;
     ImuModule m_imuModule;
+    EkfModule m_ekf_module;
     
     std::list<std::string> m_listLog;
 private:

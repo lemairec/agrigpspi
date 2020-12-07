@@ -21,6 +21,7 @@ public:
     
     
     bool m_gga = false;
+    bool m_ekf = true;
    
     bool m_sensDraw = false;
     bool m_debug = false;

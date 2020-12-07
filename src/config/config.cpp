@@ -26,6 +26,7 @@ void Config::save(){
     settings.setValue("sensDraw", m_sensDraw);
     settings.setValue("debug", m_debug);
     settings.setValue("gga", m_gga);
+    settings.setValue("ekf", m_ekf);
     
     settings.setValue("menu_vertical", m_menu_vertical);
     settings.setValue("debug_log", m_debug_log);
@@ -93,6 +94,9 @@ void Config::load(){
     }
     if(settings.contains("gga")){
         m_gga = settings.value("gga").toBool();
+    }
+    if(settings.contains("ekf")){
+        m_ekf = settings.value("ekf").toBool();
     }
     
     if(settings.contains("menu_vertical")){

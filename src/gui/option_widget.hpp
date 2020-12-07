@@ -54,6 +54,7 @@ public:
     //page2
     SelectButtonGui m_select_gps_serial;
     SelectButtonGui m_select_gps_baudrates;
+    ButtonGui m_button_ekf;
     void resizePage2();
     void onMousePage2(int x, int y);
     void drawPage2();
