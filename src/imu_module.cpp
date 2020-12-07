@@ -32,23 +32,23 @@ void ImuModule::run(){
         int c = m_list[1];
         if(c ==  0x51){
             //print(11);
-            int axl = m_list[2];
-            int axh = m_list[3];
-            int ayl = m_list[4];
-            int ayh = m_list[5];
-            int azl = m_list[6];
-            int azh = m_list[7];
+            int acc_xl = m_list[2];
+            int acc_xh = m_list[3];
+            int acc_yl = m_list[4];
+            int acc_yh = m_list[5];
+            int acc_zl = m_list[6];
+            int acc_zh = m_list[7];
             int tl = m_list[8];
             int th = m_list[9];
             int sum = m_list[10];
             
-            int sum_ = 0x55 + 0x51 + axl + axh + ayl + ayh + azl + azh + tl + th;
+            int sum_ = 0x55 + 0x51 + acc_xl + acc_xh + acc_yl + acc_yh + acc_zl + acc_zh + tl + th;
             if((sum%256) == (sum_%256)){
-                int ax = ((axh<<8)|axl);
+                int ax = ((acc_xh<<8)|acc_xl);
                 m_ax = ((double)ax)/32768.0*16.0*9.8;
-                int ay = ((ayh<<8)|ayl);
+                int ay = ((acc_yh<<8)|acc_yl);
                 m_ay = ((double)ay)/32768.0*16.0*9.8;
-                int az = ((azh<<8)|azl);
+                int az = ((acc_zh<<8)|acc_zl);
                 m_az = ((double)az)/32768.0*16.0*9.8;
             } else {
                 m_ax = 0.0;
@@ -117,21 +117,21 @@ void ImuModule::run(){
             //print(11);
         } else if(c ==  0x54){
             //magnetic output
-            int axl = m_list[2];
-            int axh = m_list[3];
-            int ayl = m_list[4];
-            int ayh = m_list[5];
-            int azl = m_list[6];
-            int azh = m_list[7];
+            int mag_axl = m_list[2];
+            int mag_axh = m_list[3];
+            int mag_ayl = m_list[4];
+            int mag_ayh = m_list[5];
+            int mag_azl = m_list[6];
+            int mag_azh = m_list[7];
             //unsigned char tl = m_list[8];
             //unsigned char th = m_list[9];
             //unsigned char sum = m_list[10];
             
-            int axis_x = ((axh<<8)|axl);
+            int axis_x = ((mag_axh<<8)|mag_axl);
             m_mag_x = ((double)axis_x);
-            int axis_y = ((ayh<<8)|ayl);
+            int axis_y = ((mag_ayh<<8)|mag_ayl);
             m_mag_y = ((double)axis_y);
-            int axis_z = ((azh<<8)|azl);
+            int axis_z = ((mag_azh<<8)|mag_azl);
             m_mag_z = ((double)axis_z);
             
             

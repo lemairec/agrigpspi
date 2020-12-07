@@ -322,13 +322,13 @@ void add4hex( std::vector<unsigned char> & l, int i){
     //}
 }*/
 
-void PilotModule::hadrienGoTo(double res){
+/*void PilotModule::hadrienGoTo(double res){
     int res2 = res*32768;
     std::vector<unsigned char> l;
     l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
     add4hex(l, res2);
     runHadrienVolant(l);
-}
+}*/
 
 void PilotModule::hadrienLeftRight(double res){
     int res2 = round(res*32768);
