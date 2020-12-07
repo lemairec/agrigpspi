@@ -128,7 +128,7 @@ void ImuModule::run(){
             int axis_x = ((axh<<8)|axl);
             m_mag_x = ((double)axis_x);
             int axis_y = ((ayh<<8)|ayl);
-            m_mag_y = ((double)axis_x);
+            m_mag_y = ((double)axis_y);
             int axis_z = ((azh<<8)|azl);
             m_mag_z = ((double)axis_z);
             
