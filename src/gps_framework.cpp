@@ -528,7 +528,7 @@ void GpsFramework::calculDeplacement(){
             m_time_last_point = point1->m_timeHour - point2->m_timeHour;
             
             m_tracteur.m_time_received = std::chrono::system_clock::now();
-            m_tracteur.m_correction_lateral_imu = tan(m_imuModule.m_moy_corr_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
+            m_tracteur.m_correction_lateral_imu = sin(m_imuModule.m_pitch_y_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
             m_tracteur.m_correction_lateral = m_tracteur.m_correction_lateral_imu + m_tracteur.m_antenne_lateral;
             
             m_tracteur.m_x_antenne = point1->m_x;

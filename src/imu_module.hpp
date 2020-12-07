@@ -26,7 +26,6 @@ public:
     
     std::list<int> m_values;
     int m_imu_moy = 100;
-    double m_moy_corr_deg = 0;
     
     void print(int i);
     void remove(int i);
