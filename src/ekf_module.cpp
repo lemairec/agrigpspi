@@ -8,7 +8,7 @@ void EkfModule::onNewPoint(double x, double y, double z, double v, double ang, d
     double x_v = m_old_x + sin(ang)*v*dt;
     double y_v = m_old_y + cos(ang)*v*dt;
     
-    if(ax > 0){
+    if(false){
         double x_acc = m_old_x + ax*dt*dt/2.0;
         double y_acc = m_old_y + ay*dt*dt/2.0;
         double z_acc = m_old_z + az*dt*dt/2.0;
