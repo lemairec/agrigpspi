@@ -38,18 +38,23 @@ void ImuModule::run(){
             int ayh = m_list[5];
             int azl = m_list[6];
             int azh = m_list[7];
-            //unsigned char tl = m_list[8];
-            //unsigned char th = m_list[9];
-            //unsigned char sum = m_list[10];
+            int tl = m_list[8];
+            int th = m_list[9];
+            int sum = m_list[10];
             
-            int axis_x = ((axh<<8)|axl);
-            m_ax = ((double)axis_x)/32768.0*16.0*9.8;
-            int axis_y = ((ayh<<8)|ayl);
-            m_ay = ((double)axis_y)/32768.0*16.0*9.8;
-            int axis_z = ((azh<<8)|azl);
-            m_az = ((double)axis_z)/32768.0*16.0*9.8;
-            
-            remove(11);
+            int sum_ = 0x55 + 0x51 + axl + axh + ayl + ayh + azl + azh + tl + th;
+            if((sum%256) == (sum_%256)){
+                int axis_x = ((axh<<8)|axl);
+                m_ax = ((double)axis_x)/32768.0*16.0*9.8;
+                int axis_y = ((ayh<<8)|ayl);
+                m_ay = ((double)axis_y)/32768.0*16.0*9.8;
+                int axis_z = ((azh<<8)|azl);
+                m_az = ((double)axis_z)/32768.0*16.0*9.8;
+            } else {
+                m_ax = 0.0;
+                m_ay = 0.0;
+                m_az = 0.0;
+            }
             
         } else if(c ==  0x52){
             //print(11);
@@ -63,7 +68,6 @@ void ImuModule::run(){
             char th = m_list[9];
             char sum = m_list[10];*/
             //INFO("52");
-            remove(11);
         } else if(c ==  0x53){
             int wxl = m_list[2];
             int wxh = m_list[3];
@@ -112,7 +116,6 @@ void ImuModule::run(){
              
             //print(11);
             //INFO("53 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
-            remove(11);
         } else if(c ==  0x54){
             //magnetic output
             int axl = m_list[2];
@@ -133,7 +136,6 @@ void ImuModule::run(){
             m_mag_z = ((double)axis_z);
             
             
-            remove(11);
         } else if(c ==  0x56){
             //print(11);
             /*char p0 = m_list[2];
@@ -146,8 +148,8 @@ void ImuModule::run(){
             char h3 = m_list[9];
             char sum = m_list[10];*/
             //INFO("56");
-            remove(11);
         }
+        remove(11);
     }
 }
 
