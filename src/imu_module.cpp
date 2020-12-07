@@ -32,12 +32,12 @@ void ImuModule::run(){
         int c = m_list[1];
         if(c ==  0x51){
             //print(11);
-            unsigned char axl = m_list[2];
-            unsigned char axh = m_list[3];
-            unsigned char ayl = m_list[4];
-            unsigned char ayh = m_list[5];
-            unsigned char azl = m_list[6];
-            unsigned char azh = m_list[7];
+            int axl = m_list[2];
+            int axh = m_list[3];
+            int ayl = m_list[4];
+            int ayh = m_list[5];
+            int azl = m_list[6];
+            int azh = m_list[7];
             //unsigned char tl = m_list[8];
             //unsigned char th = m_list[9];
             //unsigned char sum = m_list[10];
@@ -115,12 +115,12 @@ void ImuModule::run(){
             remove(11);
         } else if(c ==  0x54){
             //magnetic output
-            unsigned char axl = m_list[2];
-            unsigned char axh = m_list[3];
-            unsigned char ayl = m_list[4];
-            unsigned char ayh = m_list[5];
-            unsigned char azl = m_list[6];
-            unsigned char azh = m_list[7];
+            int axl = m_list[2];
+            int axh = m_list[3];
+            int ayl = m_list[4];
+            int ayh = m_list[5];
+            int azl = m_list[6];
+            int azh = m_list[7];
             //unsigned char tl = m_list[8];
             //unsigned char th = m_list[9];
             //unsigned char sum = m_list[10];
