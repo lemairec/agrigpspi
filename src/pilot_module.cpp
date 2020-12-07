@@ -268,13 +268,13 @@ void PilotModule::runHadrienVolant(std::vector<unsigned char> & l){
 void PilotModule::engageHadrien(){
     INFO("engageHadrien");
     {
-        std::vector<unsigned char> l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
+        //mode vitesse
+        std::vector<unsigned char> l = {0x01, 0x06, 0x00, 0x00, 0x00, 0x07};
         runHadrienVolant(l);
     }
     {
-        std::vector<unsigned char> l = {0x01, 0x06, 0x00, 0x6A, 0x00};
-        uint16_t i = m_motor_vitesse_max;
-        l.push_back(i);
+        //engage
+        std::vector<unsigned char> l = {0x01, 0x10, 0x00, 0x33, 0x00, 0x01, 0x02, 0x00, 0x01};
         runHadrienVolant(l);
     }
 }
@@ -290,51 +290,6 @@ void PilotModule::clearHadrien(){
 }
 
 
-
-
-
-
-/*void PilotModule::myGotoVolant(double res){
-    if(m_inverse){
-        res = -res;
-    }
-    
-    m_last_goto_pas = res*m_algo2_goto_pas_by_tour;
-    
-    int res2 = m_last_goto_pas;
-    std::ostringstream out;
-    if(res<0){
-        out << "$G;-" << (-res2) << "\n";
-    } else {
-        out << "$G;" << res2 << "\n";
-    }
-    m_last_order_send = out.str();
-    INFO(m_last_order_send);
-    if(m_pilot_langage == PILOT_LANGAGE_ARDUINO){
-        
-        GpsFramework::Instance().m_serialModule.writePilotSerialS(out.str());
-    } else {
-        INFO("goto " << res);
-        INFO("m_hadrien0 " << m_hadrien0);
-        
-        double gotoRel = res-m_hadrien0;
-        
-        INFO("gotoRel " << m_hadrien0);
-        INFO("hadrienVolant " << m_volant);
-        
-        double leftRight = m_volant-gotoRel;
-        INFO("leftRight " << leftRight);
-        myLeftRight(leftRight);
-        //m_tour_volant = res/4000.0
-        
-        
-    std::vector<unsigned char> l;
-    l = {0x01, 0x10, 0x01, 0x43, 0x00, 0x02, 0x04};
-    add4hex(l, res);
-    runHadrienVolant(l);
-    //}
-}*/
-
 /*void PilotModule::hadrienGoTo(double res){
     int res2 = res*32768;
     std::vector<unsigned char> l;
@@ -344,6 +299,21 @@ void PilotModule::clearHadrien(){
 }*/
 
 void PilotModule::hadrienLeftRight(double res){
+    int res2 = res;
+    if(res2 > 100){
+        res = 100;
+    }
+    if(res2 < -100){
+        res = -100;
+    }
+    
+    std::vector<unsigned char> l = {0x01, 0x06, 0x00, 0x6A};
+    add2hex(l, res2);
+    runHadrienVolant(l);
+}
+
+
+/*void PilotModule::hadrienLeftRightPosition(double res){
     int res2 = round(res*32768);
     std::vector<unsigned char> l;
     if(res2>0){
@@ -354,7 +324,7 @@ void PilotModule::hadrienLeftRight(double res){
         add4hex(l, -res2);
     }
     runHadrienVolant(l);
-}
+}*/
 
 void PilotModule::setHadrienVolant(double val){
     double temp = m_lastHadrienValue - val;
