@@ -16,6 +16,14 @@ public:
     double m_pitch_y_deg = 0;
     double m_yaw_z_deg = 0;
     
+    double m_ax = 0;
+    double m_ay = 0;
+    double m_az = 0;
+    
+    double m_mag_x = 0;
+    double m_mag_y = 0;
+    double m_mag_z = 0;
+    
     std::list<int> m_values;
     int m_imu_moy = 100;
     double m_moy_corr_deg = 0;

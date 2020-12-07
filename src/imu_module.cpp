@@ -32,16 +32,23 @@ void ImuModule::run(){
         int c = m_list[1];
         if(c ==  0x51){
             //print(11);
-            /*unsigned char axl = m_list[2];
+            unsigned char axl = m_list[2];
             unsigned char axh = m_list[3];
             unsigned char ayl = m_list[4];
             unsigned char ayh = m_list[5];
             unsigned char azl = m_list[6];
             unsigned char azh = m_list[7];
-            unsigned char tl = m_list[8];
-            unsigned char th = m_list[9];
-            unsigned char sum = m_list[10];*/
-            //INFO("51");
+            //unsigned char tl = m_list[8];
+            //unsigned char th = m_list[9];
+            //unsigned char sum = m_list[10];
+            
+            int axis_x = ((axh<<8)|axl);
+            m_ax = ((double)axis_x)/32768.0*16.0*9.8;
+            int axis_y = ((ayh<<8)|ayl);
+            m_ay = ((double)axis_y)/32768.0*16.0*9.8;
+            int axis_z = ((azh<<8)|azl);
+            m_az = ((double)axis_z)/32768.0*16.0*9.8;
+            
             remove(11);
             
         } else if(c ==  0x52){
@@ -107,7 +114,23 @@ void ImuModule::run(){
             //INFO("53 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
             remove(11);
         } else if(c ==  0x54){
-            //print(11);
+            //magnetic output
+            unsigned char axl = m_list[2];
+            unsigned char axh = m_list[3];
+            unsigned char ayl = m_list[4];
+            unsigned char ayh = m_list[5];
+            unsigned char azl = m_list[6];
+            unsigned char azh = m_list[7];
+            //unsigned char tl = m_list[8];
+            //unsigned char th = m_list[9];
+            //unsigned char sum = m_list[10];
+            
+            int axis_x = ((axh<<8)|axl);
+            m_mag_x = ((double)axis_x);
+            int axis_y = ((ayh<<8)|ayl);
+            m_mag_y = ((double)axis_x);
+            int axis_z = ((azh<<8)|azl);
+            m_mag_z = ((double)axis_z);
             
             
             remove(11);
