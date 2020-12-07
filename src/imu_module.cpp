@@ -44,11 +44,11 @@ void ImuModule::run(){
         
         if((sum%256) == (acc_sum_%256)){
             if(c1 == 0x51){
-                int ax = ((c3<<8)|c2);
+                signed short int ax = ((c3<<8)|c2);
                 m_ax = ((double)ax)/32768.0*16.0*9.8;
-                int ay = ((c5<<8)|c4);
+                signed short int ay = ((c5<<8)|c4);
                 m_ay = ((double)ay)/32768.0*16.0*9.8;
-                int az = ((c7<<8)|c6);
+                signed short int az = ((c7<<8)|c6);
                 m_az = ((double)az)/32768.0*16.0*9.8;
             } else if(c1 == 0x52){
                 
