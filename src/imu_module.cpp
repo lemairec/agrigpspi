@@ -44,12 +44,12 @@ void ImuModule::run(){
             
             int sum_ = 0x55 + 0x51 + axl + axh + ayl + ayh + azl + azh + tl + th;
             if((sum%256) == (sum_%256)){
-                int axis_x = ((axh<<8)|axl);
-                m_ax = ((double)axis_x)/32768.0*16.0*9.8;
-                int axis_y = ((ayh<<8)|ayl);
-                m_ay = ((double)axis_y)/32768.0*16.0*9.8;
-                int axis_z = ((azh<<8)|azl);
-                m_az = ((double)axis_z)/32768.0*16.0*9.8;
+                int ax = ((axh<<8)|axl);
+                m_ax = ((double)ax)/32768.0*16.0*9.8;
+                int ay = ((ayh<<8)|ayl);
+                m_ay = ((double)ay)/32768.0*16.0*9.8;
+                int az = ((azh<<8)|azl);
+                m_az = ((double)az)/32768.0*16.0*9.8;
             } else {
                 m_ax = 0.0;
                 m_ay = 0.0;
@@ -115,7 +115,6 @@ void ImuModule::run(){
             GpsFramework::Instance().m_imu_time.setNewTime();
              
             //print(11);
-            //INFO("53 " << m_axis_x << " " << m_axis_y  << " " << m_axis_z << std::hex << sum_);
         } else if(c ==  0x54){
             //magnetic output
             int axl = m_list[2];
