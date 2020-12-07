@@ -246,6 +246,7 @@ public:
     
     
     std::list<GpsPoint_ptr> m_list;
+    std::list<GpsPoint_ptr> m_list_tracteur;
     std::list<GpsPoint_ptr> m_list_ekf;
     std::list<SurfaceToDraw_ptr> m_listSurfaceToDraw;
     GGAFrame m_lastGGAFrame;
