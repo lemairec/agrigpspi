@@ -230,6 +230,7 @@ void OptionWidget::drawPage2(){
     
     m_select_gps_baudrates.setValueInt(f.m_config.m_baudrate_gps);
     m_select_gps_serial.setValueString(f.m_config.m_input_gps);
+    m_select_ekf.m_selectedValue = f.m_config.m_ekf;
     
     drawSelectButtonGuiClose(&m_select_gps_serial);
     drawSelectButtonGuiClose(&m_select_gps_baudrates);
