@@ -401,12 +401,14 @@ bool GpsFramework::isPilotConnected(){
 
 void GpsFramework::onFrame(const std::string &frame){
     if(m_debug_log){
-        file_debug_stream << frame << "\n";
         if(m_imuModule.m_pitch_y_deg != 0){
-            file_debug_stream << "IMU_ANG;" << m_imuModule.m_roll_x_deg << ";" << m_imuModule.m_pitch_y_deg << ";" << m_imuModule.m_yaw_z_deg << "\n";
-            file_debug_stream << "IMU_ACC;" << m_imuModule.m_ax << ";" << m_imuModule.m_ay << ";" << m_imuModule.m_az << "\n";
-            file_debug_stream << "IMU_MAG;" << m_imuModule.m_mag_x << ";" << m_imuModule.m_mag_y << ";" << m_imuModule.m_mag_z << "\n";
+            file_debug_stream << "IMU_ANG," << m_imuModule.m_roll_x_deg << "," << m_imuModule.m_pitch_y_deg << "," << m_imuModule.m_yaw_z_deg << ",";
+            file_debug_stream << "IMU_ACC," << m_imuModule.m_ax << "," << m_imuModule.m_ay << "," << m_imuModule.m_az << ",";
+            file_debug_stream << "IMU_ACA," << m_imuModule.m_a_ang_x << "," << m_imuModule.m_a_ang_y << "," << m_imuModule.m_a_ang_z << ",";
+            file_debug_stream << "IMU_MAG," << m_imuModule.m_mag_x << "," << m_imuModule.m_mag_y << "," << m_imuModule.m_mag_z << ",FIN\n";
         }
+        file_debug_stream << frame << "\n";
+        
     }
 }
 

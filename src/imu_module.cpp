@@ -44,6 +44,7 @@ void ImuModule::run(){
         
         if((sum%256) == (acc_sum_%256)){
             if(c1 == 0x51){
+                //acceleration
                 signed short int ax = ((c3<<8)|c2);
                 m_ax = ((double)ax)/32768.0*16.0*9.8;
                 signed short int ay = ((c5<<8)|c4);
@@ -51,8 +52,17 @@ void ImuModule::run(){
                 signed short int az = ((c7<<8)|c6);
                 m_az = ((double)az)/32768.0*16.0*9.8;
             } else if(c1 == 0x52){
-                
+                //acceleration angulaire
+                signed short int axis_x = ((c3<<8)|c2);
+                m_a_ang_x = ((double)axis_x)/32768.0*2000.0;
+
+                signed short int axis_y = ((c5<<8)|c4);
+                m_a_ang_y = ((double)axis_y)/32768.0*2000.0;
+
+                signed short int axis_z = ((c7<<8)|c6);
+                m_a_ang_z = ((double)axis_z)/32768.0*2000.0;
             } else if(c1 == 0x53){
+                //inclinometre
                 signed short int axis_x = ((c3<<8)|c2);
                 m_roll_x_deg = ((double)axis_x)/32768.0*180.0;
                 
@@ -62,6 +72,7 @@ void ImuModule::run(){
                 signed short int axis_z = ((c7<<8)|c6);
                 m_yaw_z_deg = ((double)axis_z)/32768.0*180.0;
             } else if(c1 == 0x54){
+                
                 signed short int axis_x = ((c3<<8)|c2);
                 m_mag_x = ((double)axis_x);
                 
