@@ -623,10 +623,10 @@ void GpsWidget::drawTracteur(){
     if(m_zoom >= 60){
         y = h/2;
         if(f.m_config.m_debug){
-            //drawVolant(y);
+            //
         }
     }
-    
+    drawVolant(y);
     {
         double x_temp, y_temp;
         my_projete(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, x_temp, y_temp);
