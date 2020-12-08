@@ -302,11 +302,11 @@ void PilotModule::clearHadrien(){
 void PilotModule::hadrienLeftRight(double res){
     int res2 = -res;
     INFO(res2);
-    if(res2 > 100){
-        res2 = 100;
+    if(res2 > 30){
+        res2 = 30;
     }
-    if(res2 < -100){
-        res2 = -100;
+    if(res2 < -30){
+        res2 = -30;
     }
     
     std::vector<unsigned char> l = {0x01, 0x06, 0x00, 0x6A};
