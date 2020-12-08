@@ -415,6 +415,7 @@ void GpsWidget::draw_force(){
     
     
     scene->clear();
+    drawVolant(m_height/2);
     
     if(f.m_etat == Etat_ParcelleAdd || f.m_etat == Etat_ParcellePause){
         drawTracteur();
@@ -626,7 +627,6 @@ void GpsWidget::drawTracteur(){
             //
         }
     }
-    drawVolant(y);
     {
         double x_temp, y_temp;
         my_projete(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, x_temp, y_temp);
