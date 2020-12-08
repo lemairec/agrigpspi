@@ -92,11 +92,13 @@ public:
     ButtonGui m_button_motor_inverse;
      
     ValueGui m_motor_vitesse_agressivite;
-    ValueGui m_button_algo2_goto_pas_by_tour;
-    ValueGui m_button_algo2_goto_angle_by_tour;
-    ValueGui m_button_algo2_goto_rel_s;
+    ValueGui m_motor_vitesse_max;
     
-    ValueGui m_frequence_volant;
+    ValueGui m_volant_pas_by_tour;
+    ValueGui m_volant_angle_by_tour;
+    ValueGui m_volant_derive;
+    
+    ValueGui m_volant_frequence;
     ValueGui m_virtual_point;
     
     ValueGui m_button_auto_deactive;

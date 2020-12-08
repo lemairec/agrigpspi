@@ -371,9 +371,6 @@ void OptionWidget::onMousePage3(int x, int y){
 }
 
 
-
-
-
 /**
  PAGE 4
  */
@@ -382,18 +379,18 @@ void OptionWidget::resizePage4(){
     m_button_motor_inverse.setResize(0.35*m_width, 0.20*m_height, m_petit_button);
     m_button_encoder_inverse.setResize(0.6*m_width, 0.20*m_height, m_petit_button);
     
-    m_motor_vitesse_agressivite.setResize(0.35*m_width, 0.3*m_height, m_petit_button, "vitesse moteur agressivite ");
-    m_button_algo2_goto_pas_by_tour.setResize(0.35*m_width, 0.35*m_height, m_petit_button, "goto pas by tour ");
-    m_button_algo2_goto_angle_by_tour.setResize(0.35*m_width, 0.4*m_height, m_petit_button, "goto angle by tour ");
-    m_button_algo2_goto_rel_s.setResize(0.35*m_width, 0.45*m_height, m_petit_button, "goto rel ");
+    m_motor_vitesse_agressivite.setResize(0.35*m_width, 0.3*m_height, m_petit_button, "moteur agressivite ");
+    m_motor_vitesse_max.setResize(0.35*m_width, 0.35*m_height, m_petit_button, "moteur vitesse max ");
+    m_volant_pas_by_tour.setResize(0.35*m_width, 0.45*m_height, m_petit_button, "encoder pas par tour ");
+    m_volant_angle_by_tour.setResize(0.35*m_width, 0.5*m_height, m_petit_button, "roue angle par tour de volant ");
+    m_volant_derive.setResize(0.35*m_width, 0.55*m_height, m_petit_button, "rattrapage de derive ");
     
-    m_frequence_volant.setResize(0.35*m_width, 0.55*m_height, m_petit_button, "frequence ");
-    m_virtual_point.setResize(0.35*m_width, 0.6*m_height, m_petit_button, "virtual point ");
+    m_volant_frequence.setResize(0.35*m_width, 0.65*m_height, m_petit_button, "frequence ");
+    m_virtual_point.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "virtual point ");
     
-    m_button_auto_deactive.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "auto deactive ");
-    m_button_auto_active.setResize(0.35*m_width, 0.75*m_height, m_petit_button, "auto active ");
+    m_button_auto_deactive.setResize(0.35*m_width, 0.8*m_height, m_petit_button, "auto deactive ");
+    m_button_auto_active.setResize(0.35*m_width, 0.85*m_height, m_petit_button, "auto active ");
 };
-
 
 void OptionWidget::drawPage4(){
     GpsFramework & f = GpsFramework::Instance();
@@ -415,13 +412,15 @@ void OptionWidget::drawPage4(){
     }
     drawText("Inv encoder", 0.65*m_width, m_button_motor_inverse.m_y);
     
-    drawValueGui(&m_frequence_volant, f.m_config.m_pilot_frequence);
-    drawValueGui(&m_virtual_point, f.m_config.m_pilot_virtual_point);
     drawValueGui(&m_motor_vitesse_agressivite, f.m_config.m_motor_vitesse_agressivite);
+    drawValueGui(&m_motor_vitesse_max, f.m_config.m_motor_vitesse_max);
 
-    drawValueGui(&m_button_algo2_goto_pas_by_tour, f.m_config.m_volant_pas_by_tour);
-    drawValueGui(&m_button_algo2_goto_angle_by_tour, f.m_config.m_volant_angle_by_tour);
-    drawValueGui(&m_button_algo2_goto_rel_s, f.m_config.m_volant_derive);
+    drawValueGui(&m_volant_pas_by_tour, f.m_config.m_volant_pas_by_tour);
+    drawValueGui(&m_volant_angle_by_tour, f.m_config.m_volant_angle_by_tour);
+    drawValueGui(&m_volant_derive, f.m_config.m_volant_derive);
+    
+    drawValueGui(&m_volant_frequence, f.m_config.m_pilot_frequence);
+    drawValueGui(&m_virtual_point, f.m_config.m_pilot_virtual_point);
     
     drawValueGui(&m_button_auto_deactive, f.m_config.m_pilot_auto_deactive);
     drawValueGui(&m_button_auto_active, f.m_config.m_pilot_auto_active);
@@ -437,32 +436,16 @@ void OptionWidget::onMousePage4(int x, int y){
         f.m_config.m_pilot_encoder_inverse = !f.m_config.m_pilot_encoder_inverse;
     }
     
-    f.m_config.m_pilot_frequence += 10*m_frequence_volant.getIntValue(x,y);
-    if(f.m_config.m_motor_vitesse_min > 70){
-        f.m_config.m_motor_vitesse_min = 70;
-    }
-    if(f.m_config.m_motor_vitesse_min < 0){
-        f.m_config.m_motor_vitesse_min = 0;
-    }
+    f.m_config.m_motor_vitesse_agressivite *= m_motor_vitesse_agressivite.getMultValue(x,y);
+    f.m_config.m_motor_vitesse_max += 2*m_motor_vitesse_max.getIntValue(x,y);
     
+    f.m_config.m_volant_pas_by_tour += 100*m_volant_pas_by_tour.getIntValue(x,y);
+    f.m_config.m_volant_angle_by_tour += 1*m_volant_angle_by_tour.getIntValue(x,y);
+    f.m_config.m_volant_derive += 0.001*m_volant_derive.getIntValue(x,y);
+    INFO(f.m_config.m_volant_derive);
+    
+    f.m_config.m_pilot_frequence += 10*m_volant_angle_by_tour.getIntValue(x,y);
     f.m_config.m_pilot_virtual_point += m_virtual_point.getIntValue(x,y);
-    if(f.m_config.m_motor_vitesse_max > 100){
-        f.m_config.m_motor_vitesse_max = 100;
-    }
-    if(f.m_config.m_motor_vitesse_max < 0){
-        f.m_config.m_motor_vitesse_max = 0;
-    }
-    f.m_config.m_motor_vitesse_agressivite = f.m_config.m_motor_vitesse_agressivite * m_motor_vitesse_agressivite.getMultValue(x,y);
-    
-    
-    f.m_config.m_pilot_auto_active += 2*m_button_auto_active.getIntValue(x,y);
-    f.m_config.m_pilot_auto_deactive += 2*m_button_auto_deactive.getIntValue(x,y);
-    
-    
-    f.m_config.m_volant_pas_by_tour = f.m_config.m_volant_pas_by_tour * m_button_algo2_goto_pas_by_tour.getMultValue(x,y);
-    f.m_config.m_volant_angle_by_tour = f.m_config.m_volant_angle_by_tour * m_button_algo2_goto_angle_by_tour.getMultValue(x,y);
-    f.m_config.m_volant_derive = f.m_config.m_volant_derive * m_button_algo2_goto_rel_s.getMultValue(x,y);
-    
     
     f.initOrLoadConfig();
     

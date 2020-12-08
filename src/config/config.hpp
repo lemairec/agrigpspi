@@ -57,7 +57,7 @@ public:
     
     double m_volant_pas_by_tour = 4500;
     double m_volant_angle_by_tour = 35;
-    int m_volant_derive = 100;
+    double m_volant_derive = 0.01;
     
     double m_distance_cap_vitesse = 10.0;
 
