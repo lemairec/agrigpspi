@@ -1,11 +1,17 @@
 #ifndef EKF_MODULE_H
 #define EKF_MODULE_H
+
+
+#include "config/config.hpp"
 #include <string>
 #include <memory>
 
 class EkfModule {
-public:
     double m_coeff_lissage = 0.8;
+    EkfMode m_ekf_mode = EkfNone;
+public:
+    void initOrLoad(Config & config);
+
     
     double m_old_x;
     double m_old_y;

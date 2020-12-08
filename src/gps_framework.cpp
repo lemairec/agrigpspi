@@ -71,6 +71,7 @@ void GpsFramework::initOrLoadConfig(){
     m_pilotModule.initOrLoadConfig(m_config);
     m_serialModule.initOrLoad(m_config);
     m_fileModule.initOrLoad(m_config);
+    m_ekf_module.initOrLoad(m_config);
     m_imuModule.m_imu_moy = m_config.m_imu_moy;
     
     m_distance_cap_vitesse = 3;
@@ -138,6 +139,8 @@ void GpsFramework::setRef(double latitude, double longitude){
     for(auto l: m_list){
         m_gpsModule.setXY(*l);
     }
+    m_list_tracteur.clear();
+    m_list_ekf.clear();
     for(auto l: m_listSurfaceToDraw){
         m_gpsModule.setXY(*l->m_lastPoint->m_point_left);
         m_gpsModule.setXY(*l->m_lastPoint->m_point_right);
@@ -521,6 +524,7 @@ void GpsFramework::calculDeplacement(){
                 } else {
                     m_deplacementAngle = temp+3.14;
                 }
+                
                 //int perc = temp/m_deplacementAngle*100;
                 //INFO(perc << " " << temp/3.14*180 << " " << m_deplacementAngle/3.14*180);
             }
@@ -549,11 +553,9 @@ void GpsFramework::calculDeplacement(){
                 m_list_tracteur.pop_back();
             };
             
-            if(m_config.m_ekf){
-                m_ekf_module.onNewPoint(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, 0, m_vitesse*1000/3600, m_deplacementAngle, m_imuModule.m_ax, m_imuModule.m_ay, m_imuModule.m_az);
-                m_tracteur.m_pt_antenne_corrige->m_x =m_ekf_module.m_old_x;
-                m_tracteur.m_pt_antenne_corrige->m_y =m_ekf_module.m_old_y;
-            }
+            m_ekf_module.onNewEkfPoint(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, 0, m_vitesse*1000/3600, m_deplacementAngle, m_imuModule.m_ax, m_imuModule.m_ay, m_imuModule.m_az);
+            m_tracteur.m_pt_antenne_corrige->m_x =m_ekf_module.m_old_x;
+            m_tracteur.m_pt_antenne_corrige->m_y =m_ekf_module.m_old_y;
             
             
             m_list_ekf.push_front(m_tracteur.m_pt_antenne_corrige);
@@ -597,8 +599,23 @@ void GpsFramework::calculDeplacement(){
             }
             
         }
-            
         
+        /*double hx = m_imuModule.m_mag_x;
+        double hy = m_imuModule.m_mag_y;
+        double hz = m_imuModule.m_mag_z;
+        
+        double h = sqrtf(hx * hx + hy * hy + hz * hz);
+        hx /= h;
+        hy /= h;
+        hz /= h;
+        double yaw_rad = atan2f(-hy, hx)+3.14;
+        if(m_deplacementY>0){
+         } else {
+            yaw_rad = yaw_rad+3.14;
+        }
+        
+        INFO(yaw_rad << " " << m_deplacementAngle << " " << (m_deplacementAngle-yaw_rad) << " " << (m_deplacementAngle-yaw_rad)/3.14*180);
+        */
         
         //INFO(deplacementTime << " " << vitesse);
     }

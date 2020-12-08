@@ -27,6 +27,7 @@ void Config::save(){
     settings.setValue("debug", m_debug);
     settings.setValue("gga", m_gga);
     settings.setValue("ekf", m_ekf);
+    settings.setValue("ekf_coeff_lissage", m_ekf_coeff_lissage);
     
     settings.setValue("menu_vertical", m_menu_vertical);
     settings.setValue("debug_log", m_debug_log);
@@ -96,7 +97,10 @@ void Config::load(){
         m_gga = settings.value("gga").toBool();
     }
     if(settings.contains("ekf")){
-        m_ekf = settings.value("ekf").toBool();
+        m_ekf = settings.value("ekf").toInt();
+    }
+    if(settings.contains("ekf_coeff_lissage")){
+        m_ekf_coeff_lissage = settings.value("ekf_coeff_lissage").toDouble();
     }
     
     if(settings.contains("menu_vertical")){

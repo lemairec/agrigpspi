@@ -6,6 +6,13 @@
 #define PILOT_LANGAGE_ARDUINO 0
 #define PILOT_LANGAGE_HADRIEN 1
 
+enum EkfMode{
+    EkfNone = 0,
+    EkfWithoutImu = 1,
+    Ekf1 = 2,
+    Ekf2 = 3
+};
+
 class Config  {
 public:
     std::string m_input_gps;
@@ -19,9 +26,9 @@ public:
     int m_imu_baudrate = 115200;
     int m_imu_moy = 10;
     
-    
     bool m_gga = false;
-    bool m_ekf = true;
+    int m_ekf = 0;
+    double m_ekf_coeff_lissage = 0.5;
    
     bool m_sensDraw = false;
     bool m_debug = false;

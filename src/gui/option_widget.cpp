@@ -213,7 +213,13 @@ void OptionWidget::resizePage2(){
     m_select_gps_baudrates.addValueInt("9600", 9600);
     m_select_gps_baudrates.addValueInt("115200", 115200);
     
-    m_button_ekf.setResize(0.35*m_width, 0.6*m_height, m_petit_button);
+    m_select_ekf.setResize(0.35*m_width, 0.6*m_height, m_petit_button);
+    m_select_ekf.addValue("none");
+    m_select_ekf.addValue("without imu");
+    m_select_ekf.addValue("ekf1");
+    m_select_ekf.addValue("ekf2");
+    
+    m_ekf_lissage.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "ekf_lissage ");
 
 }
 
@@ -227,17 +233,13 @@ void OptionWidget::drawPage2(){
     
     drawSelectButtonGuiClose(&m_select_gps_serial);
     drawSelectButtonGuiClose(&m_select_gps_baudrates);
+    drawSelectButtonGuiClose(&m_select_ekf);
     
-    if(f.m_config.m_ekf){
-        drawButtonLabel(&m_button_ekf, COLOR_CHECK);
-    } else {
-        drawButtonLabel(&m_button_ekf, COLOR_OTHER);
-    }
-    drawText("ekf", 0.4*m_width, m_button_ekf.m_y);
-    
+    drawValueGui(&m_ekf_lissage, f.m_config.m_ekf_coeff_lissage*100);
     
     drawSelectButtonGuiOpen(&m_select_gps_serial);
     drawSelectButtonGuiOpen(&m_select_gps_baudrates);
+    drawSelectButtonGuiOpen(&m_select_ekf);
     
     
     
@@ -250,9 +252,12 @@ void OptionWidget::onMousePage2(int x, int y){
         f.m_config.m_input_gps = m_select_gps_serial.getValueString();
     } else if(onMouseSelectButton(&m_select_gps_baudrates, x, y)){
         f.m_config.m_baudrate_gps = m_select_gps_baudrates.getValueInt();
-    } else if(m_button_ekf.isActive(x,y)){
-        f.m_config.m_ekf = !f.m_config.m_ekf;
+    } else if(onMouseSelectButton(&m_select_ekf, x, y)){
+        f.m_config.m_ekf = m_select_ekf.m_selectedValue;
     }
+
+    f.m_config.m_ekf_coeff_lissage += 0.05*m_ekf_lissage.getIntValue(x,y);
+    
     f.initOrLoadConfig();
 }
 
