@@ -10,8 +10,8 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double v, double ang
         double v_x = sin(ang)*v;
         double v_y = cos(ang)*v;
         
-        double v_acc_x = x/dt + sin(ang)*ax*dt;
-        double v_acc_y = y/dt + cos(ang)*ay*dt;
+        double v_acc_x = v_x + sin(ang)*ax*dt;
+        double v_acc_y = v_y + cos(ang)*ay*dt;
         
         
         m_v_x = ((1.0-m_coeff_lissage)*m_v_x + m_coeff_lissage*v_acc_x);
@@ -44,4 +44,10 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double v, double ang
         m_old_x = x;
         m_old_y = y;
     }
+    
+    
 }
+
+/*
+ 
+ */
