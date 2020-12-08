@@ -300,7 +300,7 @@ void PilotModule::clearHadrien(){
 }*/
 
 void PilotModule::hadrienLeftRight(double res){
-    int res2 = res;
+    int res2 = -res;
     INFO(res2);
     if(res2 > 100){
         res2 = 100;
