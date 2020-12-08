@@ -301,12 +301,13 @@ void PilotModule::clearHadrien(){
 void PilotModule::hadrienLeftRight(double res){
     int res2 = res;
     if(res2 > 100){
-        res = 100;
+        res2 = 100;
     }
     if(res2 < -100){
-        res = -100;
+        res2 = -100;
     }
     
+    INFO(res2);
     std::vector<unsigned char> l = {0x01, 0x06, 0x00, 0x6A};
     add2hex(l, res2);
     runHadrienVolant(l);
