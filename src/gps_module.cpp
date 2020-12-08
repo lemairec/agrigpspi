@@ -106,6 +106,27 @@ void GpsModule::parseBuffer(){
             GpsFramework::Instance().savePointB();
         }
     }
+    if(m_buffer[0] == 'I' && m_buffer[1] == 'M' && m_buffer[2] == 'U' && m_buffer[3] == '_'){
+        if(m_buffer[4] == 'A'&& m_buffer[5] == 'N'&& m_buffer[6] == 'G'){
+            GpsFramework & f = GpsFramework::Instance();
+            readUntilCommat();
+            f.m_imuModule.m_roll_x_deg = readDouble();
+            f.m_imuModule.m_pitch_y_deg = readDouble();
+            f.m_imuModule.m_yaw_z_deg = readDouble();
+            readUntilCommat();
+            f.m_imuModule.m_ax = readDouble();
+            f.m_imuModule.m_ay = readDouble();
+            f.m_imuModule.m_az = readDouble();
+            readUntilCommat();
+            f.m_imuModule.m_a_ang_x = readDouble();
+            f.m_imuModule.m_a_ang_y = readDouble();
+            f.m_imuModule.m_a_ang_z = readDouble();
+            readUntilCommat();
+            f.m_imuModule.m_mag_x = readDouble();
+            f.m_imuModule.m_mag_y = readDouble();
+            f.m_imuModule.m_mag_z = readDouble();
+        }
+    }
 }
 
 //GNRMC,124450.80,A,4925.15859,N,00400.48455,E,0.006,,070620,,,A*63
@@ -250,11 +271,20 @@ double GpsModule::readDouble(){
     double res = 0;
     double virgule_part = 1;
     bool virgule = false;
+    char c = m_buffer[m_tempInd];
+    bool neg = false;
+    if(c == '-'){
+        neg = true;
+        ++m_tempInd;
+    }
     while(m_tempInd < m_bufferIndLast){
         char c = m_buffer[m_tempInd];
         int number = 0;
         if(c == ','){
             ++m_tempInd;
+            if(neg){
+                res = -res;
+            }
             return res;
         } else if(c =='.'){
             virgule = true;
