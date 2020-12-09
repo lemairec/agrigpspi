@@ -183,7 +183,7 @@ public:
     double m_distance_last_point;
     double m_time_last_point;
     double m_vitesse;
-    void calculDeplacement();
+    void calculDeplacement(GpsPoint_ptr p);
     
     double m_distanceAB = 0.0;
     int m_ledAB = 0;
@@ -218,9 +218,6 @@ public:
     void calculDraw(GpsPoint_ptr);
     
     
-    std::list<GpsPoint_ptr> m_list;
-    std::list<GpsPoint_ptr> m_list_tracteur;
-    std::list<GpsPoint_ptr> m_list_ekf;
     std::list<SurfaceToDraw_ptr> m_listSurfaceToDraw;
     GGAFrame m_lastGGAFrame;
     RMCFrame_ptr m_lastRMCFrame;

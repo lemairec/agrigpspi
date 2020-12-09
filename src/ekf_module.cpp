@@ -77,6 +77,13 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double v, double ang
     
 }
 
+void EkfModule::calculDeplacement(GpsPoint_ptr p){
+    m_ekf_module.m_list.push_front(p);
+    if(m_ekf_module.m_list.size()>100){
+        m_ekf_module.m_list.pop_back();
+    };
+}
+
 /*
  
  */

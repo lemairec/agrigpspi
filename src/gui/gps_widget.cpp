@@ -432,14 +432,14 @@ void GpsWidget::draw_force(){
         drawTracteur();
         
         if(f.m_config.m_debug){
-            for(auto p: f.m_list){
+            for(auto p: f.m_ekf_module.m_list){
                 double x1, y1;
                 my_projete2(p->m_x, p->m_y, x1, y1);
                 scene->addEllipse(x1-1, y1-1, 2, 2, m_penBlack, m_brushNo);
             }
             
             double x_last = 0, y_last;
-            for(auto p: f.m_list_tracteur){
+            for(auto p: f.m_ekf_module.m_list_tracteur){
                 double x1, y1;
                 my_projete2(p->m_x, p->m_y, x1, y1);
                 if(x_last != 0){
@@ -450,7 +450,7 @@ void GpsWidget::draw_force(){
                                         
             }
             x_last = 0;
-            for(auto p: f.m_list_ekf){
+            for(auto p: f.m_ekf_module.m_list_ekf){
                 double x1, y1;
                 my_projete2(p->m_x, p->m_y, x1, y1);
                 if(x_last != 0){
@@ -544,7 +544,7 @@ void GpsWidget::drawTracteur(){
     
     
     
-    if(m_a){
+    if(f.m_tracteur.m_pt_antenne_corrige){
         y = h/2;
         double x_tracteur, y_tracteur;
         my_projete2(f.m_tracteur.m_pt_antenne_corrige->m_x, f.m_tracteur.m_pt_antenne_corrige->m_y, x_tracteur, y_tracteur);

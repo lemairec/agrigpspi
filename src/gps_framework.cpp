@@ -74,7 +74,7 @@ void GpsFramework::initOrLoadConfig(){
     m_ekf_module.initOrLoad(m_config);
     m_imuModule.m_imu_moy = m_config.m_imu_moy;
     
-    m_distance_cap_vitesse = 1;
+    m_distance_cap_vitesse = 3;
     file_job_stream << "[config]\n";
     m_reloadConfig = true;
     m_debug_log = m_config.m_debug_log;
@@ -136,11 +136,11 @@ GpsFramework & GpsFramework::Instance(){
 
 void GpsFramework::setRef(double latitude, double longitude){
     m_gpsModule.setRef(latitude, longitude);
-    for(auto l: m_list){
+    for(auto l: m_ekf_module.m_list){
         m_gpsModule.setXY(*l);
     }
-    m_list_tracteur.clear();
-    m_list_ekf.clear();
+    m_ekf_module.m_list_tracteur.clear();
+    m_ekf_module.m_list_ekf.clear();
     for(auto l: m_listSurfaceToDraw){
         m_gpsModule.setXY(*l->m_lastPoint->m_point_left);
         m_gpsModule.setXY(*l->m_lastPoint->m_point_right);
@@ -228,12 +228,7 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
         return;
     }
     
-    m_list.push_front(p);
-    if(m_list.size()>100){
-        m_list.pop_back();
-    };
-    
-    calculDeplacement();
+    calculDeplacement(p);
     if(m_tracteur.m_pt_essieu_arriere){
         processPilot(m_deplacementX, m_deplacementY
                  , m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant
@@ -458,7 +453,7 @@ void GpsFramework::setEtat(Etat etat){
         m_lastPoint = nullptr;
         //m_listSurfaceToDraw.clear();
         m_ledAB = 0;
-        m_list.clear();
+        m_ekf_module.m_list.clear();
         m_contour.clear();
         m_curveAB.m_curves.clear();
         m_curveAB.m_listAB.clear();
@@ -482,23 +477,31 @@ void GpsFramework::setAB(){
     m_etat = Etat_OK;
 }
 
-void GpsFramework::calculDeplacement(){
+void GpsFramework::calculDeplacement(GpsPoint_ptr p){
     if(m_vitesse < 0.1){
         return;
     }
+    
+    m_ekf_module.m_list.push_front(p);
+    if(m_ekf_module.m_list.size()>100){
+        m_ekf_module.m_list.pop_back();
+    };
+    
+    
+    
     m_tracteur.m_pt_outil_arriere = nullptr;
     m_tracteur.m_pt_outil_arriere_droite = nullptr;
     m_tracteur.m_pt_outil_arriere_gauche = nullptr;
     m_tracteur.m_pt_antenne_corrige = nullptr;
 
-    if(m_list.size() > 3){
-        GpsPoint_ptr point1 = m_list.front();
+    if(m_ekf_module.m_list.size() > 3){
+        GpsPoint_ptr point1 = m_ekf_module.m_list.front();
               
         
         
         GpsPoint_ptr point2 = NULL;
         int i = 0;
-        for(auto point : m_list){
+        for(auto point : m_ekf_module.m_list){
             point2 = point;
             
             double x = point1->m_x - point2->m_x;
@@ -546,9 +549,9 @@ void GpsFramework::calculDeplacement(){
             p->m_x = m_tracteur.m_pt_antenne_corrige->m_x;
             p->m_y = m_tracteur.m_pt_antenne_corrige->m_y;
                       
-            m_list_tracteur.push_front(p);
-            if(m_list_tracteur.size()>100){
-                m_list_tracteur.pop_back();
+            m_ekf_module.m_list_tracteur.push_front(p);
+            if(m_ekf_module.m_list_tracteur.size()>100){
+                m_ekf_module.m_list_tracteur.pop_back();
             };
             
             m_ekf_module.onNewEkfPoint(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, 0, m_vitesse*1000/3600, m_deplacementAngle, m_imuModule.m_ax, m_imuModule.m_ay, m_imuModule.m_az);
@@ -556,9 +559,9 @@ void GpsFramework::calculDeplacement(){
             m_tracteur.m_pt_antenne_corrige->m_y =m_ekf_module.m_old_y;
             
             
-            m_list_ekf.push_front(m_tracteur.m_pt_antenne_corrige);
-            if(m_list_ekf.size()>100){
-                m_list_ekf.pop_back();
+            m_ekf_module.m_list_ekf.push_front(m_tracteur.m_pt_antenne_corrige);
+            if(m_ekf_module.m_list_ekf.size()>100){
+                m_ekf_module.m_list_ekf.pop_back();
             };
             
             m_tracteur.setPoint(m_tracteur.m_pt_antenne_corrige, m_deplacementAngle);
@@ -710,12 +713,12 @@ double polygonArea(std::vector<GpsPoint_ptr> tab)
 }
 
 
-void GpsFramework::calculContourExterieur(){
-    if(m_list.size()>10){
+/*void GpsFramework::calculContourExterieur(){
+    if(m_ekf_module.m_list.size()>10){
         m_contour.clear();
         // Find the leftmost point
         std::vector<GpsPoint_ptr> points;
-        for(auto p: m_list){
+        for(auto p: m_ekf_module.m_list){
             points.push_back(p);
         }
         
@@ -758,7 +761,7 @@ void GpsFramework::calculContourExterieur(){
         m_surface_exterieur = polygonArea(m_contour)/10000.0;
         m_surface_exterieur_h = m_surface_exterieur/(m_list.front()->m_timeHour - m_lineAB.m_point_origin_A.m_timeHour);
     }
-}
+}*/
 
 
 void GpsFramework::setVolantEngaged(bool value){
