@@ -460,7 +460,7 @@ void GpsFramework::setEtat(Etat etat){
         m_ledAB = 0;
         m_list.clear();
         m_contour.clear();
-        m_curveAB.m_list.clear();
+        m_curveAB.m_curves.clear();
         m_curveAB.m_listAB.clear();
     }
 }

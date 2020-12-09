@@ -40,7 +40,7 @@ public:
     Lines_ptr getCurrentLine();
     Lines_ptr getCurrentLineRel(int i);
     
-    std::map<int, Lines_ptr> m_list;
+    std::map<int, Lines_ptr> m_curves;
     
     void clearAll();
     void clearWithoutAB();

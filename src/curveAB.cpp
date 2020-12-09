@@ -11,12 +11,12 @@
 #include "util/util.hpp"
 
 void CurveAB::clearAll(){
-    m_list.clear();
+    m_curves.clear();
     m_listAB.clear();
 }
 
 void CurveAB::clearWithoutAB(){
-    m_list.clear();
+    m_curves.clear();
     savePointB();
 }
 
@@ -26,13 +26,13 @@ double CurveAB::distance(double x, double y, double lg){
 }
 
 Lines_ptr CurveAB::getCurrentLine(){
-    return m_list[m_i_current];
+    return m_curves[m_i_current];
 }
 
 Lines_ptr CurveAB::getCurrentLineRel(int i){
     int res = m_i_current+i;
     verify(res);
-    return m_list[res];
+    return m_curves[res];
 }
 
 void CurveAB::verify(int i){
@@ -123,7 +123,7 @@ void CurveAB::addLine(int i){
     //INFO("  ");
     //INFO("ici " << i << " " << j);
     //INFO(m_list[j].size());
-    m_list[i] = Lines_ptr(new Lines(i));
+    m_curves[i] = Lines_ptr(new Lines(i));
     if(i<m_i_min){
         m_i_min = i;
     }
@@ -132,7 +132,7 @@ void CurveAB::addLine(int i){
     }
     
     GpsPoint_ptr old_point = nullptr;
-    for(auto p : m_list[j]->m_points){
+    for(auto p : m_curves[j]->m_points){
         if(old_point){
             
             double dx = p->m_x - old_point->m_x;
@@ -148,9 +148,9 @@ void CurveAB::addLine(int i){
             p3->m_x = (old_point->m_x + p->m_x)/2 - dy/temp*m_largeur;
             p3->m_y = (old_point->m_y + p->m_y)/2 + dx/temp*m_largeur;
             
-            if(m_list[i]->m_points.size() > 0){
-                double d2 = m_list[i]->m_points.back()->distanceCarre(*p2);
-                double d3 = m_list[i]->m_points.back()->distanceCarre(*p3);
+            if(m_curves[i]->m_points.size() > 0){
+                double d2 = m_curves[i]->m_points.back()->distanceCarre(*p2);
+                double d3 = m_curves[i]->m_points.back()->distanceCarre(*p3);
                 
                 if(d2 < d3){
                     auto r = p3;
@@ -159,20 +159,20 @@ void CurveAB::addLine(int i){
                 }
                 
             } else {
-                double d2 = m_list[j2]->m_points.front()->distanceCarre(*p2);
-                double d3 = m_list[j2]->m_points.front()->distanceCarre(*p3);
+                double d2 = m_curves[j2]->m_points.front()->distanceCarre(*p2);
+                double d3 = m_curves[j2]->m_points.front()->distanceCarre(*p3);
                 //INFO(d2 << " " << d3);
                 if(d2 > d3){
                     p3 = p2;
                 }
             }
-            m_list[i]->m_points.push_back(p3);
+            m_curves[i]->m_points.push_back(p3);
             
             
         }
         old_point = p;
     }
-    verifyLine(m_list[i]->m_points);
+    verifyLine(m_curves[i]->m_points);
 }
 
 void CurveAB::setCurrent(int i){
@@ -182,12 +182,12 @@ void CurveAB::setCurrent(int i){
 
 void CurveAB::savePointB(){
     clearLine(m_listAB);
-    m_list.clear();
+    m_curves.clear();
     GpsPoint_ptr old_point = nullptr;
     
-    m_list[0] = Lines_ptr(new Lines(0));
-    m_list[1] = Lines_ptr(new Lines(1));
-    m_list[-1] = Lines_ptr(new Lines(-1));
+    m_curves[0] = Lines_ptr(new Lines(0));
+    m_curves[1] = Lines_ptr(new Lines(1));
+    m_curves[-1] = Lines_ptr(new Lines(-1));
     m_i_max = -1;
     m_i_max = 1;
     for(auto p : m_listAB){
@@ -206,9 +206,9 @@ void CurveAB::savePointB(){
             p3->m_x = (old_point->m_x + p->m_x)/2 - dy/temp*m_largeur;
             p3->m_y = (old_point->m_y + p->m_y)/2 + dx/temp*m_largeur;
             
-            if(m_list[1]->m_points.size() > 0){
-                double d2 = m_list[1]->m_points.back()->distanceCarre(*p2);
-                double d3 = m_list[1]->m_points.back()->distanceCarre(*p3);
+            if(m_curves[1]->m_points.size() > 0){
+                double d2 = m_curves[1]->m_points.back()->distanceCarre(*p2);
+                double d3 = m_curves[1]->m_points.back()->distanceCarre(*p3);
                 
                 if(d2 < d3){
                     auto r = p3;
@@ -225,7 +225,7 @@ void CurveAB::savePointB(){
                 }
             }
             if(!eliminate){
-                m_list[-1]->m_points.push_back(p2);
+                m_curves[-1]->m_points.push_back(p2);
                 
             }
             
@@ -237,16 +237,16 @@ void CurveAB::savePointB(){
                 }
             }
             if(!eliminate){
-                m_list[1]->m_points.push_back(p3);
+                m_curves[1]->m_points.push_back(p3);
             }
                        
-            m_list[0]->m_points.push_back(p);
+            m_curves[0]->m_points.push_back(p);
         }
         old_point = p;
     }
-    verifyLine(m_list[0]->m_points);
-    verifyLine(m_list[1]->m_points);
-    verifyLine(m_list[-1]->m_points);
+    verifyLine(m_curves[0]->m_points);
+    verifyLine(m_curves[1]->m_points);
+    verifyLine(m_curves[-1]->m_points);
     
     for(int i = 2; i < 11; ++i){
         addLine(i);
