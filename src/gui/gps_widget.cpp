@@ -410,8 +410,10 @@ void GpsWidget::draw_force(){
     m_cosA = cos(m_a);
     m_sinA = sin(m_a);
     
-    m_xref = f.m_tracteur.m_x_antenne;
-    m_yref = f.m_tracteur.m_y_antenne;
+    if(f.m_tracteur.m_pt_antenne_corrige){
+    m_xref = f.m_tracteur.m_pt_antenne_corrige->m_x;
+    m_yref = f.m_tracteur.m_pt_antenne_corrige->m_y;
+    }
     
     
     scene->clear();

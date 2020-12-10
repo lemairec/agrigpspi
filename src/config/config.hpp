@@ -10,7 +10,8 @@ enum EkfMode{
     EkfNone = 0,
     EkfWithoutImu = 1,
     Ekf1 = 2,
-    Ekf2 = 3
+    Ekf2 = 3,
+    Custom3m = 4
 };
 
 class Config  {

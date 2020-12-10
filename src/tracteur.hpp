@@ -1,6 +1,10 @@
 #ifndef TRACTEUR_H
 #define TRACTEUR_H
 
+
+#include <chrono>
+#include <math.h>
+
 struct Tracteur {
     std::chrono::system_clock::time_point m_time_received;
 

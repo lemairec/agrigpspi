@@ -218,6 +218,7 @@ void OptionWidget::resizePage2(){
     m_select_ekf.addValue("without imu");
     m_select_ekf.addValue("ekf1");
     m_select_ekf.addValue("ekf2");
+    m_select_ekf.addValue("custom_3m*perc");
     
     m_ekf_lissage.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "ekf_lissage ");
 

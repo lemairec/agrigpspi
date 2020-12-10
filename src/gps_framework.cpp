@@ -481,6 +481,41 @@ void GpsFramework::calculDeplacement(GpsPoint_ptr p){
     if(m_vitesse < 0.1){
         return;
     }
+
+    m_tracteur.m_pt_outil_arriere = nullptr;
+    m_tracteur.m_pt_outil_arriere_droite = nullptr;
+    m_tracteur.m_pt_outil_arriere_gauche = nullptr;
+    m_tracteur.m_pt_antenne_corrige = nullptr;
+
+    m_ekf_module.calculDeplacement(p, m_tracteur);
+        
+    m_deplacementX = m_ekf_module.m_v_x;
+    m_deplacementY = m_ekf_module.m_v_y;
+    
+    m_deplacementAngle = m_ekf_module.m_deplacementAngle;
+    
+    
+    GpsPoint_ptr p2(new GpsPoint());
+    p2->m_x = m_ekf_module.m_old_x;
+    p2->m_y = m_ekf_module.m_old_y;
+    
+    m_ekf_module.m_list_ekf.push_front(p2);
+    if(m_ekf_module.m_list_ekf.size()>100){
+        m_ekf_module.m_list_ekf.pop_back();
+    };
+    m_tracteur.setPoint(p2, m_deplacementAngle);
+    
+    if(m_gga && m_time_last_point > 0 ){
+        m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
+        if(m_vitesse >50){
+            INFO("erreur");
+        }
+    }
+}
+/*void GpsFramework::calculDeplacement(GpsPoint_ptr p){
+    if(m_vitesse < 0.1){
+        return;
+    }
     
     m_ekf_module.m_list.push_front(p);
     if(m_ekf_module.m_list.size()>100){
@@ -580,7 +615,7 @@ void GpsFramework::calculDeplacement(GpsPoint_ptr p){
             
         }
         
-        /*double hx = m_imuModule.m_mag_x;
+        double hx = m_imuModule.m_mag_x;
         double hy = m_imuModule.m_mag_y;
         double hz = m_imuModule.m_mag_z;
         
@@ -595,11 +630,11 @@ void GpsFramework::calculDeplacement(GpsPoint_ptr p){
         }
         
         INFO(yaw_rad << " " << m_deplacementAngle << " " << (m_deplacementAngle-yaw_rad) << " " << (m_deplacementAngle-yaw_rad)/3.14*180);
-        */
-        
+                
         //INFO(deplacementTime << " " << vitesse);
     }
-}
+}*/
+
 
 void GpsFramework::changeDraw(){
     if(m_pauseDraw == false){
