@@ -417,7 +417,9 @@ void GpsWidget::draw_force(){
     
     
     scene->clear();
-    //drawVolant(m_height/2);
+    if(m_debug && m_zoom > 40){
+        drawVolant(m_height/2);
+    }
     
     if(f.m_etat == Etat_ParcelleAdd || f.m_etat == Etat_ParcellePause){
         drawTracteur();
