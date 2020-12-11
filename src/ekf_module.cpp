@@ -80,12 +80,7 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         m_old_y = new_y;
         m_old_z = new_z;
     } else if(m_ekf_mode == Ekf1 ){
-        double v_acc_x = m_v_x + sin(ang)*ax*dt;
-        double v_acc_y = m_v_y + cos(ang)*ay*dt;
-        
-        
-        m_v_x = ((1.0-m_coeff_lissage)*m_v_x + m_coeff_lissage*v_acc_x);
-        m_v_y = ((1.0-m_coeff_lissage)*m_v_y + m_coeff_lissage*v_acc_y);
+        GpsFramework & f = GpsFramework::Instance();
         
         double new_v_x = m_old_x + m_v_x*dt;
         double new_v_y = m_old_y + m_v_y*dt;
@@ -94,8 +89,16 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         double new_y = ((1.0-m_coeff_lissage)*y+m_coeff_lissage*new_v_y);
         double new_z = z;
         
-        m_v_x = (m_coeff_lissage)*m_v_x + (1.0-m_coeff_lissage)*(new_x-m_old_x)/0.1;
-        m_v_y = (m_coeff_lissage)*m_v_y + (1.0-m_coeff_lissage)*(new_y-m_old_y)/0.1;
+        
+        double v_acc_x = m_v_x + ax*dt;
+        double v_acc_y = m_v_y + ay*dt;
+        
+        double v_inst_x = (new_x-m_old_x)/0.1;
+        double v_inst_y = (new_y-m_old_y)/0.1;
+        
+        
+        m_v_x = m_coeff_lissage*m_v_x + (1.0-m_coeff_lissage)*(v_acc_x+v_inst_x)*0.5;
+        m_v_y = m_coeff_lissage*m_v_y + (1.0-m_coeff_lissage)*(v_acc_y+v_inst_y)*0.5;
         
         m_old_x = new_x;
         m_old_y = new_y;
@@ -110,7 +113,7 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         double new_y = ((1.0-m_coeff_lissage)*y+m_coeff_lissage*new_v_y);
         double new_z = z;
         
-       
+        
         double v_inst = m_v + ax*dt;
         double cos_a = cos(m_deplacementAngle + f.m_imuModule.m_a_v_z*dt);
         double sin_a = sin(m_deplacementAngle + f.m_imuModule.m_a_v_z*dt);
