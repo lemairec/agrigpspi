@@ -25,7 +25,7 @@ class PilotModule {
     //algo k
     double m_algo2_goto_pas_by_tour = 100;
     double m_algo2_goto_angle_by_tour = 100;
-    int m_volant_derive = 100;
+    double m_volant_derive = 0.01;
     
     std::string m_inputPilot;
 public:
