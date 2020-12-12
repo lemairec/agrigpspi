@@ -121,8 +121,8 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         
         
         double v_inst = m_v + ax*dt;
-        double cos_a = cos(m_deplacementAngle + f.m_imuModule.m_a_v_z*dt);
-        double sin_a = sin(m_deplacementAngle + f.m_imuModule.m_a_v_z*dt);
+        double cos_a = cos(m_deplacementAngle + f.m_imuModule.m_a_v_z/180*3.14*dt);
+        double sin_a = sin(m_deplacementAngle + f.m_imuModule.m_a_v_z/180*3.14*dt);
         
         double v_acc_x = m_v_x + cos_a*v_inst*dt;
         double v_acc_y = m_v_y + sin_a*v_inst*dt;
