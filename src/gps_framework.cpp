@@ -139,8 +139,7 @@ void GpsFramework::setRef(double latitude, double longitude){
     for(auto l: m_ekf_module.m_list){
         m_gpsModule.setXY(*l);
     }
-    m_ekf_module.m_list_tracteur.clear();
-    m_ekf_module.m_list_ekf.clear();
+    m_ekf_module.reset();
     for(auto l: m_listSurfaceToDraw){
         m_gpsModule.setXY(*l->m_lastPoint->m_point_left);
         m_gpsModule.setXY(*l->m_lastPoint->m_point_right);

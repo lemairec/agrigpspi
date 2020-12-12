@@ -30,6 +30,12 @@ double lissageAngle(double old_value, double new_value, double coeff){
 
 
 void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay, double az){
+    if(m_reset){
+        m_old_x = x;
+        m_old_y = y;
+        m_reset = false;
+    }
+    
     double dt = 0.1;
     double ang = m_deplacementAngle;
     double v = m_v;
@@ -130,7 +136,7 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         
         m_pitch_y_deg = m_coeff_lissage*m_pitch_y_deg + (1.0-m_coeff_lissage)*f.m_imuModule.m_pitch_y_deg;
         
-        INFO(m_pitch_y_deg);
+        //INFO(m_pitch_y_deg);
         
         m_old_x = new_x;
         m_old_y = new_y;
@@ -180,6 +186,13 @@ void EkfModule::calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur){
     
     
     
+}
+
+void EkfModule::reset(){
+    m_list_tracteur.clear();
+    m_list_ekf.clear();
+    
+    m_reset = true;
 }
 
 /*

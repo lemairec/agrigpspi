@@ -15,6 +15,7 @@ class EkfModule {
 public:
     void initOrLoad(Config & config);
 
+    bool m_reset = true;
     
     double m_old_x;
     double m_old_y;
@@ -36,6 +37,8 @@ public:
     
     void calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur);
     void onNewEkfPoint(double x, double y, double z,double ax, double ay, double az);
+    
+    void reset();
 };
 
 #endif //EKF_MODULE_H
