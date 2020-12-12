@@ -128,6 +128,10 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         m_v_x = m_coeff_lissage*m_v_x + (1.0-m_coeff_lissage)*(v_acc_x+v_inst_x)*0.5;
         m_v_y = m_coeff_lissage*m_v_y + (1.0-m_coeff_lissage)*(v_acc_y+v_inst_y)*0.5;
         
+        m_pitch_y_deg = m_coeff_lissage*m_pitch_y_deg + (1.0-m_coeff_lissage)*f.m_imuModule.m_pitch_y_deg;
+        
+        INFO(m_pitch_y_deg);
+        
         m_old_x = new_x;
         m_old_y = new_y;
         m_old_z = new_z;
@@ -159,7 +163,11 @@ void EkfModule::calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur){
     p2->m_x = p->m_x;
     p2->m_y = p->m_y;
     p2->m_timeHour = p->m_timeHour;
-    tracteur.m_correction_lateral_imu = sin(f.m_imuModule.m_pitch_y_deg/180.0*3.14)*tracteur.m_hauteur_antenne;
+    if(m_ekf_mode == Ekf2){
+        tracteur.m_correction_lateral_imu = sin(m_pitch_y_deg/180.0*3.14)*tracteur.m_hauteur_antenne;
+    } else {
+        tracteur.m_correction_lateral_imu = sin(f.m_imuModule.m_pitch_y_deg/180.0*3.14)*tracteur.m_hauteur_antenne;
+    }
     tracteur.m_correction_lateral = tracteur.m_correction_lateral_imu + tracteur.m_antenne_lateral;
     p2->m_x = p2->m_x + cos(m_deplacementAngle)*tracteur.m_correction_lateral;
     p2->m_y = p2->m_y - sin(m_deplacementAngle)*tracteur.m_correction_lateral;

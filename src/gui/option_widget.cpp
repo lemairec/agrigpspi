@@ -420,7 +420,7 @@ void OptionWidget::drawPage4(){
     drawValueGui(&m_volant_angle_by_tour, f.m_config.m_volant_angle_by_tour);
     drawValueGui(&m_volant_derive, f.m_config.m_volant_derive);
     
-    drawValueGui(&m_volant_frequence, f.m_config.m_pilot_frequence);
+    //drawValueGui(&m_volant_frequence, f.m_config.m_pilot_frequence);
     drawValueGui(&m_virtual_point, f.m_config.m_pilot_virtual_point);
     
     drawValueGui(&m_button_auto_deactive, f.m_config.m_pilot_auto_deactive);
@@ -445,7 +445,7 @@ void OptionWidget::onMousePage4(int x, int y){
     f.m_config.m_volant_derive += 0.001*m_volant_derive.getIntValue(x,y);
     INFO(f.m_config.m_volant_derive);
     
-    f.m_config.m_pilot_frequence += 10*m_volant_angle_by_tour.getIntValue(x,y);
+    //f.m_config.m_pilot_frequence += 10*m_volant_angle_by_tour.getIntValue(x,y);
     f.m_config.m_pilot_virtual_point += m_virtual_point.getIntValue(x,y);
     
     f.initOrLoadConfig();

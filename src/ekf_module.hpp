@@ -24,6 +24,8 @@ public:
     double m_v_x;
     double m_v_y;
     double m_v_z;
+    
+    double m_pitch_y_deg;
 
     double m_deplacementAngle;
     double m_v;
