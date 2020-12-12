@@ -28,6 +28,8 @@ double lissageAngle(double old_value, double new_value, double coeff){
     return (1.0-coeff)*new_value+coeff*old_value;
 }
 
+std::list<double> m_erreurs;
+
 
 void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay, double az){
     if(m_reset){
@@ -95,9 +97,11 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         double new_y = ((1.0-m_coeff_lissage)*y+m_coeff_lissage*new_v_y);
         double new_z = z;
         
+        double cos_a = cos(m_deplacementAngle);
+        double sin_a = sin(m_deplacementAngle);
         
-        double v_acc_x = m_v_x + ax*dt;
-        double v_acc_y = m_v_y + ay*dt;
+        double v_acc_x = m_v_x + cos_a*f.m_imuModule.m_ax*dt + sin_a*f.m_imuModule.m_ay*dt;
+        double v_acc_y = m_v_y + sin_a*f.m_imuModule.m_ax*dt + cos_a*f.m_imuModule.m_ay*dt;
         
         double v_inst_x = (new_x-m_old_x)/0.1;
         double v_inst_y = (new_y-m_old_y)/0.1;
@@ -108,7 +112,7 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         
         m_old_x = new_x;
         m_old_y = new_y;
-        m_old_z = new_z;
+        m_old_z = 0;
     } else if(m_ekf_mode == Ekf2){
         GpsFramework & f = GpsFramework::Instance();
         
@@ -153,6 +157,15 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         //m_old_x = x;
         //m_old_y = y;
     }
+    
+    double erreur = sqrt((x-m_old_x)*(x-m_old_x) + (y-m_old_y)*(y-m_old_y));
+    m_erreurs.push_back(erreur);
+    
+    double moy = 0;
+    for(auto s : m_erreurs){
+        moy += s;
+    }
+    INFO(moy/m_erreurs.size());
     
     m_deplacementAngle = atan2(m_v_x,m_v_y);
     m_v = sqrt(m_v_x*m_v_x + m_v_y*m_v_y);
