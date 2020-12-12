@@ -504,6 +504,11 @@ void GpsFramework::calculDeplacement(GpsPoint_ptr p){
         m_ekf_module.m_list_ekf.pop_back();
     };
     m_tracteur.setPoint(p2, m_deplacementAngle);
+    m_gpsModule.SetLatLong(*(m_tracteur.m_pt_antenne_corrige));
+    m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere));
+    m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere_gauche));
+    m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere_droite));
+    
     
     if(m_gga && m_time_last_point > 0 ){
         m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
