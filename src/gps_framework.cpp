@@ -375,11 +375,11 @@ void GpsFramework::updateWithoutGps(){
         double vitesse_m_s = m_vitesse*1000/3600;
         double deplacement = vitesse_m_s*seconds;
         
-        double essieu_avant_x = m_tracteur.m_x_essieu_avant + sin(m_deplacementAngle)*deplacement;
-        double essieu_avant_y = m_tracteur.m_y_essieu_avant + cos(m_deplacementAngle)*deplacement;
+        double essieu_avant_x = m_tracteur.m_x_essieu_avant + cos(m_deplacementAngle)*deplacement;
+        double essieu_avant_y = m_tracteur.m_y_essieu_avant + sin(m_deplacementAngle)*deplacement;
         
-        double essieu_arriere_x = m_tracteur.m_pt_essieu_arriere->m_x + sin(m_deplacementAngle)*deplacement;
-        double essieu_arriere_y = m_tracteur.m_pt_essieu_arriere->m_y + cos(m_deplacementAngle)*deplacement;
+        double essieu_arriere_x = m_tracteur.m_pt_essieu_arriere->m_x + cos(m_deplacementAngle)*deplacement;
+        double essieu_arriere_y = m_tracteur.m_pt_essieu_arriere->m_y + sin(m_deplacementAngle)*deplacement;
         
         processPilot(m_deplacementX, m_deplacementY, essieu_avant_x, essieu_avant_y, essieu_arriere_x, essieu_arriere_y);
     }

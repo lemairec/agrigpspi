@@ -35,8 +35,8 @@ void LineAB::setAB(){
     m_c = -m_a * m_pointA.m_x - m_b *  m_pointA.m_y;
     m_sqrt_m_a_m_b = sqrt(m_a*m_a + m_b*m_b);
     
-    if(m_ab_y != 0 && m_ab_x != 0){
-        m_angleAB = atan(m_ab_x/m_ab_y);
+    if(m_ab_x != 0){
+        m_angleAB = atan2(m_ab_y,m_ab_x);
     } else {
         m_angleAB = 0;
     }

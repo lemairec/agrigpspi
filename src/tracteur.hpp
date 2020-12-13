@@ -34,29 +34,29 @@ struct Tracteur {
     
     void setPoint(GpsPoint_ptr p, double ang){
         m_pt_antenne_corrige = p;
-        m_x_essieu_avant = m_pt_antenne_corrige->m_x + sin(ang)*m_antenne_essieu_avant;
-        m_y_essieu_avant = m_pt_antenne_corrige->m_y + cos(ang)*m_antenne_essieu_avant;
+        m_x_essieu_avant = m_pt_antenne_corrige->m_x + cos(ang)*m_antenne_essieu_avant;
+        m_y_essieu_avant = m_pt_antenne_corrige->m_y + sin(ang)*m_antenne_essieu_avant;
         
         m_pt_essieu_arriere = GpsPoint_ptr(new GpsPoint);
-        m_pt_essieu_arriere->m_x = m_pt_antenne_corrige->m_x - sin(ang)*m_antenne_essieu_arriere;
-        m_pt_essieu_arriere->m_y = m_pt_antenne_corrige->m_y - cos(ang)*m_antenne_essieu_arriere;
+        m_pt_essieu_arriere->m_x = m_pt_antenne_corrige->m_x - cos(ang)*m_antenne_essieu_arriere;
+        m_pt_essieu_arriere->m_y = m_pt_antenne_corrige->m_y - sin(ang)*m_antenne_essieu_arriere;
         
         double d_antenne_outil = m_antenne_essieu_arriere+m_outil_distance;
         m_pt_outil_arriere = GpsPoint_ptr(new GpsPoint);
-        m_pt_outil_arriere->m_x = m_pt_antenne_corrige->m_x - sin(ang)*(d_antenne_outil);
-        m_pt_outil_arriere->m_y = m_pt_antenne_corrige->m_y - cos(ang)*(d_antenne_outil);
+        m_pt_outil_arriere->m_x = m_pt_antenne_corrige->m_x - cos(ang)*(d_antenne_outil);
+        m_pt_outil_arriere->m_y = m_pt_antenne_corrige->m_y - sin(ang)*(d_antenne_outil);
         
         m_pt_outil_arriere_droite = GpsPoint_ptr(new GpsPoint);
-        m_pt_outil_arriere_droite->m_x = m_pt_antenne_corrige->m_x - sin(ang)*(d_antenne_outil)
-            + cos(ang)*m_outil_largeur/2;
-         m_pt_outil_arriere_droite->m_y = m_pt_antenne_corrige->m_y - cos(ang)*(d_antenne_outil)
-            - sin(ang)*m_outil_largeur/2;
+        m_pt_outil_arriere_droite->m_x = m_pt_antenne_corrige->m_x - cos(ang)*(d_antenne_outil)
+            + sin(ang)*m_outil_largeur/2;
+         m_pt_outil_arriere_droite->m_y = m_pt_antenne_corrige->m_y - sin(ang)*(d_antenne_outil)
+            - cos(ang)*m_outil_largeur/2;
         
         m_pt_outil_arriere_gauche = GpsPoint_ptr(new GpsPoint);
-        m_pt_outil_arriere_gauche->m_x = m_pt_antenne_corrige->m_x - sin(ang)*(d_antenne_outil)
-            - cos(ang)*m_outil_largeur/2;
-        m_pt_outil_arriere_gauche->m_y = m_pt_antenne_corrige->m_y - cos(ang)*(d_antenne_outil)
-            + sin(ang)*m_outil_largeur/2;
+        m_pt_outil_arriere_gauche->m_x = m_pt_antenne_corrige->m_x - cos(ang)*(d_antenne_outil)
+            - sin(ang)*m_outil_largeur/2;
+        m_pt_outil_arriere_gauche->m_y = m_pt_antenne_corrige->m_y - sin(ang)*(d_antenne_outil)
+            + cos(ang)*m_outil_largeur/2;
     }
 };
 

@@ -7,6 +7,7 @@
 void EkfModule::initOrLoad(Config & config){
     m_ekf_mode = (EkfMode)config.m_ekf;
     m_coeff_lissage = config.m_ekf_coeff_lissage;
+    m_ekf_correction_devers = config.m_ekf_correction_devers;
 }
 
 double lissageAngle(double old_value, double new_value, double coeff){
@@ -74,6 +75,7 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         }
         m_old_x = x;
         m_old_y = y;
+        m_pitch_y_deg = m_coeff_lissage*m_pitch_y_deg + (1.0-m_coeff_lissage)*f.m_imuModule.m_pitch_y_deg;
     } else if(m_ekf_mode == EkfWithoutImu ){
         double new_v_x = m_old_x + sin(ang)*v*dt;
         double new_v_y = m_old_y + cos(ang)*v*dt;
@@ -115,7 +117,6 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         m_old_x = new_x;
         m_old_y = new_y;
         m_old_z = 0;*/
-        m_coeff_lissage = 0.7;
         double old_x = m_old_x;
         double old_y = m_old_y;
                
@@ -182,20 +183,19 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         //m_old_y = y;
     }
     
-    double erreur = sqrt((x-m_old_x)*(x-m_old_x) + (y-m_old_y)*(y-m_old_y));
+    /*double erreur = sqrt((x-m_old_x)*(x-m_old_x) + (y-m_old_y)*(y-m_old_y));
     m_erreurs.push_back(erreur);
     
     double moy = 0;
     for(auto s : m_erreurs){
         moy += s;
     }
+    INFO(moy/m_erreurs.size());*/
     
-    m_deplacementAngle = atan2(m_v_x,m_v_y);
+    if(m_v_x != 0){
+        m_deplacementAngle = atan2(m_v_y,m_v_x);
+    }
     m_v = sqrt(m_v_x*m_v_x + m_v_y*m_v_y);
-    
-    INFO(moy/m_erreurs.size());
-    //INFO(m_deplacementAngle << " " << m_v*3600/1000);
-    
 }
 
 void EkfModule::calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur){
@@ -209,11 +209,17 @@ void EkfModule::calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur){
     p2->m_y = p->m_y;
     p2->m_timeHour = p->m_timeHour;
     
-    tracteur.m_correction_lateral_imu = sin(m_pitch_y_deg/180.0*3.14)*tracteur.m_hauteur_antenne;
-
+    if(m_ekf_correction_devers){
+        INFO("correction");
+        tracteur.m_correction_lateral_imu = sin(m_pitch_y_deg/180.0*3.14)*tracteur.m_hauteur_antenne;
+    } else {
+        INFO("non");
+        tracteur.m_correction_lateral_imu = 0;
+    }
+    INFO(tracteur.m_correction_lateral_imu);
     tracteur.m_correction_lateral = tracteur.m_correction_lateral_imu + tracteur.m_antenne_lateral;
-    p2->m_x = p2->m_x + cos(m_deplacementAngle)*tracteur.m_correction_lateral;
-    p2->m_y = p2->m_y - sin(m_deplacementAngle)*tracteur.m_correction_lateral;
+    p2->m_x = p2->m_x + sin(m_deplacementAngle)*tracteur.m_correction_lateral;
+    p2->m_y = p2->m_y - cos(m_deplacementAngle)*tracteur.m_correction_lateral;
     m_list_tracteur.push_front(p2);
     if(m_list_tracteur.size()>100){
         m_list_tracteur.pop_back();

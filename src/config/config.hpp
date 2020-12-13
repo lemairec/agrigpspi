@@ -30,6 +30,7 @@ public:
     bool m_gga = false;
     int m_ekf = 0;
     double m_ekf_coeff_lissage = 0.5;
+    bool m_ekf_correction_devers = true;
    
     bool m_sensDraw = false;
     bool m_debug = false;

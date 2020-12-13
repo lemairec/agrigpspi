@@ -403,7 +403,7 @@ void GpsWidget::draw_force(){
     m_heightMax = m_height/2+f.m_config.m_outil_largeur*m_zoom/2;
     m_debug = f.m_config.m_debug;
     
-    m_a = -f.m_deplacementAngle;
+    m_a = -3.14/2+f.m_deplacementAngle;
     if(!f.m_config.m_sensDraw){
         m_a = 0;
     }
@@ -512,8 +512,8 @@ void GpsWidget::drawTracteur(){
     double h = m_height;
     double w = m_width;
     
-    double dx = f.m_vitesse*sin(f.m_deplacementAngle);
-    double dy = f.m_vitesse*cos(f.m_deplacementAngle);
+    double dx = f.m_vitesse*cos(f.m_deplacementAngle);
+    double dy = f.m_vitesse*sin(f.m_deplacementAngle);
     
     double l2 = f.m_tracteur.m_antenne_essieu_avant;
     double res = sqrt(dx*dx+dy*dy);

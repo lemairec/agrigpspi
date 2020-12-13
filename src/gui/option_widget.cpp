@@ -221,7 +221,7 @@ void OptionWidget::resizePage2(){
     m_select_ekf.addValue("custom_3m*perc");
     
     m_ekf_lissage.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "ekf_lissage ");
-
+    m_correction_lateral_imu.setResize(0.35*m_width, 0.8*m_height, m_petit_button);
 }
 
 void OptionWidget::drawPage2(){
@@ -238,6 +238,14 @@ void OptionWidget::drawPage2(){
     drawSelectButtonGuiClose(&m_select_ekf);
     
     drawValueGui(&m_ekf_lissage, f.m_config.m_ekf_coeff_lissage*100);
+    if(f.m_config.m_ekf_correction_devers){
+        drawButton(&m_correction_lateral_imu, COLOR_CHECK);
+    } else {
+        drawButton(&m_correction_lateral_imu);
+    }
+    drawText("correction de devers", 0.4*m_width, m_correction_lateral_imu.m_y, sizeText_medium, false);
+      
+    
     
     drawSelectButtonGuiOpen(&m_select_gps_serial);
     drawSelectButtonGuiOpen(&m_select_gps_baudrates);
@@ -256,6 +264,8 @@ void OptionWidget::onMousePage2(int x, int y){
         f.m_config.m_baudrate_gps = m_select_gps_baudrates.getValueInt();
     } else if(onMouseSelectButton(&m_select_ekf, x, y)){
         f.m_config.m_ekf = m_select_ekf.m_selectedValue;
+    } else if (m_correction_lateral_imu.isActive(x, y)){
+        f.m_config.m_ekf_correction_devers = !f.m_config.m_ekf_correction_devers;
     }
 
     f.m_config.m_ekf_coeff_lissage += 0.05*m_ekf_lissage.getIntValue(x,y);

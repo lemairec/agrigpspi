@@ -12,6 +12,7 @@
 class EkfModule {
     double m_coeff_lissage = 0.8;
     EkfMode m_ekf_mode = EkfNone;
+    bool m_ekf_correction_devers = true;
 public:
     void initOrLoad(Config & config);
 
