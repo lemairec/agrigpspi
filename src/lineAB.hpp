@@ -13,6 +13,8 @@ public:
     GpsPoint m_pointA;
     GpsPoint m_pointB;
     
+    double m_largeur = 10;
+    
     std::string m_name;
     
     double m_a = 0;
@@ -38,13 +40,13 @@ public:
     double m_pont_x_h = 0, m_pont_y_h = 0;
     double m_lookhead_x_h = 0, m_lookhead_y_h = 0;
     
-    void calculProjete2(double x, double y, double deplacement_x, double deplacement_y, double lg);
+    void calculProjete2(double x, double y, double deplacement_x, double deplacement_y);
     
-    double distance(double x, double y, double deplacementX, double deplacementY, double lg);
+    double distance(double x, double y, double deplacementX, double deplacementY);
     
-    double anglefollowTheCarrot(double x, double y, double deplacementX, double deplacementY, double lg, double angleDeplacement, double lk);
+    double anglefollowTheCarrot(double x, double y, double deplacementX, double deplacementY, double lk);
 
-    double calculRearWheelPosition(double p_x, double p_y, double lg, double angle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
+    double calculRearWheelPosition(double p_x, double p_y, double angle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
     
     double m_d_k;
     double m_d_angle;

@@ -44,7 +44,7 @@ void LineAB::setAB(){
     INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
 }
 
-void LineAB::calculProjete2(double x, double y, double deplacement_x, double deplacement_y, double lg){
+void LineAB::calculProjete2(double x, double y, double deplacement_x, double deplacement_y){
     double x_a = x;
     double y_a = y;
     
@@ -77,17 +77,17 @@ void LineAB::calculProjete2(double x, double y, double deplacement_x, double dep
         distance = - distance;
     }
     
-    double i = round(distance/lg);
+    double i = round(distance/m_largeur);
       
-    m_x_h = m_x_h + sin(m_angleAB)*i*lg;
-    m_y_h = m_y_h - cos(m_angleAB)*i*lg;
+    m_x_h = m_x_h + sin(m_angleAB)*i*m_largeur;
+    m_y_h = m_y_h - cos(m_angleAB)*i*m_largeur;
 }
 
 
 
-double LineAB::distance(double x, double y, double deplacementX, double deplacementY, double lg){
+double LineAB::distance(double x, double y, double deplacementX, double deplacementY){
     
-    calculProjete2(x, y, deplacementX, deplacementY, lg);
+    calculProjete2(x, y, deplacementX, deplacementY);
     
     m_antenne_x_h = m_x_h;
     m_antenne_y_h = m_y_h;
@@ -95,7 +95,7 @@ double LineAB::distance(double x, double y, double deplacementX, double deplacem
     if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
         double dist = (m_a * x + m_b * y + m_c)/m_sqrt_m_a_m_b;
         //INFO(dist);
-        m_current_line = round(dist/lg);
+        m_current_line = round(dist/m_largeur);
         
         bool m_sensAB = false;
         if(m_ab_x != 0 || m_ab_y != 0){
@@ -107,18 +107,18 @@ double LineAB::distance(double x, double y, double deplacementX, double deplacem
         if(!m_sensAB){
             dist = -dist;
         }
-        dist = fmod(dist, lg);
-        if(dist > lg/2){
-            dist -= lg;
+        dist = fmod(dist, m_largeur);
+        if(dist > m_largeur/2){
+            dist -= m_largeur;
         }
-        if(dist < -lg/2){
-         dist += lg;
+        if(dist < -m_largeur/2){
+         dist += m_largeur;
         }
-        if(dist < -lg/2){
-         dist += lg;
+        if(dist < -m_largeur/2){
+         dist += m_largeur;
         }
-        if(dist > lg/2){
-         dist -= lg;
+        if(dist > m_largeur/2){
+         dist -= m_largeur;
         }
         return dist;
     }
@@ -127,8 +127,8 @@ double LineAB::distance(double x, double y, double deplacementX, double deplacem
 }
 
 
-double LineAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lg, double angleDeplacement, double lk){
-    calculProjete2(x, y, deplacement_x, deplacement_y, lg);
+double LineAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lk){
+    calculProjete2(x, y, deplacement_x, deplacement_y);
     
     m_pont_x_h = m_x_h;
     m_pont_y_h = m_y_h;
@@ -152,14 +152,14 @@ double LineAB::anglefollowTheCarrot(double x, double y, double deplacement_x, do
     return angle;
 }
 
-double LineAB::calculRearWheelPosition(double p_x, double p_y, double lg, double deplacementAngle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
+double LineAB::calculRearWheelPosition(double p_x, double p_y, double deplacementAngle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
     double x_segment = m_pointB.m_x - m_pointA.m_x;
     double y_segment = m_pointB.m_y - m_pointA.m_y;
     
     double angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
     angle = angleBetweenPI2(angle);
     
-    double distance = this->distance(p_x, p_y, deplacement_x, deplacement_y, lg);
+    double distance = this->distance(p_x, p_y, deplacement_x, deplacement_y);
     
     double e = -distance;
     double th_e = -angle;//todo;
