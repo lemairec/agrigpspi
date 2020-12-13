@@ -6,9 +6,9 @@
 #include <vector>
 #include <map>
 
-class Lines{
+class Curve{
 public:
-    Lines(int i){
+    Curve(int i){
         m_i = i;
     }
     int m_i;
@@ -17,7 +17,7 @@ public:
     std::vector<GpsPoint_ptr> m_points;
 };
 
-typedef std::shared_ptr<Lines> Lines_ptr;
+typedef std::shared_ptr<Curve> Curve_ptr;
 
 
 class CurveAB{
@@ -37,10 +37,10 @@ public:
     int m_i_current = 0;
     
     void verify(int i);
-    Lines_ptr getCurrentLine();
-    Lines_ptr getCurrentLineRel(int i);
+    Curve_ptr getCurrentLine();
+    Curve_ptr getCurrentLineRel(int i);
     
-    std::map<int, Lines_ptr> m_curves;
+    std::map<int, Curve_ptr> m_curves;
     
     void clearAll();
     void clearWithoutAB();
@@ -57,7 +57,7 @@ public:
     double x_h = 0, y_h = 0;
     double m_distance_pont = 0;
     
-    double calculCurbature(Lines_ptr line, size_t i);
+    double calculCurbature(Curve_ptr line, size_t i);
     
     void calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
     void calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line);

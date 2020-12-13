@@ -80,7 +80,7 @@ public:
     
     void setScene(QGraphicsScene * s);
     
-    void drawCurve(Lines_ptr l, QPen & pen);
+    void drawCurve(Curve_ptr l, QPen & pen);
     bool addligne(double l, int i, QPen & pen);
     void drawLines();
     void drawLineCurve();

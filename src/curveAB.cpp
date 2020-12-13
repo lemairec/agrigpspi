@@ -25,11 +25,11 @@ double CurveAB::distance(double x, double y, double lg){
     
 }
 
-Lines_ptr CurveAB::getCurrentLine(){
+Curve_ptr CurveAB::getCurrentLine(){
     return m_curves[m_i_current];
 }
 
-Lines_ptr CurveAB::getCurrentLineRel(int i){
+Curve_ptr CurveAB::getCurrentLineRel(int i){
     int res = m_i_current+i;
     verify(res);
     return m_curves[res];
@@ -123,7 +123,7 @@ void CurveAB::addLine(int i){
     //INFO("  ");
     //INFO("ici " << i << " " << j);
     //INFO(m_list[j].size());
-    m_curves[i] = Lines_ptr(new Lines(i));
+    m_curves[i] = Curve_ptr(new Curve(i));
     if(i<m_i_min){
         m_i_min = i;
     }
@@ -185,9 +185,9 @@ void CurveAB::savePointB(){
     m_curves.clear();
     GpsPoint_ptr old_point = nullptr;
     
-    m_curves[0] = Lines_ptr(new Lines(0));
-    m_curves[1] = Lines_ptr(new Lines(1));
-    m_curves[-1] = Lines_ptr(new Lines(-1));
+    m_curves[0] = Curve_ptr(new Curve(0));
+    m_curves[1] = Curve_ptr(new Curve(1));
+    m_curves[-1] = Curve_ptr(new Curve(-1));
     m_i_max = -1;
     m_i_max = 1;
     for(auto p : m_listAB){
@@ -260,7 +260,7 @@ void CurveAB::savePointB(){
 const double tol = 0.9999999;
 size_t size_cur = 10;
 
-double CurveAB::calculCurbature(Lines_ptr line, size_t i){
+double CurveAB::calculCurbature(Curve_ptr line, size_t i){
     if(line->m_points.size() < size_cur){
         return 0.0;
     }
@@ -302,7 +302,7 @@ double CurveAB::calculCurbature(Lines_ptr line, size_t i){
 }
 
 void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
-    Lines_ptr list = getCurrentLine();
+    Curve_ptr list = getCurrentLine();
     if(list == NULL || list->m_points.size() < 5){
         return;
     }
@@ -370,7 +370,7 @@ void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplac
 }
 
 double CurveAB::followCarrot(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead){
-    Lines_ptr list = getCurrentLine();
+    Curve_ptr list = getCurrentLine();
     if(list == NULL || list->m_points.size() < 5){
         return 0;
     }
@@ -535,7 +535,7 @@ void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplace
 
 double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
     
-    Lines_ptr list = getCurrentLine();
+    Curve_ptr list = getCurrentLine();
     if(list == NULL || list->m_points.size() < 5){
         return 0.0;
     }

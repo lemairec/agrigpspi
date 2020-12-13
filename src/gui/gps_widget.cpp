@@ -165,7 +165,7 @@ bool GpsWidget::must_be_draw(double x, double y){
 }
 
 
-void GpsWidget::drawCurve(Lines_ptr l, QPen & pen){
+void GpsWidget::drawCurve(Curve_ptr l, QPen & pen){
     if(!l){
         return;
     }
