@@ -488,18 +488,6 @@ double CurveAB::followCarrot(double x_pont, double y_pont, double deplacement_x,
     double m_angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
     m_angle = angleBetweenPI2(m_angle);
     
-    double ha_x = x_h_pont-x_a;
-    double ha_y = y_h_pont-y_a;
-    
-    double ah = sqrt((ha_x)*(ha_x) + (ha_y)*(ha_y));
-    m_distance_pont = ah;
-    
-    double det = x_segment*ha_y-y_segment*ha_x;
-    
-    if(det < 0){
-        m_distance_pont = -m_distance_pont;
-    }
-    
     return m_angle;
     
 }

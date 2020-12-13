@@ -44,8 +44,54 @@ void LineAB::setAB(){
     INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
 }
 
+void LineAB::calculProjete2(double x, double y, double deplacement_x, double deplacement_y, double lg){
+    double x_a = x;
+    double y_a = y;
+    
+    double x_b = m_pointA.m_x;
+    double y_b = m_pointA.m_y;
+    double x_m = m_pointB.m_x;
+    double y_m = m_pointB.m_y;
+
+    //https://fr.wikipedia.org/wiki/Projection_orthogonale
+    double x_v = x_m-x_b;
+    double y_v = y_m-y_b;
+    double d_v = sqrt(x_v*x_v + y_v*y_v);
+    x_v = x_v/d_v;
+    y_v = y_v/d_v;
+    
+    
+    
+    double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
+    m_x_h = x_b + bh*x_v;
+    m_y_h = y_b + bh*y_v;
+    
+    
+    double ah = sqrt((m_x_h-x_a)*(m_x_h-x_a) + (m_y_h-y_a)*(m_y_h-y_a));
+    double distance = ah;
+    
+    double det = x_v*(m_y_h-y_a)-y_v*(m_x_h-x_a);
+    
+    if(det < 0){
+        INFO("neg");
+        distance = - distance;
+    }
+    
+    double i = round(distance/lg);
+      
+    m_x_h = m_x_h + sin(m_angleAB)*i*lg;
+    m_y_h = m_y_h - cos(m_angleAB)*i*lg;
+}
+
+
 
 double LineAB::distance(double x, double y, double deplacementX, double deplacementY, double lg){
+    
+    calculProjete2(x, y, deplacementX, deplacementY, lg);
+    
+    m_antenne_x_h = m_x_h;
+    m_antenne_y_h = m_y_h;
+    
     if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
         double dist = (m_a * x + m_b * y + m_c)/m_sqrt_m_a_m_b;
         //INFO(dist);
@@ -81,14 +127,26 @@ double LineAB::distance(double x, double y, double deplacementX, double deplacem
 }
 
 
-double LineAB::anglefollowTheCarrot(double x, double y, double deplacementX, double deplacementY, double lg, double angleDeplacement, double lk){
-    double angleABDeplacement = m_angleAB - angleDeplacement;
-    //INFO(angleABDeplacement/3.14*180);
-
-    double distance = this->distance(x, y, deplacementX, deplacementY, lg);
+double LineAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lg, double angleDeplacement, double lk){
+    calculProjete2(x, y, deplacement_x, deplacement_y, lg);
     
-    double angle_followCarrot =  atan(distance/lk);
-    double angle = angle_followCarrot + angleABDeplacement;
+    m_pont_x_h = m_x_h;
+    m_pont_y_h = m_y_h;
+    
+    double d = deplacement_x*m_ab_x+deplacement_y*m_ab_y;
+    
+    if(d>0){
+        m_lookhead_x_h = m_pont_x_h+cos(m_angleAB)*lk;
+        m_lookhead_y_h = m_pont_y_h+sin(m_angleAB)*lk;
+    } else {
+        m_lookhead_x_h = m_pont_x_h-cos(m_angleAB)*lk;
+        m_lookhead_y_h = m_pont_y_h-sin(m_angleAB)*lk;
+    }
+    
+    double x_segment = m_lookhead_x_h - x;
+    double y_segment = m_lookhead_y_h - y;
+    
+    double angle = my_angle(x_segment, y_segment, deplacement_x, deplacement_y);
     angle = angleBetweenPI2(angle);
     
     return angle;

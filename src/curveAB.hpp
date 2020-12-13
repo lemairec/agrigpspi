@@ -55,7 +55,6 @@ public:
     
     double m_distance = 0;
     double x_h = 0, y_h = 0;
-    double m_distance_pont = 0;
     
     double calculCurbature(Curve_ptr line, size_t i);
     

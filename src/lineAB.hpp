@@ -27,7 +27,18 @@ public:
     
     double m_current_line = 0;
     
+    bool isInit(){
+        return m_a != 0  || m_b !=0;
+    }
+    
     void setAB();
+    
+    double m_x_h, m_y_h;
+    double m_antenne_x_h, m_antenne_y_h;
+    double m_pont_x_h = 0, m_pont_y_h = 0;
+    double m_lookhead_x_h = 0, m_lookhead_y_h = 0;
+    
+    void calculProjete2(double x, double y, double deplacement_x, double deplacement_y, double lg);
     
     double distance(double x, double y, double deplacementX, double deplacementY, double lg);
     

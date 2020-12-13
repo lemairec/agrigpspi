@@ -231,7 +231,7 @@ bool GpsWidget::addligne(double l, int i, QPen & pen){
 
 void GpsWidget::drawLines(){
     GpsFramework & f = GpsFramework::Instance();
-    if(f.m_lineAB.m_a == 0 && f.m_lineAB.m_b ==0 && f.m_lineAB.m_c ==0){
+    if(!f.m_lineAB.isInit()){
         return;
     }
     //addligne(0, x, y);
@@ -835,30 +835,6 @@ void GpsWidget::drawDebug(){
     GpsFramework & f = GpsFramework::Instance();
     
     if(!f.m_line){
-        {
-            double x_h;
-            double y_h;
-            
-            my_projete2(f.m_curveAB.x_h, f.m_curveAB.y_h, x_h, y_h);
-            scene->addEllipse(x_h-1, y_h-1, 2, 2, m_penRed, m_brushNo);
-        }
-        
-        {
-            double x_h_pont;
-            double y_h_pont;
-            
-            my_projete2(f.m_curveAB.x_h_pont, f.m_curveAB.y_h_pont, x_h_pont, y_h_pont);
-            scene->addEllipse(x_h_pont-1, y_h_pont-1, 2, 2, m_penGreen, m_brushNo);
-        }
-        
-        {
-            double x_h_pont;
-            double y_h_pont;
-            
-            my_projete2(f.m_curveAB.x_h_lookhead, f.m_curveAB.y_h_lookhead, x_h_pont, y_h_pont);
-            scene->addEllipse(x_h_pont-1, y_h_pont-1, 2, 2, m_penGreen, m_brushNo);
-        }
-        
         auto list = f.m_curveAB.getCurrentLine();
         if(list && list->m_points.size()>3){
             {
@@ -878,6 +854,54 @@ void GpsWidget::drawDebug(){
                 my_projete2(p->m_x, p->m_y, x_h, y_h);
                 scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
             }
+        }
+        
+        {
+            double x_h;
+            double y_h;
+            
+            my_projete2(f.m_curveAB.x_h, f.m_curveAB.y_h, x_h, y_h);
+            scene->addEllipse(x_h-1, y_h-1, 2, 2, m_penRed, m_brushNo);
+        }
+        if(f.m_pilot_algo == FollowCarrot){
+            double x_h_lk;
+            double y_h_lk;
+            my_projete2(f.m_curveAB.x_h_lookhead, f.m_curveAB.y_h_lookhead, x_h_lk, y_h_lk);
+            
+            double tract_pont_x;
+            double tract_pont_y;
+            my_projete2(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, tract_pont_x, tract_pont_y);
+            scene->addLine(tract_pont_x, tract_pont_y, x_h_lk, y_h_lk, m_penGreen);
+            
+            double x2_h_lk;
+            double y2_h_lk;
+            my_projete2(f.m_tracteur.m_x_essieu_avant + f.m_deplacementX, f.m_tracteur.m_y_essieu_avant + f.m_deplacementY, x2_h_lk, y2_h_lk);
+            scene->addLine(tract_pont_x, tract_pont_y, x2_h_lk, y2_h_lk, m_penGreen);
+        }
+    } else {
+        {
+            double x_h;
+            double y_h;
+            
+            my_projete2(f.m_lineAB.m_antenne_x_h, f.m_lineAB.m_antenne_y_h, x_h, y_h);
+            scene->addEllipse(x_h-1, y_h-1, 2, 2, m_penRed, m_brushNo);
+        }
+        if(f.m_pilot_algo == FollowCarrot && f.m_lineAB.isInit()){
+            double x_h_lk;
+            double y_h_lk;
+            my_projete2(f.m_lineAB.m_lookhead_x_h, f.m_lineAB.m_lookhead_y_h, x_h_lk, y_h_lk);
+            
+            double tract_pont_x;
+            double tract_pont_y;
+            my_projete2(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, tract_pont_x, tract_pont_y);
+            scene->addLine(tract_pont_x, tract_pont_y, x_h_lk, y_h_lk, m_penGreen);
+            
+            double x2_h_lk;
+            double y2_h_lk;
+            my_projete2(f.m_tracteur.m_x_essieu_avant + f.m_deplacementX, f.m_tracteur.m_y_essieu_avant + f.m_deplacementY, x2_h_lk, y2_h_lk);
+            scene->addLine(tract_pont_x, tract_pont_y, x2_h_lk, y2_h_lk, m_penGreen);
+            
+            
         }
     }
     
