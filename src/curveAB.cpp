@@ -504,10 +504,10 @@ double CurveAB::followCarrot(double x_pont, double y_pont, double deplacement_x,
     
 }
 
-void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
+void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line){
     calculProjete2(p, deplacement_x, deplacement_y);
     double dist = abs(m_distance);
-    if(dist > m_largeur/2){
+    if(change_line && dist > m_largeur/2){
         double temp_x_h = x_h;
         double temp_y_h = y_h;
         double temp_i = m_i_current;

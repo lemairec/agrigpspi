@@ -60,7 +60,7 @@ public:
     double calculCurbature(Lines_ptr line, size_t i);
     
     void calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
-    void calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
+    void calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line);
     
     double calculRearWheelPosition(double p_x, double p_y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
 
