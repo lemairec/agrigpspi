@@ -458,6 +458,10 @@ void OptionWidget::onMousePage4(int x, int y){
     //f.m_config.m_pilot_frequence += 10*m_volant_angle_by_tour.getIntValue(x,y);
     f.m_config.m_pilot_virtual_point += m_virtual_point.getIntValue(x,y);
     
+    f.m_config.m_pilot_auto_deactive += 5*m_button_auto_deactive.getIntValue(x,y);
+    f.m_config.m_pilot_auto_active += 5*m_button_auto_active.getIntValue(x,y);
+    
+    
     f.initOrLoadConfig();
     
 }
