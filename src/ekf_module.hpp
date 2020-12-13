@@ -20,11 +20,18 @@ public:
     double m_old_x;
     double m_old_y;
     double m_old_z;
+    double m_the;
     
-    
+    double m_the_v;
     double m_v_x;
     double m_v_y;
     double m_v_z;
+    
+    double m_a_x;
+    double m_a_y;
+    double m_a_z;
+    
+    
     
     double m_pitch_y_deg;
 
