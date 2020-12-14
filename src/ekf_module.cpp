@@ -5,7 +5,7 @@
 #include <math.h>
 
 const double vitesse_mini_km_h = 0.5;
-const double vitesse_mini_m_s = vitesse_mini_km_h/1000.0*3600;
+const double vitesse_mini_m_s = vitesse_mini_km_h*1000.0/3600.0;
 
 void EkfModule::initOrLoad(Config & config){
     m_ekf_mode = (EkfMode)config.m_ekf;
