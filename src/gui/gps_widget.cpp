@@ -345,11 +345,8 @@ void GpsWidget::drawSurfaceToDraw(){
                     if(init != 0){
                         QPolygon polygon;
                         polygon << QPoint(xA, yA) << QPoint(xB, yB) << QPoint(xB1, yB1)<< QPoint(xA1, yA1);
-                        if(m_debug){
-                            scene->addPolygon(polygon, m_penBlack, m_brushGreen);
-                        } else {
-                            scene->addPolygon(polygon, m_penNo, m_brushGreen);
-                        }
+                        //scene->addPolygon(polygon, m_penBlack, m_brushGreen);
+                        scene->addPolygon(polygon, m_penNo, m_brushGreen);
                     }
                     init = 1;
                     xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;

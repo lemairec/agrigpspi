@@ -85,21 +85,20 @@ void OptionWidget::draw(){
     }
     
     //GpsFramework & f = GpsFramework::Instance();
-    //if(f.m_config.m_debug){
-        if(m_page == 5){
-            drawButtonImage(&m_button_p5, *m_imgVolantBlanc);
-            drawPage5();
-        } else {
-            drawButtonImage(&m_button_p5, *m_imgVolantGris);
-        }
-        
-        if(m_page == 6){
-            drawButtonImage(&m_button_p6, *m_imgImuBlanc, 0.5);
-            drawPage6();
-        } else {
-            drawButtonImage(&m_button_p6, *m_imgImuGris, 0.5);
-        }
-    //}
+    
+    if(m_page == 5){
+        drawButtonImage(&m_button_p5, *m_imgVolantBlanc);
+        drawPage5();
+    } else {
+        drawButtonImage(&m_button_p5, *m_imgVolantGris);
+    }
+    
+    if(m_page == 6){
+        drawButtonImage(&m_button_p6, *m_imgImuBlanc, 0.5);
+        drawPage6();
+    } else {
+        drawButtonImage(&m_button_p6, *m_imgImuGris, 0.5);
+    }
 }
 
 void OptionWidget::onMouse(int x, int y){
