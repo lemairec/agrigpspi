@@ -4,6 +4,9 @@
 #include "logging.hpp"
 #include <math.h>
 
+const double vitesse_mini_km_h = 0.5;
+const double vitesse_mini_m_s = vitesse_mini_km_h/1000.0*3600;
+
 void EkfModule::initOrLoad(Config & config){
     m_ekf_mode = (EkfMode)config.m_ekf;
     m_coeff_lissage = config.m_ekf_coeff_lissage;
@@ -192,10 +195,11 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
     }
     INFO(moy/m_erreurs.size());*/
     
-    if(m_v_x != 0){
+    m_v = sqrt(m_v_x*m_v_x + m_v_y*m_v_y);
+    if(m_v_x != 0 && m_v_y != 0 && m_v>vitesse_mini_m_s){
         m_deplacementAngle = atan2(m_v_y,m_v_x);
     }
-    m_v = sqrt(m_v_x*m_v_x + m_v_y*m_v_y);
+    
 }
 
 void EkfModule::calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur){
