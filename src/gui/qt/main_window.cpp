@@ -34,7 +34,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     DEBUG("begin");
     m_timer = new QTimer(this);
-    m_timer->start(500);
+    m_timer->start(100);
+    
+
+    
     
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimerSlot()));
     
@@ -85,10 +88,7 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     DEBUG("begin");
     int width = event->size().width();
     int height = event->size().height();
-    /*m_view->scene->setSceneRect(0, 0, width-10, height-10);
-    m_view->setBackgroundBrush(QBrush(QColor(183,166,138)));
-    
-    m_view->m_gpsWidget->setSize(width-10, height-10);*/
+    m_gpsWidget->setSize(width, height);
     //m_gpsWidget->resizeEvent(event);
     DEBUG("end");
 }

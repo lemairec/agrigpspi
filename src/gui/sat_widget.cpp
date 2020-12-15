@@ -6,8 +6,6 @@
 
 SatWidget::SatWidget(){
     m_imgOk = loadImage("/images/ok.png");
-    m_close = false;
-    
 }
 
 int x = 0;
@@ -127,8 +125,6 @@ void SatWidget::draw(){
         {
             QString s =  "draw " + QString::number(round(f.m_draw_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_draw_time.m_et*10)/10);
             drawQText(s, x2, 0.3*m_height, sizeText_little, false);
-            INFO(s.toUtf8().constData());
-            
         }
         
         {
