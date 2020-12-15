@@ -192,7 +192,7 @@ void EkfModule::calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur){
     } else {
         tracteur.m_correction_lateral_imu = 0;
     }
-    INFO(tracteur.m_correction_lateral_imu);
+    //INFO(tracteur.m_correction_lateral_imu);
     tracteur.m_correction_lateral = tracteur.m_correction_lateral_imu + tracteur.m_antenne_lateral;
     p2->m_x = p2->m_x + sin(m_deplacementAngle)*tracteur.m_correction_lateral;
     p2->m_y = p2->m_y - cos(m_deplacementAngle)*tracteur.m_correction_lateral;

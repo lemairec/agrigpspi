@@ -180,6 +180,51 @@ void CurveAB::computeCurve(Curve_ptr curve){
         }
     }
     
+    if(curve->m_points.size() > 5){
+        GpsPoint_ptr p0 = curve->m_points[0];
+        GpsPoint_ptr p1 = curve->m_points[1];
+    
+        double d_x = p1->m_x - p0->m_x;
+        double d_y = p1->m_y - p0->m_y;
+        double d = sqrt(d_x*d_x+d_y*d_y);
+        
+        d_x = d_x/d;
+        d_y = d_y/d;
+        
+        for(int i = -10; i < 0; ++i){
+            GpsPoint_ptr p(new GpsPoint());
+            p->m_x = p0->m_x+d_x*10*i;
+            p->m_y = p0->m_y+d_y*10*i;
+            
+            curve->m_points_to_draw.push_back(p);
+        }
+    }
+    for(auto p : curve->m_points_simpl){
+        curve->m_points_to_draw.push_back(p);
+    }
+    
+    if(curve->m_points.size() > 5){
+        
+        size_t l = curve->m_points.size()-2;
+        GpsPoint_ptr p0 = curve->m_points[l];
+        GpsPoint_ptr p1 = curve->m_points[l+1];
+    
+        double d_x = p1->m_x - p0->m_x;
+        double d_y = p1->m_y - p0->m_y;
+        double d = sqrt(d_x*d_x+d_y*d_y);
+        
+        d_x = d_x/d;
+        d_y = d_y/d;
+        
+        for(int i = 0; i < 10; ++i){
+            GpsPoint_ptr p(new GpsPoint());
+            p->m_x = p0->m_x+d_x*10*i;
+            p->m_y = p0->m_y+d_y*10*i;
+            
+            curve->m_points_to_draw.push_back(p);
+        }
+    }
+    
 }
 
 void CurveAB::setCurrent(int i){

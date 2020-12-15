@@ -172,7 +172,7 @@ void GpsWidget::drawCurve(Curve_ptr l, QPen & pen){
     bool first = true;
     GpsPoint_ptr old_point = nullptr;
     QPainterPath polygonPath;
-    for(auto p :l->m_points_simpl){
+    for(auto p :l->m_points_to_draw){
         
         if(must_be_draw(p->m_x, p->m_y)){
             double xB, yB;
@@ -298,11 +298,11 @@ void GpsWidget::drawParcelle(bool force){
     GpsFramework & f = GpsFramework::Instance();
     if(force || f.m_parcelle.isInit()){
         QPolygon p;
-        for(auto s: f.m_parcelle.m_contour){
+        for(auto s: f.m_parcelle.m_contour_to_draw){
             double x, y;
             my_projete2(s->m_x, s->m_y, x, y);
             if(m_debug){
-                scene->addEllipse(x, y, 1, 1, m_penBlack);
+                //scene->addEllipse(x, y, 1, 1, m_penBlack);
             }
             p.push_back(QPoint(x, y));
         }
@@ -350,7 +350,7 @@ void GpsWidget::drawSurfaceToDraw(){
                     if(init != 0){
                         QPolygon polygon;
                         polygon << QPoint(xA, yA) << QPoint(xB, yB) << QPoint(xB1, yB1)<< QPoint(xA1, yA1);
-                        //scene->addPolygon(polygon, m_penBlack, m_brushGreen);
+                        scene->addPolygon(polygon, m_penBlack, m_brushGreen);
                         scene->addPolygon(polygon, m_penNo, m_brushGreen);
                     }
                     init = 1;
@@ -568,7 +568,7 @@ void GpsWidget::drawTracteur(){
         
         double lg_capot = 1*m_zoom;
         double l_capot = (f.m_tracteur.m_antenne_essieu_avant+0.2)*m_zoom;
-        scene->addRect(x_tracteur - lg_capot/2, y-l_capot, lg_capot, l_capot, m_penNo, m_brushTractor);
+        scene->addRect(x_tracteur - lg_capot/2, y-l_capot, lg_capot, f.m_tracteur.m_empatement*m_zoom, m_penNo, m_brushTractor);
         
         double y_direction = y-f.m_tracteur.m_antenne_essieu_avant*m_zoom;
         scene->addLine(x_tracteur - voie/2, y_direction, x_tracteur + voie/2, y_direction, m_penTractorEssieu);

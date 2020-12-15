@@ -16,6 +16,7 @@ public:
     int m_curve_i_min2 = 0;
     std::vector<GpsPoint_ptr> m_points;
     std::vector<GpsPoint_ptr> m_points_simpl;
+    std::vector<GpsPoint_ptr> m_points_to_draw;
 };
 
 typedef std::shared_ptr<Curve> Curve_ptr;
