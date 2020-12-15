@@ -111,6 +111,8 @@ void Parcelle::compute(){
     //addContours();
     
     calculSurface();
+    
+    calculContourToDraw();
 }
 
 void Parcelle::calculSurface(){
@@ -125,6 +127,17 @@ void Parcelle::calculSurface(){
     m_surface_ha = round(m_surface_ha*100)/100.0;
 }
 
+void Parcelle::calculContourToDraw(){
+    m_contour_to_draw.clear();
+    
+    GpsPoint_ptr last_point = nullptr;
+    for(auto p : m_contour){
+        if(last_point== nullptr || (last_point->distanceCarre(*p) > m_resolution_to_draw*m_resolution_to_draw)){
+            last_point = p;
+            m_contour_to_draw.push_back(p);
+        }
+    }
+}
 
 void Parcelle::addPoint(GpsPoint_ptr p){
     m_contour.push_back(p);

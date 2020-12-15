@@ -74,8 +74,9 @@ public:
     double m_outil_distance = 1.5;
     double m_outil_largeur = 3.0;
     
-    
-    
+    double m_resolution_calcul = 0.5;
+    double m_resolution_draw = 1.0;
+       
     Config();
     
     void save();

@@ -121,7 +121,8 @@ public:
 class GpsFramework {
     GpsFramework();
     
-    double m_distance_cap_vitesse;
+    double m_resolution_draw;
+    
     GpsPoint_ptr m_lastPoint;
     GpsPoint_ptr m_lastImportantPoint;
     

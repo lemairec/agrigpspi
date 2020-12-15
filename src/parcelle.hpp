@@ -13,10 +13,13 @@ public:
     double m_surface_ha = 0;
     
     std::vector<GpsPoint_ptr> m_contour;
+    std::vector<GpsPoint_ptr> m_contour_to_draw;
     std::vector<int> m_flag;
     
     double m_bounding_rect_x, m_bounding_rect_y, m_bounding_rect_width, m_bounding_rect_height;
     double m_center_x, m_center_y;
+    
+    double m_resolution_to_draw = 0.5;
     
     void addPoint(GpsPoint_ptr p);
     void addFlag();
@@ -31,6 +34,7 @@ public:
     void clearContours();
     void compute();
     void calculSurface();
+    void calculContourToDraw();
     
     void saveParcelle(std::string name);
     void loadParcelle(std::string name);

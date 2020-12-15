@@ -74,7 +74,6 @@ void GpsFramework::initOrLoadConfig(){
     m_ekf_module.initOrLoad(m_config);
     m_imuModule.m_imu_moy = m_config.m_imu_moy;
     
-    m_distance_cap_vitesse = 0.5;
     file_job_stream << "[config]\n";
     m_reloadConfig = true;
     m_debug_log = m_config.m_debug_log;
@@ -103,6 +102,13 @@ void GpsFramework::initOrLoadConfig(){
     m_gga = m_config.m_gga;
     
     m_curveAB.clearWithoutAB();
+    
+    m_parcelle.m_resolution_to_draw = m_config.m_resolution_draw;
+    m_parcelle.calculContourToDraw();
+    
+    m_resolution_draw = m_config.m_resolution_draw;
+
+    INFO(m_config.m_resolution_draw);
     
     //m_lines.loadCurveOrLine("curve_TEST");
 }
@@ -258,7 +264,7 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
         
     }
     
-    if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) < m_distance_cap_vitesse*m_distance_cap_vitesse){
+    if(m_lastImportantPoint && m_lastImportantPoint->distanceCarre(*p) < m_resolution_draw*m_resolution_draw){
         return;
     } else {
         onNewImportantPoint(p);
@@ -454,7 +460,6 @@ void GpsFramework::setEtat(Etat etat){
         //m_listSurfaceToDraw.clear();
         m_ledAB = 0;
         m_ekf_module.m_list.clear();
-        m_contour.clear();
         m_curveAB.m_curves.clear();
         m_curveAB.m_listAB.clear();
     }
