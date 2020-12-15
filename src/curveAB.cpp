@@ -10,6 +10,9 @@
 #include "environnement.hpp"
 #include "util/util.hpp"
 
+const double longeur = 0.5;
+
+
 void CurveAB::clearAll(){
     m_curves.clear();
     m_listAB.clear();
@@ -51,9 +54,6 @@ void CurveAB::verify(int i){
 void CurveAB::addPoint(GpsPoint_ptr p){
     m_listAB.push_back(p);
 }
-
-double longeur = 0.5;
-
 
 void clearLine(std::vector<GpsPoint_ptr> & l){
     auto l2 = l;
@@ -102,12 +102,6 @@ void addPoints(std::vector<GpsPoint_ptr> & l){
         }
     }
     
-}
-
-void verifyLine(std::vector<GpsPoint_ptr> & l){
-    clearLine(l);
-    addPoints(l);
-    addPoints(l);
 }
 
 void CurveAB::addLine(int i){
@@ -172,7 +166,20 @@ void CurveAB::addLine(int i){
         }
         old_point = p;
     }
-    verifyLine(m_curves[i]->m_points);
+    computeCurve(m_curves[i]);
+}
+
+void CurveAB::computeCurve(Curve_ptr curve){
+    clearLine(curve->m_points);
+    addPoints(curve->m_points);
+    addPoints(curve->m_points);
+    
+    for(size_t i = 0; i< curve->m_points.size(); ++i){
+        if(i%5 == 0 || i == (curve->m_points.size()-1)){
+            curve->m_points_simpl.push_back(curve->m_points[i]);
+        }
+    }
+    
 }
 
 void CurveAB::setCurrent(int i){
@@ -244,9 +251,9 @@ void CurveAB::savePointB(){
         }
         old_point = p;
     }
-    verifyLine(m_curves[0]->m_points);
-    verifyLine(m_curves[1]->m_points);
-    verifyLine(m_curves[-1]->m_points);
+    computeCurve(m_curves[0]);
+    computeCurve(m_curves[1]);
+    computeCurve(m_curves[-1]);
     
     for(int i = 2; i < 11; ++i){
         addLine(i);

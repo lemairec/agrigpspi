@@ -15,6 +15,7 @@ public:
     int m_curve_i_min = 0;
     int m_curve_i_min2 = 0;
     std::vector<GpsPoint_ptr> m_points;
+    std::vector<GpsPoint_ptr> m_points_simpl;
 };
 
 typedef std::shared_ptr<Curve> Curve_ptr;
@@ -36,6 +37,7 @@ public:
     int m_i_max = 0;
     int m_i_current = 0;
     
+    void computeCurve(Curve_ptr);
     void verify(int i);
     Curve_ptr getCurrentLine();
     Curve_ptr getCurrentLineRel(int i);

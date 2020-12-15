@@ -169,23 +169,28 @@ void GpsWidget::drawCurve(Curve_ptr l, QPen & pen){
     if(!l){
         return;
     }
-    double xA = 0, yA = 0;
+    bool first = true;
     GpsPoint_ptr old_point = nullptr;
-    for(auto p :l->m_points){
+    QPainterPath polygonPath;
+    for(auto p :l->m_points_simpl){
+        
         if(must_be_draw(p->m_x, p->m_y)){
             double xB, yB;
             my_projete2(p->m_x, p->m_y, xB, yB);
             if(m_debug){
-                scene->addEllipse(xB-1, yB-1, 2, 2, pen);
+                scene->addRect(xB-1, yB-1, 2, 2, pen);
             }
-            if(xA != 0 && yA != 0){
-                scene->addLine(xA, yA, xB, yB, pen);
+            if(!first){
+                polygonPath.lineTo(xB, yB);
+            } else {
+                polygonPath.moveTo(xB, yB);
             }
-            xA = xB, yA = yB;
+            first = false;
         } else {
-            xA = 0, yA = 0;
+            first = true;
         }
     }
+    scene->addPath(polygonPath, pen);
 }
 
 bool GpsWidget::addligne(double l, int i, QPen & pen){
