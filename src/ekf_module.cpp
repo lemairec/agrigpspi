@@ -188,7 +188,7 @@ void EkfModule::calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur){
     p2->m_timeHour = p->m_timeHour;
     
     if(m_ekf_correction_devers){
-        tracteur.m_correction_lateral_imu = sin(30/180.0*3.14)*tracteur.m_hauteur_antenne;
+        tracteur.m_correction_lateral_imu = sin(m_pitch_y_deg/180.0*3.14)*tracteur.m_hauteur_antenne;
     } else {
         tracteur.m_correction_lateral_imu = 0;
     }
