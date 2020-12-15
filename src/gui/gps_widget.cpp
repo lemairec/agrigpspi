@@ -368,25 +368,6 @@ void GpsWidget::drawSurfaceToDraw(){
     }
 }
 
-
-
-void GpsWidget::drawContour(){
-    GpsFramework & f = GpsFramework::Instance();
-    double x = m_xref;
-    double y = m_yref;
-    double last_x = 0, last_y;
-    for(auto l : f.m_contour){
-        double x1 = m_width/2+(l->m_x-x)*m_zoom;
-        double y1 = m_height/2-(l->m_y-y)*m_zoom;
-        if(last_x != 0){
-            scene->addLine(x1,y1, last_x, last_y, m_penRed);
-        }
-        last_x = x1; last_y = y1;
-    }
-    
-}
-
-
 void GpsWidget::draw(){
     //scene = s;
     DEBUG("BEGIN");
@@ -434,7 +415,6 @@ void GpsWidget::draw_force(){
         
         drawSurfaceToDraw();
         
-        drawContour();
         drawTracteur();
         
         if(f.m_config.m_debug){

@@ -209,7 +209,6 @@ public:
     //contour_exterieur;
     double m_surface_exterieur = 0;
     double m_surface_exterieur_h = 0;
-    std::vector<GpsPoint_ptr> m_contour;
     void calculContourExterieur();
     
     void clearSurface();

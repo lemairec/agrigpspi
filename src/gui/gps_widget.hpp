@@ -91,7 +91,6 @@ public:
     void drawTracteur();
     void drawBottom();
     void drawTop();
-    void drawContour();
     void drawError();
     
     void drawDebug();
