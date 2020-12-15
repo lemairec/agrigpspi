@@ -106,7 +106,7 @@ void Config::load(){
         m_ekf_coeff_lissage = settings.value("ekf_coeff_lissage").toDouble();
     }
     if(settings.contains("ekf_correction_devers")){
-        m_ekf_correction_devers = settings.value("ekf_correction_devers").toDouble();
+        m_ekf_correction_devers = settings.value("ekf_correction_devers").toBool();
     }
     
     
