@@ -213,28 +213,19 @@ void BaseWidget::setSize(int width, int height){
 
 void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap, double scale){
     double scale2 = 0.4*scale;
+    int w = pixmap.size().width()*scale2;
+    int h = pixmap.size().height()*scale2;
 
-    auto item = new QGraphicsPixmapItem(pixmap);
-    item->setScale(scale2);
-    auto size = item->boundingRect();
-    item->setPos(button->m_x-size.width()*scale2/2, button->m_y-size.height()*scale2/2);
-    scene->addItem(item);
-    
-    //scene->addRect(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
-    //scene->addEllipse(m_width*button->m_x, m_height*button->m_y, 1, 1, QPen(QColor(0,0,0)), QBrush(QColor(0, 0, 0)));
+    m_painter->drawPixmap(button->m_x-w/2, button->m_y-h/2, w, h, pixmap);
 }
 
 void BaseWidget::drawMyImage(QPixmap & pixmap, int x, int y, double scale, bool center){
     double scale2 = 0.4*scale;
     
-    auto item = new QGraphicsPixmapItem(pixmap);
-    item->setScale(scale2);
-    auto size = item->boundingRect();
-    item->setPos(x-size.width()*scale2/2, y-size.height()*scale2/2);
-    scene->addItem(item);
-    
-    //scene->addRect(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
-    //scene->addEllipse(m_width*button->m_x, m_height*button->m_y, 1, 1, QPen(QColor(0,0,0)), QBrush(QColor(0, 0, 0)));
+    int w = pixmap.size().width()*scale2;
+    int h = pixmap.size().height()*scale2;
+
+    m_painter->drawPixmap(x-w/2, y-h/2, w, h, pixmap);
 }
 
 
@@ -243,45 +234,37 @@ void BaseWidget::drawButton(ButtonGui * button, int color){
     int y = button->m_y-button->m_rayon;
     int d = button->m_rayon*2;
     
+    m_painter->setPen(m_penBlack);
     if(color == COLOR_RED){
-        scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
+        m_painter->setBrush(QBrush(QColor(255, 0, 0)));
+        m_painter->drawEllipse(x, y, d, d);
     } else if(color == COLOR_GREEN){
-        scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(0, 255, 0)));
+        m_painter->setBrush(QBrush(QColor(0, 255, 0)));
+        m_painter->drawEllipse(x, y, d, d);
     } else if(color == COLOR_CHECK){
-        scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255,255,255)));
-        scene->addEllipse(x+d*0.1, y+d*0.1, d*0.8, d*0.8, QPen(QColor(0,0,0)), QBrush(QColor(155,155,155)));
-        
-            
+        int d2 = d*0.1;
+        m_painter->setBrush(QBrush(QColor(255, 255, 255)));
+        m_painter->drawEllipse(x, y, d, d);
+        m_painter->setBrush(QBrush(QColor(155, 155, 155)));
+        m_painter->drawEllipse(x+d2, y+d2, d-2*d2, d-2*d2);
     } else {
-        scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255,255,255)));
+        m_painter->setBrush(QBrush(QColor(255, 255, 255)));
+        m_painter->drawEllipse(x, y, d, d);
     }
 }
 
 
 void BaseWidget::drawButtonLabel(ButtonGui * button, int color){
-    int x = button->m_x-button->m_rayon;
-    int y = button->m_y-button->m_rayon;
-    int d = button->m_rayon*2;
-    
-    if(color == COLOR_RED){
-        scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255, 0, 0)));
-    } else if(color == COLOR_GREEN){
-        scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(0, 255, 0)));
-    } else if(color == COLOR_CHECK){
-        scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255,255,255)));
-        scene->addEllipse(x+d*0.1, y+d*0.1, d*0.8, d*0.8, QPen(QColor(0,0,0)), QBrush(QColor(155,155,155)));
-        
-            
-    } else {
-        scene->addEllipse(x, y, d, d, QPen(QColor(0,0,0)), QBrush(QColor(255,255,255)));
-    }
+    drawButton(button);
     
     drawText(button->m_label, button->m_x-20, button->m_y, sizeText_medium);
 }
 
 void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
     if(select->m_open){
-        scene->addRect(select->m_x, select->m_y, m_width*0.4, (select->m_buttons.size()+1)*select->m_rayon*2, m_penBlack, m_brushLightGrayDebug);
+        m_painter->setPen(m_penBlack);
+        m_painter->setBrush(m_brushLightGrayDebug);
+        m_painter->drawRect(select->m_x, select->m_y, m_width*0.4, (select->m_buttons.size()+1)*select->m_rayon*2);
         for(int i = 0; i < (int)select->m_buttons.size(); ++i){
             if(select->m_selectedValue == i){
                 drawButtonLabel(select->m_buttons[i], COLOR_CHECK);
@@ -324,8 +307,6 @@ void BaseWidget::drawText(const std::string & text, int x, int y, SizeText size,
 }
 
 void BaseWidget::drawQText(const QString & s, int x, int y, SizeText size, bool center, bool white){
-    auto textItem = scene->addText(s);
-    
     int s2 = 10;
     switch (size) {
         case sizeText_big:
@@ -340,17 +321,21 @@ void BaseWidget::drawQText(const QString & s, int x, int y, SizeText size, bool 
     }
     QFont font = QFont("Latin", s2, 1, false);
     font.setBold(true);
-    textItem->setFont(font);
+    //textItem->setFont(font);
     if(white){
-        textItem->setDefaultTextColor(Qt::white);
+        m_painter->setPen(Qt::white);
     }
     
+    font.setPixelSize(s2);
+    m_painter->setFont(font);
+    
     if(center){
-        auto mBounds = textItem->boundingRect();
-        textItem->setPos(x-mBounds.width()/2, y-s2+2);
+        //auto mBounds = textItem->boundingRect();
+        m_painter->drawText(x-s.size()*s2*0.25, y+2, s);
     } else {
-        textItem->setPos(x, y-s2+2);
+        m_painter->drawText(x, y+2, s);
     }
+   
 }
 
 void BaseWidget::drawValueGui2(ValueGui * valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s){
@@ -380,7 +365,9 @@ void BaseWidget::drawValueGui(ValueGui * valueGui, double value){
 
 void BaseWidget::drawValueGuiKeyPad(ValueGuiKeyPad * value){
     QString s = QString::number(value->m_value);
-    scene->addRect(value->m_x-40, value->m_y-15, 80, 30, m_penBlack, m_brushGreen);
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushGreen);
+    m_painter->drawRect(value->m_x-40, value->m_y-15, 80, 30);
     drawQText(s, value->m_x, value->m_y, sizeText_medium, true);
     if(value->m_label.size() > 0){
         drawText(value->m_label, value->m_x-60, value->m_y, sizeText_medium, true);
@@ -401,7 +388,9 @@ bool BaseWidget::isActiveValueGuiKeyPad(ValueGuiKeyPad * value, int x, int y){
 
 
 void BaseWidget::drawValueGuiKeyBoard(ValueGuiKeyBoard * value){
-    scene->addRect(value->m_x-80, value->m_y-15, 160, 30, m_penBlack, m_brushGreen);
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushGreen);
+    m_painter->drawRect(value->m_x-80, value->m_y-15, 160, 30);
     drawText(value->m_text, value->m_x, value->m_y, sizeText_medium, true);
 }
 bool BaseWidget::isActiveValueGuiKeyBoard(ValueGuiKeyBoard * value, int x, int y){

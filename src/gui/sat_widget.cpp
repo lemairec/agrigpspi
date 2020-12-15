@@ -6,6 +6,7 @@
 
 SatWidget::SatWidget(){
     m_imgOk = loadImage("/images/ok.png");
+    m_close = false;
     
 }
 
@@ -24,8 +25,9 @@ void SatWidget::setSize(int width, int height){
 void SatWidget::draw(){
     GpsFramework & f =  GpsFramework::Instance();
     auto last_frame = f.m_lastGGAFrame;
-    scene->addRect(x, m_height*0.1, m_width-x, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
-    //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushWhiteAlpha);
+    m_painter->drawRect(x, m_height*0.1, m_width-x, m_height*0.8);
     
     int x2 = x+30;
     if(m_type == 0){
@@ -125,6 +127,8 @@ void SatWidget::draw(){
         {
             QString s =  "draw " + QString::number(round(f.m_draw_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_draw_time.m_et*10)/10);
             drawQText(s, x2, 0.3*m_height, sizeText_little, false);
+            INFO(s.toUtf8().constData());
+            
         }
         
         {

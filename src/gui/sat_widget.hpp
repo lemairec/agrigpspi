@@ -6,7 +6,7 @@
 class SatWidget : public BaseWidget {
     QPixmap * m_imgOk;
     
-    int m_type = 0;
+    int m_type = 3;
 public:
     SatWidget();
     

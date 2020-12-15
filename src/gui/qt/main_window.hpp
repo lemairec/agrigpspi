@@ -1,18 +1,30 @@
 #include "include_qt.hpp"
 #include "../gps_widget.hpp"
 
+class MyWidget : public QWidget
+{
+  public:
+    GpsWidget * m_gpsWidget = NULL;
+    MyWidget( QWidget *parent = 0 ) : QWidget( parent ) {}
 
-class View : public QGraphicsView {
-public:
-    GpsWidget * m_gpsWidget;
-    QGraphicsScene * scene;
+    void paintEvent(QPaintEvent* e)
+    {
+        QWidget::paintEvent(e); // effectue le comportement standard
 
-    void setupUi();
+        QPainter painter(this); // construire
+        if(m_gpsWidget){
+            m_gpsWidget->setPainter(&painter);
+            m_gpsWidget->draw();
+        }
+
+    } // détruire
+    
     void mouseReleaseEvent ( QMouseEvent * event );
 };
 
 class MainWindow : public QMainWindow, public IGpsObserver
 {
+    GpsWidget * m_gpsWidget;
     QTimer *m_timer;
     Q_OBJECT
     
@@ -21,7 +33,7 @@ class MainWindow : public QMainWindow, public IGpsObserver
     
 public:
     static MainWindow * Instance_ptr();
-    View * m_view;
+    MyWidget * m_my_widget;
 
     ~MainWindow();
     

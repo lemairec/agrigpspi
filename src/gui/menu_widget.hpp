@@ -29,7 +29,7 @@ public:
     MenuWidget();
     
     void setSize(int width, int height);
-    void setScene(QGraphicsScene * s);
+    void setPainter(QPainter * s);
     
     virtual void draw();
     virtual void onMouse(int x, int y);

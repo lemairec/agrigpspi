@@ -41,9 +41,9 @@ void MachineWidget::open(){
 }
 
 void MachineWidget::draw(){
-    //auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
-    scene->addRect(m_x, m_height*0.1, m_width-m_x, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
-
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushWhiteAlpha);
+    m_painter->drawRect(m_x, m_height*0.1, m_width-m_x, m_height*0.8);
     
     {
         QString s = "Tracteur";
@@ -133,7 +133,9 @@ void OutilWidget::open(){
 
 void OutilWidget::draw(){
     //auto last_frame = GpsFramework::Instance().m_lastGGAFrame;
-    scene->addRect(m_x, m_height*0.1, m_width-m_x, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushWhiteAlpha);
+    m_painter->drawRect(m_x, m_height*0.1, m_width-m_x, m_height*0.8);
 
     
     {

@@ -11,11 +11,11 @@ MenuWidget::MenuWidget(){
     
 }
 
-void MenuWidget::setScene(QGraphicsScene * s){
-    BaseWidget::setScene(s);
-    m_machine_widget.setScene(s);
-    m_outil_widget.setScene(s);
-    m_options_widget.setScene(scene);
+void MenuWidget::setPainter(QPainter *s){
+    BaseWidget::setPainter(s);
+    m_machine_widget.setPainter(s);
+    m_outil_widget.setPainter(s);
+    m_options_widget.setPainter(s);
     
 }
 
@@ -46,7 +46,9 @@ void MenuWidget::draw(){
     } else if(!m_outil_widget.m_close){
         m_outil_widget.draw();
     } else {
-        scene->addRect(m_x, m_height*0.15, m_lg, m_height*0.7, m_penBlack, m_brushWhiteAlpha);
+        m_painter->setPen(m_penBlack);
+        m_painter->setBrush(m_brushWhiteAlpha);
+        m_painter->drawRect(m_x, m_height*0.15, m_lg, m_height*0.7);
         
         {
             QString s = "Menu";

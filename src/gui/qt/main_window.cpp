@@ -13,27 +13,11 @@
 #include <QFileDialog>
 #include "environnement.hpp"
 
-void View::setupUi(){
-    DEBUG("begin");
-    scene = new QGraphicsScene(this);
-    setScene(scene);
-    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    
-    m_gpsWidget = GpsWidget::Instance();
-    m_gpsWidget->setScene(scene);
-    
-    
-    DEBUG("end");
-    
-};
-
-void View::mouseReleaseEvent ( QMouseEvent * event ){
+void MyWidget::mouseReleaseEvent ( QMouseEvent * event ){
     int x = event->x()-5;
     int y = event->y()-5;
     
     m_gpsWidget->onMouse(x, y);
-    
-    m_gpsWidget->draw_force();
 }
 
 
@@ -73,9 +57,14 @@ void MainWindow::setupUi(){
     }
     this->resize(800, 480);
     
-    m_view = new View();
-    m_view->setupUi();
-    this->setCentralWidget(m_view);
+    m_my_widget = new MyWidget();
+    m_gpsWidget = GpsWidget::Instance();
+    m_my_widget->m_gpsWidget = m_gpsWidget;
+    m_my_widget->m_gpsWidget->setSize(800, 480);
+    
+
+    //m_my_widget->setupUi();
+    this->setCentralWidget(m_my_widget);
     
     
     GpsFramework & f = GpsFramework::Instance();
@@ -96,10 +85,10 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     DEBUG("begin");
     int width = event->size().width();
     int height = event->size().height();
-    m_view->scene->setSceneRect(0, 0, width-10, height-10);
+    /*m_view->scene->setSceneRect(0, 0, width-10, height-10);
     m_view->setBackgroundBrush(QBrush(QColor(183,166,138)));
     
-    m_view->m_gpsWidget->setSize(width-10, height-10);
+    m_view->m_gpsWidget->setSize(width-10, height-10);*/
     //m_gpsWidget->resizeEvent(event);
     DEBUG("end");
 }
@@ -112,13 +101,14 @@ void MainWindow::onNewPoint(){
 
 void MainWindow::onValueChangeSlot(){
     DEBUG("begin");
-    m_view->m_gpsWidget->draw();
+    //m_view->m_gpsWidget->draw();
     DEBUG("end");
 }
 
 void MainWindow::onTimerSlot(){
     DEBUG("begin");
-    m_view->m_gpsWidget->draw();
+    m_my_widget->update();
+    //m_view->m_gpsWidget->draw();
     DEBUG("end");
 }
 

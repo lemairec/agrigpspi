@@ -118,13 +118,11 @@ GpsWidget * GpsWidget::Instance(){
     return &gf;
 }
 
-void GpsWidget::setScene(QGraphicsScene * s){
-    BaseWidget::setScene(s);
-    for(auto p : m_widgets){
-        p->setScene(s);
+void GpsWidget::setPainter(QPainter * p){
+    BaseWidget::setPainter(p);
+    for(auto p2 : m_widgets){
+        p2->setPainter(p);
     }
-    /*m_key_pad_widget.setScene(s);
-     m_key_board_widget.setScene(s);*/
 }
 
 void GpsWidget::my_projete(double x, double y, double & x_res, double & y_res){
@@ -169,6 +167,9 @@ void GpsWidget::drawCurve(Curve_ptr l, QPen & pen){
     if(!l){
         return;
     }
+    m_painter->setPen(pen);
+    m_painter->setBrush(m_brushNo);
+    
     bool first = true;
     GpsPoint_ptr old_point = nullptr;
     QPainterPath polygonPath;
@@ -178,7 +179,7 @@ void GpsWidget::drawCurve(Curve_ptr l, QPen & pen){
             double xB, yB;
             my_projete2(p->m_x, p->m_y, xB, yB);
             if(m_debug){
-                scene->addRect(xB-1, yB-1, 2, 2, pen);
+                m_painter->drawRect(xB-1, yB-1, 2, 2);
             }
             if(!first){
                 polygonPath.lineTo(xB, yB);
@@ -190,7 +191,7 @@ void GpsWidget::drawCurve(Curve_ptr l, QPen & pen){
             first = true;
         }
     }
-    scene->addPath(polygonPath, pen);
+    m_painter->drawPath(polygonPath);
 }
 
 bool GpsWidget::addligne(double l, int i, QPen & pen){
@@ -222,14 +223,8 @@ bool GpsWidget::addligne(double l, int i, QPen & pen){
         return false;
     }
     
-    /*QString s = QString::number(i);
-    auto textItem = scene->addText(s);
-    auto mBounds = textItem->boundingRect();
-    textItem->setPos(m_width/2 + (x12+x02)/2 - mBounds.width()/2, m_height/2 - (y12+y02)/2  - mBounds.height()/2);
-    //INFO(x1 << " " << x0);*/
-    
-    
-    scene->addLine(m_width/2 + x02, m_height/2 - y02, m_width/2 + x12, m_height/2 - y12, pen);
+    m_painter->setPen(pen);
+    m_painter->drawLine(m_width/2 + x02, m_height/2 - y02, m_width/2 + x12, m_height/2 - y12);
     
     return true;
 }
@@ -264,7 +259,7 @@ void GpsWidget::drawLines(){
 void GpsWidget::drawLineCurve(){
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_line){
-        if(f.m_lineAB.m_pointA.m_isOk){
+        /*if(f.m_lineAB.m_pointA.m_isOk){
             double xA, yA;
             my_projete2(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, xA, yA);
             scene->addEllipse(xA-3, yA-3, 6, 6, m_penRed, m_brushNo);
@@ -275,7 +270,7 @@ void GpsWidget::drawLineCurve(){
                 
                 scene->addLine(xA, yA, xB, yB, m_penRed);
             }
-        }
+        }*///TODO
         
         drawLines();
     } else {
@@ -307,15 +302,22 @@ void GpsWidget::drawParcelle(bool force){
             p.push_back(QPoint(x, y));
         }
         if(force){
-            scene->addPolygon(p, m_penBlack, m_parcelleBrush);
+            m_painter->setPen(m_penBlack);
+            m_painter->setBrush(m_parcelleBrush);
+            m_painter->drawPolygon(p);
+            
+            m_painter->setBrush(m_brushRed);
             for(auto i: f.m_parcelle.m_flag){
                 double x, y;
                 auto p = f.m_parcelle.m_contour[i];
                 my_projete2(p->m_x, p->m_y, x, y);
-                scene->addEllipse(x-3, y-3, 6, 6, m_penBlack, m_brushRed);
+                m_painter->drawEllipse(x-3, y-3, 6, 6);
             }
         } else {
-            scene->addPolygon(p, m_penNo, m_parcelleBrush);
+            m_painter->setPen(m_penNo);
+            m_painter->setBrush(m_parcelleBrush);
+            m_painter->drawPolygon(p);
+            
         }
         
     }
@@ -324,6 +326,8 @@ void GpsWidget::drawParcelle(bool force){
 void GpsWidget::drawSurfaceToDraw(){
     GpsFramework & f = GpsFramework::Instance();
     
+    m_painter->setBrush(m_brushGreen);
+    m_painter->setPen(m_penNo);
     for(auto s: f.m_listSurfaceToDraw){
         if(s->m_points.size() > 0 && s->m_lastPoint && s->m_lastPoint->m_point_left && s->m_lastPoint->m_point_right){
             double xA1 = 0, yA1 = 0, xB1 = 0, yB1 = 0;
@@ -348,10 +352,12 @@ void GpsWidget::drawSurfaceToDraw(){
                     my_projete2(frame->m_point_left->m_x, frame->m_point_left->m_y, xA, yA);
                     my_projete2(frame->m_point_right->m_x, frame->m_point_right->m_y, xB, yB);
                     if(init != 0){
-                        QPolygon polygon;
-                        polygon << QPoint(xA, yA) << QPoint(xB, yB) << QPoint(xB1, yB1)<< QPoint(xA1, yA1);
-                        scene->addPolygon(polygon, m_penBlack, m_brushGreen);
-                        scene->addPolygon(polygon, m_penNo, m_brushGreen);
+                        QPointF points[4] = {
+                            QPointF(xA, yA),
+                            QPointF(xB, yB),
+                            QPointF(xB1, yB1),
+                            QPointF(xA1, yA1)};
+                        m_painter->drawPolygon(points, 4);
                     }
                     init = 1;
                     xA1 = xA, yA1 = yA, xB1 = xB, yB1 = yB;
@@ -398,8 +404,7 @@ void GpsWidget::draw_force(){
     m_yref = f.m_tracteur.m_pt_antenne_corrige->m_y;
     }
     
-    
-    scene->clear();
+    //scene->clear();
     if(m_debug && m_zoom > 40){
         drawVolant(m_height/2);
     }
@@ -418,29 +423,34 @@ void GpsWidget::draw_force(){
         drawTracteur();
         
         if(f.m_config.m_debug){
+            m_painter->setPen( QPen(Qt::black, 2) ); // personnaliser
+
             for(auto p: f.m_ekf_module.m_list){
                 double x1, y1;
+                
                 my_projete2(p->m_x, p->m_y, x1, y1);
-                scene->addEllipse(x1-1, y1-1, 2, 2, m_penBlack, m_brushNo);
+                m_painter->drawPoint(x1, y1);
             }
             
+            m_painter->setPen(m_penRed); // personnaliser
             double x_last = 0, y_last;
             for(auto p: f.m_ekf_module.m_list_tracteur){
                 double x1, y1;
                 my_projete2(p->m_x, p->m_y, x1, y1);
                 if(x_last != 0){
-                    scene->addLine(x1, y1, x_last, y_last, m_penRed);
+                    m_painter->drawLine(x1, y1, x_last, y_last);
                 }
                 x_last = x1;
                 y_last = y1;
                                         
             }
             x_last = 0;
+            m_painter->setPen(m_penGreen); // personnaliser
             for(auto p: f.m_ekf_module.m_list_ekf){
                 double x1, y1;
                 my_projete2(p->m_x, p->m_y, x1, y1);
                 if(x_last != 0){
-                    scene->addLine(x1, y1, x_last, y_last, m_penGreen);
+                    m_painter->drawLine(x1, y1, x_last, y_last);
                 }
                 x_last = x1;
                 y_last = y1;
@@ -468,6 +478,10 @@ void GpsWidget::draw_force(){
             p->draw();
         }
     }
+    
+    QString s =  "draw " + QString::number(round(f.m_draw_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_draw_time.m_et*10)/10);
+    //drawQText(s, x2, 0.3*m_height, sizeText_little, false);
+    INFO(s.toUtf8().constData());
     
    
     DEBUG("END");
@@ -542,58 +556,58 @@ void GpsWidget::drawTracteur(){
         
         
         //outil
+        m_painter->setBrush(m_brushOutil);
         double l_outil = f.m_tracteur.m_outil_distance;
         double lg_outil = f.m_tracteur.m_outil_largeur;
-        scene->addRect(x_tracteur - lg_outil*0.5*m_zoom, y_arriere + (l_outil-0.5)*m_zoom, lg_outil*m_zoom, 0.5*m_zoom, m_penNo, m_brushOutil);
-        scene->addRect(x_tracteur - 0.1*m_zoom, y_arriere, 0.2*m_zoom, (l_outil)*m_zoom, m_penNo, m_brushOutil);
+        m_painter->drawRect(x_tracteur - lg_outil*0.5*m_zoom, y_arriere + (l_outil-0.5)*m_zoom, lg_outil*m_zoom, 0.5*m_zoom);
+        m_painter->drawRect(x_tracteur - 0.1*m_zoom, y_arriere, 0.2*m_zoom, (l_outil)*m_zoom);
         
         
         double voie = 1.8*m_zoom;
         double l_roue = 1.7*m_zoom/2;
-        scene->addLine(x_tracteur - voie/2, y_arriere, x_tracteur + voie/2, y_arriere, m_penTractorEssieu);
-        scene->addLine(x_tracteur - voie/2, y_arriere-l_roue, x_tracteur - voie/2, y_arriere+l_roue, m_penTractorRoue);
-        scene->addLine(x_tracteur + voie/2, y_arriere-l_roue, x_tracteur + voie/2, y_arriere+l_roue, m_penTractorRoue);
-        //scene->addRect(w/2, y_arriere - voie/2, y-4*l2, l2, 4*l2, m_penBlue);
-        
-        //scene->addRect(w/2 - voie/2, y_arriere-f.m_tracteur.m_empatement*m_zoom, voie, f.m_tracteur.m_empatement*m_zoom, m_penTractorEssieu);
-        
-        
-        //scene->addRect(w/2 - l2/2, y-4*l2, l2, 4*l2, m_penTractorEssieu, m_brushTractor);
+        m_painter->setPen(m_penTractorRoue);
+        m_painter->drawLine(x_tracteur - voie/2, y_arriere, x_tracteur + voie/2, y_arriere);
+        m_painter->drawLine(x_tracteur - voie/2, y_arriere-l_roue, x_tracteur - voie/2, y_arriere+l_roue);
+        m_painter->drawLine(x_tracteur + voie/2, y_arriere-l_roue, x_tracteur + voie/2, y_arriere+l_roue);
         
         //cabine
+        m_painter->setBrush(m_brushTractor);
+        m_painter->setPen(m_penNo);
         double l_cabine = 1.6*m_zoom;
-        scene->addRect(x_tracteur - l_cabine/2, y_arriere-1.2*m_zoom, l_cabine, l_cabine, m_penNo, m_brushTractor);
+        m_painter->drawRect(x_tracteur - l_cabine/2, y_arriere-1.2*m_zoom, l_cabine, l_cabine);
         
         //capot
-        
         double lg_capot = 1*m_zoom;
         double l_capot = (f.m_tracteur.m_antenne_essieu_avant+0.2)*m_zoom;
-        scene->addRect(x_tracteur - lg_capot/2, y-l_capot, lg_capot, f.m_tracteur.m_empatement*m_zoom, m_penNo, m_brushTractor);
+        m_painter->drawRect(x_tracteur - lg_capot/2, y-l_capot, lg_capot, f.m_tracteur.m_empatement*m_zoom);
         
         double y_direction = y-f.m_tracteur.m_antenne_essieu_avant*m_zoom;
-        scene->addLine(x_tracteur - voie/2, y_direction, x_tracteur + voie/2, y_direction, m_penTractorEssieu);
+        m_painter->setPen(m_penTractorRoue);
+        m_painter->drawLine(x_tracteur - voie/2, y_direction, x_tracteur + voie/2, y_direction);
         double l_roue2 = 1.1*m_zoom/2;
         
         for(int i = -1; i<=1; i+=2){
             int x=x_tracteur+i*voie/2;
             int dx = -l_roue2*sin(f.m_angle_correction);
             int dy = l_roue2*cos(f.m_angle_correction);
-            scene->addLine(x-dx, y_direction-dy, x+dx, y_direction+dy, m_penTractorRoue);
+            m_painter->drawLine(x-dx, y_direction-dy, x+dx, y_direction+dy);
         }
         
         
-        scene->addEllipse(x_tracteur - 0.10*m_zoom, h/2 - 0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom, m_penBlack, m_brushWhite);
+        m_painter->setBrush(m_brushWhite);
+        m_painter->setPen(m_penBlack);
+        m_painter->drawEllipse(x_tracteur - 0.10*m_zoom, h/2 - 0.10*m_zoom, 0.20*m_zoom, 0.20*m_zoom);
         
         
         if(m_debug){
-            scene->addEllipse(w/2 - 0.05*m_zoom, h/2 - 0.05*m_zoom, 0.10*m_zoom, 0.10*m_zoom, m_penBlack, m_brushRed);
+            //scene->addEllipse(w/2 - 0.05*m_zoom, h/2 - 0.05*m_zoom, 0.10*m_zoom, 0.10*m_zoom, m_penBlack, m_brushRed);
             /*my_projete2_pt(f.m_tracteur.m_pt_outil_arriere, x, y);
             scene->addEllipse(x-3, y-3, 6, 6, m_penRed, m_brushGreen);
             my_projete2_pt(f.m_tracteur.m_pt_outil_arriere_droite, x, y);
             scene->addEllipse(x-2, y-2, 4, 4, m_penRed, m_brushGreen);*/
         }
     } else {
-        QPolygon polygon;
+        /*QPolygon polygon;
         polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + x2, h/2 - y2) << QPoint(w/2 - xA, h/2 + yA)<< QPoint(w/2 + x, h/2 - y);
         scene->addPolygon(polygon, m_penNo, m_brushTractor);
         
@@ -604,7 +618,7 @@ void GpsWidget::drawTracteur(){
             double a = -f.m_angle_correction;
             my_projete(m_xref+dx*cos(a)-dy*sin(a), m_yref+dx*sin(a)+dy*cos(a), x2, y2);
             scene->addLine(w/2+x, h/2-y, w/2 + x2, h/2 - y2, m_penBlue);
-        }
+        }*/// TODO
         
     }
     if(m_zoom >= 60){
@@ -627,29 +641,36 @@ const int l1 = 15;
 void GpsWidget::drawTop(){
     GpsFramework & f = GpsFramework::Instance();
     
-    scene->addRect(0, 0, m_width, 40, m_penBlack, m_brushDarkGray);
-    scene->addRect(m_width/2-50, 5, 100, 30, m_penBlack, m_grayBrush);
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushDarkGray);
+    m_painter->drawRect(0, 0, m_width, 40);
+    
+    m_painter->setBrush(m_grayBrush);
+    m_painter->drawRect(m_width/2-50, 5, 100, 30);
     QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
+    
     drawQText(s, m_width/2, 23,sizeText_big, true);
     
-    scene->addRect(m_width/2-60, 40, 120, 40, m_penBlack, m_brushDarkGray);
+    /*scene->addRect(m_width/2-60, 40, 120, 40, m_penBlack, m_brushDarkGray);
     scene->addRect(m_width/2-50, 45, 100, 30, m_penBlack, m_grayBrush);
     {
         QString s = QString::number(f.m_angle_correction/3.14*180, 'f', 2) + " °";
         drawQText(s, m_width/2, 63,sizeText_big, true);
-    }
+    }*/
     
+    m_painter->setBrush(m_grayBrush);
     for(int i = 0; i < 8; ++i){
-        scene->addRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20, m_penBlack, m_grayBrush);
-        scene->addRect(m_width/2 + 60 + l1*i, 10, 10, 20, m_penBlack, m_grayBrush);
+        m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
+        m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
     }
+    m_painter->setBrush(m_greenBrush);
     if(f.m_ledAB > 0){
         for(int i = 0; i < std::min(8, f.m_ledAB); ++i){
-            scene->addRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20, m_penBlack, m_greenBrush);
+            m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
         }
     } else {
         for(int i = 0; i < std::min(8, -f.m_ledAB); ++i){
-            scene->addRect(m_width/2 + 60 + l1*i, 10, 10, 20, m_penBlack, m_greenBrush);
+            m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
         }
     }
     
@@ -690,7 +711,9 @@ void GpsWidget::drawBottom(){
     //GpsFramework & f = GpsFramework::Instance();
     
     //auto last_frame = f.m_lastGGAFrame;
-    scene->addRect(0, m_height-40-l_bottom, m_width, 40+l_bottom, m_penBlack, m_brushDarkGray);
+    m_painter->setBrush(m_brushDarkGray);
+    m_painter->setPen(m_penBlack);
+    m_painter->drawRect(0, m_height-40-l_bottom, m_width, 40+l_bottom);
     //int y_bottom = m_height-40-l_bottom+12;
     
     
@@ -741,7 +764,7 @@ void GpsWidget::drawBottom(){
 }
 
 void GpsWidget::drawVolant_(double y, double a, double r, double start_angle){
-    double angle = a;
+    /*double angle = a;
     int nbr_tour = 0;
     while(angle > 1.0){
         angle = angle - 1.0;
@@ -770,11 +793,11 @@ void GpsWidget::drawVolant_(double y, double a, double r, double start_angle){
         auto mBounds = textItem->boundingRect();
         
         textItem->setPos(m_width/2-mBounds.width()/2, y-r);
-    }
+    }*/
 }
 
 void GpsWidget::drawVolant(double y){
-    GpsFramework & f = GpsFramework::Instance();
+    /*GpsFramework & f = GpsFramework::Instance();
     
     int r=40;
     
@@ -809,7 +832,7 @@ void GpsWidget::drawVolant(double y){
     
     //double x1 = cos(i*2*3.14)*r;
     //double y1 = sin(i*2*3.14)*r;
-    //scene->addRect(m_width/2+x1, y+y1, 2, 2);
+    //scene->addRect(m_width/2+x1, y+y1, 2, 2);*/
     
 }
 
@@ -818,7 +841,7 @@ void GpsWidget::drawDebug(){
     
     if(!f.m_line){
         auto list = f.m_curveAB.getCurrentLine();
-        if(list && list->m_points.size()>3){
+        /*if(list && list->m_points.size()>3){
             {
                 double x_h;
                 double y_h;
@@ -836,15 +859,20 @@ void GpsWidget::drawDebug(){
                 my_projete2(p->m_x, p->m_y, x_h, y_h);
                 scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
             }
-        }
+        }*/
         
+        m_painter->setPen(m_penNo);
+        m_painter->setBrush(m_brushRed);
         {
             double x_h;
             double y_h;
             
             my_projete2(f.m_curveAB.x_h, f.m_curveAB.y_h, x_h, y_h);
-            scene->addEllipse(x_h-1, y_h-1, 2, 2, m_penRed, m_brushNo);
+            m_painter->drawEllipse(x_h-1, y_h-1, 2, 2);
         }
+        
+        
+        m_painter->setPen(m_penGreen);
         if(f.m_pilot_algo == FollowCarrot){
             double x_h_lk;
             double y_h_lk;
@@ -853,21 +881,25 @@ void GpsWidget::drawDebug(){
             double tract_pont_x;
             double tract_pont_y;
             my_projete2(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, tract_pont_x, tract_pont_y);
-            scene->addLine(tract_pont_x, tract_pont_y, x_h_lk, y_h_lk, m_penGreen);
+            m_painter->drawLine(tract_pont_x, tract_pont_y, x_h_lk, y_h_lk);
             
             double x2_h_lk;
             double y2_h_lk;
             my_projete2(f.m_tracteur.m_x_essieu_avant + f.m_deplacementX, f.m_tracteur.m_y_essieu_avant + f.m_deplacementY, x2_h_lk, y2_h_lk);
-            scene->addLine(tract_pont_x, tract_pont_y, x2_h_lk, y2_h_lk, m_penGreen);
+            m_painter->drawLine(tract_pont_x, tract_pont_y, x2_h_lk, y2_h_lk);
         }
     } else {
+        m_painter->setPen(m_penNo);
+        m_painter->setBrush(m_brushRed);
         {
             double x_h;
             double y_h;
             
             my_projete2(f.m_lineAB.m_antenne_x_h, f.m_lineAB.m_antenne_y_h, x_h, y_h);
-            scene->addEllipse(x_h-1, y_h-1, 2, 2, m_penRed, m_brushNo);
+            m_painter->drawEllipse(x_h-1, y_h-1, 2, 2);
         }
+        
+        m_painter->setPen(m_penGreen);
         if(f.m_pilot_algo == FollowCarrot && f.m_lineAB.isInit()){
             double x_h_lk;
             double y_h_lk;
@@ -876,12 +908,12 @@ void GpsWidget::drawDebug(){
             double tract_pont_x;
             double tract_pont_y;
             my_projete2(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, tract_pont_x, tract_pont_y);
-            scene->addLine(tract_pont_x, tract_pont_y, x_h_lk, y_h_lk, m_penGreen);
+            m_painter->drawLine(tract_pont_x, tract_pont_y, x_h_lk, y_h_lk);
             
             double x2_h_lk;
             double y2_h_lk;
             my_projete2(f.m_tracteur.m_x_essieu_avant + f.m_deplacementX, f.m_tracteur.m_y_essieu_avant + f.m_deplacementY, x2_h_lk, y2_h_lk);
-            scene->addLine(tract_pont_x, tract_pont_y, x2_h_lk, y2_h_lk, m_penGreen);
+            m_painter->drawLine(tract_pont_x, tract_pont_y, x2_h_lk, y2_h_lk);
             
             
         }
@@ -962,6 +994,7 @@ void GpsWidget::drawDebug(){
     
     //zoom
     {
+        m_painter->setPen(m_penBlack);
         int x =  100;
         int y = m_height*0.6;
         std::ostringstream out;
@@ -985,7 +1018,7 @@ void GpsWidget::drawDebug(){
             int x = m_width-l2;
             int y = 00;
             
-            scene->addRect(x, y, l2, m_height-100, m_penBlack, m_brushLightGrayDebug);
+            //scene->addRect(x, y, l2, m_height-100, m_penBlack, m_brushLightGrayDebug);
             
             int y_temp = m_height - 120;
             for(auto s:f.m_listLog){
@@ -1006,7 +1039,9 @@ void GpsWidget::drawError(){
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_config.m_debug){
         if(!f.m_messages_errors.empty()){
-            scene->addRect(x, y, w, h, m_penBlack, m_brushLightGrayDebug);
+            m_painter->setPen(m_penBlack);
+            m_painter->setBrush(m_brushLightGrayDebug);
+            m_painter->drawRect(x, y, w, h);
             drawText("Erreurs", x+w/2, y+15, sizeText_big, true);
             drawText(f.m_messages_errors, x+20, y+40, sizeText_little, false);
             m_buttonErrorOk.m_x = (x+w/2);
@@ -1058,7 +1093,7 @@ void GpsWidget::onMouse(int x, int y){
         auto p = m_widgets[n-i-1];
         if(!p->m_close){
             p->onMouse(x, y);
-            return;
+            //return;
         }
     }
     
@@ -1100,6 +1135,9 @@ void GpsWidget::onMouse(int x, int y){
     } else if(f.m_config.m_pilot_auto_deactive > 0 && m_buttonVolantAuto.isActive(x2, y2)){
         GpsFramework::Instance().m_pilot_auto = !GpsFramework::Instance().m_pilot_auto;
     }
-    draw();
+    
+    INFO(x << " " << y);
+    INFO(m_buttonChamp.m_x << " " << m_buttonChamp.m_y);
+    //draw();
 }
 

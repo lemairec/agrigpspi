@@ -119,7 +119,8 @@ struct SelectButtonGui{
 
 class BaseWidget{
 public:
-    QGraphicsScene * scene;
+    QPainter * m_painter;
+    
     QPen m_penBlack;
     QPen m_penGray;
     QPen m_penRed;
@@ -140,8 +141,8 @@ public:
     QBrush m_brushLightGrayDebug;
     
 public:
-    virtual void setScene(QGraphicsScene * s){
-        scene = s;
+    virtual void setPainter(QPainter * p){
+        m_painter = p;
     }
 public:
     int m_gros_button = 10;

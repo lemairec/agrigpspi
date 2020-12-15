@@ -49,8 +49,11 @@ void OptionWidget::setSize(int width, int height){
 }
 
 void OptionWidget::draw(){
-    scene->addRect(m_width*0.2, m_height*0.1, m_width*0.6, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
-    scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushWhiteAlpha);
+    m_painter->drawRect(m_width*0.2, m_height*0.1, m_width*0.6, m_height*0.8);
+    m_painter->setBrush(m_brushDarkGray);
+    m_painter->drawRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8);
     
     drawButtonImage(&m_button_close, *m_imgClose);
     

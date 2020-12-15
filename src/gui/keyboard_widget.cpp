@@ -39,7 +39,9 @@ void KeyPadWidget::myDrawButton(ButtonGui * b, QString s){
 
 
 void KeyPadWidget::draw(){
-    scene->addRect(m_x, m_height*0.1, m_width*0.3, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushWhiteAlpha);
+    m_painter->drawRect(m_x, m_height*0.1, m_width*0.3, m_height*0.8);
     
     QString s = "KeyPad";
     drawQText(s, m_x+m_lg/2, 0.15*m_height, sizeText_big, true);
@@ -181,7 +183,9 @@ void KeyBoardWidget::myDrawButton(ButtonGui * b, QString s){
 
 
 void KeyBoardWidget::draw(){
-    scene->addRect(m_x, m_height*0.1, m_lg, m_height*0.8, m_penBlack, m_brushWhiteAlpha);
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushWhiteAlpha);
+    m_painter->drawRect(m_x, m_height*0.1, m_lg, m_height*0.8);
     
     QString s = "KeyBoard";
     drawQText(s, m_x+m_lg/2, 0.15*m_height, sizeText_big, true);

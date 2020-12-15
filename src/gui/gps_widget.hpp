@@ -78,7 +78,7 @@ public:
     
     bool m_debug = false;
     
-    void setScene(QGraphicsScene * s);
+    void setPainter(QPainter * s);
     
     void drawCurve(Curve_ptr l, QPen & pen);
     bool addligne(double l, int i, QPen & pen);

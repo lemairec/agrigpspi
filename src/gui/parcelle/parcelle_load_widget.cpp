@@ -54,35 +54,6 @@ void ParcelleLoadWidget::drawParcelle(){
     }
     
     QPolygon poly;
-   
-    /*double x_min = 0, y_min, x_max, y_max;
-    for(auto p : parcelle.m_contour){
-        if(x_min == 0){
-            x_min = p->m_x;
-            x_max = p->m_x;
-            y_min = p->m_y;
-            y_max = p->m_y;
-        }
-        if(x_min > p->m_x){ x_min = p->m_x; }
-        if(x_max < p->m_x){ x_max = p->m_x; }
-        if(y_min > p->m_y){ y_min = p->m_y; }
-        if(y_max < p->m_y){ y_max = p->m_y; }
-    }
-    INFO(x_min << " " << x_max << " "<< y_min << " " << y_max);
-    {
-        double x = m_width*0.7 - (x_min-parcelle.m_center_x)*zoom;
-        double y = m_height/2 + (y_min-parcelle.m_center_y)*zoom;
-        scene->addEllipse(x, y, 3,3, m_penRed);
-    }
-    {
-        double x = m_width*0.7 - (x_max-parcelle.m_center_x)*zoom;
-        double y = m_height/2 + (y_max-parcelle.m_center_y)*zoom;
-        scene->addEllipse(x, y, 3,3, m_penRed);
-    }
-    double w = (parcelle.m_bounding_rect_width)*zoom;
-    double h = (parcelle.m_bounding_rect_height)*zoom;
-    scene->addRect(m_width*0.7-w/2,  m_height/2-h/2, w,h, m_penBlack);
-    */
     
     
     for(auto p : parcelle.m_contour){
@@ -91,21 +62,22 @@ void ParcelleLoadWidget::drawParcelle(){
         poly.push_back(QPoint(x, y));
     }
     
+    m_painter->setPen(m_penNo);
+    m_painter->setBrush(m_brushDarkGray);
     
+    m_painter->drawPolygon(poly);
     
-    
-    
-    
-    scene->addPolygon(poly, m_penNo, m_brushDarkGray);
-    
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushRed);
     
     for(auto f : parcelle.m_flag){
         auto p = parcelle.m_contour[f];
         double x = m_width*0.7 - (p->m_x-parcelle.m_center_x)*zoom;
         double y = m_height/2 + (p->m_y-parcelle.m_center_y)*zoom;
-        scene->addEllipse(x-3, y-3, 6, 6, m_penBlack, m_brushRed);
+        m_painter->drawEllipse(x-3, y-3, 6, 6);
     }
     
+    m_painter->setPen(m_penRed);
     if(m_selectLine.m_selectedValue != 0){
         int i = m_selectLine.m_selectedValue-1;
         if(parcelle.m_flag.size()>1){
@@ -119,7 +91,7 @@ void ParcelleLoadWidget::drawParcelle(){
             double y1 = m_height/2 + (p1->m_y-parcelle.m_center_y)*zoom;
             double x2 = m_width*0.7 - (p2->m_x-parcelle.m_center_x)*zoom;
             double y2 = m_height/2 + (p2->m_y-parcelle.m_center_y)*zoom;
-            scene->addLine(x1, y1, x2, y2, m_penRed);
+            m_painter->drawLine(x1, y1, x2, y2);
             
         }
     }
@@ -129,9 +101,12 @@ void ParcelleLoadWidget::drawParcelle(){
 }
 
 void ParcelleLoadWidget::draw(){
-    scene->addRect(m_x, 0, m_width, m_height, m_penBlack, m_brushWhite);
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushWhite);
+    m_painter->drawRect(m_x, 0, m_width, m_height);
     
-    scene->addRect(m_width*0.4, m_height*0.05, m_width*0.6-m_height*0.05, m_height*0.9, m_penBlack, m_parcelleBrush);
+    m_painter->setBrush(m_parcelleBrush);
+    m_painter->drawRect(m_width*0.4, m_height*0.05, m_width*0.6-m_height*0.05, m_height*0.9);
     //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
     
     GpsFramework & f = GpsFramework::Instance();
