@@ -419,7 +419,7 @@ void GpsWidget::draw_force(){
             if(m_zoom > 10){
                 nb = 5;
                 if(m_zoom > 20){
-                    nb = 3;
+                    nb = 4;
                 }
             }
         }
@@ -566,36 +566,9 @@ void GpsWidget::drawTracteur(){
     dx = dx/res*l2;
     dy = dy/res*l2;
     
-    double x;
-    double y;
-    
-    double x2;
-    double y2;
-    
-    //m_angle_correction
-    
-    my_projete(m_xref+dx, m_yref+dy, x, y);
-    my_projete(m_xref+dx/4, m_yref+dy/4, x2, y2);
-    
-    //scene->addLine(w/2, h/2, w/2 + x, h/2 - y, m_penBlue);
-    
-    double l = 1.8*m_zoom/2;
-    
-    double xA;
-    double yA;
-    if(y==0){
-        xA=0;
-        yA=l;
-    } else {
-        double res = x/y;
-        xA = l/(sqrt(1+res*res));
-        yA = -xA*res;
-    }
-    
-    
     
     if(f.m_tracteur.m_pt_antenne_corrige){
-        y = h/2;
+        double y = h/2;
         double x_tracteur, y_tracteur;
         my_projete2(f.m_tracteur.m_pt_antenne_corrige->m_x, f.m_tracteur.m_pt_antenne_corrige->m_y, x_tracteur, y_tracteur);
         
@@ -657,7 +630,32 @@ void GpsWidget::drawTracteur(){
             scene->addEllipse(x-2, y-2, 4, 4, m_penRed, m_brushGreen);*/
         }
     } else {
-        /*QPolygon polygon;
+        /*
+        
+        double x;
+        double y;
+        
+        double x2;
+        double y2;
+        
+        //m_angle_correction
+        
+        my_projete(m_xref+dx, m_yref+dy, x, y);
+        my_projete(m_xref+dx/4, m_yref+dy/4, x2, y2);
+        
+        double l = 1.8*m_zoom/2;
+        
+        double xA;
+        double yA;
+        if(y==0){
+            xA=0;
+            yA=l;
+        } else {
+            double res = x/y;
+            xA = l/(sqrt(1+res*res));
+            yA = -xA*res;
+        }
+        QPolygon polygon;
         polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + x2, h/2 - y2) << QPoint(w/2 - xA, h/2 + yA)<< QPoint(w/2 + x, h/2 - y);
         scene->addPolygon(polygon, m_penNo, m_brushTractor);
         
@@ -669,19 +667,6 @@ void GpsWidget::drawTracteur(){
             my_projete(m_xref+dx*cos(a)-dy*sin(a), m_yref+dx*sin(a)+dy*cos(a), x2, y2);
             scene->addLine(w/2+x, h/2-y, w/2 + x2, h/2 - y2, m_penBlue);
         }*/// TODO
-        
-    }
-    if(m_zoom >= 60){
-        y = h/2;
-        if(f.m_config.m_debug){
-            //
-        }
-    }
-    {
-        double x_temp, y_temp;
-        my_projete(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, x_temp, y_temp);
-        //INFO(x_temp << " " << y_temp);
-        //scene->addEllipse(w/2 + x_temp-5, h/2 - y_temp-5, 10, 10, m_penRed, m_grayBrush);
         
     }
     
@@ -949,21 +934,26 @@ void GpsWidget::drawDebug(){
             m_painter->drawEllipse(x_h-1, y_h-1, 2, 2);
         }
         
-        m_painter->setPen(m_penGreen);
+        m_painter->setPen(QColor(255,157,0));
         if(f.m_pilot_algo == FollowCarrot && f.m_lineAB.isInit()){
-            double x_h_lk;
-            double y_h_lk;
-            my_projete2(f.m_lineAB.m_lookhead_x_h, f.m_lineAB.m_lookhead_y_h, x_h_lk, y_h_lk);
+            double fc_x;
+            double fc_y;
+            my_projete2(f.m_lineAB.m_fc_x, f.m_lineAB.m_fc_y, fc_x, fc_y);
             
-            double tract_pont_x;
-            double tract_pont_y;
-            my_projete2(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, tract_pont_x, tract_pont_y);
-            m_painter->drawLine(tract_pont_x, tract_pont_y, x_h_lk, y_h_lk);
+            double fc_lh_x;
+            double fc_lh_y;
+            my_projete2(f.m_lineAB.m_fc_lh_x, f.m_lineAB.m_fc_lh_y, fc_lh_x, fc_lh_y);
+            m_painter->drawLine(fc_x, fc_y, fc_lh_x, fc_lh_y);
             
-            double x2_h_lk;
-            double y2_h_lk;
-            my_projete2(f.m_tracteur.m_x_essieu_avant + f.m_deplacementX, f.m_tracteur.m_y_essieu_avant + f.m_deplacementY, x2_h_lk, y2_h_lk);
-            m_painter->drawLine(tract_pont_x, tract_pont_y, x2_h_lk, y2_h_lk);
+            double fc_d_x;
+            double fc_d_y;
+            my_projete2(f.m_lineAB.m_fc_x + f.m_deplacementX, f.m_lineAB.m_fc_y + f.m_deplacementY, fc_d_x, fc_d_y);
+            m_painter->drawLine(fc_x, fc_y, fc_d_x, fc_d_y);
+            
+            double fc_h_x;
+            double fc_h_y;
+            my_projete2(f.m_lineAB.m_fc_xh, f.m_lineAB.m_fc_yh, fc_h_x, fc_h_y);
+            m_painter->drawEllipse(fc_h_x-1, fc_h_y-1, 2, 2);
             
             
         }

@@ -37,8 +37,6 @@ public:
     
     double m_x_h, m_y_h;
     double m_antenne_x_h, m_antenne_y_h;
-    double m_pont_x_h = 0, m_pont_y_h = 0;
-    double m_lookhead_x_h = 0, m_lookhead_y_h = 0;
     
     void calculProjete2(double x, double y, double deplacement_x, double deplacement_y);
     
@@ -56,6 +54,11 @@ public:
     double m_d_xthe;
     double m_d_res;
     double m_d_delta;
+    
+    double m_fc_x, m_fc_y;
+    double m_fc_lh_x, m_fc_lh_y;
+    double m_fc_xh = 0, m_fc_yh = 0;
+    
 };
 
 class LineCurves {

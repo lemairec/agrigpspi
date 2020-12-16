@@ -128,22 +128,24 @@ double LineAB::distance(double x, double y, double deplacementX, double deplacem
 
 double LineAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lk){
     calculProjete2(x, y, deplacement_x, deplacement_y);
+    m_fc_x = x;
+    m_fc_y = y;
     
-    m_pont_x_h = m_x_h;
-    m_pont_y_h = m_y_h;
+    m_fc_xh = m_x_h;
+    m_fc_yh = m_y_h;
     
     double d = deplacement_x*m_ab_x+deplacement_y*m_ab_y;
     
     if(d>0){
-        m_lookhead_x_h = m_pont_x_h+cos(m_angleAB)*lk;
-        m_lookhead_y_h = m_pont_y_h+sin(m_angleAB)*lk;
+        m_fc_lh_x = m_fc_xh+cos(m_angleAB)*lk;
+        m_fc_lh_y = m_fc_yh+sin(m_angleAB)*lk;
     } else {
-        m_lookhead_x_h = m_pont_x_h-cos(m_angleAB)*lk;
-        m_lookhead_y_h = m_pont_y_h-sin(m_angleAB)*lk;
+        m_fc_lh_x = m_fc_xh-cos(m_angleAB)*lk;
+        m_fc_lh_y = m_fc_yh-sin(m_angleAB)*lk;
     }
     
-    double x_segment = m_lookhead_x_h - x;
-    double y_segment = m_lookhead_y_h - y;
+    double x_segment = m_fc_lh_x - m_fc_x;
+    double y_segment = m_fc_lh_y - m_fc_y;
     
     double angle = my_angle(x_segment, y_segment, deplacement_x, deplacement_y);
     angle = angleBetweenPI2(angle);
