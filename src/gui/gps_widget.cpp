@@ -557,7 +557,6 @@ void GpsWidget::drawTracteur(){
     
     
     double h = m_height;
-    double w = m_width;
     
     double dx = f.m_vitesse*cos(f.m_deplacementAngle);
     double dy = f.m_vitesse*sin(f.m_deplacementAngle);
@@ -1067,7 +1066,6 @@ void GpsWidget::drawDebug(){
         int l2 = 160;
         {
             int x = m_width-l2;
-            int y = 00;
             
             //scene->addRect(x, y, l2, m_height-100, m_penBlack, m_brushLightGrayDebug);
             
