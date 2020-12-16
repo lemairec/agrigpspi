@@ -28,11 +28,11 @@ public:
     int m_imu_moy = 10;
     
     bool m_gga = false;
-    int m_ekf = 0;
-    double m_ekf_coeff_lissage = 0.5;
+    int m_ekf = 2;
+    double m_ekf_coeff_lissage = 0.7;
     bool m_ekf_correction_devers = true;
    
-    bool m_sensDraw = false;
+    bool m_sensDraw = true;
     bool m_debug = false;
     bool m_menu_vertical = false;
     bool m_debug_log = true;
