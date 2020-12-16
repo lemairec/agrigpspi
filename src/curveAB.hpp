@@ -67,10 +67,6 @@ public:
     double calculRearWheelPosition(double p_x, double p_y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
 
     
-    double x_h_pont = 0, y_h_pont = 0;
-    double x_h_lookhead = 0, y_h_lookhead = 0;
-    double m_angle = 0;
-    
     double m_fc_x = 0, m_fc_y = 0;
     double m_fc_lh_x = 0, m_fc_lh_y = 0;
     double m_fc_xh = 0, m_fc_yh = 0;

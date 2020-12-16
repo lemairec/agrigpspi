@@ -483,9 +483,6 @@ double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, d
      * Follow carrot PT LOOKHEAD
      */
     
-    x_h_lookhead = 0;
-    y_h_lookhead = 0;
-    
     double d = deplacement_x*x_v+deplacement_y*y_v;
     double x_v2 = 0;
     double y_v2 = 0;
