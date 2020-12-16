@@ -70,7 +70,8 @@ void MainWindow::setupUi(){
     this->setCentralWidget(m_my_widget);
     
     
-    if(false){
+    GpsFramework & f = GpsFramework::Instance();
+    if(f.m_config.m_fullscreen){
         showFullScreen();
     } else {
         creerMenu();

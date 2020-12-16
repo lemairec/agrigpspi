@@ -489,7 +489,7 @@ void GpsWidget::draw_force(){
             }
             
             m_painter->setPen(m_penRed); // personnaliser
-            double x_last = 0, y_last;
+            double x_last = 0, y_last = 0;
             for(auto p: f.m_ekf_module.m_list_tracteur){
                 double x1, y1;
                 my_projete2(p->m_x, p->m_y, x1, y1);
