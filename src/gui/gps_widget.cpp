@@ -392,6 +392,10 @@ void GpsWidget::draw_force(){
     m_heightMax = m_height/2+f.m_config.m_outil_largeur*m_zoom/2;
     m_debug = f.m_config.m_debug;
     
+    
+   
+    
+    
     m_a = -3.14/2+f.m_deplacementAngle;
     if(!f.m_config.m_sensDraw){
         m_a = 0;
@@ -400,14 +404,66 @@ void GpsWidget::draw_force(){
     m_sinA = sin(m_a);
     
     if(f.m_tracteur.m_pt_antenne_corrige){
-    m_xref = f.m_tracteur.m_pt_antenne_corrige->m_x;
-    m_yref = f.m_tracteur.m_pt_antenne_corrige->m_y;
+        m_xref = f.m_tracteur.m_pt_antenne_corrige->m_x;
+        m_yref = f.m_tracteur.m_pt_antenne_corrige->m_y;
+        
+        
+        double begin_ref_x = round(f.m_tracteur.m_pt_antenne_corrige->m_x/20.0)*20;
+        double begin_ref_y = round(f.m_tracteur.m_pt_antenne_corrige->m_y/20.0)*20;
+
+        m_painter->setPen(m_penNo);
+        
+        int nb = -1;
+        if(m_zoom > 4){
+            nb = 10;
+            if(m_zoom > 10){
+                nb = 5;
+                if(m_zoom > 20){
+                    nb = 3;
+                }
+            }
+        }
+        for(int j = -nb; j < nb+1; ++j){
+            for(int i = -nb; i < nb+1; ++i){
+                if((i+j)%2==0){
+                    m_painter->setBrush(m_brushParcelle1);
+                    
+                } else {
+                    m_painter->setBrush(m_brushParcelle2);
+                                
+                }
+                double x0 = begin_ref_x+i*10;
+                double y0 = begin_ref_y+j*10;
+                double x02, y02;
+                my_projete2(x0, y0, x02, y02);
+                double x1 = begin_ref_x+(i+1)*(10);
+                double y1 = begin_ref_y+j*10;
+                double x12, y12;
+                my_projete2(x1, y1, x12, y12);
+                double x3 = begin_ref_x+(i+1)*(10);
+                double y3 = begin_ref_y+(j+1)*(10);
+                double x32, y32;
+                my_projete2(x3, y3, x32, y32);
+                double x4 = begin_ref_x+i*(10);
+                double y4 = begin_ref_y+(j+1)*(10);
+                double x42, y42;
+                my_projete2(x4, y4, x42, y42);
+                
+                QPointF points[4] = {
+                    QPointF(x02, y02),
+                    QPointF(x12, y12),
+                    QPointF(x32, y32),
+                    QPointF(x42, y42)};
+                m_painter->drawPolygon(points, 4);
+            }
+        }
     }
     
     //scene->clear();
     if(m_debug && m_zoom > 40){
         drawVolant(m_height/2);
     }
+        
     
     if(f.m_etat == Etat_ParcelleAdd || f.m_etat == Etat_ParcellePause){
         drawTracteur();
@@ -479,11 +535,6 @@ void GpsWidget::draw_force(){
         }
     }
     
-    QString s =  "draw " + QString::number(round(f.m_draw_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_draw_time.m_et*10)/10);
-    //drawQText(s, x2, 0.3*m_height, sizeText_little, false);
-    INFO(s.toUtf8().constData());
-    
-   
     DEBUG("END");
     
 }

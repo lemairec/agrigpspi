@@ -140,6 +140,9 @@ public:
     QBrush m_brushDarkGray;
     QBrush m_brushLightGrayDebug;
     
+    QBrush m_brushParcelle1;
+    QBrush m_brushParcelle2;
+    
 public:
     virtual void setPainter(QPainter * p){
         m_painter = p;
