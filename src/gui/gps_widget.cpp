@@ -1187,8 +1187,6 @@ void GpsWidget::onMouse(int x, int y){
         GpsFramework::Instance().m_pilot_auto = !GpsFramework::Instance().m_pilot_auto;
     }
     
-    INFO(x << " " << y);
-    INFO(m_buttonChamp.m_x << " " << m_buttonChamp.m_y);
     //draw();
 }
 

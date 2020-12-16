@@ -83,7 +83,7 @@ void Config::save(){
     settings.setValue("outil_largeur", m_outil_largeur);
     settings.setValue("outil_distance", m_outil_distance);
     
-    m_resolution_draw = 2.0;
+    m_resolution_draw = 3.0;
     m_resolution_calcul = 0.5;
 }
 

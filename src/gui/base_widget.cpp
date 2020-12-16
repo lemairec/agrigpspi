@@ -258,7 +258,7 @@ void BaseWidget::drawButton(ButtonGui * button, int color){
 
 
 void BaseWidget::drawButtonLabel(ButtonGui * button, int color){
-    drawButton(button);
+    drawButton(button, color);
     
     drawText(button->m_label, button->m_x-20, button->m_y, sizeText_medium);
 }
@@ -334,7 +334,7 @@ void BaseWidget::drawQText(const QString & s, int x, int y, SizeText size, bool 
     
     if(center){
         //auto mBounds = textItem->boundingRect();
-        m_painter->drawText(x-s.size()*s2*0.25, y+2, s);
+        m_painter->drawText(x-s.size()*s2*0.25, y+5, s);
     } else {
         m_painter->drawText(x, y+2, s);
     }
