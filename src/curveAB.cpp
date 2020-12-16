@@ -375,9 +375,13 @@ double CurveAB::calculCurbature(Curve_ptr line, size_t i){
     return curbature;
 }
 
+
+
 void CurveAB::calculProjete2P(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
     calculProjete2(p->m_x, p->m_y, deplacement_x, deplacement_y);
 }
+
+
 
 void CurveAB::calculProjete2(double x, double y, double deplacement_x, double deplacement_y){
     Curve_ptr list = getCurrentLine();
@@ -448,6 +452,37 @@ void CurveAB::calculProjete2(double x, double y, double deplacement_x, double de
         m_proj_distance = -m_proj_distance;
     }
 }
+
+void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line){
+    calculProjete2P(p, deplacement_x, deplacement_y);
+    double dist = abs(m_proj_distance);
+    if(change_line && dist > m_largeur/2){
+        double temp_x_h = m_proj_x;
+        double temp_y_h = m_proj_y;
+        double temp_i = m_i_current;
+        double temp_distance = m_proj_distance;
+        
+        setCurrent(m_i_current + 1);
+        calculProjete2P(p, deplacement_x, deplacement_y);
+        double dist2 = abs(m_proj_distance);
+        if(dist2 < dist){
+            return;
+        }
+        setCurrent(m_i_current - 2);
+        calculProjete2P(p, deplacement_x, deplacement_y);
+        double dist3 = abs(m_proj_distance);
+        if(dist3 < dist){
+            return;
+        }
+        setCurrent(temp_i);
+        m_proj_x = temp_x_h;
+        m_proj_y = temp_y_h;
+        m_proj_distance = temp_distance;
+    }
+}
+
+
+
 
 double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lookhead){
     m_fc_x = x;
@@ -522,35 +557,6 @@ double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, d
 
     return angle;
 }
-
-void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line){
-    calculProjete2P(p, deplacement_x, deplacement_y);
-    double dist = abs(m_proj_distance);
-    if(change_line && dist > m_largeur/2){
-        double temp_x_h = m_proj_x;
-        double temp_y_h = m_proj_y;
-        double temp_i = m_i_current;
-        double temp_distance = m_proj_distance;
-        
-        setCurrent(m_i_current + 1);
-        calculProjete2P(p, deplacement_x, deplacement_y);
-        double dist2 = abs(m_proj_distance);
-        if(dist2 < dist){
-            return;
-        }
-        setCurrent(m_i_current - 2);
-        calculProjete2P(p, deplacement_x, deplacement_y);
-        double dist3 = abs(m_proj_distance);
-        if(dist3 < dist){
-            return;
-        }
-        setCurrent(temp_i);
-        m_proj_x = temp_x_h;
-        m_proj_y = temp_y_h;
-        m_proj_distance = temp_distance;
-    }
-}
-
 
 double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
     
