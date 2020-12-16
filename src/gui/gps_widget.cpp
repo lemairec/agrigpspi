@@ -412,8 +412,24 @@ void GpsWidget::draw_force(){
         double begin_ref_y = round(f.m_tracteur.m_pt_antenne_corrige->m_y/20.0)*20;
 
         m_painter->setPen(m_penNo);
+<<<<<<< HEAD
         for(int j = -5; j < 5; ++j){
             for(int i = -5; i < 5; ++i){
+=======
+        
+        int nb = -1;
+        if(m_zoom > 4){
+            nb = 10;
+            if(m_zoom > 10){
+                nb = 5;
+                if(m_zoom > 20){
+                    nb = 3;
+                }
+            }
+        }
+        for(int j = -nb; j < nb+1; ++j){
+            for(int i = -nb; i < nb+1; ++i){
+>>>>>>> 78a9e707a8ebab06e14e1c4eb152ec7312681e0f
                 if((i+j)%2==0){
                     m_painter->setBrush(m_brushParcelle1);
                     

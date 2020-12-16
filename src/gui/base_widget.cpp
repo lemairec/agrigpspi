@@ -182,8 +182,9 @@ BaseWidget::BaseWidget(){
     
     m_grayBrush = QBrush (QColor(200,200,200));
     m_parcelleBrush = QBrush(QColor(133,146,118, 100));
-    m_brushParcelle1 = QBrush(QColor(133,146,118, 100));
-    m_brushParcelle2 = QBrush(QColor(133*0.8,146*0.8,118*0.8, 100));
+
+    m_brushParcelle1 = QBrush(QColor(183,166,138));
+    m_brushParcelle2 = QBrush(QColor(183*1.2,166*1.2,138*1.2));
     
     m_brushDarkGray = QBrush (QColor(60,60,60));
     
