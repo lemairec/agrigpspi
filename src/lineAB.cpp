@@ -73,7 +73,6 @@ void LineAB::calculProjete2(double x, double y, double deplacement_x, double dep
     double det = x_v*(m_y_h-y_a)-y_v*(m_x_h-x_a);
     
     if(det < 0){
-        INFO("neg");
         distance = - distance;
     }
     
