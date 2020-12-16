@@ -175,9 +175,9 @@ void CurveAB::computeCurve(Curve_ptr curve){
     addPoints(curve->m_points);
     
     for(size_t i = 0; i< curve->m_points.size(); ++i){
-        if(i%5 == 0 || i == (curve->m_points.size()-1)){
+        //if(i%5 == 0 || i == (curve->m_points.size()-1)){
             curve->m_points_simpl.push_back(curve->m_points[i]);
-        }
+        //}
     }
     
     if(curve->m_points.size() > 5){
@@ -310,20 +310,23 @@ void CurveAB::savePointB(){
 }
 
 const double tol = 0.9999999;
-size_t size_cur = 10;
+size_t size_cur = 4;
 
 double CurveAB::calculCurbature(Curve_ptr line, size_t i){
     if(line->m_points.size() < size_cur){
+        m_curb_l = 0;
         return 0.0;
     }
     if(i < size_cur){
+        m_curb_l = 0;
         return 0.0;
     }
     if(i > line->m_points.size()-size_cur-1){
+        m_curb_l = 0;
         return 0.0;
     }
-    auto pointA = line->m_points[i-size_cur];
     auto pointB = line->m_points[i];
+    auto pointA = line->m_points[i-size_cur];
     auto pointC = line->m_points[i+size_cur];
     
     double a = sqrt(pointA->distanceCarre(*pointB));
@@ -336,7 +339,7 @@ double CurveAB::calculCurbature(Curve_ptr line, size_t i){
         return 0;
     }
     double p = (a+b+c)/2;
-    double curbature = (4*sqrt(p*(p-a)*(p-b)*(p-c)))/(a*b*c);
+    double curbature_p = (4*sqrt(p*(p-a)*(p-b)*(p-c)))/(a*b*c);
     
     double x_ab = pointB->m_x - pointA->m_x;
     double y_ab = pointB->m_y - pointA->m_y;
@@ -346,14 +349,37 @@ double CurveAB::calculCurbature(Curve_ptr line, size_t i){
     
     double det = x_ab*y_bc-y_ab*x_bc;
     
+    double curbature = curbature_p;
     if(det < 0){
         curbature = -curbature;
     }
+    curbature = -curbature;
+    
+    double x_ca = pointC->m_x - pointA->m_x;
+    double y_ca = pointC->m_y - pointA->m_y;
+    double d_ca = sqrt(x_ca*x_ca+y_ca*y_ca);
+    double x_v = x_ca/d_ca;
+    double y_v = y_ca/d_ca;
+    
+    if(curbature>0){
+        m_curb_x = (pointC->m_x+ pointA->m_x)/2+y_v/curbature_p;
+        m_curb_y = (pointC->m_y+ pointA->m_y)/2-x_v/curbature_p;
+    } else {
+        m_curb_x = (pointC->m_x+ pointA->m_x)/2-y_v/curbature_p;
+        m_curb_y = (pointC->m_y+ pointA->m_y)/2+x_v/curbature_p;
+    }
+    m_curb_l = 1/curbature_p;
+    m_curb_c_x = pointB->m_x;
+    m_curb_c_y = pointB->m_y;
     
     return curbature;
 }
 
-void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
+void CurveAB::calculProjete2P(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
+    calculProjete2(p->m_x, p->m_y, deplacement_x, deplacement_y);
+}
+
+void CurveAB::calculProjete2(double x, double y, double deplacement_x, double deplacement_y){
     Curve_ptr list = getCurrentLine();
     if(list == NULL || list->m_points.size() < 5){
         return;
@@ -363,75 +389,6 @@ void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplac
     double dist_min = 10000;
     
     
-    
-    for(int i = 0; i < (int)list->m_points.size(); ++i){
-        double d = list->m_points[i]->distanceCarre(*p);
-        if(d < dist_min){
-            dist_min = d;
-            list->m_curve_i_min = i;
-        }
-    }
-    if(list->m_curve_i_min == 0){
-        list->m_curve_i_min2 = 1;
-    } else if(list->m_curve_i_min == ((int)list->m_points.size())-1){
-        list->m_curve_i_min2 = list->m_points.size()-2;
-    } else {
-        
-        double d1 = list->m_points[list->m_curve_i_min-1]->distanceCarre(*p);
-        double d2 = list->m_points[list->m_curve_i_min+1]->distanceCarre(*p);
-        
-        if(d1 < d2){
-            list->m_curve_i_min = list->m_curve_i_min-1;
-        }
-        list->m_curve_i_min2 = list->m_curve_i_min+1;
-    }
-    
-    double x_a = p->m_x;
-    double y_a = p->m_y;
-    
-    double x_b = list->m_points[list->m_curve_i_min]->m_x;
-    double y_b = list->m_points[list->m_curve_i_min]->m_y;
-    double x_m = list->m_points[list->m_curve_i_min2]->m_x;
-    double y_m = list->m_points[list->m_curve_i_min2]->m_y;
-
-    //https://fr.wikipedia.org/wiki/Projection_orthogonale
-    double x_v = x_m-x_b;
-    double y_v = y_m-y_b;
-    double d_v = sqrt(x_v*x_v + y_v*y_v);
-    x_v = x_v/d_v;
-    y_v = y_v/d_v;
-    
-    
-    
-    double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
-    x_h = x_b + bh*x_v;
-    y_h = y_b + bh*y_v;
-    
-    
-    double ah = sqrt((x_h-x_a)*(x_h-x_a) + (y_h-y_a)*(y_h-y_a));
-    m_distance = ah;
-    
-    double x_ab = x_b-x_a;
-    double y_ab = y_b-y_a;
-    
-    double det = x_ab*deplacement_y-y_ab*deplacement_x;
-    
-    if(det < 0){
-        m_distance = -m_distance;
-    }
-}
-
-double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lookhead){
-    Curve_ptr list = getCurrentLine();
-    if(list == NULL || list->m_points.size() < 5){
-        return 0;
-    }
-    list->m_curve_i_min = 0;
-    list->m_curve_i_min2 = 0;
-    double dist_min = 10000;
-    
-    m_fc_x = x;
-    m_fc_y = y;
     
     for(int i = 0; i < (int)list->m_points.size(); ++i){
         double d = list->m_points[i]->distanceCarre(x, y);
@@ -455,9 +412,6 @@ double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, d
         list->m_curve_i_min2 = list->m_curve_i_min+1;
     }
     
-    //double curvature = calculCurbature(list, list->m_curve_i_min2);
-    //INFO(curvature);
-    
     double x_a = x;
     double y_a = y;
     
@@ -476,14 +430,42 @@ double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, d
     
     
     double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
-    m_fc_xh = x_b + bh*x_v;
-    m_fc_yh = y_b + bh*y_v;
+    m_proj_x = x_b + bh*x_v;
+    m_proj_y = y_b + bh*y_v;
+    
+    
+    double ah = sqrt((m_proj_x-x_a)*(m_proj_x-x_a) + (m_proj_y-y_a)*(m_proj_y-y_a));
+    m_proj_distance = ah;
+    
+    double x_ab = x_b-x_a;
+    double y_ab = y_b-y_a;
+    
+    m_proj_prod_vect = deplacement_x*x_v+deplacement_y*y_v;
+    
+    double det = x_ab*deplacement_y-y_ab*deplacement_x;
+    
+    if(det < 0){
+        m_proj_distance = -m_proj_distance;
+    }
+}
+
+double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lookhead){
+    m_fc_x = x;
+    m_fc_y = y;
+    
+    Curve_ptr list = getCurrentLine();
+    if(list == NULL || list->m_points.size() < 5){
+        return 0;
+    }
+    calculProjete2(x, y, deplacement_x, deplacement_y);
+    m_fc_xh = m_proj_x;
+    m_fc_yh = m_proj_y;
     
     /**
      * Follow carrot PT LOOKHEAD
      */
     
-    double d = deplacement_x*x_v+deplacement_y*y_v;
+    double d = m_proj_prod_vect;
     double x_v2 = 0;
     double y_v2 = 0;
     
@@ -542,30 +524,30 @@ double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, d
 }
 
 void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line){
-    calculProjete2(p, deplacement_x, deplacement_y);
-    double dist = abs(m_distance);
+    calculProjete2P(p, deplacement_x, deplacement_y);
+    double dist = abs(m_proj_distance);
     if(change_line && dist > m_largeur/2){
-        double temp_x_h = x_h;
-        double temp_y_h = y_h;
+        double temp_x_h = m_proj_x;
+        double temp_y_h = m_proj_y;
         double temp_i = m_i_current;
-        double temp_distance = m_distance;
+        double temp_distance = m_proj_distance;
         
         setCurrent(m_i_current + 1);
-        calculProjete2(p, deplacement_x, deplacement_y);
-        double dist2 = abs(m_distance);
+        calculProjete2P(p, deplacement_x, deplacement_y);
+        double dist2 = abs(m_proj_distance);
         if(dist2 < dist){
             return;
         }
         setCurrent(m_i_current - 2);
-        calculProjete2(p, deplacement_x, deplacement_y);
-        double dist3 = abs(m_distance);
+        calculProjete2P(p, deplacement_x, deplacement_y);
+        double dist3 = abs(m_proj_distance);
         if(dist3 < dist){
             return;
         }
         setCurrent(temp_i);
-        x_h = temp_x_h;
-        y_h = temp_y_h;
-        m_distance = temp_distance;
+        m_proj_x = temp_x_h;
+        m_proj_y = temp_y_h;
+        m_proj_distance = temp_distance;
     }
 }
 
@@ -622,15 +604,15 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     
     
     double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
-    x_h = x_b + bh*x_v;
-    y_h = y_b + bh*y_v;
+    double x_h = x_b + bh*x_v;
+    double y_h = y_b + bh*y_v;
     
     
     double ha_x = x_h-x_a;
     double ha_y = y_h-y_a;
     
     double ah = sqrt((ha_x)*(ha_x) + (ha_y)*(ha_y));
-    m_distance = ah;
+    double m_distance = ah;
     
     
     double x_segment = x_m - x_b;
@@ -649,12 +631,19 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
 
     double e = -ah;
     double v = vitesse*10000.0/3600.0;
-    double k = -calculCurbature(list, list->m_curve_i_min);
+    double k = calculCurbature(list, list->m_curve_i_min);
+    double d = deplacement_x*x_segment+deplacement_y*y_segment;
+    if(d < 0){
+        INFO("neg");
+        k = -k;
+    } else {
+        INFO(" not neg");
+    }
     double th_e = -angle;//todo;
 
     double xk = v * k * cos(th_e) / (1.0 - k * e) ;
-    double xthe = KTH * abs(v) * th_e ;
-    double xe = KE * v * sin(th_e) * e / th_e;
+    double xthe =0 ;
+    double xe = 0;
     
     
     
@@ -663,8 +652,8 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     
     double omega = xk - xthe - xe;
 
-    m_d_e = e;
-    m_d_angle = th_e;
+    m_d_e = 0;
+    m_d_angle = 0;
     m_d_k = k;
     
     m_d_xk = xk;
@@ -675,6 +664,7 @@ double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplaceme
     double delta = atan2(L * omega / v, 1.0);
 
     m_d_delta = delta;
+    
     
    
     //std::cout << e <<  " " << cos_a << " th_e "  << th_e << " " << v << " " << th_e << " " << k << " " << omega << " d " << delta << std::endl;

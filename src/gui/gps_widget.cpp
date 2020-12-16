@@ -919,49 +919,23 @@ void GpsWidget::drawDebug(){
         }
     }
     
-    if(!f.m_line){
-        auto list = f.m_curveAB.getCurrentLine();
-        /*if(list && list->m_points.size()>3){
-            {
-                double x_h;
-                double y_h;
+    if(f.m_pilot_algo == RearWheelPosition){
+        if(!f.m_line){
+            if(f.m_curveAB.m_curb_l != 0){
+                m_painter->setPen(QColor(255,157,0));
+                m_painter->setBrush(m_brushNo);
+                double l = f.m_curveAB.m_curb_l*2*m_zoom;
+                double curb_x;
+                double curb_y;
+                my_projete2(f.m_curveAB.m_curb_x, f.m_curveAB.m_curb_y, curb_x, curb_y);
+                m_painter->drawEllipse(curb_x-l/2, curb_y-l/2, l, l);
                 
-                auto p = list->m_points[list->m_curve_i_min];
-                my_projete2(p->m_x, p->m_y, x_h, y_h);
-                scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
+                double curb_cx;
+                double curb_cy;
+                my_projete2(f.m_curveAB.m_curb_c_x, f.m_curveAB.m_curb_c_y, curb_cx, curb_cy);
+                m_painter->drawEllipse(curb_cx-1, curb_cy-1, 2, 2);
             }
-            
-            {
-                double x_h;
-                double y_h;
-                
-                auto p = list->m_points[list->m_curve_i_min2];
-                my_projete2(p->m_x, p->m_y, x_h, y_h);
-                scene->addEllipse(x_h, y_h, 8, 8, m_penBlue, m_brushNo);
-            }
-        }*/
-        
-        m_painter->setPen(m_penNo);
-        m_painter->setBrush(m_brushRed);
-        {
-            double x_h;
-            double y_h;
-            
-            my_projete2(f.m_curveAB.x_h, f.m_curveAB.y_h, x_h, y_h);
-            m_painter->drawEllipse(x_h-1, y_h-1, 2, 2);
         }
-    } else {
-        m_painter->setPen(m_penNo);
-        m_painter->setBrush(m_brushRed);
-        {
-            double x_h;
-            double y_h;
-            
-            my_projete2(f.m_lineAB.m_antenne_x_h, f.m_lineAB.m_antenne_y_h, x_h, y_h);
-            m_painter->drawEllipse(x_h-1, y_h-1, 2, 2);
-        }
-        
-        
     }
     
     //surface

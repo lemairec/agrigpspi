@@ -332,7 +332,7 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
             }
         } else {
             m_curveAB.calculProjete(m_tracteur.m_pt_antenne_corrige, m_deplacementX, m_deplacementY, !m_pilotModule.m_engaged);
-            double dist = m_curveAB.m_distance;
+            double dist = m_curveAB.m_proj_distance;
             setDistance(dist);
             
             if(m_pilot_algo == AlgoPilot::FollowCarrot){

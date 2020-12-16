@@ -56,12 +56,16 @@ public:
     
     void savePointB();
     
-    double m_distance = 0;
-    double x_h = 0, y_h = 0;
     
+    double m_curb_x, m_curb_y, m_curb_l;
+    double m_curb_c_x, m_curb_c_y;
     double calculCurbature(Curve_ptr line, size_t i);
     
-    void calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
+    double m_proj_distance = 0;
+    double m_proj_prod_vect = 0;
+    double m_proj_x = 0, m_proj_y = 0;
+    void calculProjete2(double x, double y, double deplacement_x, double deplacement_y);
+    void calculProjete2P(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
     void calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line);
     
     double calculRearWheelPosition(double p_x, double p_y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
