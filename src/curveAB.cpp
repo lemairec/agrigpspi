@@ -421,7 +421,7 @@ void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplac
     }
 }
 
-double CurveAB::anglefollowTheCarrot(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead){
+double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lookhead){
     Curve_ptr list = getCurrentLine();
     if(list == NULL || list->m_points.size() < 5){
         return 0;
@@ -430,10 +430,11 @@ double CurveAB::anglefollowTheCarrot(double x_pont, double y_pont, double deplac
     list->m_curve_i_min2 = 0;
     double dist_min = 10000;
     
-    
+    m_fc_x = x;
+    m_fc_y = y;
     
     for(int i = 0; i < (int)list->m_points.size(); ++i){
-        double d = list->m_points[i]->distanceCarre(x_pont, y_pont);
+        double d = list->m_points[i]->distanceCarre(x, y);
         if(d < dist_min){
             dist_min = d;
             list->m_curve_i_min = i;
@@ -445,8 +446,8 @@ double CurveAB::anglefollowTheCarrot(double x_pont, double y_pont, double deplac
         list->m_curve_i_min2 = list->m_points.size()-2;
     } else {
         
-        double d1 = list->m_points[list->m_curve_i_min-1]->distanceCarre(x_pont, y_pont);
-        double d2 = list->m_points[list->m_curve_i_min+1]->distanceCarre(x_pont, y_pont);
+        double d1 = list->m_points[list->m_curve_i_min-1]->distanceCarre(x, y);
+        double d2 = list->m_points[list->m_curve_i_min+1]->distanceCarre(x, y);
         
         if(d1 < d2){
             list->m_curve_i_min = list->m_curve_i_min-1;
@@ -457,8 +458,8 @@ double CurveAB::anglefollowTheCarrot(double x_pont, double y_pont, double deplac
     //double curvature = calculCurbature(list, list->m_curve_i_min2);
     //INFO(curvature);
     
-    double x_a = x_pont;
-    double y_a = y_pont;
+    double x_a = x;
+    double y_a = y;
     
     double x_b = list->m_points[list->m_curve_i_min]->m_x;
     double y_b = list->m_points[list->m_curve_i_min]->m_y;
@@ -475,8 +476,8 @@ double CurveAB::anglefollowTheCarrot(double x_pont, double y_pont, double deplac
     
     
     double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
-    x_h_pont = x_b + bh*x_v;
-    y_h_pont = y_b + bh*y_v;
+    m_fc_xh = x_b + bh*x_v;
+    m_fc_yh = y_b + bh*y_v;
     
     /**
      * Follow carrot PT LOOKHEAD
@@ -501,8 +502,8 @@ double CurveAB::anglefollowTheCarrot(double x_pont, double y_pont, double deplac
         
         auto pt1 = list->m_points[i_min2];
 
-        x_v2 = pt1->m_x-x_h_pont;
-        y_v2 = pt1->m_y-y_h_pont;
+        x_v2 = pt1->m_x-m_fc_xh;
+        y_v2 = pt1->m_y-m_fc_yh;
     } else {
         double d = lookhead;
         
@@ -515,33 +516,32 @@ double CurveAB::anglefollowTheCarrot(double x_pont, double y_pont, double deplac
         
         auto pt1 = list->m_points[i_min2];
 
-        x_v2 = pt1->m_x-x_h_pont;
-        y_v2 = pt1->m_y-y_h_pont;
+        x_v2 = pt1->m_x-m_fc_xh;
+        y_v2 = pt1->m_y-m_fc_yh;
     }
     double d_v2 = sqrt(x_v2*x_v2 + y_v2*y_v2);
     x_v2 = x_v2/d_v2;
     y_v2 = y_v2/d_v2;
     double d2 = deplacement_x*x_v2+deplacement_y*y_v2;
     if(d2 >0){
-        x_h_lookhead = x_h_pont + lookhead*x_v2;
-        y_h_lookhead = y_h_pont + lookhead*y_v2;
+        m_fc_lh_x = m_fc_xh + lookhead*x_v2;
+        m_fc_lh_y = m_fc_yh + lookhead*y_v2;
     } else {
-        x_h_lookhead = x_h_pont - lookhead*x_v2;
-        y_h_lookhead = y_h_pont - lookhead*y_v2;
+        m_fc_lh_x = m_fc_xh - lookhead*x_v2;
+        m_fc_lh_y = m_fc_yh - lookhead*y_v2;
     }
     
     /**
      * Follow carrot CALCUL ANGLE
      */
 
-    double x_segment = x_h_lookhead - x_pont;
-    double y_segment = y_h_lookhead - y_pont;
-    
-    double m_angle = my_angle(x_segment, y_segment, deplacement_x, deplacement_y);
-    m_angle = angleBetweenPI2(m_angle);
-    
-    return m_angle;
-    
+    double x_segment = m_fc_lh_x - m_fc_x;
+    double y_segment = m_fc_lh_y - m_fc_y;
+
+    double angle = my_angle(x_segment, y_segment, deplacement_x, deplacement_y);
+    angle = angleBetweenPI2(angle);
+
+    return angle;
 }
 
 void CurveAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line){

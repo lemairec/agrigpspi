@@ -42,6 +42,9 @@ public:
     
     double distance(double x, double y, double deplacementX, double deplacementY);
     
+    double m_fc_x = 0, m_fc_y = 0;
+    double m_fc_lh_x = 0, m_fc_lh_y = 0;
+    double m_fc_xh = 0, m_fc_yh = 0;
     double anglefollowTheCarrot(double x, double y, double deplacementX, double deplacementY, double lk);
 
     double calculRearWheelPosition(double p_x, double p_y, double angle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
@@ -55,9 +58,8 @@ public:
     double m_d_res;
     double m_d_delta;
     
-    double m_fc_x, m_fc_y;
-    double m_fc_lh_x, m_fc_lh_y;
-    double m_fc_xh = 0, m_fc_yh = 0;
+
+    
     
 };
 

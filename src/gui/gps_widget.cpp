@@ -174,22 +174,17 @@ void GpsWidget::drawCurve(Curve_ptr l, QPen & pen){
     GpsPoint_ptr old_point = nullptr;
     QPainterPath polygonPath;
     for(auto p :l->m_points_to_draw){
-        
-        if(must_be_draw(p->m_x, p->m_y)){
-            double xB, yB;
-            my_projete2(p->m_x, p->m_y, xB, yB);
-            if(m_debug){
-                m_painter->drawRect(xB-1, yB-1, 2, 2);
-            }
-            if(!first){
-                polygonPath.lineTo(xB, yB);
-            } else {
-                polygonPath.moveTo(xB, yB);
-            }
-            first = false;
-        } else {
-            first = true;
+        double xB, yB;
+        my_projete2(p->m_x, p->m_y, xB, yB);
+        if(m_debug){
+            m_painter->drawRect(xB-1, yB-1, 2, 2);
         }
+        if(!first){
+            polygonPath.lineTo(xB, yB);
+        } else {
+            polygonPath.moveTo(xB, yB);
+        }
+        first = false;
     }
     m_painter->drawPath(polygonPath);
 }
@@ -874,6 +869,56 @@ void GpsWidget::drawVolant(double y){
 void GpsWidget::drawDebug(){
     GpsFramework & f = GpsFramework::Instance();
     
+    if(f.m_pilot_algo == FollowCarrot){
+        if(f.m_line && f.m_lineAB.isInit()){
+            m_painter->setPen(QColor(255,157,0));
+            double fc_x;
+            double fc_y;
+            my_projete2(f.m_lineAB.m_fc_x, f.m_lineAB.m_fc_y, fc_x, fc_y);
+            
+            double fc_lh_x;
+            double fc_lh_y;
+            my_projete2(f.m_lineAB.m_fc_lh_x, f.m_lineAB.m_fc_lh_y, fc_lh_x, fc_lh_y);
+            m_painter->drawLine(fc_x, fc_y, fc_lh_x, fc_lh_y);
+            
+            double fc_d_x;
+            double fc_d_y;
+            my_projete2(f.m_lineAB.m_fc_x + f.m_deplacementX, f.m_lineAB.m_fc_y + f.m_deplacementY, fc_d_x, fc_d_y);
+            m_painter->drawLine(fc_x, fc_y, fc_d_x, fc_d_y);
+            
+            double fc_h_x;
+            double fc_h_y;
+            my_projete2(f.m_lineAB.m_fc_xh, f.m_lineAB.m_fc_yh, fc_h_x, fc_h_y);
+            m_painter->drawEllipse(fc_h_x-1, fc_h_y-1, 2, 2);
+            
+            
+        }
+        
+        if(!f.m_line){
+            m_painter->setPen(QColor(255,157,0));
+            double fc_x;
+            double fc_y;
+            my_projete2(f.m_curveAB.m_fc_x, f.m_curveAB.m_fc_y, fc_x, fc_y);
+            
+            double fc_lh_x;
+            double fc_lh_y;
+            my_projete2(f.m_curveAB.m_fc_lh_x, f.m_curveAB.m_fc_lh_y, fc_lh_x, fc_lh_y);
+            m_painter->drawLine(fc_x, fc_y, fc_lh_x, fc_lh_y);
+            
+            double fc_d_x;
+            double fc_d_y;
+            my_projete2(f.m_curveAB.m_fc_x + f.m_deplacementX, f.m_curveAB.m_fc_y + f.m_deplacementY, fc_d_x, fc_d_y);
+            m_painter->drawLine(fc_x, fc_y, fc_d_x, fc_d_y);
+            
+            double fc_h_x;
+            double fc_h_y;
+            my_projete2(f.m_curveAB.m_fc_xh, f.m_curveAB.m_fc_yh, fc_h_x, fc_h_y);
+            m_painter->drawEllipse(fc_h_x-1, fc_h_y-1, 2, 2);
+            
+            
+        }
+    }
+    
     if(!f.m_line){
         auto list = f.m_curveAB.getCurrentLine();
         /*if(list && list->m_points.size()>3){
@@ -905,24 +950,6 @@ void GpsWidget::drawDebug(){
             my_projete2(f.m_curveAB.x_h, f.m_curveAB.y_h, x_h, y_h);
             m_painter->drawEllipse(x_h-1, y_h-1, 2, 2);
         }
-        
-        
-        m_painter->setPen(m_penGreen);
-        if(f.m_pilot_algo == FollowCarrot){
-            double x_h_lk;
-            double y_h_lk;
-            my_projete2(f.m_curveAB.x_h_lookhead, f.m_curveAB.y_h_lookhead, x_h_lk, y_h_lk);
-            
-            double tract_pont_x;
-            double tract_pont_y;
-            my_projete2(f.m_tracteur.m_x_essieu_avant, f.m_tracteur.m_y_essieu_avant, tract_pont_x, tract_pont_y);
-            m_painter->drawLine(tract_pont_x, tract_pont_y, x_h_lk, y_h_lk);
-            
-            double x2_h_lk;
-            double y2_h_lk;
-            my_projete2(f.m_tracteur.m_x_essieu_avant + f.m_deplacementX, f.m_tracteur.m_y_essieu_avant + f.m_deplacementY, x2_h_lk, y2_h_lk);
-            m_painter->drawLine(tract_pont_x, tract_pont_y, x2_h_lk, y2_h_lk);
-        }
     } else {
         m_painter->setPen(m_penNo);
         m_painter->setBrush(m_brushRed);
@@ -934,29 +961,7 @@ void GpsWidget::drawDebug(){
             m_painter->drawEllipse(x_h-1, y_h-1, 2, 2);
         }
         
-        m_painter->setPen(QColor(255,157,0));
-        if(f.m_pilot_algo == FollowCarrot && f.m_lineAB.isInit()){
-            double fc_x;
-            double fc_y;
-            my_projete2(f.m_lineAB.m_fc_x, f.m_lineAB.m_fc_y, fc_x, fc_y);
-            
-            double fc_lh_x;
-            double fc_lh_y;
-            my_projete2(f.m_lineAB.m_fc_lh_x, f.m_lineAB.m_fc_lh_y, fc_lh_x, fc_lh_y);
-            m_painter->drawLine(fc_x, fc_y, fc_lh_x, fc_lh_y);
-            
-            double fc_d_x;
-            double fc_d_y;
-            my_projete2(f.m_lineAB.m_fc_x + f.m_deplacementX, f.m_lineAB.m_fc_y + f.m_deplacementY, fc_d_x, fc_d_y);
-            m_painter->drawLine(fc_x, fc_y, fc_d_x, fc_d_y);
-            
-            double fc_h_x;
-            double fc_h_y;
-            my_projete2(f.m_lineAB.m_fc_xh, f.m_lineAB.m_fc_yh, fc_h_x, fc_h_y);
-            m_painter->drawEllipse(fc_h_x-1, fc_h_y-1, 2, 2);
-            
-            
-        }
+        
     }
     
     //surface
