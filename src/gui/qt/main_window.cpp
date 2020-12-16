@@ -71,7 +71,7 @@ void MainWindow::setupUi(){
     
     
     GpsFramework & f = GpsFramework::Instance();
-    if(f.m_config.m_fullscreen){
+    if(true){
         showFullScreen();
     } else {
         creerMenu();
