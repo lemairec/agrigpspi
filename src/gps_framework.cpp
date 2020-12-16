@@ -336,7 +336,7 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
             setDistance(dist);
             
             if(m_pilot_algo == AlgoPilot::FollowCarrot){
-                m_angle_correction = m_curveAB.followCarrot(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+                m_angle_correction = m_curveAB.anglefollowTheCarrot(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
             } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
                 m_angle_correction = m_curveAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
             } else {

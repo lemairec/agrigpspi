@@ -421,7 +421,7 @@ void CurveAB::calculProjete2(GpsPoint_ptr p, double deplacement_x, double deplac
     }
 }
 
-double CurveAB::followCarrot(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead){
+double CurveAB::anglefollowTheCarrot(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead){
     Curve_ptr list = getCurrentLine();
     if(list == NULL || list->m_points.size() < 5){
         return 0;

@@ -70,7 +70,7 @@ public:
     double x_h_pont = 0, y_h_pont = 0;
     double x_h_lookhead = 0, y_h_lookhead = 0;
     double m_angle = 0;
-    double followCarrot(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead);
+    double anglefollowTheCarrot(double x_pont, double y_pont, double deplacement_x, double deplacement_y, double lookhead);
     
     double m_d_k;
     double m_d_angle;
