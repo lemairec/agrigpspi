@@ -664,7 +664,9 @@ void GpsFramework::changeDrawBool(bool b){
         SurfaceToDraw_ptr p(new SurfaceToDraw());
         m_listSurfaceToDraw.push_front(p);
         m_pauseDraw = false;
-        onNewImportantPoint(m_lastPoint);
+        if(m_lastPoint){
+            onNewImportantPoint(m_lastPoint);
+        }
     }
 }
 
