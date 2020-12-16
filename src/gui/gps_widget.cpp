@@ -1137,7 +1137,7 @@ void GpsWidget::onMouse(int x, int y){
         auto p = m_widgets[n-i-1];
         if(!p->m_close){
             p->onMouse(x, y);
-            //return;
+            return;
         }
     }
     
