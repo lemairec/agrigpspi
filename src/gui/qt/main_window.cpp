@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     DEBUG("begin");
     m_timer = new QTimer(this);
-    m_timer->start(100);
+    m_timer->start(200);
     
 
     

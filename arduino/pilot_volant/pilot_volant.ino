@@ -5,7 +5,7 @@ String a;
 
 #define MOTOR_ENABLE_PIN 3 //pwm
 #define MOTOR_PIN1 4
-#define MOTOR_PIN2 2
+#define MOTOR_PIN2 5
 
 #define ENCODER_A 10
 #define ENCODER_B 11
