@@ -250,6 +250,7 @@ void LineCurves::loadCurveOrLine(std::string name){
         
         if(l.size() == 2){
             INFO("line");
+            f.m_line = true;
             f.m_lineAB.m_point_origin_A = *(l[0]);
             f.m_lineAB.m_point_origin_B = *(l[1]);
             f.setAB();
