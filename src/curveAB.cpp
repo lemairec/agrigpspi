@@ -449,7 +449,7 @@ void CurveAB::calculProjete2(double x, double y, double deplacement_x, double de
      
     m_proj_prod_vect = deplacement_x*x_v+deplacement_y*y_v;
     
-    double det = x_ab*deplacement_y-y_ab*deplacement_x;
+    double det = (m_proj_x-x_a)*deplacement_y-(m_proj_y-y_a)*deplacement_x;
     
     if(det < 0){
         m_proj_distance = -m_proj_distance;
@@ -574,15 +574,17 @@ double CurveAB::calculRearWheelPosition(double x_pont, double y_pont, double x, 
     calculProjete2(x, y, deplacement_x, deplacement_y);
     double x_segment = m_proj_x_segment;
     double y_segment = m_proj_y_segment;
-
-    double angle = my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
-    angle = angleBetweenPI2(angle);
+    
+    
     
     double k = calculCurbature(list, list->m_curve_i_min);
     double d = m_proj_prod_vect;
     if(d < 0){
         k = -k;
     }
+    
+    double angle = my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
+    angle = angleBetweenPI2(angle);
     double th_e = angle;//todo;
 
     double xk = v * k * cos(th_e) / (1.0 - k * e) ;
