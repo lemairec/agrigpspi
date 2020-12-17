@@ -443,10 +443,6 @@ void CurveAB::calculProjete2(double x, double y, double deplacement_x, double de
     double ah = sqrt((m_proj_x-x_a)*(m_proj_x-x_a) + (m_proj_y-y_a)*(m_proj_y-y_a));
     m_proj_distance = ah;
     
-    double x_ab = x_b-x_a;
-    double y_ab = y_b-y_a;
-    
-     
     m_proj_prod_vect = deplacement_x*x_v+deplacement_y*y_v;
     
     double det = (m_proj_x-x_a)*deplacement_y-(m_proj_y-y_a)*deplacement_x;

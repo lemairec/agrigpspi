@@ -149,7 +149,7 @@ public:
     void onFrame(const std::string & frame);
     void setRef(double latitude, double longitude);
     
-    void setDistance(double distance);
+    void setDistance(double distance, bool led);
     
     void savePointA();
     void savePointB();

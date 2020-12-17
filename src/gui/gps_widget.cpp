@@ -254,25 +254,12 @@ void GpsWidget::drawLines(){
 void GpsWidget::drawLineCurve(){
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_line){
-        /*if(f.m_lineAB.m_pointA.m_isOk){
-            double xA, yA;
-            my_projete2(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, xA, yA);
-            scene->addEllipse(xA-3, yA-3, 6, 6, m_penRed, m_brushNo);
-            if(f.m_lineAB.m_pointB.m_isOk){
-                double xB, yB;
-                my_projete2(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, xB, yB);
-                scene->addEllipse(xB-3, yB-3, 6, 6, m_penRed, m_brushNo);
-                
-                scene->addLine(xA, yA, xB, yB, m_penRed);
-            }
-        }*///TODO
-        
         drawLines();
     } else {
         if(f.m_etat == Etat_OK){
             auto list = f.m_curveAB.getCurrentLine();
             drawCurve(list, m_penBlack);
-            for(int i = 1; i<3; ++i){
+            for(int i = 1; i<2; ++i){
                 auto list2 = f.m_curveAB.getCurrentLineRel(i);
                 drawCurve(list2, m_penGray);
                 auto list3 = f.m_curveAB.getCurrentLineRel(-i);
@@ -680,19 +667,55 @@ void GpsWidget::drawTop(){
         drawQText(s, m_width/2, 63,sizeText_big, true);
     }*/
     
-    m_painter->setBrush(m_grayBrush);
-    for(int i = 0; i < 8; ++i){
-        m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
-        m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
-    }
-    m_painter->setBrush(m_greenBrush);
-    if(f.m_ledAB > 0){
-        for(int i = 0; i < std::min(8, f.m_ledAB); ++i){
+    if(f.m_ledAB != 888){
+        m_painter->setBrush(m_grayBrush);
+        for(int i = 0; i < 8; ++i){
             m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
+            m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
+        }
+        m_painter->setBrush(m_greenBrush);
+        if(f.m_ledAB > 0){
+            for(int i = 0; i < std::min(8, f.m_ledAB); ++i){
+                m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
+            }
+        } else {
+            for(int i = 0; i < std::min(8, -f.m_ledAB); ++i){
+                m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
+            }
         }
     } else {
-        for(int i = 0; i < std::min(8, -f.m_ledAB); ++i){
-            m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
+        if(f.m_distanceAB < 0){
+            if(f.m_distanceAB > -0.02){
+                m_painter->setBrush(m_brushNo);
+            } else if(f.m_distanceAB > -0.05){
+                m_painter->setBrush(m_greenBrush);
+            } else if(f.m_distanceAB > -0.15){
+                m_painter->setBrush(m_brushOrange);
+            } else {
+                m_painter->setBrush(m_brushRed);
+            }
+            QPointF points[4] = {
+                QPointF(m_width/2 + 80, 10),
+                QPointF(m_width/2 + 60, 20),
+                QPointF(m_width/2 + 80, 30),};
+            m_painter->drawPolygon(points, 3);
+            
+            
+        } else {
+            if(f.m_distanceAB < 0.02){
+                m_painter->setBrush(m_brushNo);
+            } else if(f.m_distanceAB < 0.05){
+                m_painter->setBrush(m_greenBrush);
+            } else if(f.m_distanceAB < 0.15){
+                m_painter->setBrush(m_brushOrange);
+            } else {
+                m_painter->setBrush(m_brushRed);
+            }
+            QPointF points2[4] = {
+                QPointF(m_width/2 - 80, 10),
+                QPointF(m_width/2 - 60, 20),
+                QPointF(m_width/2 - 80, 30),};
+            m_painter->drawPolygon(points2, 3);
         }
     }
     
@@ -905,7 +928,7 @@ void GpsWidget::drawDebug(){
             double fc_h_x;
             double fc_h_y;
             my_projete2(f.m_curveAB.m_fc_xh, f.m_curveAB.m_fc_yh, fc_h_x, fc_h_y);
-            m_painter->drawEllipse(fc_h_x-1, fc_h_y-1, 2, 2);
+            m_painter->drawEllipse(fc_h_x-2, fc_h_y-2, 4, 4);
             
             
         }

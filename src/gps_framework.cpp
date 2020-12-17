@@ -312,8 +312,14 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
                             , double essieu_arriere_x, double essieu_arriere_y){
     if(m_etat == Etat_OK){
         if(m_line){
-            double dist = m_lineAB.distance(essieu_arriere_x, essieu_arriere_y,m_deplacementX, m_deplacementY);
-            setDistance(dist);
+            double dist = 0;
+            if(m_pilotModule.m_engaged){
+                dist = m_lineAB.distance(essieu_arriere_x, essieu_arriere_y,m_deplacementX, m_deplacementY);
+                setDistance(dist, false);
+            } else {
+                dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, m_deplacementX, m_deplacementY);
+                setDistance(dist, true);
+            }
             
             if(m_pilot_algo == AlgoPilot::FollowCarrot){
                 m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
@@ -331,9 +337,16 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
                 m_angle_correction = 0;
             }
         } else {
-            m_curveAB.calculProjete(m_tracteur.m_pt_essieu_arriere, m_deplacementX, m_deplacementY, !m_pilotModule.m_engaged);
-            double dist = m_curveAB.m_proj_distance;
-            setDistance(dist);
+            if(m_pilotModule.m_engaged){
+                m_curveAB.calculProjete(m_tracteur.m_pt_essieu_arriere, m_deplacementX, m_deplacementY, !m_pilotModule.m_engaged);
+                double dist = m_curveAB.m_proj_distance;
+                setDistance(dist, false);
+            } else {
+                m_curveAB.calculProjete(m_tracteur.m_pt_antenne_corrige, m_deplacementX, m_deplacementY, !m_pilotModule.m_engaged);
+                double dist = m_curveAB.m_proj_distance;
+                setDistance(dist, true);
+            }
+            
             
             if(m_pilot_algo == AlgoPilot::FollowCarrot){
                 m_angle_correction = m_curveAB.anglefollowTheCarrot(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
@@ -344,7 +357,7 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
             }
         }
     } else {
-        setDistance(0);
+        setDistance(0, false);
         m_angle_correction = 0;
     }
     
@@ -419,14 +432,18 @@ void GpsFramework::onFrame(const std::string &frame){
 }
 
 
-void GpsFramework::setDistance(double distance){
+void GpsFramework::setDistance(double distance, bool led){
     m_distanceAB = distance;
     
     double coeff = m_config.m_outil_largeur/(2*10);
-    if(m_distanceAB < 0.0){
-        m_ledAB = round(-m_distanceAB/coeff);
+    if(led){
+        if(m_distanceAB < 0.0){
+            m_ledAB = round(-m_distanceAB/coeff);
+        } else {
+            m_ledAB = -round(m_distanceAB/coeff);
+        }
     } else {
-        m_ledAB = -round(m_distanceAB/coeff);
+        m_ledAB = 888;
     }
 }
 

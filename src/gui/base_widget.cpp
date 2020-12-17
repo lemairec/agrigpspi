@@ -202,6 +202,7 @@ BaseWidget::BaseWidget(){
     m_brushWhiteAlpha =QBrush(white);
     m_brushGreen = QBrush(QColor(0, 150, 0, 100));
     m_penNo.setColor(QColor(0, 250, 0, 0));
+    m_brushOrange = QBrush(QColor(255, 127, 0));
     m_brushRed = QBrush(Qt::red);
 }
 
