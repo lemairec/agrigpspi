@@ -70,7 +70,7 @@ void LineAB::calculProjete2(double x, double y, double deplacement_x, double dep
     double ah = sqrt((m_x_h-x_a)*(m_x_h-x_a) + (m_y_h-y_a)*(m_y_h-y_a));
     double distance = ah;
     
-    double det = x_v*(m_y_h-y_a)-y_v*(m_x_h-x_a);
+    double det = (m_x_h-x_a)*deplacement_y-(m_y_h-y_a)*deplacement_x;
     
     if(det < 0){
         distance = - distance;
@@ -240,7 +240,7 @@ void LineCurves::loadCurveOrLine(std::string name){
                 break;
                 
             } // error
-            INFO(a << " " << b);
+            //INFO(a << " " << b);
             GpsPoint_ptr p = GpsPoint_ptr(new GpsPoint());
             p->m_latitude = a;
             p->m_longitude = b;
