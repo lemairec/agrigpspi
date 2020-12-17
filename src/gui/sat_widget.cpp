@@ -105,12 +105,12 @@ void SatWidget::draw(){
         
         {
             QString s = "roll_x "+QString::number(f.m_imuModule.m_roll_x_deg)+"°\npitch_y "+QString::number(f.m_imuModule.m_pitch_y_deg)+"°\nyaw_z "+QString::number(f.m_imuModule.m_yaw_z_deg)+"°";
-            drawQText(s, x2, 0.4*m_height, sizeText_little, false);
+            drawQTexts(s, x2, 0.4*m_height, sizeText_little, false);
         }
         
         {
             QString s = "a_x "+QString::number(f.m_imuModule.m_ax)+"\na_y "+QString::number(f.m_imuModule.m_ay)+"\na_z "+QString::number(f.m_imuModule.m_az)+"";
-            drawQText(s, x2, 0.55*m_height, sizeText_little, false);
+            drawQTexts(s, x2, 0.55*m_height, sizeText_little, false);
         }
         {
             QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral_imu*1000)/10.0)+" cm";
@@ -166,7 +166,7 @@ void SatWidget::draw(){
                 
                 s += "m_d_delta "+QString::number(round(f.m_lineAB.m_d_delta/3.14*180*100)/100.0)+" °\n\n";
                 
-                drawQText(s, x2, 0.25*m_height, sizeText_little, false);
+                drawQTexts(s, x2, 0.25*m_height, sizeText_little, false);
             } else {
                 QString s = "curveAB\n\n";
                 s += "m_d_e "+QString::number(round(f.m_curveAB.m_d_e*10000)/100.0)+" cm\n";
@@ -179,8 +179,8 @@ void SatWidget::draw(){
                 
                 s += "m_d_res "+QString::number(round(f.m_curveAB.m_d_res*100)/100.0)+"\n";
                 
-                s += "m_d_delta "+QString::number(round(f.m_lineAB.m_d_delta/3.14*180*100)/100.0)+" °\n\n";
-                drawQText(s, x2, 0.25   *m_height, sizeText_little, false);
+                s += "m_d_delta "+QString::number(round(f.m_curveAB.m_d_delta/3.14*180*100)/100.0)+" °\n\n";
+                drawQTexts(s, x2, 0.25   *m_height, sizeText_little, false);
             }
         }
     }

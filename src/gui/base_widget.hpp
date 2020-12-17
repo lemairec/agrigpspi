@@ -186,6 +186,7 @@ public:
     
     void drawText(const std::string & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
     void drawQText(const QString & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
+    void drawQTexts(const QString & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
     
 
     void drawValueGuiKeyPad(ValueGuiKeyPad * value);

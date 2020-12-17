@@ -48,7 +48,7 @@ void ParcelleWidget::draw(){
         if(f.m_parcelle.isInit()){
             s = QString::fromStdString(f.m_parcelle.m_name) + "\nsurface : \n" + QString::number(f.m_parcelle.m_surface_ha) + " ha";
         }
-        drawQText(s, m_x + m_lg/2, m_height*0.5, sizeText_big, true);
+        drawQTexts(s, m_x + m_lg/2, m_height*0.5, sizeText_big, true);
     }
     
     

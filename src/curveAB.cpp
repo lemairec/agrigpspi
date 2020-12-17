@@ -427,6 +427,8 @@ void CurveAB::calculProjete2(double x, double y, double deplacement_x, double de
     //https://fr.wikipedia.org/wiki/Projection_orthogonale
     double x_v = x_m-x_b;
     double y_v = y_m-y_b;
+    m_proj_x_segment = x_v;
+    m_proj_y_segment = y_v;
     double d_v = sqrt(x_v*x_v + y_v*y_v);
     x_v = x_v/d_v;
     y_v = y_v/d_v;
@@ -444,6 +446,7 @@ void CurveAB::calculProjete2(double x, double y, double deplacement_x, double de
     double x_ab = x_b-x_a;
     double y_ab = y_b-y_a;
     
+     
     m_proj_prod_vect = deplacement_x*x_v+deplacement_y*y_v;
     
     double det = x_ab*deplacement_y-y_ab*deplacement_x;
@@ -558,123 +561,51 @@ double CurveAB::anglefollowTheCarrot(double x, double y, double deplacement_x, d
     return angle;
 }
 
-double CurveAB::calculRearWheelPosition(double p_x, double p_y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
+double CurveAB::calculRearWheelPosition(double x_pont, double y_pont, double x, double y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
+    double v = vitesse*10000.0/3600.0;
     
     Curve_ptr list = getCurrentLine();
     if(list == NULL || list->m_points.size() < 5){
-        return 0.0;
+        return 0;
     }
-    list->m_curve_i_min = 0;
-    list->m_curve_i_min2 = 0;
-    double dist_min = 10000;
+    calculProjete2(x_pont, y_pont, deplacement_x, deplacement_y);
+    double e = -m_proj_distance;
     
-    
-    
-    for(int i = 0; i < (int)list->m_points.size(); ++i){
-        double d = list->m_points[i]->distanceCarre(p_x, p_y);
-        if(d < dist_min){
-            dist_min = d;
-            list->m_curve_i_min = i;
-        }
-    }
-    if(list->m_curve_i_min == 0){
-        list->m_curve_i_min2 = 1;
-    } else if(list->m_curve_i_min == ((int)list->m_points.size())-1){
-        list->m_curve_i_min2 = list->m_points.size()-2;
-    } else {
-        
-        double d1 = list->m_points[list->m_curve_i_min-1]->distanceCarre(p_x, p_y);
-        double d2 = list->m_points[list->m_curve_i_min+1]->distanceCarre(p_x, p_y);
-        
-        if(d1 < d2){
-            list->m_curve_i_min = list->m_curve_i_min-1;
-        }
-        list->m_curve_i_min2 = list->m_curve_i_min+1;
-    }
-    
-    double x_a = p_x;
-    double y_a = p_y;
-    
-    double x_b = list->m_points[list->m_curve_i_min]->m_x;
-    double y_b = list->m_points[list->m_curve_i_min]->m_y;
-    double x_m = list->m_points[list->m_curve_i_min2]->m_x;
-    double y_m = list->m_points[list->m_curve_i_min2]->m_y;
+    calculProjete2(x, y, deplacement_x, deplacement_y);
+    double x_segment = m_proj_x_segment;
+    double y_segment = m_proj_y_segment;
 
-    //https://fr.wikipedia.org/wiki/Projection_orthogonale
-    double x_v = x_m-x_b;
-    double y_v = y_m-y_b;
-    double d_v = sqrt(x_v*x_v + y_v*y_v);
-    x_v = x_v/d_v;
-    y_v = y_v/d_v;
-    
-    
-    
-    double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
-    double x_h = x_b + bh*x_v;
-    double y_h = y_b + bh*y_v;
-    
-    
-    double ha_x = x_h-x_a;
-    double ha_y = y_h-y_a;
-    
-    double ah = sqrt((ha_x)*(ha_x) + (ha_y)*(ha_y));
-    double m_distance = ah;
-    
-    
-    double x_segment = x_m - x_b;
-    double y_segment = y_m - y_b;
-    
-    
-    double angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
+    double angle = my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
     angle = angleBetweenPI2(angle);
     
-
-    double det = x_segment*ha_y-y_segment*ha_x;
-    
-    if(det > 0){
-        ah = -ah;
-    }
-
-    double e = -ah;
-    double v = vitesse*10000.0/3600.0;
     double k = calculCurbature(list, list->m_curve_i_min);
-    double d = deplacement_x*x_segment+deplacement_y*y_segment;
+    double d = m_proj_prod_vect;
     if(d < 0){
-        INFO("neg");
         k = -k;
-    } else {
-        INFO(" not neg");
     }
-    double th_e = -angle;//todo;
+    double th_e = angle;//todo;
 
     double xk = v * k * cos(th_e) / (1.0 - k * e) ;
-    double xthe =0 ;
-    double xe = 0;
-    
-    
-    
-    //std::cout << "c  e " << e << "  th_e " << th_e << std::endl;
-    //std::cout << "c    " << x2 << " " << x3 << std::endl;
-    
-    double omega = xk - xthe - xe;
+    double xthe = KTH * abs(v) * th_e ;
+    double xe = KE * v * sin(th_e) * e / th_e;
 
-    m_d_e = 0;
-    m_d_angle = 0;
+    //std::cout << "l  e " << e << "  th_e " << th_e << std::endl;
+    //std::cout << "l    " << x2 << " " << x3 << std::endl;
+    double omega = xk - xe - xthe;
+
+
+    m_d_e = e;
+    m_d_angle = th_e;
     m_d_k = k;
-    
+
     m_d_xk = xk;
     m_d_xthe = -xthe;
     m_d_xe = -xe;
     m_d_res = omega;
-    
+
     double delta = atan2(L * omega / v, 1.0);
 
     m_d_delta = delta;
-    
-    
-   
-    //std::cout << e <<  " " << cos_a << " th_e "  << th_e << " " << v << " " << th_e << " " << k << " " << omega << " d " << delta << std::endl;
-    //std::cout << " " << delta << " " << omega << " ++ " << x1 << " "  << x2 << " " << x3 << std::endl;
-    //INFO(omega);
+
     return delta;
 }

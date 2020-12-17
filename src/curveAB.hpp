@@ -61,6 +61,8 @@ public:
     double m_curb_c_x, m_curb_c_y;
     double calculCurbature(Curve_ptr line, size_t i);
     
+    double m_proj_x_segment;
+    double m_proj_y_segment;
     double m_proj_distance = 0;
     double m_proj_prod_vect = 0;
     double m_proj_x = 0, m_proj_y = 0;
@@ -68,7 +70,7 @@ public:
     void calculProjete2P(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
     void calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line);
     
-    double calculRearWheelPosition(double p_x, double p_y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
+    double calculRearWheelPosition(double x_pont, double y_pont, double x, double y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
 
     
     double m_fc_x = 0, m_fc_y = 0;

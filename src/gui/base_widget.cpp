@@ -334,9 +334,51 @@ void BaseWidget::drawQText(const QString & s, int x, int y, SizeText size, bool 
     
     if(center){
         //auto mBounds = textItem->boundingRect();
-        m_painter->drawText(x-s.size()*s2*0.25, y+5, s);
+        auto fm = m_painter->fontMetrics();
+        auto rect = fm.boundingRect(s);
+        m_painter->drawText(x-rect.width()/2, y+5, s);
     } else {
         m_painter->drawText(x, y+2, s);
+    }
+   
+}
+
+void BaseWidget::drawQTexts(const QString & s, int x, int y, SizeText size, bool center, bool white){
+    int s2 = 10;
+    switch (size) {
+        case sizeText_big:
+            s2 = 22;
+            break;
+        case sizeText_medium:
+            s2 = 18;
+            break;
+        case sizeText_little:
+            s2 = 14;
+            break;
+    }
+    QFont font = QFont("Latin", s2, 1, false);
+    font.setBold(true);
+    //textItem->setFont(font);
+    if(white){
+        m_painter->setPen(Qt::white);
+    }
+    
+    QStringList list1 = s.split(QLatin1Char('\n'));
+    
+    font.setPixelSize(s2);
+    m_painter->setFont(font);
+    
+    int y2 = y+5;
+    for(auto s3 : list1){
+        if(center){
+            //auto mBounds = textItem->boundingRect();
+            auto fm = m_painter->fontMetrics();
+            auto rect = fm.boundingRect(s3);
+            m_painter->drawText(x-rect.width()/2, y2, s3);
+        } else {
+            m_painter->drawText(x, y2, s3);
+        }
+        y2 += s2*1.2;
     }
    
 }
