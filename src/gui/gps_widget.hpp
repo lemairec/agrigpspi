@@ -92,8 +92,10 @@ public:
     void drawBottom();
     void drawTop();
     void drawError();
+    void drawBackground();
     
     void drawDebug();
+    void drawDebugEkf();
     void drawVolant(double y);
     void drawVolant_(double y, double a, double r, double start_angle);
     
