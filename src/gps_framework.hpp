@@ -188,6 +188,7 @@ public:
     
     double m_distanceAB = 0.0;
     int m_ledAB = 0;
+    bool m_rtk = false;
     
     std::string m_pilot_algo_str = "none";
     AlgoPilot m_pilot_algo = FollowCarrot;

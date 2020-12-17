@@ -742,13 +742,25 @@ void GpsWidget::drawTop(){
     auto last_frame = f.m_lastGGAFrame;
     QPixmap * img = m_imgSatBlanc;
     if(f.isGpsConnected()){
-        
-        if(last_frame.m_fix == 1 || last_frame.m_fix == 5){
-            img = m_imgSatOrange;
-        } else if(last_frame.m_fix == 2 || last_frame.m_fix == 4 || last_frame.m_fix == 9){
-            img = m_imgSatVert;
+        if(last_frame.m_fix == 4){
+            f.m_rtk = true;
+        }
+        if(f.m_rtk){
+            if(last_frame.m_fix == 1 || last_frame.m_fix == 2 || last_frame.m_fix == 5 || last_frame.m_fix == 9){
+                img = m_imgSatOrange;
+            } else if(last_frame.m_fix == 4){
+                img = m_imgSatVert;
+            } else {
+                img = m_imgSatRouge;
+            }
         } else {
-            img = m_imgSatRouge;
+            if(last_frame.m_fix == 1 || last_frame.m_fix == 5){
+                img = m_imgSatOrange;
+            } else if(last_frame.m_fix == 2 || last_frame.m_fix == 4 || last_frame.m_fix == 9){
+                img = m_imgSatVert;
+            } else {
+                img = m_imgSatRouge;
+            }
         }
     }
     
