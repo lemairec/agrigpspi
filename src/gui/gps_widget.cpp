@@ -689,7 +689,7 @@ void GpsWidget::drawTop(){
         }
     } else {
         if(f.m_distanceAB < 0){
-            if(f.m_distanceAB > -0.02){
+            if(f.m_distanceAB > -0.025){
                 m_painter->setBrush(m_brushNo);
             } else if(f.m_distanceAB > -0.05){
                 m_painter->setBrush(m_greenBrush);
@@ -706,7 +706,7 @@ void GpsWidget::drawTop(){
             
             
         } else {
-            if(f.m_distanceAB < 0.02){
+            if(f.m_distanceAB < 0.025){
                 m_painter->setBrush(m_brushNo);
             } else if(f.m_distanceAB < 0.05){
                 m_painter->setBrush(m_greenBrush);
