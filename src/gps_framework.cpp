@@ -312,7 +312,7 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
                             , double essieu_arriere_x, double essieu_arriere_y){
     if(m_etat == Etat_OK){
         if(m_line){
-            double dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y,m_deplacementX, m_deplacementY);
+            double dist = m_lineAB.distance(essieu_arriere_x, essieu_arriere_y,m_deplacementX, m_deplacementY);
             setDistance(dist);
             
             if(m_pilot_algo == AlgoPilot::FollowCarrot){
@@ -331,7 +331,7 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
                 m_angle_correction = 0;
             }
         } else {
-            m_curveAB.calculProjete(m_tracteur.m_pt_antenne_corrige, m_deplacementX, m_deplacementY, !m_pilotModule.m_engaged);
+            m_curveAB.calculProjete(m_tracteur.m_pt_essieu_arriere, m_deplacementX, m_deplacementY, !m_pilotModule.m_engaged);
             double dist = m_curveAB.m_proj_distance;
             setDistance(dist);
             
