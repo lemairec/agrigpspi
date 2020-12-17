@@ -652,9 +652,13 @@ void GpsWidget::drawTop(){
     
     m_painter->setPen(m_penBlack);
     m_painter->setBrush(m_brushDarkGray);
+    
     m_painter->drawRect(0, 0, m_width, 40);
     
     m_painter->setBrush(m_grayBrush);
+    if(f.m_ledAB == 888 && abs(f.m_distanceAB) < 0.025){
+        m_painter->setBrush(m_greenBrush);
+    }
     m_painter->drawRect(m_width/2-50, 5, 100, 30);
     QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
     
@@ -695,9 +699,9 @@ void GpsWidget::drawTop(){
                 m_painter->setBrush(m_brushRed);
             }
             QPointF points[4] = {
-                QPointF(m_width/2 + 80, 10),
-                QPointF(m_width/2 + 60, 20),
-                QPointF(m_width/2 + 80, 30),};
+                QPointF(m_width/2 - 80, 10),
+                QPointF(m_width/2 - 100, 20),
+                QPointF(m_width/2 - 80, 30),};
             m_painter->drawPolygon(points, 3);
             
             
@@ -712,9 +716,9 @@ void GpsWidget::drawTop(){
                 m_painter->setBrush(m_brushRed);
             }
             QPointF points2[4] = {
-                QPointF(m_width/2 - 80, 10),
-                QPointF(m_width/2 - 60, 20),
-                QPointF(m_width/2 - 80, 30),};
+                QPointF(m_width/2 + 80, 10),
+                QPointF(m_width/2 + 100, 20),
+                QPointF(m_width/2 + 80, 30),};
             m_painter->drawPolygon(points2, 3);
         }
     }
