@@ -4,7 +4,7 @@
 #include "../gps_framework.hpp"
 #include "base_widget.hpp"
 #include "option_widget.hpp"
-#include "sat_widget.hpp"
+#include "infos_widget.hpp"
 #include "machine_widget.hpp"
 #include "menu_widget.hpp"
 #include "line/line_widget.hpp"
@@ -20,7 +20,7 @@ class GpsWidget : public BaseWidget {
 public:
     static GpsWidget * Instance();
     
-    SatWidget m_satWidget;
+    InfosWidget m_infosWidget;
     
     ParcelleWidget m_parcelleWidget;
     ParcelleNewWidget m_parcelleNewWidget;

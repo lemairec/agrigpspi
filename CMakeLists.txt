@@ -4,7 +4,7 @@ project(agri_gps_pi)
 # The version number.
 set (PROJECT_VERSION_MAJOR 20)
 set (PROJECT_VERSION_MINOR 12)
-set (PROJECT_VERSION_PATCH 12)
+set (PROJECT_VERSION_PATCH 14)
 
 configure_file (
     "${PROJECT_SOURCE_DIR}/src/environnement.hpp.in"

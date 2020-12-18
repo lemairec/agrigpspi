@@ -1,14 +1,14 @@
-#ifndef SAT_WIDGET_H
-#define SAT_WIDGET_H
+#ifndef INFOS_WIDGET_H
+#define INFOS_WIDGET_H
 
 #include "base_widget.hpp"
 
-class SatWidget : public BaseWidget {
+class InfosWidget : public BaseWidget {
     QPixmap * m_imgOk;
     
     int m_type = 3;
 public:
-    SatWidget();
+    InfosWidget();
     
     ButtonGui m_buttonOk;
     ButtonGui m_buttonDebug;

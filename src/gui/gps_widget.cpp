@@ -52,7 +52,7 @@ GpsWidget::GpsWidget()
     
     m_imgFleche = loadImage("/images/fleche.png");
     
-    m_widgets.push_back(&m_satWidget);
+    //m_widgets.push_back(&m_satWidget);
     m_widgets.push_back(&m_lineWidget);
     m_widgets.push_back(&m_lineNewWidget);
     m_widgets.push_back(&m_lineLoadWidget);
@@ -78,6 +78,7 @@ void GpsWidget::setSize(int width, int height){
     for(auto p : m_widgets){
         p->setSize(m_width, m_height);
     }
+    m_infosWidget.setSize(m_width, m_height);
     /*m_key_pad_widget.setSize(m_width, m_height);
      m_key_board_widget.setSize(m_width, m_height);*/
     
@@ -123,6 +124,7 @@ void GpsWidget::setPainter(QPainter * p){
     for(auto p2 : m_widgets){
         p2->setPainter(p);
     }
+    m_infosWidget.setPainter(p);
 }
 
 void GpsWidget::my_projete(double x, double y, double & x_res, double & y_res){
@@ -474,6 +476,9 @@ void GpsWidget::draw_force(){
         if(!p->m_close){
             p->draw();
         }
+    }
+    if(!m_infosWidget.m_close){
+        m_infosWidget.draw();
     }
     drawError();
     
@@ -1145,6 +1150,9 @@ void GpsWidget::onMouse(int x, int y){
             return;
         }
     }
+    if(!m_infosWidget.m_close){
+        m_infosWidget.onMouse(x, y);
+    }
     
     /*if(!m_key_pad_widget.m_close){
      m_key_pad_widget.onMouse(x, y);;
@@ -1176,7 +1184,7 @@ void GpsWidget::onMouse(int x, int y){
     } else if(m_buttonOption.isActive(x2, y2)){
         m_menuWidget.m_close = false;
     } else if(m_buttonSat.isActive(x2, y2)){
-        m_satWidget.m_close = false;
+        m_infosWidget.m_close = false;
     } else if(m_buttonChamp.isActive(x2, y2)){
         GpsFramework::Instance().changeDraw();
     } else if(m_buttonVolant.isActive(x2, y2)){

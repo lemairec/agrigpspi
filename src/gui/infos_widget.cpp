@@ -1,17 +1,17 @@
-#include "sat_widget.hpp"
+#include "infos_widget.hpp"
 
 #include "../gps_framework.hpp"
 #include "gps_widget.hpp"
 
 
-SatWidget::SatWidget(){
+InfosWidget::InfosWidget(){
     m_imgOk = loadImage("/images/ok.png");
 }
 
 int x = 0;
 
 
-void SatWidget::setSize(int width, int height){
+void InfosWidget::setSize(int width, int height){
     BaseWidget::setSize(width, height);
     
     x = m_width*0.7;
@@ -20,7 +20,7 @@ void SatWidget::setSize(int width, int height){
 }
 
 
-void SatWidget::draw(){
+void InfosWidget::draw(){
     GpsFramework & f =  GpsFramework::Instance();
     auto last_frame = f.m_lastGGAFrame;
     m_painter->setPen(m_penBlack);
@@ -192,7 +192,7 @@ void SatWidget::draw(){
     drawButton(&m_buttonDebug);
     
 }
-void SatWidget::onMouse(int x, int y){
+void InfosWidget::onMouse(int x, int y){
     if(m_buttonOk.isActive(x, y)){
         m_close = true;
     }
