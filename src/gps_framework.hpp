@@ -177,6 +177,7 @@ public:
     TimeObserver m_draw_time;
     TimeObserver m_imu_time;
     TimeObserver m_virtual_point;
+    ValueStat m_stat_distance;
     
     bool isGpsConnected();
     bool isPilotConnected();

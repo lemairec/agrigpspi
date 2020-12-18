@@ -60,4 +60,16 @@ public:
     }
 };
 
+
+class ValueStat{
+    std::list<double> m_values;
+public:
+    double m_moy;
+    double m_moy_carre;
+    double m_et;
+    
+    void addNewValue(double value);
+    void clear(){m_values.clear();};
+};
+
 #endif //STAT_H

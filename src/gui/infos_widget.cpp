@@ -118,30 +118,19 @@ void InfosWidget::draw(){
         }
     } else  if (m_type == 3) {
         {
-            QString s = "Time";
+            QString s = "Info";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
         }
         
         {
             QString s =  "draw " + QString::number(round(f.m_draw_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_draw_time.m_et*10)/10);
-            drawQText(s, x2, 0.3*m_height, sizeText_little, false);
-        }
-        
-        {
-            QString s =  "gps " + QString::number(round(f.m_gps_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_gps_time.m_et*10)/10);
-            drawQText(s, x2, 0.4*m_height, sizeText_little, false);
-        }
-        {
-            QString s =  "pil " + QString::number(round(f.m_pilot_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_pilot_time.m_et*10)/10);
-            drawQText(s, x2, 0.45*m_height, sizeText_little, false);
-        }
-        {
-            QString s =  "imu " + QString::number(round(f.m_imu_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_imu_time.m_et*10)/10);
-            drawQText(s, x2, 0.5*m_height, sizeText_little, false);
-        }
-        {
-            QString s =  "virtual " + QString::number(round(f.m_virtual_point.m_moy*10)/10) + " ms " + QString::number(round(f.m_virtual_point.m_et*10)/10);
-            drawQText(s, x2, 0.55*m_height, sizeText_little, false);
+            s = s +  "\n\ngps " + QString::number(round(f.m_gps_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_gps_time.m_et*10)/10);
+            s = s +  "\npil " + QString::number(round(f.m_pilot_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_pilot_time.m_et*10)/10);
+            s = s +  "\nimu " + QString::number(round(f.m_imu_time.m_moy*10)/10) + " ms " + QString::number(round(f.m_imu_time.m_et*10)/10);
+            s = s +  "\nvirtual " + QString::number(round(f.m_virtual_point.m_moy*10)/10) + " ms " + QString::number(round(f.m_virtual_point.m_et*10)/10);
+            s = s +  "\n\npendant 5s\ndistance " + QString::number(round(f.m_stat_distance.m_moy*1000)/10) + " cm ";
+            s = s +  "\necart " + QString::number(round(f.m_stat_distance.m_moy_carre*1000)/10) + " cm ";
+            drawQTexts(s, x2, 0.25*m_height, sizeText_little, false);
         }
         
         

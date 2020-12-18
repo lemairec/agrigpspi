@@ -239,6 +239,7 @@ void GpsFramework::onNewPoint(GpsPoint_ptr p){
         processPilot(m_deplacementX, m_deplacementY
                  , m_tracteur.m_x_essieu_avant, m_tracteur.m_y_essieu_avant
                  , m_tracteur.m_pt_essieu_arriere->m_x, m_tracteur.m_pt_essieu_arriere->m_y);
+        m_stat_distance.addNewValue(m_distanceAB);
     }
     
     m_gps_time.setNewTime();
@@ -830,6 +831,7 @@ double polygonArea(std::vector<GpsPoint_ptr> tab)
 
 void GpsFramework::setVolantEngaged(bool value){
     m_pilotModule.clear();
+    m_stat_distance.clear();
     if(value){
         file_job_stream << "[engage]\n";
         m_pilotModule.engage();
