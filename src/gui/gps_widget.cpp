@@ -310,7 +310,7 @@ void GpsWidget::drawParcelle(bool force){
 void GpsWidget::drawSurfaceToDraw(){
     GpsFramework & f = GpsFramework::Instance();
     
-    m_painter->setBrush(m_brushGreenTransparent);
+    m_painter->setBrush(m_brushGreenAlpha);
     m_painter->setPen(m_penNo);
     for(auto s: f.m_listSurfaceToDraw){
         if(s->m_points.size() > 0 && s->m_lastPoint && s->m_lastPoint->m_point_left && s->m_lastPoint->m_point_right){
@@ -384,10 +384,10 @@ void GpsWidget::drawBackground(){
     for(int j = -nb; j < nb+1; ++j){
         for(int i = -nb; i < nb+1; ++i){
             if((i+j)%2==0){
-                m_painter->setBrush(m_brushParcelle1);
+                m_painter->setBrush(m_brushBackGround1);
                 
             } else {
-                m_painter->setBrush(m_brushParcelle2);
+                m_painter->setBrush(m_brushBackGround2);
                             
             }
             double x0 = begin_ref_x+i*10;

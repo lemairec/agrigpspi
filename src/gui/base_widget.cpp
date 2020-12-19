@@ -183,8 +183,8 @@ BaseWidget::BaseWidget(){
     m_brushGray = QBrush (QColor(200,200,200));
     m_brushParcelle = QBrush(QColor(133,146,118, 100));
 
-    m_brushParcelle1 = QBrush(QColor(183,166,138));
-    m_brushParcelle2 = QBrush(QColor(183*1.2,166*1.2,138*1.2));
+    m_brushBackGround1 = QBrush(QColor(183,166,138));
+    m_brushBackGround2 = QBrush(QColor(183*1.2,166*1.2,138*1.2));
     
     m_brushDarkGray = QBrush (QColor(60,60,60));
     
@@ -200,7 +200,7 @@ BaseWidget::BaseWidget(){
     QColor white = QColor(255,255,255);
     white.setAlphaF(0.9);
     m_brushWhiteAlpha =QBrush(white);
-    m_brushGreenTransparent = QBrush(QColor(0, 150, 0, 100));
+    m_brushGreenAlpha = QBrush(QColor(0, 150, 0, 100));
     m_penNo.setColor(QColor(0, 250, 0, 0));
     m_brushOrange = QBrush(QColor(255, 127, 0));
     m_brushRed = QBrush(Qt::red);
@@ -412,7 +412,7 @@ void BaseWidget::drawValueGui(ValueGui * valueGui, double value){
 void BaseWidget::drawValueGuiKeyPad(ValueGuiKeyPad * value){
     QString s = QString::number(value->m_value);
     m_painter->setPen(m_penBlack);
-    m_painter->setBrush(m_brushGreenTransparent);
+    m_painter->setBrush(m_brushGreenAlpha);
     m_painter->drawRect(value->m_x-40, value->m_y-15, 80, 30);
     drawQText(s, value->m_x, value->m_y, sizeText_medium, true);
     if(value->m_label.size() > 0){
@@ -435,7 +435,7 @@ bool BaseWidget::isActiveValueGuiKeyPad(ValueGuiKeyPad * value, int x, int y){
 
 void BaseWidget::drawValueGuiKeyBoard(ValueGuiKeyBoard * value){
     m_painter->setPen(m_penBlack);
-    m_painter->setBrush(m_brushGreenTransparent);
+    m_painter->setBrush(m_brushGreenAlpha);
     m_painter->drawRect(value->m_x-80, value->m_y-15, 160, 30);
     drawText(value->m_text, value->m_x, value->m_y, sizeText_medium, true);
 }

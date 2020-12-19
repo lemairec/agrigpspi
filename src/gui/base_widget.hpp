@@ -132,7 +132,7 @@ public:
     QBrush m_brushNo;
     QBrush m_brushWhite;
     QBrush m_brushWhiteAlpha;
-    QBrush m_brushGreenTransparent;
+    QBrush m_brushGreenAlpha;
     QBrush m_brushRed;
     QBrush m_brushOrange;
     QBrush m_brushGray;
@@ -142,8 +142,8 @@ public:
     
     QBrush m_brushParcelle;
     
-    QBrush m_brushParcelle1;
-    QBrush m_brushParcelle2;
+    QBrush m_brushBackGround1;
+    QBrush m_brushBackGround2;
     
 public:
     virtual void setPainter(QPainter * p){
