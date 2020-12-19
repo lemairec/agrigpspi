@@ -145,6 +145,12 @@ public:
     QBrush m_brushBackGround1;
     QBrush m_brushBackGround2;
     
+    
+    QPen m_penTracteurRoue;
+    QBrush m_brushTracteur;
+    QPen m_penOutil;
+    QBrush m_brushOutil;
+    
 public:
     virtual void setPainter(QPainter * p){
         m_painter = p;

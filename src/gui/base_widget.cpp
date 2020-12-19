@@ -204,6 +204,19 @@ BaseWidget::BaseWidget(){
     m_penNo.setColor(QColor(0, 250, 0, 0));
     m_brushOrange = QBrush(QColor(255, 127, 0));
     m_brushRed = QBrush(Qt::red);
+    
+    int alpha = 255;
+    //alpa = 100;
+    QColor colorTracteur = QColor(0,0,200,alpha);
+    m_brushTracteur = QBrush(colorTracteur);
+    
+    QColor colorOutil = QColor(60,60,200,alpha);
+    m_brushOutil = QBrush(colorOutil);
+    
+    /*m_penOutil = QPen(colorOutil, 0.3*m_zoom);
+    m_penTractorEssieu = QPen(color, 0.15*m_zoom);
+    m_penTractorRoue = QPen(color, 0.3*m_zoom);*/
+    
 }
 
 

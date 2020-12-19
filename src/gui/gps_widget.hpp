@@ -70,12 +70,6 @@ public:
     ButtonGui m_buttonVolant;
     ButtonGui m_buttonVolantAuto;
     
-    QBrush m_brushTractor;
-    QBrush m_brushOutil;
-    QPen m_penOutil;
-    QPen m_penTractorEssieu;
-    QPen m_penTractorRoue;
-    
     bool m_debug = false;
     
     void setPainter(QPainter * s);
