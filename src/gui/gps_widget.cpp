@@ -660,9 +660,9 @@ void GpsWidget::drawTop(){
     
     m_painter->drawRect(0, 0, m_width, 40);
     
-    m_painter->setBrush(m_grayBrush);
+    m_painter->setBrush(m_brushGray);
     if(f.m_ledAB == 888 && abs(f.m_distanceAB) < 0.025){
-        m_painter->setBrush(m_greenBrush);
+        m_painter->setBrush(m_brushGreen);
     }
     m_painter->drawRect(m_width/2-50, 5, 100, 30);
     QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
@@ -677,12 +677,12 @@ void GpsWidget::drawTop(){
     }*/
     
     if(f.m_ledAB != 888){
-        m_painter->setBrush(m_grayBrush);
+        m_painter->setBrush(m_brushGray);
         for(int i = 0; i < 8; ++i){
             m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
             m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
         }
-        m_painter->setBrush(m_greenBrush);
+        m_painter->setBrush(m_brushGreen);
         if(f.m_ledAB > 0){
             for(int i = 0; i < std::min(8, f.m_ledAB); ++i){
                 m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
@@ -697,7 +697,7 @@ void GpsWidget::drawTop(){
             if(f.m_distanceAB > -0.025){
                 m_painter->setBrush(m_brushNo);
             } else if(f.m_distanceAB > -0.05){
-                m_painter->setBrush(m_greenBrush);
+                m_painter->setBrush(m_brushGreen);
             } else if(f.m_distanceAB > -0.15){
                 m_painter->setBrush(m_brushOrange);
             } else {
@@ -714,7 +714,7 @@ void GpsWidget::drawTop(){
             if(f.m_distanceAB < 0.025){
                 m_painter->setBrush(m_brushNo);
             } else if(f.m_distanceAB < 0.05){
-                m_painter->setBrush(m_greenBrush);
+                m_painter->setBrush(m_brushGreen);
             } else if(f.m_distanceAB < 0.15){
                 m_painter->setBrush(m_brushOrange);
             } else {

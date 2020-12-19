@@ -135,8 +135,8 @@ public:
     QBrush m_brushGreenTransparent;
     QBrush m_brushRed;
     QBrush m_brushOrange;
-    QBrush m_grayBrush;
-    QBrush m_greenBrush;
+    QBrush m_brushGray;
+    QBrush m_brushGreen;
     QBrush m_brushDarkGray;
     QBrush m_brushLightGrayDebug;
     
