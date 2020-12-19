@@ -67,6 +67,8 @@ GpsWidget::GpsWidget()
     m_menuWidget.m_outil_widget.m_key_pad_widget = &m_key_pad_widget;
     m_parcelleNewWidget.m_key_board_widget = &m_key_board_widget;
     m_lineNewWidget.m_key_board_widget = &m_key_board_widget;
+    
+    m_vue_3D = true;
 }
 
 void GpsWidget::setSize(int width, int height){
@@ -135,20 +137,30 @@ void GpsWidget::my_projete(double x, double y, double & x_res, double & y_res){
     double h10 = -m_sinA, h11 = m_cosA;// h12 = 1;
     //double h20 = -m_sinA, h21 = m_cosA, h22 = 1;
     
-    x_res = x1_temp*h00 +y1_temp*h01;
-    y_res  = x1_temp*h10 +y1_temp*h11;
+    double x_temp = (x1_temp*h00 + y1_temp*h01);
+    double y_temp  = (x1_temp*h10  + y1_temp*h11);
+    
+    if(m_vue_3D){
+        double a = 1;
+        double b = 1.005;
+        double res = ((a-1)*x_temp+(b-1)*y_temp+1);
+        if(res<0){
+            res = 0.0001;
+        }
+        x_res = a*x_temp/res;
+        y_res  = b*y_temp/res;
+    } else {
+        x_res = x_temp;
+        y_res = y_temp;
+    }
 }
 
 void GpsWidget::my_projete2(double x, double y, double & x_res, double & y_res){
-    double x1_temp = (x - m_xref)*m_zoom;
-    double y1_temp = (y - m_yref)*m_zoom;
+    double x_temp, y_temp;
+    my_projete(x,y,x_temp, y_temp);
     
-    double h00 = m_cosA, h01 = m_sinA;//, h02 = 1;
-    double h10 = -m_sinA, h11 = m_cosA;// h12 = 1;
-    //double h20 = -m_sinA, h21 = m_cosA, h22 = 1;
-    
-    x_res = round(m_width/2 + x1_temp*h00 + y1_temp*h01);
-    y_res  = round(m_height/2 - x1_temp*h10  - y1_temp*h11);
+    x_res = m_width/2 + x_temp;
+    y_res = m_height*9/16 - y_temp;
 }
 
 void GpsWidget::my_projete2_pt(GpsPoint_ptr pt, double & x_res, double & y_res){
@@ -457,10 +469,25 @@ void GpsWidget::draw_force(){
         drawParcelle();
         drawLineCurve();
         
+        
         drawSurfaceToDraw();
         
         drawTracteur();
         drawDebugEkf();
+        
+        if(m_vue_3D){
+            m_painter->setBrush(QColor(135,206,235));
+            m_painter->setPen(m_penNo);
+            QPolygonF points;
+            points.append(QPointF(0, 0));
+            points.append(QPointF(m_width, 0));
+            points.append(QPointF(m_width, m_height*0.25));
+            points.append(QPointF(m_width/2, m_height*0.20));
+            points.append(QPointF(0, m_height*0.25));
+               
+            m_painter->drawPolygon(points);
+            m_painter->drawRect(0,0, m_width, m_height/6);
+        }
         
         drawTop();
         drawBottom();
@@ -495,20 +522,6 @@ void GpsWidget::draw_force(){
 
 void GpsWidget::drawTracteur(){
     GpsFramework & f = GpsFramework::Instance();
-    int alpha = 255;
-    if(f.m_config.m_debug){
-        alpha = 155;
-    }
-    
-    QColor color = QColor(0,0,200,alpha);
-    QColor colorOutil = QColor(60,60,200,alpha);
-    
-    m_brushTractor = QBrush(color);
-    m_brushOutil = QBrush(colorOutil);
-    m_penOutil = QPen(colorOutil, 0.3*m_zoom);
-    m_penTractorEssieu = QPen(color, 0.15*m_zoom);
-    m_penTractorRoue = QPen(color, 0.3*m_zoom);
-    
     
     double x_tracteur = m_width/2, y_tracteur = m_height/2;
     if(f.m_tracteur.m_pt_antenne_corrige){
@@ -529,16 +542,19 @@ void GpsWidget::drawTracteur(){
     m_painter->drawRect(x_tracteur - 0.1*m_zoom, y_arriere, 0.2*m_zoom, (l_outil)*m_zoom);
     
     
+    //tracteur
+    m_painter->setBrush(m_brushTracteur);
+    m_painter->setPen(m_penNo);
+    
+    //roue arriere
     double voie = 1.8*m_zoom;
-    double l_roue = 1.7*m_zoom/2;
-    m_painter->setPen(m_penTractorRoue);
-    m_painter->drawLine(x_tracteur - voie/2, y_arriere, x_tracteur + voie/2, y_arriere);
-    m_painter->drawLine(x_tracteur - voie/2, y_arriere-l_roue, x_tracteur - voie/2, y_arriere+l_roue);
-    m_painter->drawLine(x_tracteur + voie/2, y_arriere-l_roue, x_tracteur + voie/2, y_arriere+l_roue);
+    double l_roue = 1.7*m_zoom;
+    double lg_pneu = 0.45*m_zoom;
+    m_painter->drawRect(x_tracteur - voie/2, y_arriere-0.1*m_zoom, voie, 0.2*m_zoom);
+    m_painter->drawRect(x_tracteur - voie/2 - lg_pneu/2, y_arriere - l_roue/2, lg_pneu, l_roue);
+    m_painter->drawRect(x_tracteur + voie/2 - lg_pneu/2, y_arriere - l_roue/2, lg_pneu, l_roue);
     
     //cabine
-    m_painter->setBrush(m_brushTractor);
-    m_painter->setPen(m_penNo);
     double l_cabine = 1.6*m_zoom;
     m_painter->drawRect(x_tracteur - l_cabine/2, y_arriere-1.2*m_zoom, l_cabine, l_cabine);
     
@@ -547,16 +563,40 @@ void GpsWidget::drawTracteur(){
     double l_capot = (f.m_tracteur.m_antenne_essieu_avant+0.2)*m_zoom;
     m_painter->drawRect(x_tracteur - lg_capot/2, y_tracteur-l_capot, lg_capot, f.m_tracteur.m_empatement*m_zoom);
     
+    
     double y_direction = y_tracteur-f.m_tracteur.m_antenne_essieu_avant*m_zoom;
-    m_painter->setPen(m_penTractorRoue);
-    m_painter->drawLine(x_tracteur - voie/2, y_direction, x_tracteur + voie/2, y_direction);
+    m_painter->drawRect(x_tracteur - voie/2, y_direction-0.1*m_zoom, voie, 0.2*m_zoom);
+    
+    
+    
     double l_roue2 = 1.1*m_zoom/2;
+    double lg_pneu2 = 0.33*m_zoom/2;
+    
+    
     
     for(int i = -1; i<=1; i+=2){
-        int x=x_tracteur+i*voie/2;
-        int dx = -l_roue2*sin(f.m_angle_correction);
-        int dy = l_roue2*cos(f.m_angle_correction);
+        float x = x_tracteur+i*voie/2;
+        
+        float dx = -l_roue2*sin(f.m_angle_correction);
+        float dy = l_roue2*cos(f.m_angle_correction);
+        
+        float droue_x = lg_pneu2;
+        float droue_y = 0;
+        if(abs(f.m_angle_correction) < 3.14){
+            droue_x = lg_pneu2*cos(f.m_angle_correction);
+            droue_y = lg_pneu2*sin(f.m_angle_correction);
+        }
+        
         m_painter->drawLine(x-dx, y_direction-dy, x+dx, y_direction+dy);
+        
+        QPointF points[4] = {
+            QPointF(x-dx-droue_x, y_direction-dy-droue_y),
+            QPointF(x-dx+droue_x, y_direction-dy+droue_y),
+            QPointF(x+dx+droue_x, y_direction+dy+droue_y),
+            QPointF(x+dx-droue_x, y_direction+dy-droue_y)
+            
+        };
+        m_painter->drawPolygon(points, 4);
     }
     
     

@@ -98,7 +98,7 @@ public:
     
     double m_zoom;
     
-    
+    bool m_vue_3D;
     
     //angle
     double m_xref;
