@@ -128,18 +128,19 @@ public:
     QPen m_penBlue;
     QPen m_penBlue2;
     QPen m_penNo;
+
     QBrush m_brushNo;
     QBrush m_brushWhite;
     QBrush m_brushWhiteAlpha;
-    QBrush m_parcelleBrush;
-    
-    QBrush m_brushGreen;
+    QBrush m_brushGreenTransparent;
     QBrush m_brushRed;
     QBrush m_brushOrange;
     QBrush m_grayBrush;
     QBrush m_greenBrush;
     QBrush m_brushDarkGray;
     QBrush m_brushLightGrayDebug;
+    
+    QBrush m_brushParcelle;
     
     QBrush m_brushParcelle1;
     QBrush m_brushParcelle2;

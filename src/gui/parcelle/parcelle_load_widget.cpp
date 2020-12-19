@@ -105,7 +105,7 @@ void ParcelleLoadWidget::draw(){
     m_painter->setBrush(m_brushWhite);
     m_painter->drawRect(m_x, 0, m_width, m_height);
     
-    m_painter->setBrush(m_parcelleBrush);
+    m_painter->setBrush(m_brushParcelle);
     m_painter->drawRect(m_width*0.4, m_height*0.05, m_width*0.6-m_height*0.05, m_height*0.9);
     //scene->addRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8, m_penBlack, m_brushDarkGray);
     

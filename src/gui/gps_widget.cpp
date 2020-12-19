@@ -287,7 +287,7 @@ void GpsWidget::drawParcelle(bool force){
         }
         if(force){
             m_painter->setPen(m_penBlack);
-            m_painter->setBrush(m_parcelleBrush);
+            m_painter->setBrush(m_brushParcelle);
             m_painter->drawPolygon(p);
             
             m_painter->setBrush(m_brushRed);
@@ -299,7 +299,7 @@ void GpsWidget::drawParcelle(bool force){
             }
         } else {
             m_painter->setPen(m_penNo);
-            m_painter->setBrush(m_parcelleBrush);
+            m_painter->setBrush(m_brushParcelle);
             m_painter->drawPolygon(p);
             
         }
@@ -310,7 +310,7 @@ void GpsWidget::drawParcelle(bool force){
 void GpsWidget::drawSurfaceToDraw(){
     GpsFramework & f = GpsFramework::Instance();
     
-    m_painter->setBrush(m_brushGreen);
+    m_painter->setBrush(m_brushGreenTransparent);
     m_painter->setPen(m_penNo);
     for(auto s: f.m_listSurfaceToDraw){
         if(s->m_points.size() > 0 && s->m_lastPoint && s->m_lastPoint->m_point_left && s->m_lastPoint->m_point_right){
