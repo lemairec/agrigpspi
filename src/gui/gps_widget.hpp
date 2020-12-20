@@ -59,6 +59,7 @@ public:
     QPixmap * m_imgOk;
     
     ButtonGui m_buttonSat;
+    ButtonGui m_button3d;
     ButtonGui m_buttonPlus;
     ButtonGui m_buttonMinus;
     ButtonGui m_buttonGuidage;
@@ -82,6 +83,8 @@ public:
     void drawParcelle(bool force = false);
     void drawSurfaceToDraw();
     
+    void drawRect3D(double x, double y, double l, double lg);
+    void drawTracteur3D();
     void drawTracteur();
     void drawBottom();
     void drawTop();

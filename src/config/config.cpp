@@ -85,6 +85,7 @@ void Config::save(){
     
     m_resolution_draw = 3.0;
     m_resolution_calcul = 0.5;
+    m_3d = true;
 }
 
 void Config::load(){

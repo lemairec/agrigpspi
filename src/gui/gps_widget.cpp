@@ -68,7 +68,7 @@ GpsWidget::GpsWidget()
     m_parcelleNewWidget.m_key_board_widget = &m_key_board_widget;
     m_lineNewWidget.m_key_board_widget = &m_key_board_widget;
     
-    m_vue_3D = true;
+    m_vue_3D = false;
 }
 
 void GpsWidget::setSize(int width, int height){
@@ -98,6 +98,7 @@ void GpsWidget::setSize(int width, int height){
     m_buttonChamp.setResize(m_width - 160, m_height-30, m_gros_gros_button);
     m_buttonVolant.setResize(m_width - 40, m_height-30, m_gros_gros_button);
     m_buttonVolantAuto.setResize(m_width - 100, m_height-30, m_gros_gros_button);
+    m_button3d.setResize(m_width/2, m_height/2, m_gros_gros_button);
     
     if(GpsFramework::Instance().m_config.m_menu_vertical){
         m_imgGuidage = loadImage("/images/guidage2.png");
@@ -169,6 +170,7 @@ void GpsWidget::my_projete2_pt(GpsPoint_ptr pt, double & x_res, double & y_res){
 }
 
 bool GpsWidget::must_be_draw(double x, double y){
+    return true;
     double x_temp = (x - m_xref);
     double y_temp = (y - m_yref);
     double res = x_temp*x_temp+y_temp*y_temp;
@@ -381,7 +383,7 @@ void GpsWidget::draw(){
 void GpsWidget::drawBackground(){
     double begin_ref_x = round(m_xref/20.0)*20;
     double begin_ref_y = round(m_yref/20.0)*20;
-
+    
     m_painter->setPen(m_penNo);
     
     int nb = -1;
@@ -394,6 +396,7 @@ void GpsWidget::drawBackground(){
             }
         }
     }
+    nb=10;
     for(int j = -nb; j < nb+1; ++j){
         for(int i = -nb; i < nb+1; i+=1){
             if((i+j)%2==0){
@@ -401,7 +404,7 @@ void GpsWidget::drawBackground(){
                 
             } else {
                 m_painter->setBrush(m_brushBackGround2);
-                            
+                
             }
             double x0 = begin_ref_x+i*10;
             double y0 = begin_ref_y+j*10;
@@ -435,25 +438,26 @@ void GpsWidget::draw_force(){
     auto begin = std::chrono::system_clock::now();
     GpsFramework & f = GpsFramework::Instance();
     m_debug = f.m_config.m_debug;
-      
-     m_widthMax = m_width/2+f.m_config.m_outil_largeur*m_zoom/2;
-     m_heightMax = m_height/2+f.m_config.m_outil_largeur*m_zoom/2;
-     m_debug = f.m_config.m_debug;
-     if(f.m_tracteur.m_pt_antenne_corrige){
-         m_xref = f.m_tracteur.m_pt_antenne_corrige->m_x;
-         m_yref = f.m_tracteur.m_pt_antenne_corrige->m_y;
-     }
-     
+    m_vue_3D = f.m_config.m_3d;
     
-     
-     
-     m_a = -3.14/2+f.m_deplacementAngle;
-     if(!f.m_config.m_sensDraw){
-         m_a = 0;
-     }
-     m_cosA = cos(m_a);
-     m_sinA = sin(m_a);
-     
+    m_widthMax = m_width/2+f.m_config.m_outil_largeur*m_zoom/2;
+    m_heightMax = m_height/2+f.m_config.m_outil_largeur*m_zoom/2;
+    m_debug = f.m_config.m_debug;
+    if(f.m_tracteur.m_pt_antenne_corrige){
+        m_xref = f.m_tracteur.m_pt_antenne_corrige->m_x;
+        m_yref = f.m_tracteur.m_pt_antenne_corrige->m_y;
+    }
+    
+    
+    
+    
+    m_a = -3.14/2+f.m_deplacementAngle;
+    if(!f.m_config.m_sensDraw){
+        m_a = 0;
+    }
+    m_cosA = cos(m_a);
+    m_sinA = sin(m_a);
+    
     
     drawBackground();
     
@@ -461,7 +465,7 @@ void GpsWidget::draw_force(){
     if(m_debug && m_zoom > 40){
         drawVolant(m_height/2);
     }
-        
+    
     
     if(f.m_etat == Etat_ParcelleAdd || f.m_etat == Etat_ParcellePause){
         drawParcelle(true);
@@ -485,7 +489,7 @@ void GpsWidget::draw_force(){
             points.append(QPointF(m_width, m_height*0.25));
             points.append(QPointF(m_width/2, m_height*0.20));
             points.append(QPointF(0, m_height*0.25));
-               
+            
             m_painter->drawPolygon(points);
             m_painter->drawRect(0,0, m_width, m_height/6);
         }
@@ -544,7 +548,7 @@ void GpsWidget::drawRect3D(double x, double y, double l, double lg){
     points.append(QPointF(x4, y4));
     points.append(QPointF(x2, y2));
     points.append(QPointF(x1, y1));
-       
+    
     m_painter->drawPolygon(points);
 }
 
@@ -630,6 +634,12 @@ void GpsWidget::drawTracteur3D(){
 }
 
 void GpsWidget::drawTracteur(){
+    if(m_vue_3D){
+        drawTracteur3D();
+        return;
+    }
+    //drawTracteur3D();
+    //return;
     GpsFramework & f = GpsFramework::Instance();
     
     double x_tracteur = m_width/2, y_tracteur = m_height/2;
@@ -717,55 +727,56 @@ void GpsWidget::drawTracteur(){
     if(m_debug){
         //scene->addEllipse(w/2 - 0.05*m_zoom, h/2 - 0.05*m_zoom, 0.10*m_zoom, 0.10*m_zoom, m_penBlack, m_brushRed);
         /*my_projete2_pt(f.m_tracteur.m_pt_outil_arriere, x, y);
-        scene->addEllipse(x-3, y-3, 6, 6, m_penRed, m_brushGreen);
-        my_projete2_pt(f.m_tracteur.m_pt_outil_arriere_droite, x, y);
-        scene->addEllipse(x-2, y-2, 4, 4, m_penRed, m_brushGreen);*/
+         scene->addEllipse(x-3, y-3, 6, 6, m_penRed, m_brushGreen);
+         my_projete2_pt(f.m_tracteur.m_pt_outil_arriere_droite, x, y);
+         scene->addEllipse(x-2, y-2, 4, 4, m_penRed, m_brushGreen);*/
     }
     /*
-        
-        double x;
-        double y;
-        
-        double x2;
-        double y2;
-        
-        //m_angle_correction
-        
-        my_projete(m_xref+dx, m_yref+dy, x, y);
-        my_projete(m_xref+dx/4, m_yref+dy/4, x2, y2);
-        
-        double l = 1.8*m_zoom/2;
-        
-        double xA;
-        double yA;
-        if(y==0){
-            xA=0;
-            yA=l;
-        } else {
-            double res = x/y;
-            xA = l/(sqrt(1+res*res));
-            yA = -xA*res;
-        }
-        QPolygon polygon;
-        polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + x2, h/2 - y2) << QPoint(w/2 - xA, h/2 + yA)<< QPoint(w/2 + x, h/2 - y);
-        scene->addPolygon(polygon, m_penNo, m_brushTractor);
-        
-        scene->addLine(w/2+xA, h/2-yA, w/2 - xA, h/2 + yA, m_penBlue);
-        
-        if(f.m_config.m_debug){
-            my_projete(m_xref, m_yref, x, y);
-            double a = -f.m_angle_correction;
-            my_projete(m_xref+dx*cos(a)-dy*sin(a), m_yref+dx*sin(a)+dy*cos(a), x2, y2);
-            scene->addLine(w/2+x, h/2-y, w/2 + x2, h/2 - y2, m_penBlue);
-        }*/// TODO
+     
+     double x;
+     double y;
+     
+     double x2;
+     double y2;
+     
+     //m_angle_correction
+     
+     my_projete(m_xref+dx, m_yref+dy, x, y);
+     my_projete(m_xref+dx/4, m_yref+dy/4, x2, y2);
+     
+     double l = 1.8*m_zoom/2;
+     
+     double xA;
+     double yA;
+     if(y==0){
+     xA=0;
+     yA=l;
+     } else {
+     double res = x/y;
+     xA = l/(sqrt(1+res*res));
+     yA = -xA*res;
+     }
+     QPolygon polygon;
+     polygon << QPoint(w/2 + xA, h/2 - yA) << QPoint(w/2 + x2, h/2 - y2) << QPoint(w/2 - xA, h/2 + yA)<< QPoint(w/2 + x, h/2 - y);
+     scene->addPolygon(polygon, m_penNo, m_brushTractor);
+     
+     scene->addLine(w/2+xA, h/2-yA, w/2 - xA, h/2 + yA, m_penBlue);
+     
+     if(f.m_config.m_debug){
+     my_projete(m_xref, m_yref, x, y);
+     double a = -f.m_angle_correction;
+     my_projete(m_xref+dx*cos(a)-dy*sin(a), m_yref+dx*sin(a)+dy*cos(a), x2, y2);
+     scene->addLine(w/2+x, h/2-y, w/2 + x2, h/2 - y2, m_penBlue);
+     }*/// TODO
     
 }
+
 
 void GpsWidget::drawDebugEkf(){
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_config.m_debug){
         m_painter->setPen( QPen(Qt::black, 2) ); // personnaliser
-
+        
         for(auto p: f.m_ekf_module.m_list){
             double x1, y1;
             
@@ -783,7 +794,7 @@ void GpsWidget::drawDebugEkf(){
             }
             x_last = x1;
             y_last = y1;
-                                    
+            
         }
         x_last = 0;
         m_painter->setPen(m_penGreen); // personnaliser
@@ -795,7 +806,7 @@ void GpsWidget::drawDebugEkf(){
             }
             x_last = x1;
             y_last = y1;
-                                    
+            
         }
     }
 }
@@ -819,11 +830,11 @@ void GpsWidget::drawTop(){
     drawQText(s, m_width/2, 23,sizeText_big, true);
     
     /*scene->addRect(m_width/2-60, 40, 120, 40, m_penBlack, m_brushDarkGray);
-    scene->addRect(m_width/2-50, 45, 100, 30, m_penBlack, m_grayBrush);
-    {
-        QString s = QString::number(f.m_angle_correction/3.14*180, 'f', 2) + " °";
-        drawQText(s, m_width/2, 63,sizeText_big, true);
-    }*/
+     scene->addRect(m_width/2-50, 45, 100, 30, m_penBlack, m_grayBrush);
+     {
+     QString s = QString::number(f.m_angle_correction/3.14*180, 'f', 2) + " °";
+     drawQText(s, m_width/2, 63,sizeText_big, true);
+     }*/
     
     if(f.m_ledAB != 888){
         m_painter->setBrush(m_brushGray);
@@ -980,74 +991,74 @@ void GpsWidget::drawBottom(){
 
 void GpsWidget::drawVolant_(double y, double a, double r, double start_angle){
     /*double angle = a;
-    int nbr_tour = 0;
-    while(angle > 1.0){
-        angle = angle - 1.0;
-        nbr_tour++;
-    }
-    while(angle < -1.0){
-        angle = angle + 1.0;
-        nbr_tour--;
-    }
-    double j = 1.1;
-    
-    QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
-    item->setBrush(m_grayBrush);
-    item->setPen(m_penNo);
-    item->setStartAngle(90*16 - start_angle*360*16);
-    
-    item->setSpanAngle(-angle*360*16);
-    scene->addItem(item);
-    
-    j=0.9;
-    scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
-    
-    {
-        QString s = QString::number(a, 'f', 2);
-        auto textItem = scene->addText(s);
-        auto mBounds = textItem->boundingRect();
-        
-        textItem->setPos(m_width/2-mBounds.width()/2, y-r);
-    }*/
+     int nbr_tour = 0;
+     while(angle > 1.0){
+     angle = angle - 1.0;
+     nbr_tour++;
+     }
+     while(angle < -1.0){
+     angle = angle + 1.0;
+     nbr_tour--;
+     }
+     double j = 1.1;
+     
+     QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
+     item->setBrush(m_grayBrush);
+     item->setPen(m_penNo);
+     item->setStartAngle(90*16 - start_angle*360*16);
+     
+     item->setSpanAngle(-angle*360*16);
+     scene->addItem(item);
+     
+     j=0.9;
+     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
+     
+     {
+     QString s = QString::number(a, 'f', 2);
+     auto textItem = scene->addText(s);
+     auto mBounds = textItem->boundingRect();
+     
+     textItem->setPos(m_width/2-mBounds.width()/2, y-r);
+     }*/
 }
 
 void GpsWidget::drawVolant(double y){
     /*GpsFramework & f = GpsFramework::Instance();
-    
-    int r=40;
-    
-    double angle = f.m_pilotModule.m_volant;
-    
-    double j = 1.2;
-    scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penBlack, m_brushWhite);
-    
-    
-    
-    QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
-    item->setBrush(m_grayBrush);
-    item->setPen(m_penNo);
-    item->setStartAngle(90*16-f.m_pilotModule.m_volant0*360*16);
-    item->setSpanAngle(-angle*360*16);
-    scene->addItem(item);
-    
-    j=0.8;
-    scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
-    {
-        QString s = QString::number(f.m_pilotModule.m_volantTotal, 'f', 2);
-        auto textItem = scene->addText(s);
-        auto mBounds = textItem->boundingRect();
-        
-        textItem->setPos(m_width/2-mBounds.width()/2, y-r-10);
-    }
-    
-    {
-        drawVolant_(y, f.m_pilotModule.m_volantMesured, r-10, 0);
-        
-    }
-    
-    //double x1 = cos(i*2*3.14)*r;
-    //double y1 = sin(i*2*3.14)*r;
-    //scene->addRect(m_width/2+x1, y+y1, 2, 2);*/
+     
+     int r=40;
+     
+     double angle = f.m_pilotModule.m_volant;
+     
+     double j = 1.2;
+     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penBlack, m_brushWhite);
+     
+     
+     
+     QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
+     item->setBrush(m_grayBrush);
+     item->setPen(m_penNo);
+     item->setStartAngle(90*16-f.m_pilotModule.m_volant0*360*16);
+     item->setSpanAngle(-angle*360*16);
+     scene->addItem(item);
+     
+     j=0.8;
+     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
+     {
+     QString s = QString::number(f.m_pilotModule.m_volantTotal, 'f', 2);
+     auto textItem = scene->addText(s);
+     auto mBounds = textItem->boundingRect();
+     
+     textItem->setPos(m_width/2-mBounds.width()/2, y-r-10);
+     }
+     
+     {
+     drawVolant_(y, f.m_pilotModule.m_volantMesured, r-10, 0);
+     
+     }
+     
+     //double x1 = cos(i*2*3.14)*r;
+     //double y1 = sin(i*2*3.14)*r;
+     //scene->addRect(m_width/2+x1, y+y1, 2, 2);*/
     
 }
 
@@ -1340,8 +1351,9 @@ void GpsWidget::onMouse(int x, int y){
         GpsFramework::Instance().setVolantEngaged(!GpsFramework::Instance().getVolantEngaged());
     } else if(f.m_config.m_pilot_auto_deactive > 0 && m_buttonVolantAuto.isActive(x2, y2)){
         GpsFramework::Instance().m_pilot_auto = !GpsFramework::Instance().m_pilot_auto;
+    } else if(m_button3d.isActive(x2, y2)){
+        GpsFramework::Instance().m_config.m_3d = !GpsFramework::Instance().m_config.m_3d;
     }
-    
     //draw();
 }
 

@@ -36,6 +36,7 @@ public:
     bool m_debug = false;
     bool m_menu_vertical = false;
     bool m_debug_log = true;
+    bool m_3d = true;
     
     bool m_fullscreen = true;
     
