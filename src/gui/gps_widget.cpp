@@ -129,6 +129,7 @@ void GpsWidget::setPainter(QPainter * p){
     m_infosWidget.setPainter(p);
 }
 
+int max = 10000;
 void GpsWidget::my_projete(double x, double y, double & x_res, double & y_res){
     double x1_temp = (x - m_xref)*m_zoom;
     double y1_temp = (y - m_yref)*m_zoom;
@@ -394,7 +395,7 @@ void GpsWidget::drawBackground(){
         }
     }
     for(int j = -nb; j < nb+1; ++j){
-        for(int i = -nb; i < nb+1; ++i){
+        for(int i = -nb; i < nb+1; i+=1){
             if((i+j)%2==0){
                 m_painter->setBrush(m_brushBackGround1);
                 
@@ -517,6 +518,114 @@ void GpsWidget::draw_force(){
     
     
     DEBUG("END");
+    
+}
+
+double cosa = 0;
+double sina = 0;
+void GpsWidget::drawRect3D(double x, double y, double l, double lg){
+    
+    double x1 = x - sina*lg/2;
+    double y1 = y + cosa*lg/2;
+    my_projete2(x1, y1, x1, y1);
+    double x2 = x + sina*lg/2;;
+    double y2 = y - cosa*lg/2;;
+    my_projete2(x2, y2, x2, y2);
+    double x_outil2 = x + cosa*l;
+    double y_outil2 = y + sina*l;
+    double x3 = x_outil2 - sina*lg/2;
+    double y3 = y_outil2 + cosa*lg/2;
+    my_projete2(x3, y3, x3, y3);
+    double x4 = x_outil2 + sina*lg/2;;
+    double y4 = y_outil2 - cosa*lg/2;;
+    my_projete2(x4, y4, x4, y4);
+    QPolygonF points;
+    points.append(QPointF(x3, y3));
+    points.append(QPointF(x4, y4));
+    points.append(QPointF(x2, y2));
+    points.append(QPointF(x1, y1));
+       
+    m_painter->drawPolygon(points);
+}
+
+
+void GpsWidget::drawTracteur3D(){
+    GpsFramework & f = GpsFramework::Instance();
+    
+    double x_tracteur = m_width/2, y_tracteur = m_height/2;
+    double angle = 0;
+    if(f.m_tracteur.m_pt_antenne_corrige){
+        my_projete2(f.m_tracteur.m_pt_antenne_corrige->m_x, f.m_tracteur.m_pt_antenne_corrige->m_y, x_tracteur, y_tracteur);
+        x_tracteur = f.m_tracteur.m_pt_antenne_corrige->m_x;
+        y_tracteur = f.m_tracteur.m_pt_antenne_corrige->m_y;
+        angle = f.m_deplacementAngle;
+    }
+    cosa = cos(angle);
+    sina = sin(angle);
+    
+    
+    double l2 = f.m_tracteur.m_antenne_essieu_arriere*m_zoom;
+    
+    
+    //outil
+    m_painter->setBrush(m_brushOutil);
+    double l_outil2 = f.m_tracteur.m_outil_distance+f.m_tracteur.m_antenne_essieu_arriere;
+    double lg_outil = f.m_tracteur.m_outil_largeur;
+    double x_outil = x_tracteur - cosa*l_outil2;
+    double y_outil = y_tracteur - sina*l_outil2;
+    
+    drawRect3D(x_outil, y_outil, 0.5, lg_outil);
+    drawRect3D(x_outil, y_outil, f.m_tracteur.m_outil_distance, 0.3);
+    
+    
+    //roue arriere
+    double x_arriere = x_tracteur - cosa*f.m_tracteur.m_antenne_essieu_arriere;
+    double y_arriere = y_tracteur - sina*f.m_tracteur.m_antenne_essieu_arriere;
+    
+    m_painter->setBrush(m_brushTracteur);
+    double voie = 1.8;
+    double l_roue = 1.7;
+    double lg_pneu = 0.45;
+    
+    drawRect3D(x_arriere - cosa*0.1, y_arriere - sina*0.1, 0.2, voie);
+    
+    double x_arriere_l = x_arriere - cosa*l_roue/2 - sina*voie/2;
+    double y_arriere_l = y_arriere - sina*l_roue/2 + cosa*voie/2;
+    double x_arriere_r = x_arriere - cosa*l_roue/2 + sina*voie/2;
+    double y_arriere_r = y_arriere - sina*l_roue/2 - cosa*voie/2;
+    
+    drawRect3D(x_arriere_l, y_arriere_l, l_roue, lg_pneu);
+    drawRect3D(x_arriere_r, y_arriere_r, l_roue, lg_pneu);
+    
+    //roue avant
+    l_roue = 1.1;
+    lg_pneu = 0.33;
+    
+    double x_avant = x_tracteur + cosa*f.m_tracteur.m_antenne_essieu_avant;
+    double y_avant = y_tracteur + sina*f.m_tracteur.m_antenne_essieu_avant;
+    
+    m_painter->setBrush(m_brushTracteur);
+    drawRect3D(x_avant - cosa*0.1, y_avant - sina*0.1, 0.2, voie);
+    
+    double x_avant_l = x_avant - cosa*l_roue/2 - sina*voie/2;
+    double y_avant_l = y_avant - sina*l_roue/2 + cosa*voie/2;
+    double x_avant_r = x_avant - cosa*l_roue/2 + sina*voie/2;
+    double y_avant_r = y_avant - sina*l_roue/2 - cosa*voie/2;
+    
+    drawRect3D(x_avant_l, y_avant_l, l_roue, lg_pneu);
+    drawRect3D(x_avant_r, y_avant_r, l_roue, lg_pneu);
+    
+    //capot
+    double lg_capot = 1;
+    double l_capot = f.m_tracteur.m_empatement+0.3;
+    drawRect3D(x_arriere, y_arriere, l_capot, lg_capot);
+    
+    //cabine
+    double l_cabine = 1.6;
+    double x_cabine = x_arriere - cosa*0.3;
+    double y_cabine  = y_arriere - sina*0.3;
+    drawRect3D(x_cabine, y_cabine, l_cabine, l_cabine);
+    
     
 }
 
