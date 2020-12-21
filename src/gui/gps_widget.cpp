@@ -584,10 +584,12 @@ void GpsWidget::drawTracteur3D(){
     drawRect3D(x_outil, y_outil, 0.5, lg_outil);
     drawRect3D(x_outil, y_outil, f.m_tracteur.m_outil_distance, 0.3);
     
-    int h = 8*m_zoom;
-    int w = 8*m_zoom;
-    m_painter->drawPixmap(x_tracteur2-w/2, y_tracteur2-h/2, w, h, *m_tracteur_3d);
-    return;
+    if(!m_debug){
+        int h = 8*m_zoom;
+        int w = 8*m_zoom;
+        m_painter->drawPixmap(x_tracteur2-w/2, y_tracteur2-h/2, w, h, *m_tracteur_3d);
+        return;
+    }
     
     //roue arriere
     double x_arriere = x_tracteur - cosa*f.m_tracteur.m_antenne_essieu_arriere;
@@ -670,9 +672,11 @@ void GpsWidget::drawTracteur(){
     m_painter->drawRect(x_tracteur - lg_outil*0.5*m_zoom, y_arriere + (l_outil-0.5)*m_zoom, lg_outil*m_zoom, 0.5*m_zoom);
     m_painter->drawRect(x_tracteur - 0.1*m_zoom, y_arriere, 0.2*m_zoom, (l_outil)*m_zoom);
     
-    m_painter->drawPixmap(x_tracteur-w/2, y_tracteur-h*0.55, w, h, *m_tracteur_2d);
-    //m_painter->drawEllipse( x_tracteur-5, y_tracteur-5, 10, 10);
-    return;
+    if(!m_debug){
+        m_painter->drawPixmap(x_tracteur-w/2, y_tracteur-h*0.55, w, h, *m_tracteur_2d);
+        //m_painter->drawEllipse( x_tracteur-5, y_tracteur-5, 10, 10);
+        return;
+    }
     
     //tracteur
     m_painter->setBrush(m_brushTracteur);
