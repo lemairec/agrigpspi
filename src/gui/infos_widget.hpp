@@ -6,7 +6,7 @@
 class InfosWidget : public BaseWidget {
     QPixmap * m_imgOk;
     
-    int m_type = 3;
+    int m_type = 0;
 public:
     InfosWidget();
     
@@ -18,6 +18,14 @@ public:
     
     virtual void draw();
     virtual void onMouse(int x, int y);
+    
+    ValueGui m_ekf;
+    ValueGui m_lk;
+    ValueGui m_kth;
+    void setSize0(int width, int height);
+    void drawPage0();
+    virtual void onMouse0(int x, int y);
+
     
 };
 

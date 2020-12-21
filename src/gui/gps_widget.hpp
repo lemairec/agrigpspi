@@ -58,6 +58,9 @@ public:
     QPixmap * m_imgVolantAutoVert;
     QPixmap * m_imgOk;
     
+    QPixmap * m_tracteur_2d;
+    QPixmap * m_tracteur_3d;
+    
     ButtonGui m_buttonSat;
     ButtonGui m_button3d;
     ButtonGui m_buttonPlus;

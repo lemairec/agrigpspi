@@ -51,6 +51,8 @@ GpsWidget::GpsWidget()
     m_imgVolantAutoVert = loadImage("/images/volant_auto_vert.png");
     
     m_imgFleche = loadImage("/images/fleche.png");
+    m_tracteur_2d = loadImage("/images/tracteur_2d.png");
+    m_tracteur_3d = loadImage("/images/tracteur_3d.png");
     
     //m_widgets.push_back(&m_satWidget);
     m_widgets.push_back(&m_lineWidget);
@@ -557,9 +559,10 @@ void GpsWidget::drawTracteur3D(){
     GpsFramework & f = GpsFramework::Instance();
     
     double x_tracteur = m_width/2, y_tracteur = m_height/2;
+    double x_tracteur2 = m_width/2, y_tracteur2 = m_height/2;
     double angle = 0;
     if(f.m_tracteur.m_pt_antenne_corrige){
-        my_projete2(f.m_tracteur.m_pt_antenne_corrige->m_x, f.m_tracteur.m_pt_antenne_corrige->m_y, x_tracteur, y_tracteur);
+        my_projete2(f.m_tracteur.m_pt_antenne_corrige->m_x, f.m_tracteur.m_pt_antenne_corrige->m_y, x_tracteur2, y_tracteur2);
         x_tracteur = f.m_tracteur.m_pt_antenne_corrige->m_x;
         y_tracteur = f.m_tracteur.m_pt_antenne_corrige->m_y;
         angle = f.m_deplacementAngle;
@@ -581,6 +584,10 @@ void GpsWidget::drawTracteur3D(){
     drawRect3D(x_outil, y_outil, 0.5, lg_outil);
     drawRect3D(x_outil, y_outil, f.m_tracteur.m_outil_distance, 0.3);
     
+    int h = 8*m_zoom;
+    int w = 8*m_zoom;
+    m_painter->drawPixmap(x_tracteur2-w/2, y_tracteur2-h/2, w, h, *m_tracteur_3d);
+    return;
     
     //roue arriere
     double x_arriere = x_tracteur - cosa*f.m_tracteur.m_antenne_essieu_arriere;
@@ -638,6 +645,9 @@ void GpsWidget::drawTracteur(){
         drawTracteur3D();
         return;
     }
+    
+    int h = 6*m_zoom;
+    int w = 6*m_zoom;
     //drawTracteur3D();
     //return;
     GpsFramework & f = GpsFramework::Instance();
@@ -660,6 +670,9 @@ void GpsWidget::drawTracteur(){
     m_painter->drawRect(x_tracteur - lg_outil*0.5*m_zoom, y_arriere + (l_outil-0.5)*m_zoom, lg_outil*m_zoom, 0.5*m_zoom);
     m_painter->drawRect(x_tracteur - 0.1*m_zoom, y_arriere, 0.2*m_zoom, (l_outil)*m_zoom);
     
+    m_painter->drawPixmap(x_tracteur-w/2, y_tracteur-h*0.55, w, h, *m_tracteur_2d);
+    //m_painter->drawEllipse( x_tracteur-5, y_tracteur-5, 10, 10);
+    return;
     
     //tracteur
     m_painter->setBrush(m_brushTracteur);

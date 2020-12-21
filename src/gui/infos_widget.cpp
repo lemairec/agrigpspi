@@ -15,8 +15,10 @@ void InfosWidget::setSize(int width, int height){
     BaseWidget::setSize(width, height);
     
     x = m_width*0.7;
-    m_buttonOk.setResize((m_width+x)/2+m_width/12, 0.8*m_height, m_petit_button);
-    m_buttonDebug.setResize((m_width+x)/2-m_width/12, 0.8*m_height, m_petit_button);
+    m_buttonOk.setResize(0.8*m_width, 0.8*m_height, m_petit_button);
+    m_buttonDebug.setResize(0.9*m_width, 0.8*m_height, m_petit_button);
+    
+    setSize0(width, height);
 }
 
 
@@ -25,10 +27,12 @@ void InfosWidget::draw(){
     auto last_frame = f.m_lastGGAFrame;
     m_painter->setPen(m_penBlack);
     m_painter->setBrush(m_brushWhiteAlpha);
-    m_painter->drawRect(x, m_height*0.1, m_width-x, m_height*0.8);
+    m_painter->drawRect(m_width*0.7, m_height*0.1, m_width*0.3, m_height*0.8);
     
     int x2 = x+30;
     if(m_type == 0){
+        drawPage0();
+    }else if(m_type == 1){
         {
             QString s = "Satellite";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -67,7 +71,7 @@ void InfosWidget::draw(){
             QString s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
             drawQText(s, x2, 0.60*m_height, sizeText_medium, false);
         }
-    } else if (m_type == 1){
+    } else if (m_type == 2){
         {
             QString s = "Pilot";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -92,7 +96,7 @@ void InfosWidget::draw(){
         }
               
         
-    } else  if (m_type == 2){
+    } else  if (m_type == 3){
         {
             QString s = "IMU";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -116,7 +120,7 @@ void InfosWidget::draw(){
             QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral_imu*1000)/10.0)+" cm";
             drawQText(s, x2, 0.7*m_height, sizeText_little, false);
         }
-    } else  if (m_type == 3) {
+    } else  if (m_type == 4) {
         {
             QString s = "Info";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -134,7 +138,7 @@ void InfosWidget::draw(){
         }
         
         
-    } else  if (m_type == 4) {
+    } else  if (m_type == 5) {
         {
             QString s = "Debug";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -188,4 +192,46 @@ void InfosWidget::onMouse(int x, int y){
     if(m_buttonDebug.isActive(x, y)){
         m_type = (m_type+1)%5;
     }
+    if(m_type == 0){
+        onMouse0(x, y);
+    }
+}
+
+
+void InfosWidget::setSize0(int width, int height){
+    m_ekf.setResize(m_width*0.8, 0.35*height, m_petit_button, "ekf ");
+    m_lk.setResize(m_width*0.8, 0.5*height, m_petit_button, "lk ");
+    m_kth.setResize(m_width*0.8, 0.5*height, m_petit_button, "kth ");
+}
+void InfosWidget::drawPage0(){
+    GpsFramework & f =  GpsFramework::Instance();
+    {
+        QString s = "Menu Rapide";
+        drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
+    }
+    QString s = "ekf";
+    drawQText(s, (m_width+x)/2, 0.3*m_height, sizeText_big, true);
+    drawValueGui(&m_ekf, f.m_config.m_ekf_coeff_lissage*100);
+    
+    if(f.m_config.m_pilot_algo == FollowCarrot){
+        QString s = "follow carrot";
+        drawQText(s, (m_width+x)/2, 0.4*m_height, sizeText_big, true);
+        drawValueGui(&m_lk, f.m_config.m_pilot_lookahead_d);
+        
+    } else if(f.m_config.m_pilot_algo == RearWheelPosition){
+        QString s = "rwp";
+        drawQText(s, (m_width+x)/2, 0.45*m_height, sizeText_big, true);
+        drawValueGui(&m_kth, f.m_config.m_pilot_rwp_kth);
+        QString s2 = "kte "+QString::number(f.m_pilot_rwp_kte);
+        drawQText(s2, m_kth.m_x, 0.55*m_height, sizeText_medium, false);
+    }
+}
+
+void InfosWidget::onMouse0(int x, int y){
+    GpsFramework & f = GpsFramework::Instance();
+    f.m_config.m_ekf_coeff_lissage += 0.05*m_ekf.getIntValue(x,y);
+    f.m_config.m_pilot_lookahead_d += 0.5*m_lk.getIntValue(x,y);
+    f.m_config.m_pilot_rwp_kth += 0.1*m_kth.getIntValue(x,y);
+    f.m_config.m_pilot_rwp_kte = f.m_config.m_pilot_rwp_kth/2;
+    f.initOrLoadConfig();
 }

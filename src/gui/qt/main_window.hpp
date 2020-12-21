@@ -12,6 +12,7 @@ class MyWidget : public QWidget
         QWidget::paintEvent(e); // effectue le comportement standard
 
         QPainter painter(this); // construire
+        //painter.setRenderHint(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
         if(m_gpsWidget){
             m_gpsWidget->setPainter(&painter);
             m_gpsWidget->draw();
