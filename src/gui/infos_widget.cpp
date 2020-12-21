@@ -180,9 +180,9 @@ void InfosWidget::draw(){
           
     
     
-    drawButtonImage(&m_buttonOk, *m_imgOk);
+    drawButtonImage(m_buttonOk, m_imgOk);
     
-    drawButton(&m_buttonDebug);
+    drawButton(m_buttonDebug);
     
 }
 void InfosWidget::onMouse(int x, int y){
@@ -211,17 +211,17 @@ void InfosWidget::drawPage0(){
     }
     QString s = "ekf";
     drawQText(s, (m_width+x)/2, 0.3*m_height, sizeText_big, true);
-    drawValueGui(&m_ekf, f.m_config.m_ekf_coeff_lissage*100);
+    drawValueGui(m_ekf, f.m_config.m_ekf_coeff_lissage*100);
     
     if(f.m_config.m_pilot_algo == FollowCarrot){
         QString s = "follow carrot";
         drawQText(s, (m_width+x)/2, 0.4*m_height, sizeText_big, true);
-        drawValueGui(&m_lk, f.m_config.m_pilot_lookahead_d);
+        drawValueGui(m_lk, f.m_config.m_pilot_lookahead_d);
         
     } else if(f.m_config.m_pilot_algo == RearWheelPosition){
         QString s = "rwp";
         drawQText(s, (m_width+x)/2, 0.45*m_height, sizeText_big, true);
-        drawValueGui(&m_kth, f.m_config.m_pilot_rwp_kth);
+        drawValueGui(m_kth, f.m_config.m_pilot_rwp_kth);
         QString s2 = "kte "+QString::number(f.m_pilot_rwp_kte);
         drawQText(s2, m_kth.m_x, 0.55*m_height, sizeText_medium, false);
     }

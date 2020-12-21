@@ -51,13 +51,13 @@ void MachineWidget::draw(){
     }
     
     
-    drawButtonImage(&m_buttonOk, *m_imgOk);
+    drawButtonImage(m_buttonOk, m_imgOk);
     drawMyImage(*m_imgMachine, 0.5*m_width ,0.42*m_height, 1.5, true);
     
-    drawValueGuiKeyPad(&m_valueA);
-    drawValueGuiKeyPad(&m_valueB);
-    drawValueGuiKeyPad(&m_valueC);
-    drawValueGuiKeyPad(&m_valueD);
+    drawValueGuiKeyPad(m_valueA);
+    drawValueGuiKeyPad(m_valueB);
+    drawValueGuiKeyPad(m_valueC);
+    drawValueGuiKeyPad(m_valueD);
     
 }
 void MachineWidget::onMouse(int x, int y){
@@ -75,16 +75,16 @@ void MachineWidget::onMouse(int x, int y){
         m_close = true;
     }
     
-    if(this->isActiveValueGuiKeyPad(&m_valueA,x,y)){
+    if(this->isActiveValueGuiKeyPad(m_valueA,x,y)){
         m_key_pad_widget->m_close = false;
         m_key_pad_widget->setValueGuiKeyPad(&m_valueA);
-    } else if(this->isActiveValueGuiKeyPad(&m_valueB,x,y)){
+    } else if(this->isActiveValueGuiKeyPad(m_valueB,x,y)){
         m_key_pad_widget->m_close = false;
         m_key_pad_widget->setValueGuiKeyPad(&m_valueB);
-    } else if(this->isActiveValueGuiKeyPad(&m_valueC,x,y)){
+    } else if(this->isActiveValueGuiKeyPad(m_valueC,x,y)){
         m_key_pad_widget->m_close = false;
         m_key_pad_widget->setValueGuiKeyPad(&m_valueC);
-    } else if(this->isActiveValueGuiKeyPad(&m_valueD,x,y)){
+    } else if(this->isActiveValueGuiKeyPad(m_valueD,x,y)){
        m_key_pad_widget->m_close = false;
        m_key_pad_widget->setValueGuiKeyPad(&m_valueD);
    }
@@ -144,12 +144,12 @@ void OutilWidget::draw(){
     }
     
     
-    drawButtonImage(&m_buttonOk, *m_imgOk);
+    drawButtonImage(m_buttonOk, m_imgOk);
     drawMyImage(*m_imgOutil1, 0.25*m_width ,0.45*m_height, 0.8, true);
     drawMyImage(*m_imgOutil2, 0.75*m_width ,0.45*m_height, 0.9, true);
     
-    drawValueGuiKeyPad(&m_valueA);
-    drawValueGuiKeyPad(&m_valueB);
+    drawValueGuiKeyPad(m_valueA);
+    drawValueGuiKeyPad(m_valueB);
     
 }
 void OutilWidget::onMouse(int x, int y){
@@ -164,11 +164,11 @@ void OutilWidget::onMouse(int x, int y){
         m_close = true;
     }
     
-    if(isActiveValueGuiKeyPad(&m_valueA,x,y)){
+    if(isActiveValueGuiKeyPad(m_valueA,x,y)){
         m_key_pad_widget->m_close = false;
         m_key_pad_widget->setValueGuiKeyPad(&m_valueA);
     }
-    if(isActiveValueGuiKeyPad(&m_valueB,x,y)){
+    if(isActiveValueGuiKeyPad(m_valueB,x,y)){
         m_key_pad_widget->m_close = false;
         m_key_pad_widget->setValueGuiKeyPad(&m_valueB);
     }

@@ -55,11 +55,11 @@ void MenuWidget::draw(){
             drawQText(s, m_x + m_lg/2, 0.25*m_height, sizeText_big, true);
         }
 
-        drawButtonImage(&m_buttonOk, *m_imgOk);
-        drawButtonImage(&m_buttonTractor, *m_imgTractor);
-        drawButtonImage(&m_buttonOutil, *m_imgOutil);
-        drawButtonImage(&m_buttonParam, *m_imgParam);
-        drawButtonImage(&m_buttonStop, *m_imgStop);
+        drawButtonImage(m_buttonOk, m_imgOk);
+        drawButtonImage(m_buttonTractor, m_imgTractor);
+        drawButtonImage(m_buttonOutil, m_imgOutil);
+        drawButtonImage(m_buttonParam, m_imgParam);
+        drawButtonImage(m_buttonStop, m_imgStop);
     
     }
 }

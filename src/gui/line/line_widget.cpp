@@ -32,12 +32,12 @@ void LineWidget::draw(){
     }
     
     {
-        drawButton(&m_buttonParcelleNew);
+        drawButton(m_buttonParcelleNew);
         QString s = "New";
         drawQText(s, m_buttonParcelleNew.m_x + 50, m_buttonParcelleNew.m_y, sizeText_big, true);
     }
     {
-        drawButton(&m_buttonParcelleLoad);
+        drawButton(m_buttonParcelleLoad);
         QString s = "Load";
         drawQText(s, m_buttonParcelleLoad.m_x + 50, m_buttonParcelleLoad.m_y, sizeText_big, true);
     }
@@ -49,7 +49,7 @@ void LineWidget::draw(){
     }
     
     
-    drawButtonImage(&m_buttonOk, *m_imgOk);
+    drawButtonImage(m_buttonOk, m_imgOk);
     
 }
 void LineWidget::onMouse(int x, int y){

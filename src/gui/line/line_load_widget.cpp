@@ -36,12 +36,12 @@ void LineLoadWidget::draw(){
         drawQText(s, m_lg/2, 0.15*m_height, sizeText_big, true);
     }
     
-    drawSelectButtonGuiClose(&m_selectLines);
-    drawSelectButtonGuiOpen(&m_selectLines);
+    drawSelectButtonGuiClose(m_selectLines);
+    drawSelectButtonGuiOpen(m_selectLines);
     
     
-    drawButtonImage(&m_buttonOk, *m_imgOk);
-    drawButtonImage(&m_buttonCancel, *m_imgCancel);
+    drawButtonImage(m_buttonOk, m_imgOk);
+    drawButtonImage(m_buttonCancel, m_imgCancel);
     
 }
 void LineLoadWidget::onMouse(int x, int y){
@@ -53,7 +53,7 @@ void LineLoadWidget::onMouse(int x, int y){
     if(m_buttonCancel.isActive(x, y)){
         m_close = true;
     }
-    onMouseSelectButton(&m_selectLines, x, y);
+    onMouseSelectButton(m_selectLines, x, y);
 
 }
 

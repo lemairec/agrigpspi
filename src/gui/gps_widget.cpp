@@ -571,7 +571,7 @@ void GpsWidget::drawTracteur3D(){
     sina = sin(angle);
     
     
-    double l2 = f.m_tracteur.m_antenne_essieu_arriere*m_zoom;
+    //double l2 = f.m_tracteur.m_antenne_essieu_arriere*m_zoom;
     
     
     //outil
@@ -942,7 +942,7 @@ void GpsWidget::drawTop(){
         }
     }
     
-    drawButtonImage(&m_buttonSat, *img);
+    drawButtonImage(m_buttonSat, img);
 }
 
 
@@ -1273,42 +1273,42 @@ void GpsWidget::drawError(){
             drawText(f.m_messages_errors, x+20, y+40, sizeText_little, false);
             m_buttonErrorOk.m_x = (x+w/2);
             m_buttonErrorOk.m_y = (y+h-30);
-            drawButtonImage(&m_buttonErrorOk, *m_imgOk);
+            drawButtonImage(m_buttonErrorOk, m_imgOk);
             // m_pilot_serial_input
         }
     }
 }
 
 void GpsWidget::addButtons(){
-    drawButtonImage(&m_buttonPlus, *m_imgPlus);
-    drawButtonImage(&m_buttonMinus, *m_imgMinus);
-    drawButtonImage(&m_buttonGuidage, *m_imgGuidage);
-    drawButtonImage(&m_buttonParcelle, *m_imgParcelle);
-    drawButtonImage(&m_buttonOption, *m_imgOption);
+    drawButtonImage(m_buttonPlus, m_imgPlus);
+    drawButtonImage(m_buttonMinus, m_imgMinus);
+    drawButtonImage(m_buttonGuidage, m_imgGuidage);
+    drawButtonImage(m_buttonParcelle, m_imgParcelle);
+    drawButtonImage(m_buttonOption, m_imgOption);
     
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_pauseDraw){
-        drawButtonImage(&m_buttonChamp, *m_imgChampBlanc);
+        drawButtonImage(m_buttonChamp, m_imgChampBlanc);
     } else {
-        drawButtonImage(&m_buttonChamp, *m_imgChampVert);
+        drawButtonImage(m_buttonChamp, m_imgChampVert);
     }
     
     if(f.isPilotConnected()){
         if(f.getVolantEngaged()){
-            drawButtonImage(&m_buttonVolant, *m_imgVolantVert);
+            drawButtonImage(m_buttonVolant, m_imgVolantVert);
         } else {
-            drawButtonImage(&m_buttonVolant, *m_imgVolantBlanc);
+            drawButtonImage(m_buttonVolant, m_imgVolantBlanc);
         }
         
         
     } else {
-        drawButtonImage(&m_buttonVolant, *m_imgVolantRouge);
+        drawButtonImage(m_buttonVolant, m_imgVolantRouge);
     }
     if(f.m_config.m_pilot_auto_deactive > 0){
         if(f.m_pilot_auto){
-            drawButtonImage(&m_buttonVolantAuto, *m_imgVolantAutoVert);
+            drawButtonImage(m_buttonVolantAuto, m_imgVolantAutoVert);
         } else {
-            drawButtonImage(&m_buttonVolantAuto, *m_imgVolantAutoGris);
+            drawButtonImage(m_buttonVolantAuto, m_imgVolantAutoGris);
         }
     }
 }

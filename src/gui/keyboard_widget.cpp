@@ -33,7 +33,7 @@ void KeyPadWidget::setSize(int width, int height){
 }
 
 void KeyPadWidget::myDrawButton(ButtonGui * b, QString s){
-    drawButton(b);
+    drawButton(*b);
     drawQText(s, b->m_x, b->m_y, sizeText_medium, true);
 }
 
@@ -177,7 +177,7 @@ KeyBoardWidget::KeyBoardWidget(){
 
 
 void KeyBoardWidget::myDrawButton(ButtonGui * b, QString s){
-    drawButton(b);
+    drawButton(*b);
     drawQText(s, b->m_x, b->m_y, sizeText_medium, true);
 }
 

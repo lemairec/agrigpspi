@@ -119,25 +119,25 @@ void ParcelleLoadWidget::draw(){
         drawQText(s, m_lg/5, 0.15*m_height, sizeText_big, false);
     }
     
-    drawSelectButtonGuiClose(&m_selectParcelles);
+    drawSelectButtonGuiClose(m_selectParcelles);
     
     if(m_parcelleSelected != 0){
         {
             QString s = "Load lines";
             drawQText(s, m_lg/5, 0.4*m_height, sizeText_big, false);
         }
-        drawSelectButtonGuiClose(&m_selectLine);
+        drawSelectButtonGuiClose(m_selectLine);
         
         if(m_selectLine.m_selectedValue != 0){
             if(m_line){
-                drawButtonImage(&m_buttonLigneCurve, *m_imgLigneAB);
+                drawButtonImage(m_buttonLigneCurve, m_imgLigneAB);
             } else {
-                drawButtonImage(&m_buttonLigneCurve, *m_imgCurveAB);
+                drawButtonImage(m_buttonLigneCurve, m_imgCurveAB);
             }
             if(m_demi_outil){
-                drawButton(&m_buttonDemiOutil, COLOR_CHECK);
+                drawButton(m_buttonDemiOutil, COLOR_CHECK);
             } else {
-                drawButton(&m_buttonDemiOutil, COLOR_OTHER);
+                drawButton(m_buttonDemiOutil, COLOR_OTHER);
             }
             drawText("1/2 outil", m_buttonDemiOutil.m_x+1.5*m_petit_button, m_buttonDemiOutil.m_y);
         }
@@ -145,12 +145,12 @@ void ParcelleLoadWidget::draw(){
     
     
     
-    drawButtonImage(&m_buttonOk, *m_imgOk);
-    drawButtonImage(&m_buttonCancel, *m_imgCancel);
+    drawButtonImage(m_buttonOk, m_imgOk);
+    drawButtonImage(m_buttonCancel, m_imgCancel);
     
-    drawSelectButtonGuiOpen(&m_selectParcelles);
+    drawSelectButtonGuiOpen(m_selectParcelles);
     if(m_parcelleSelected != 0){
-        drawSelectButtonGuiOpen(&m_selectLine);
+        drawSelectButtonGuiOpen(m_selectLine);
     }
     
     
@@ -200,7 +200,7 @@ void ParcelleLoadWidget::onMouse(int x, int y){
     if(m_buttonCancel.isActive(x, y)){
         m_close = true;
     }
-    onMouseSelectButton(&m_selectParcelles, x, y);
+    onMouseSelectButton(m_selectParcelles, x, y);
     if(m_parcelleSelected != m_selectParcelles.m_selectedValue){
         m_parcelleSelected = m_selectParcelles.m_selectedValue;
         m_selectLine.clear();
@@ -214,7 +214,7 @@ void ParcelleLoadWidget::onMouse(int x, int y){
     }
     
     if(m_parcelleSelected != 0){
-        onMouseSelectButton(&m_selectLine, x, y);
+        onMouseSelectButton(m_selectLine, x, y);
         if(m_buttonDemiOutil.isActive(x, y)){
             m_demi_outil = !m_demi_outil;
         }

@@ -176,32 +176,32 @@ public:
     virtual void onMouse(int x, int y){};
     virtual void setSize(int width, int height);
     
-    void drawButton(ButtonGui * button, int color = 0);
-    void drawButtonLabel(ButtonGui * button, int color = 0);
-    void drawButtonImage(ButtonGui * button, QPixmap & pixmap, double scale=1.0);
+    void drawButton(ButtonGui & button, int color = 0);
+    void drawButtonLabel(ButtonGui & button, int color = 0);
+    void drawButtonImage(ButtonGui & button, QPixmap * pixmap, double scale=1.0);
 
-    void drawSelectButtonGuiOpen(SelectButtonGui * select);
-    void drawSelectButtonGuiClose(SelectButtonGui * select);
-    int onMouseSelectButton(SelectButtonGui *select, double x, double y);
+    void drawSelectButtonGuiOpen(SelectButtonGui & select);
+    void drawSelectButtonGuiClose(SelectButtonGui & select);
+    int onMouseSelectButton(SelectButtonGui & select, double x, double y);
     
     void drawMyImage(QPixmap & pixmap, int x, int y, double scale, bool center);
     
     void drawLabel(std::string s, double x, double y);
     void drawLabel2(std::string s, double x, double y);
 
-    void drawValueGui(ValueGui * valueGui, double value);
-    void drawValueGui2(ValueGui * valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s);
+    void drawValueGui(ValueGui & valueGui, double value);
+    void drawValueGui2(ValueGui & valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s);
     
     void drawText(const std::string & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
     void drawQText(const QString & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
     void drawQTexts(const QString & text, int x, int y, SizeText = sizeText_little, bool center = false, bool white = false);
     
 
-    void drawValueGuiKeyPad(ValueGuiKeyPad * value);
-    bool isActiveValueGuiKeyPad(ValueGuiKeyPad * value, int x, int y);
+    void drawValueGuiKeyPad(ValueGuiKeyPad & value);
+    bool isActiveValueGuiKeyPad(ValueGuiKeyPad & value, int x, int y);
     
-    void drawValueGuiKeyBoard(ValueGuiKeyBoard * value);
-    bool isActiveValueGuiKeyBoard(ValueGuiKeyBoard * value, int x, int y);
+    void drawValueGuiKeyBoard(ValueGuiKeyBoard & value);
+    bool isActiveValueGuiKeyBoard(ValueGuiKeyBoard & value, int x, int y);
 
     QPixmap * loadImage(const std::string & s);
 };

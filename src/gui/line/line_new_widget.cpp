@@ -38,19 +38,19 @@ void LineNewWidget::draw(){
         QString s = "nouvelle ligne";
         drawQText(s, m_lg/2, 0.15*m_height, sizeText_big, true);
     }
-    drawValueGuiKeyBoard(&m_name);
+    drawValueGuiKeyBoard(m_name);
     
     GpsFramework & f = GpsFramework::Instance();
-    drawButtonImage(&m_buttonOk, *m_imgOk);
+    drawButtonImage(m_buttonOk, m_imgOk);
     if(f.m_etat == Etat_Reset){
-        drawButtonImage(&m_buttonAB, *m_imgA);
+        drawButtonImage(m_buttonAB, m_imgA);
     } else {
-        drawButtonImage(&m_buttonAB, *m_imgB);
+        drawButtonImage(m_buttonAB, m_imgB);
     }
     if(f.m_line){
-        drawButtonImage(&m_buttonLigneCurve, *m_imgLigneAB);
+        drawButtonImage(m_buttonLigneCurve, m_imgLigneAB);
     } else {
-        drawButtonImage(&m_buttonLigneCurve, *m_imgCurveAB);
+        drawButtonImage(m_buttonLigneCurve, m_imgCurveAB);
     }
     
     
@@ -87,7 +87,7 @@ void LineNewWidget::onMouse(int x, int y){
         f.m_line = !f.m_line;
     }
     
-    if(isActiveValueGuiKeyBoard(&m_name,x,y)){
+    if(isActiveValueGuiKeyBoard(m_name,x,y)){
         m_key_board_widget->m_close = false;
         m_key_board_widget->setValueGuiKeyBoard(&m_name);
     }

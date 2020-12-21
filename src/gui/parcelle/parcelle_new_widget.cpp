@@ -45,7 +45,7 @@ void ParcelleNewWidget::draw(){
         QString s = "Nom de la parcelle : ";
         drawQText(s, m_lg/2, 0.25*m_height, sizeText_big, true);
     }
-    drawValueGuiKeyBoard(&m_name);
+    drawValueGuiKeyBoard(m_name);
     {
         QPixmap * p = m_imgRecord;
         QString s = "Play";
@@ -54,13 +54,13 @@ void ParcelleNewWidget::draw(){
             p = m_imgPause;
         }
         drawQText(s, m_buttonParcelleStartPause.m_x+30, m_buttonParcelleStartPause.m_y, sizeText_big, false);
-        drawButtonImage(&m_buttonParcelleStartPause, *p);
+        drawButtonImage(m_buttonParcelleStartPause, p);
         
     }
     {
         QString s = "Flag";
         drawQText(s, m_buttonFlag.m_x+30, m_buttonFlag.m_y, sizeText_big, false);
-        drawButtonImage(&m_buttonFlag, *m_imgFlag);
+        drawButtonImage(m_buttonFlag, m_imgFlag);
         
         
     }
@@ -73,14 +73,14 @@ void ParcelleNewWidget::draw(){
             s = "Right";
         }
         drawQText(s, m_buttonParcellePoint.m_x+30, m_buttonParcellePoint.m_y, sizeText_big, false);
-        drawButton(&m_buttonParcellePoint);
+        drawButton(m_buttonParcellePoint);
         
         
     }
     
     
-    drawButtonImage(&m_buttonOk, *m_imgOk);
-    drawButtonImage(&m_buttonCancel, *m_imgCancel);
+    drawButtonImage(m_buttonOk, m_imgOk);
+    drawButtonImage(m_buttonCancel, m_imgCancel);
     
     int x2 = m_width-m_lg;
     
@@ -91,7 +91,7 @@ void ParcelleNewWidget::draw(){
         f.m_parcelle.calculSurface();
         QString s = "Surface :\n "+QString::number(f.m_parcelle.m_surface_ha)+" ha";
         drawQText(s, x2+30, m_buttonFlag.m_y, sizeText_big, false);
-        drawButtonImage(&m_buttonFlag, *m_imgFlag);
+        drawButtonImage(m_buttonFlag, m_imgFlag);
         
         
     }
@@ -124,7 +124,7 @@ void ParcelleNewWidget::onMouse(int x, int y){
         int i = ((int)(f.m_parcellePoint) + 1)%3;
         f.m_parcellePoint = (ParcellePoint)i;
     }
-    if(isActiveValueGuiKeyBoard(&m_name,x,y)){
+    if(isActiveValueGuiKeyBoard(m_name,x,y)){
         m_key_board_widget->m_close = false;
         m_key_board_widget->setValueGuiKeyBoard(&m_name);
     }

@@ -228,12 +228,12 @@ void BaseWidget::setSize(int width, int height){
     m_height = height;
 }
 
-void BaseWidget::drawButtonImage(ButtonGui * button, QPixmap & pixmap, double scale){
+void BaseWidget::drawButtonImage(ButtonGui & button, QPixmap * pixmap, double scale){
     double scale2 = 0.4*scale;
-    int w = pixmap.size().width()*scale2;
-    int h = pixmap.size().height()*scale2;
+    int w = pixmap->size().width()*scale2;
+    int h = pixmap->size().height()*scale2;
 
-    m_painter->drawPixmap(button->m_x-w/2, button->m_y-h/2, w, h, pixmap);
+    m_painter->drawPixmap(button.m_x-w/2, button.m_y-h/2, w, h, *pixmap);
 }
 
 void BaseWidget::drawMyImage(QPixmap & pixmap, int x, int y, double scale, bool center){
@@ -246,10 +246,10 @@ void BaseWidget::drawMyImage(QPixmap & pixmap, int x, int y, double scale, bool 
 }
 
 
-void BaseWidget::drawButton(ButtonGui * button, int color){
-    int x = button->m_x-button->m_rayon;
-    int y = button->m_y-button->m_rayon;
-    int d = button->m_rayon*2;
+void BaseWidget::drawButton(ButtonGui & button, int color){
+    int x = button.m_x-button.m_rayon;
+    int y = button.m_y-button.m_rayon;
+    int d = button.m_rayon*2;
     
     m_painter->setPen(m_penBlack);
     if(color == COLOR_RED){
@@ -271,48 +271,48 @@ void BaseWidget::drawButton(ButtonGui * button, int color){
 }
 
 
-void BaseWidget::drawButtonLabel(ButtonGui * button, int color){
+void BaseWidget::drawButtonLabel(ButtonGui & button, int color){
     drawButton(button, color);
     
-    drawText(button->m_label, button->m_x-20, button->m_y, sizeText_medium);
+    drawText(button.m_label, button.m_x-20, button.m_y, sizeText_medium);
 }
 
-void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui *select){
-    if(select->m_open){
+void BaseWidget::drawSelectButtonGuiOpen(SelectButtonGui & select){
+    if(select.m_open){
         m_painter->setPen(m_penBlack);
         m_painter->setBrush(m_brushLightGrayDebug);
-        m_painter->drawRect(select->m_x, select->m_y, m_width*0.4, (select->m_buttons.size()+1)*select->m_rayon*2);
-        for(int i = 0; i < (int)select->m_buttons.size(); ++i){
-            if(select->m_selectedValue == i){
-                drawButtonLabel(select->m_buttons[i], COLOR_CHECK);
+        m_painter->drawRect(select.m_x, select.m_y, m_width*0.4, (select.m_buttons.size()+1)*select.m_rayon*2);
+        for(int i = 0; i < (int)select.m_buttons.size(); ++i){
+            if(select.m_selectedValue == i){
+                drawButtonLabel(*(select.m_buttons[i]), COLOR_CHECK);
             } else {
-                drawButtonLabel(select->m_buttons[i], COLOR_OTHER);
+                drawButtonLabel(*(select.m_buttons[i]), COLOR_OTHER);
             }
-            drawText(select->m_values[i], select->m_buttons[i]->m_x+2*select->m_buttonOpen.m_rayon, select->m_buttons[i]->m_y, sizeText_medium);
+            drawText(select.m_values[i], select.m_buttons[i]->m_x+2*select.m_buttonOpen.m_rayon, select.m_buttons[i]->m_y, sizeText_medium);
         }
     }
 }
 
-void BaseWidget::drawSelectButtonGuiClose(SelectButtonGui *select){
-    if(!select->m_open){
-        drawButtonLabel(&(select->m_buttonOpen));
-        drawText(select->getValueString(), select->m_buttonOpen.m_x+2*select->m_buttonOpen.m_rayon, select->m_buttonOpen.m_y, sizeText_medium);
+void BaseWidget::drawSelectButtonGuiClose(SelectButtonGui & select){
+    if(!select.m_open){
+        drawButtonLabel(select.m_buttonOpen);
+        drawText(select.getValueString(), select.m_buttonOpen.m_x+2*select.m_buttonOpen.m_rayon, select.m_buttonOpen.m_y, sizeText_medium);
     }
 }
 
-int BaseWidget::onMouseSelectButton(SelectButtonGui *select, double x, double y){
+int BaseWidget::onMouseSelectButton(SelectButtonGui & select, double x, double y){
     int res = 0;
-    if(select->m_open){
-        for(size_t i = 0; i < select->m_buttons.size(); ++i){
-            if(select->m_buttons[i]->isActive(x, y)){
-                select->m_selectedValue = i;
+    if(select.m_open){
+        for(size_t i = 0; i < select.m_buttons.size(); ++i){
+            if(select.m_buttons[i]->isActive(x, y)){
+                select.m_selectedValue = i;
                 res = 1;
             };
         }
-        select->m_open = false;
+        select.m_open = false;
     }
-    if( select->m_buttonOpen.isActive(x, y)){
-        select->m_open = !select->m_open;
+    if( select.m_buttonOpen.isActive(x, y)){
+        select.m_open = !select.m_open;
     }
     return res;
 }
@@ -397,11 +397,11 @@ void BaseWidget::drawQTexts(const QString & s, int x, int y, SizeText size, bool
    
 }
 
-void BaseWidget::drawValueGui2(ValueGui * valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s){
+void BaseWidget::drawValueGui2(ValueGui & valueGui, QPixmap * pixmap1, QPixmap * pixmap2, std::string s){
     
-    drawButtonImage(&(valueGui->m_buttonAdd), *pixmap1);
-    drawButtonImage(&(valueGui->m_buttonMinus), *pixmap2);
-    drawText(s, valueGui->m_x+valueGui->m_rayon*3, valueGui->m_y, sizeText_medium);
+    drawButtonImage((valueGui.m_buttonAdd), pixmap1);
+    drawButtonImage((valueGui.m_buttonMinus), pixmap2);
+    drawText(s, valueGui.m_x+valueGui.m_rayon*3, valueGui.m_y, sizeText_medium);
 
 }
 QPixmap * BaseWidget::loadImage(const std::string & s){
@@ -411,34 +411,34 @@ QPixmap * BaseWidget::loadImage(const std::string & s){
     return res;
 }
 
-void BaseWidget::drawValueGui(ValueGui * valueGui, double value){
-    drawButtonLabel(&(valueGui->m_buttonMinus), 0);
-    drawButtonLabel(&(valueGui->m_buttonAdd), 0);
+void BaseWidget::drawValueGui(ValueGui & valueGui, double value){
+    drawButtonLabel((valueGui.m_buttonMinus), 0);
+    drawButtonLabel((valueGui.m_buttonAdd), 0);
     
     std::ostringstream strs;
-    strs << valueGui->m_label << value;
-    drawText(strs.str(), valueGui->m_x + 3*valueGui->m_rayon, valueGui->m_y, sizeText_medium);
+    strs << valueGui.m_label << value;
+    drawText(strs.str(), valueGui.m_x + 3*valueGui.m_rayon, valueGui.m_y, sizeText_medium);
     
 }
 
 
-void BaseWidget::drawValueGuiKeyPad(ValueGuiKeyPad * value){
-    QString s = QString::number(value->m_value);
+void BaseWidget::drawValueGuiKeyPad(ValueGuiKeyPad & value){
+    QString s = QString::number(value.m_value);
     m_painter->setPen(m_penBlack);
     m_painter->setBrush(m_brushGreenAlpha);
-    m_painter->drawRect(value->m_x-40, value->m_y-15, 80, 30);
-    drawQText(s, value->m_x, value->m_y, sizeText_medium, true);
-    if(value->m_label.size() > 0){
-        drawText(value->m_label, value->m_x-60, value->m_y, sizeText_medium, true);
+    m_painter->drawRect(value.m_x-40, value.m_y-15, 80, 30);
+    drawQText(s, value.m_x, value.m_y, sizeText_medium, true);
+    if(value.m_label.size() > 0){
+        drawText(value.m_label, value.m_x-60, value.m_y, sizeText_medium, true);
     }
-    if(value->m_unity.size() > 0){
-        drawText(value->m_unity, value->m_x+60, value->m_y, sizeText_medium, true);
+    if(value.m_unity.size() > 0){
+        drawText(value.m_unity, value.m_x+60, value.m_y, sizeText_medium, true);
     }
     
 }
 
-bool BaseWidget::isActiveValueGuiKeyPad(ValueGuiKeyPad * value, int x, int y){
-    if(value->m_x-30 < x && x < value->m_x + 30 && value->m_y-15 < y && y <value->m_y+15){
+bool BaseWidget::isActiveValueGuiKeyPad(ValueGuiKeyPad & value, int x, int y){
+    if(value.m_x-30 < x && x < value.m_x + 30 && value.m_y-15 < y && y < value.m_y+15){
         return true;
     }
     return false;
@@ -446,14 +446,14 @@ bool BaseWidget::isActiveValueGuiKeyPad(ValueGuiKeyPad * value, int x, int y){
 }
 
 
-void BaseWidget::drawValueGuiKeyBoard(ValueGuiKeyBoard * value){
+void BaseWidget::drawValueGuiKeyBoard(ValueGuiKeyBoard & value){
     m_painter->setPen(m_penBlack);
     m_painter->setBrush(m_brushGreenAlpha);
-    m_painter->drawRect(value->m_x-80, value->m_y-15, 160, 30);
-    drawText(value->m_text, value->m_x, value->m_y, sizeText_medium, true);
+    m_painter->drawRect(value.m_x-80, value.m_y-15, 160, 30);
+    drawText(value.m_text, value.m_x, value.m_y, sizeText_medium, true);
 }
-bool BaseWidget::isActiveValueGuiKeyBoard(ValueGuiKeyBoard * value, int x, int y){
-    if(value->m_x-80 < x && x < value->m_x + 80 && value->m_y-15 < y && y <value->m_y+15){
+bool BaseWidget::isActiveValueGuiKeyBoard(ValueGuiKeyBoard & value, int x, int y){
+    if(value.m_x-80 < x && x < value.m_x + 80 && value.m_y-15 < y && y < value.m_y+15){
        return true;
    }
    return false;

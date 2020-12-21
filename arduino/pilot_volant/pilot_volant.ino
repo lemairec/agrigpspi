@@ -3,12 +3,12 @@
 String a;
 
 
-#define MOTOR_ENABLE_PIN 3 //pwm
+#define MOTOR_ENABLE_PIN 5 //pwm
 #define MOTOR_PIN1 4
-#define MOTOR_PIN2 5
+#define MOTOR_PIN2 3
 
-#define ENCODER_A 10
-#define ENCODER_B 11
+#define ENCODER_A 9
+#define ENCODER_B 10
 
 long position = 0;
 long desired_position = 0;
