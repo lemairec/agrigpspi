@@ -1069,7 +1069,7 @@ void GpsWidget::drawVolant(double y){
         drawQText(s, m_width/2, y-r-10, sizeText_little, true, false);
     }
     {
-         QString s = QString::number(f.m_pilotModule.m_volant, 'f', 2);
+         QString s = QString::number(f.m_pilotModule.m_volantMesured, 'f', 2);
         drawQText(s, m_width/2, y-r+20, sizeText_little, true, false);
     }
      
