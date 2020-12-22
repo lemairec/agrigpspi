@@ -464,9 +464,6 @@ void GpsWidget::draw_force(){
     drawBackground();
     
     //scene->clear();
-    if(m_debug && m_zoom > 40){
-        drawVolant(m_height/2);
-    }
     
     
     if(f.m_etat == Etat_ParcelleAdd || f.m_etat == Etat_ParcellePause){
@@ -505,6 +502,11 @@ void GpsWidget::draw_force(){
     if(f.m_config.m_debug){
         drawDebug();
     }
+    
+    if(m_debug && m_zoom >40){
+        drawVolant(m_height/2);
+    }
+    
     
     for(auto p : m_widgets){
         if(!p->m_close){
@@ -1040,33 +1042,36 @@ void GpsWidget::drawVolant_(double y, double a, double r, double start_angle){
 }
 
 void GpsWidget::drawVolant(double y){
-    /*GpsFramework & f = GpsFramework::Instance();
+    GpsFramework & f = GpsFramework::Instance();
      
+    y = m_height/2;
      int r=40;
      
      double angle = f.m_pilotModule.m_volant;
      
      double j = 1.2;
-     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penBlack, m_brushWhite);
+    m_painter->setBrush(m_brushWhite);
+     m_painter->drawEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j);
      
      
      
-     QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
+     /*QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
      item->setBrush(m_grayBrush);
      item->setPen(m_penNo);
      item->setStartAngle(90*16-f.m_pilotModule.m_volant0*360*16);
      item->setSpanAngle(-angle*360*16);
-     scene->addItem(item);
+     scene->addItem(item);*/
      
      j=0.8;
-     scene->addEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j, m_penNo, m_brushWhite);
+     m_painter->drawEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j);
      {
-     QString s = QString::number(f.m_pilotModule.m_volantTotal, 'f', 2);
-     auto textItem = scene->addText(s);
-     auto mBounds = textItem->boundingRect();
-     
-     textItem->setPos(m_width/2-mBounds.width()/2, y-r-10);
-     }
+         QString s = QString::number(f.m_pilotModule.m_volantTotal, 'f', 2);
+        drawQText(s, m_width/2, y-r-10, sizeText_little, true, false);
+    }
+    {
+         QString s = QString::number(f.m_pilotModule.m_volant, 'f', 2);
+        drawQText(s, m_width/2, y-r+20, sizeText_little, true, false);
+    }
      
      {
      drawVolant_(y, f.m_pilotModule.m_volantMesured, r-10, 0);
