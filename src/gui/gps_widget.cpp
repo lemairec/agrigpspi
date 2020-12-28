@@ -102,7 +102,8 @@ void GpsWidget::setSize(int width, int height){
     m_buttonVolantAuto.setResize(m_width - 100, m_height-30, m_gros_gros_button);
     m_button3d.setResize(m_width/2, m_height/2, m_gros_gros_button);
     
-    if(GpsFramework::Instance().m_config.m_menu_vertical){
+    GpsFramework & f = GpsFramework::Instance();
+    if(f.m_config.m_menu_vertical){
         m_imgGuidage = loadImage("/images/guidage2.png");
         m_imgParcelle = loadImage("/images/parcelle2.png");
         m_imgOption = loadImage("/images/menu2.png");
@@ -116,7 +117,9 @@ void GpsWidget::setSize(int width, int height){
     
     
     m_buttonErrorOk.setResize((0.5)*m_width, 0.8*m_height, m_gros_button);
-    //    onValueChangeSlot(true);
+    
+    //f.m_lines.loadCurveOrLine("curve_CURVE_MINI");
+    //f.loadParcelle("CANON", 0, true, false);  
 }
 
 GpsWidget * GpsWidget::Instance(){
