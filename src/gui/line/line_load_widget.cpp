@@ -20,9 +20,6 @@ void LineLoadWidget::setSize(int width, int height){
       
     m_selectLines.setResize(m_x+30, 0.25*m_height, m_petit_button);
     //m_buttonParcelleLoad.setResize(m_x+30, 0.35*m_height, m_petit_button);
-    
-    GpsFramework & f = GpsFramework::Instance();
-    f.m_lines.loadCurveOrLine("curve_CURVE_MINI");
 }
 
 

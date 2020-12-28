@@ -847,3 +847,37 @@ bool GpsFramework::getVolantEngaged(){
     return m_pilotModule.m_engaged;
 }
 
+void GpsFramework::loadParcelle(const std::string & name, int flags_i, bool line, bool demi_outil){
+    m_parcelle.loadParcelle(name);
+
+    if(flags_i >=0){
+        if(m_parcelle.m_flag.size()>1){
+            int debut = m_parcelle.m_flag[flags_i%m_parcelle.m_flag.size()];
+            int fin = m_parcelle.m_flag[(flags_i+1)%m_parcelle.m_flag.size()];
+            
+            auto p1 = m_parcelle.m_contour[debut];
+            auto p2 = m_parcelle.m_contour[fin];
+            
+            if(line){
+                m_line = true;
+                m_lineAB.m_point_origin_A = *p1;
+                m_lineAB.m_point_origin_B = *p2;
+                m_lineAB.m_deplacement = 0;
+                if(demi_outil){
+                    m_lineAB.m_deplacement = m_config.m_outil_largeur/2;
+                }
+                setAB();
+            } else {
+                if(debut < fin){
+                    m_line = false;
+                    for(int i = debut; i < fin; ++i){
+                        m_curveAB.addPoint(m_parcelle.m_contour[i]);
+                    }
+                    setAB();
+                } else {
+                    addError("pas la derniere courbe :(");
+                }
+            }
+        }
+    }
+}

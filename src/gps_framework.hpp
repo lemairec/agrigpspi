@@ -183,6 +183,7 @@ public:
     bool isPilotConnected();
     void exportHtml();
     
+    void loadParcelle(const std::string & name, int flags_i, bool line, bool demi_outil);
      
     void changeDraw();
     void changeDrawBool(bool b);
