@@ -72,11 +72,11 @@ void LineAB::calculProjete2(double x, double y, double deplacement_x, double dep
     
     double det = (m_x_h-x_a)*deplacement_y-(m_y_h-y_a)*deplacement_x;
     
+    double i = round(distance/m_largeur);
     if(det < 0){
         distance = - distance;
     }
     
-    double i = round(distance/m_largeur);
       
     m_x_h = m_x_h + sin(m_angleAB)*i*m_largeur;
     m_y_h = m_y_h - cos(m_angleAB)*i*m_largeur;
