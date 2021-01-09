@@ -86,7 +86,7 @@ void Config::save(){
     settings.setValue("3d", m_3d);
     
     m_resolution_draw = 3;
-    m_resolution_calcul = 0.5;
+    m_resolution_calcul = 3;
 }
 
 void Config::load(){
