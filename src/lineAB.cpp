@@ -45,41 +45,53 @@ void LineAB::setAB(){
 }
 
 void LineAB::calculProjete2(double x, double y, double deplacement_x, double deplacement_y){
-    double x_a = x;
-    double y_a = y;
+    double x_m = x;
+    double y_m = y;
     
-    double x_b = m_pointA.m_x;
-    double y_b = m_pointA.m_y;
-    double x_m = m_pointB.m_x;
-    double y_m = m_pointB.m_y;
+    double x_a = m_pointA.m_x;
+    double y_a = m_pointA.m_y;
+    double x_b = m_pointB.m_x;
+    double y_b = m_pointB.m_y;
 
     //https://fr.wikipedia.org/wiki/Projection_orthogonale
-    double x_v = x_m-x_b;
-    double y_v = y_m-y_b;
+    double x_v = x_b-x_a;
+    double y_v = y_b-y_a;
     double d_v = sqrt(x_v*x_v + y_v*y_v);
     x_v = x_v/d_v;
     y_v = y_v/d_v;
     
     
     
-    double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
-    m_x_h = x_b + bh*x_v;
-    m_y_h = y_b + bh*y_v;
+    double ah = (x_m-x_a)*x_v+(y_m-y_a)*y_v;
+    m_x_h = x_a + ah*x_v;
+    m_y_h = y_a + ah*y_v;
     
     
-    double ah = sqrt((m_x_h-x_a)*(m_x_h-x_a) + (m_y_h-y_a)*(m_y_h-y_a));
-    double distance = ah;
+    double mh = sqrt((m_x_h-x_m)*(m_x_h-x_m) + (m_y_h-y_m)*(m_y_h-y_m));
+    m_distance = mh;
     
-    double det = (m_x_h-x_a)*deplacement_y-(m_y_h-y_a)*deplacement_x;
+
+    double det = (m_x_h-x_m)*deplacement_y-(m_y_h-y_m)*deplacement_x;
+    double i = round(m_distance/m_largeur);
     
-    double i = round(distance/m_largeur);
+    INFO("calculProjete2");
     if(det < 0){
-        distance = - distance;
+        INFO("det");
+        m_distance = - m_distance;
     }
     
+    double det2 = (m_x_h-x_m)*y_v-(m_y_h-y_m)*x_v;
+    if(det2 > 0){
+        i = -i;
+    }
+    
+    m_current_line = i;
+    INFO(i);
+    INFO(m_distance);
+          
       
-    m_x_h = m_x_h + sin(m_angleAB)*i*m_largeur;
-    m_y_h = m_y_h - cos(m_angleAB)*i*m_largeur;
+    m_x_h = m_x_h + y_v*i*m_largeur;
+    m_y_h = m_y_h - x_v*i*m_largeur;
 }
 
 
@@ -92,33 +104,8 @@ double LineAB::distance(double x, double y, double deplacementX, double deplacem
     m_antenne_y_h = m_y_h;
     
     if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
-        double dist = (m_a * x + m_b * y + m_c)/m_sqrt_m_a_m_b;
-        //INFO(dist);
-        m_current_line = round(dist/m_largeur);
-        
-        bool m_sensAB = false;
-        if(m_ab_x != 0 || m_ab_y != 0){
-            double det = m_a*deplacementY - m_b*deplacementX;
-            //m_deplacementAngle = m_deplacementAngle+3.14;
-            m_sensAB = (det < 0);
-        }
-        
-        if(!m_sensAB){
-            dist = -dist;
-        }
-        dist = fmod(dist, m_largeur);
-        if(dist > m_largeur/2){
-            dist -= m_largeur;
-        }
-        if(dist < -m_largeur/2){
-         dist += m_largeur;
-        }
-        if(dist < -m_largeur/2){
-         dist += m_largeur;
-        }
-        if(dist > m_largeur/2){
-         dist -= m_largeur;
-        }
+        double dist = m_distance;
+        dist = m_distance -m_current_line*m_largeur;
         return dist;
     }
     return 0.0;

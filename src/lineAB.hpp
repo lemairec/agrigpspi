@@ -36,6 +36,8 @@ public:
     void setAB();
     
     double m_x_h, m_y_h;
+    double m_distance;
+    
     double m_antenne_x_h, m_antenne_y_h;
     
     void calculProjete2(double x, double y, double deplacement_x, double deplacement_y);
