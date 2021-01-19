@@ -118,7 +118,7 @@ void GpsWidget::setSize(int width, int height){
     
     m_buttonErrorOk.setResize((0.5)*m_width, 0.8*m_height, m_gros_button);
     
-    //f.m_lines.loadCurveOrLine("curve_CURVE_MINI");
+    f.m_lines.loadCurveOrLine("line_HADRIEN3");
     //f.loadParcelle("CANON", 0, true, false);  
 }
 
@@ -507,7 +507,7 @@ void GpsWidget::draw_force(){
     }
     
     if(m_debug && m_zoom >40){
-        drawVolant(m_height/2);
+        drawVolant(m_height/2, m_width/2);
     }
     
     
@@ -1011,8 +1011,8 @@ void GpsWidget::drawBottom(){
      }*/
 }
 
-void GpsWidget::drawVolant_(double y, double a, double r, double start_angle){
-    /*double angle = a;
+/*void GpsWidget::drawVolant_(double y, double a, double r, double start_angle){
+    double angle = a;
      int nbr_tour = 0;
      while(angle > 1.0){
      angle = angle - 1.0;
@@ -1041,49 +1041,50 @@ void GpsWidget::drawVolant_(double y, double a, double r, double start_angle){
      auto mBounds = textItem->boundingRect();
      
      textItem->setPos(m_width/2-mBounds.width()/2, y-r);
-     }*/
-}
+     }
+}*/
 
-void GpsWidget::drawVolant(double y){
+void GpsWidget::drawVolant(double y, double x){
     GpsFramework & f = GpsFramework::Instance();
-     
-    y = m_height/2;
-     int r=40;
-     
-     double angle = f.m_pilotModule.m_volant;
-     
-     double j = 1.2;
+    
+    y = 3*m_height/4;
+    x = 3*m_width/4;
+    int r=40;
+    
+    double angle = f.m_pilotModule.m_volant;
+    
+    double j = 1.2;
     m_painter->setBrush(m_brushWhite);
-     m_painter->drawEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j);
-     
-     
-     
-     /*QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
+    m_painter->drawEllipse(x-r*j, y-r*j, 2*r*j, 2*r*j);
+    
+    
+    
+    /*QGraphicsEllipseItem* item = new QGraphicsEllipseItem(m_width/2-r, y-r, 2*r, 2*r);
      item->setBrush(m_grayBrush);
      item->setPen(m_penNo);
      item->setStartAngle(90*16-f.m_pilotModule.m_volant0*360*16);
      item->setSpanAngle(-angle*360*16);
      scene->addItem(item);*/
-     
-     j=0.8;
-     m_painter->drawEllipse(m_width/2-r*j, y-r*j, 2*r*j, 2*r*j);
-     {
-         QString s = QString::number(f.m_pilotModule.m_volantTotal, 'f', 2);
-        drawQText(s, m_width/2, y-r-10, sizeText_little, true, false);
+    
+    j=0.8;
+    m_painter->drawEllipse(x-r*j, y-r*j, 2*r*j, 2*r*j);
+    {
+        QString s = QString::number(f.m_pilotModule.m_volantTotal, 'f', 2);
+        drawQText(s, x, y-r-10, sizeText_little, true, false);
     }
     {
-         QString s = QString::number(f.m_pilotModule.m_volantMesured, 'f', 2);
-        drawQText(s, m_width/2, y-r+20, sizeText_little, true, false);
+        QString s = QString::number(f.m_pilotModule.m_volantMesured, 'f', 2);
+        drawQText(s, x, y-r+20, sizeText_little, true, false);
     }
-     
-     {
-     drawVolant_(y, f.m_pilotModule.m_volantMesured, r-10, 0);
-     
-     }
-     
-     //double x1 = cos(i*2*3.14)*r;
-     //double y1 = sin(i*2*3.14)*r;
-     //scene->addRect(m_width/2+x1, y+y1, 2, 2);*/
+    
+    {
+        //drawVolant_(y, f.m_pilotModule.m_volantMesured, r-10, 0);
+        
+    }
+    
+    //double x1 = cos(i*2*3.14)*r;
+    //double y1 = sin(i*2*3.14)*r;
+    //scene->addRect(m_width/2+x1, y+y1, 2, 2);*/
     
 }
 
@@ -1111,6 +1112,20 @@ void GpsWidget::drawDebug(){
             double fc_h_y;
             my_projete2(f.m_lineAB.m_fc_xh, f.m_lineAB.m_fc_yh, fc_h_x, fc_h_y);
             m_painter->drawEllipse(fc_h_x-1, fc_h_y-1, 2, 2);
+            
+            
+            double a_x;
+            double a_y;
+            my_projete2(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, a_x, a_y);
+            m_painter->drawEllipse(a_x-1, a_y-1, 2, 2);
+            m_painter->drawText(a_x-1, a_y-1, "A");
+            
+            
+            double b_x;
+            double b_y;
+            my_projete2(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, b_x, b_y);
+            m_painter->drawEllipse(b_x-1, b_y-1, 2, 2);
+            m_painter->drawText(b_x-1, b_y-1, "B");
             
             
         }

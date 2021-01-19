@@ -96,8 +96,7 @@ public:
     
     void drawDebug();
     void drawDebugEkf();
-    void drawVolant(double y);
-    void drawVolant_(double y, double a, double r, double start_angle);
+    void drawVolant(double y, double x);
     
     void draw();
     void draw_force();
