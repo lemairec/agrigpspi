@@ -71,6 +71,7 @@ void ImuModule::run(){
                 
                 signed short int axis_z = ((c7<<8)|c6);
                 m_yaw_z_deg = ((double)axis_z)/32768.0*180.0;
+                GpsFramework::Instance().onNewImuPoint(m_ax, m_ay, m_az, m_roll_x_deg, m_pitch_y_deg);
             } else if(c1 == 0x54){
                 
                 signed short int axis_x = ((c3<<8)|c2);

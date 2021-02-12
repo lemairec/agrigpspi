@@ -34,8 +34,14 @@ double lissageAngle(double old_value, double new_value, double coeff){
 
 std::list<double> m_erreurs;
 
+void EkfModule::onNewImuPoint(double ax, double ay, double az, double pitch_x_deg, double pitch_y_deg){
+    m_a_x = m_coeff_lissage*m_a_x + (1.0-m_coeff_lissage)*ax;
+    m_a_y = m_coeff_lissage*m_a_y + (1.0-m_coeff_lissage)*ay;
+    
+    m_pitch_y_deg = m_coeff_lissage*m_pitch_y_deg + (1.0-m_coeff_lissage)*pitch_y_deg;
+}
 
-void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay, double az){
+void EkfModule::onNewGpsPoint(double x, double y, double z){
     if(m_reset){
         m_old_x = x;
         m_old_y = y;
@@ -79,30 +85,16 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         m_old_x = x;
         m_old_y = y;
         m_pitch_y_deg = m_coeff_lissage*m_pitch_y_deg + (1.0-m_coeff_lissage)*f.m_imuModule.m_pitch_y_deg;
-    } else if(m_ekf_mode == EkfWithoutImu ){
-        double new_v_x = m_old_x + sin(ang)*v*dt;
-        double new_v_y = m_old_y + cos(ang)*v*dt;
-        
-        double new_x = ((1.0-m_coeff_lissage)*x+m_coeff_lissage*new_v_x);
-        double new_y = ((1.0-m_coeff_lissage)*y+m_coeff_lissage*new_v_y);
-        double new_z = z;
-        
-        m_v_x = (m_coeff_lissage)*m_v_x + (1.0-m_coeff_lissage)*(new_x-m_old_x)/0.1;
-        m_v_y = (m_coeff_lissage)*m_v_y + (1.0-m_coeff_lissage)*(new_y-m_old_y)/0.1;
-        
-        m_old_x = new_x;
-        m_old_y = new_y;
-        m_old_z = new_z;
-    } else if(m_ekf_mode == Ekf1 ){
+    } else if(m_ekf_mode == Ekf ){
         double old_x = m_old_x;
         double old_y = m_old_y;
-               
-        double v_inst = sqrt(m_v_x*m_v_x+m_v_y*m_v_y) + m_a_x*dt;
-               
-        m_the = atan2(m_v_y,m_v_x)  + m_the_v*dt;
         
-        double v_x = v_inst*cos(m_the);
-        double v_y = v_inst*sin(m_the);
+        double v_inst = sqrt(m_v_x*m_v_x+m_v_y*m_v_y) + m_a_x*dt;
+        
+        m_the = atan2(m_v_y,m_v_x);
+        
+        double v_x = v_inst*cos(m_the) - m_a_y*dt*sin(m_the);
+        double v_y = v_inst*sin(m_the) + m_a_y*dt*cos(m_the);
         
         m_old_x = m_old_x + v_x*dt;
         m_old_y = m_old_y + v_y*dt;
@@ -110,14 +102,12 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         m_old_x = m_coeff_lissage*m_old_x + (1.0-m_coeff_lissage)*x;
         m_old_y = m_coeff_lissage*m_old_y + (1.0-m_coeff_lissage)*y;
         m_the_v = m_coeff_lissage*m_the_v + (1.0-m_coeff_lissage)*f.m_imuModule.m_a_v_z/180*3.14;
-        m_a_x = m_coeff_lissage*m_a_x + (1.0-m_coeff_lissage)*f.m_imuModule.m_ax;
         
-        m_v_x = m_coeff_lissage*m_v_x + (1.0-m_coeff_lissage)*(v_x+(m_old_x - old_x)/dt)*0.5;
-        m_v_y = m_coeff_lissage*m_v_y + (1.0-m_coeff_lissage)*(v_y+(m_old_y - old_y)/dt)*0.5;
+        m_v_x = m_coeff_lissage*m_v_x + (1.0-m_coeff_lissage)*(m_old_x - old_x)/dt;
+        m_v_y = m_coeff_lissage*m_v_y + (1.0-m_coeff_lissage)*(m_old_y - old_y)/dt;
         
-        m_pitch_y_deg = m_coeff_lissage*m_pitch_y_deg + (1.0-m_coeff_lissage)*f.m_imuModule.m_pitch_y_deg;
-    } else if(m_ekf_mode == Ekf2){
-        double new_v_x = m_old_x + m_v_x*dt;
+        
+        /*double new_v_x = m_old_x + m_v_x*dt;
         double new_v_y = m_old_y + m_v_y*dt;
         
         double new_x = ((1.0-m_coeff_lissage)*x+m_coeff_lissage*new_v_x);
@@ -145,7 +135,7 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         
         m_old_x = new_x;
         m_old_y = new_y;
-        m_old_z = new_z;
+        m_old_z = new_z;*/
     } else {
         m_v_x = (x-m_old_x)/0.1;
         m_v_y = (y-m_old_y)/0.1;
@@ -160,20 +150,19 @@ void EkfModule::onNewEkfPoint(double x, double y, double z, double ax, double ay
         //m_old_y = y;
     }
     
-    /*double erreur = sqrt((x-m_old_x)*(x-m_old_x) + (y-m_old_y)*(y-m_old_y));
+    double erreur = sqrt((x-m_old_x)*(x-m_old_x) + (y-m_old_y)*(y-m_old_y));
     m_erreurs.push_back(erreur);
     
     double moy = 0;
     for(auto s : m_erreurs){
         moy += s;
     }
-    INFO(moy/m_erreurs.size());*/
+    INFO(moy/m_erreurs.size());
     
     m_v = sqrt(m_v_x*m_v_x + m_v_y*m_v_y);
     if(m_v_x != 0 && m_v_y != 0 && m_v>vitesse_mini_m_s){
         m_deplacementAngle = atan2(m_v_y,m_v_x);
     }
-    
 }
 
 void EkfModule::calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur){
@@ -202,7 +191,7 @@ void EkfModule::calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur){
         m_list_tracteur.pop_back();
     };
     
-    onNewEkfPoint(p2->m_x, p2->m_y, 0, 0, 0, 0);
+    onNewGpsPoint(p2->m_x, p2->m_y, 0);
     
     
     

@@ -44,7 +44,9 @@ public:
     std::list<GpsPoint_ptr> m_list_ekf;
     
     void calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur);
-    void onNewEkfPoint(double x, double y, double z,double ax, double ay, double az);
+    
+    void onNewImuPoint(double ax, double ay, double az, double pitch_x_deg, double pitch_y_deg);
+    void onNewGpsPoint(double x, double y, double z);
     
     void reset();
 };

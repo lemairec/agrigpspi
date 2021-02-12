@@ -85,6 +85,8 @@ public:
     void onGGAFrame(GGAFrame & frame);
     void onRMCFrame(RMCFrame_ptr frame);
     
+    void onNewImuPoint(double ax, double ay, double az, double pitch_x_deg, double pitch_y_deg);
+    
     void onNewPoint(GpsPoint_ptr point);
     void onNewImportantPoint(GpsPoint_ptr point);
     

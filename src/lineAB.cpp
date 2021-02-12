@@ -74,9 +74,9 @@ void LineAB::calculProjete2(double x, double y, double deplacement_x, double dep
     double det = (m_x_h-x_m)*deplacement_y-(m_y_h-y_m)*deplacement_x;
     double i = round(m_distance/m_largeur);
     
-    INFO("calculProjete2");
+    //INFO("calculProjete2");
     if(det < 0){
-        INFO("det");
+        //INFO("det");
         m_distance = - m_distance;
     }
     
@@ -86,8 +86,8 @@ void LineAB::calculProjete2(double x, double y, double deplacement_x, double dep
     }
     
     m_current_line = i;
-    INFO(i);
-    INFO(m_distance);
+    //INFO(i);
+    //INFO(m_distance);
           
       
     m_x_h = m_x_h + y_v*i*m_largeur;

@@ -216,10 +216,9 @@ void OptionWidget::resizePage2(){
     m_select_gps_baudrates.addValueInt("115200", 115200);
     
     m_select_ekf.setResize(0.35*m_width, 0.6*m_height, m_petit_button);
+    m_select_ekf.clear();
     m_select_ekf.addValue("none");
-    m_select_ekf.addValue("without imu");
-    m_select_ekf.addValue("ekf1");
-    m_select_ekf.addValue("ekf2");
+    m_select_ekf.addValue("ekf");
     m_select_ekf.addValue("custom_3m*perc");
     
     m_ekf_lissage.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "ekf_lissage ");

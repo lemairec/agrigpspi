@@ -8,10 +8,8 @@
 
 enum EkfMode{
     EkfNone = 0,
-    EkfWithoutImu = 1,
-    Ekf1 = 2,
-    Ekf2 = 3,
-    Custom3m = 4
+    Ekf = 1,
+    Custom3m = 2
 };
 
 class Config  {
@@ -28,7 +26,7 @@ public:
     int m_imu_moy = 10;
     
     bool m_gga = false;
-    int m_ekf = 2;
+    int m_ekf = 1;
     double m_ekf_coeff_lissage = 0.7;
     bool m_ekf_correction_devers = true;
    

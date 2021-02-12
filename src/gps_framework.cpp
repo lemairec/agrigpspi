@@ -221,6 +221,10 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     }
 }
 
+void GpsFramework::onNewImuPoint(double ax, double ay, double az, double pitch_x_deg, double pitch_y_deg){
+    m_ekf_module.onNewImuPoint(ax, ay, az, pitch_x_deg, pitch_y_deg);
+}
+
 
 
 void GpsFramework::onNewPoint(GpsPoint_ptr p){
