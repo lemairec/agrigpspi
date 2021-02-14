@@ -236,7 +236,7 @@ double LineAB::calculRearWheelPosition(double x_pont, double y_pont, double x, d
     
     
     
-    double k = 1.0;
+    double k = 0;
     double d = m_proj_prod_vect;
     if(d < 0){
         k = -k;
