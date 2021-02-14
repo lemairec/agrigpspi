@@ -78,8 +78,8 @@ public:
     
     void setPainter(QPainter * s);
     
+    void drawLine2(Line_ptr l, QPen & pen);
     void drawCurve(Curve_ptr l, QPen & pen);
-    bool addligne(double l, int i, QPen & pen);
     void drawLines();
     void drawLineCurve();
     

@@ -28,7 +28,6 @@ public:
     GpsPoint m_pointB;
     
     double m_largeur = 10;
-    bool m_sensAB = true;
     
     std::string m_name;
     

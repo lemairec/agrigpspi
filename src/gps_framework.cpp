@@ -162,8 +162,8 @@ void GpsFramework::setRef(double latitude, double longitude){
         m_gpsModule.setXY(*l);
     }
     if(m_line){
-        m_gpsModule.setXY(m_lineAB.m_point_origin_A);
-        m_gpsModule.setXY(m_lineAB.m_point_origin_B);
+        m_gpsModule.setXY(m_lineAB.m_pointA);
+        m_gpsModule.setXY(m_lineAB.m_pointB);
     } else {
         m_gpsModule.setXY(m_curveAB.m_pointA);
         m_gpsModule.setXY(m_curveAB.m_pointB);
@@ -317,27 +317,21 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
                             , double essieu_arriere_x, double essieu_arriere_y){
     if(m_etat == Etat_OK){
         if(m_line){
-            double dist = 0;
             if(m_pilotModule.m_engaged){
-                dist = m_lineAB.distance(essieu_arriere_x, essieu_arriere_y,m_deplacementX, m_deplacementY);
+                m_lineAB.calculProjete(m_tracteur.m_pt_essieu_arriere, m_deplacementX, m_deplacementY, !m_pilotModule.m_engaged);
+                double dist = m_lineAB.m_proj_distance;
                 setDistance(dist, false);
-            } else {
-                dist = m_lineAB.distance(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, m_deplacementX, m_deplacementY);
+            }  else {
+                m_lineAB.calculProjete(m_tracteur.m_pt_antenne_corrige, m_deplacementX, m_deplacementY, !m_pilotModule.m_engaged);
+                double dist = m_lineAB.m_proj_distance;
                 setDistance(dist, true);
             }
+            
             
             if(m_pilot_algo == AlgoPilot::FollowCarrot){
                 m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
             } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
-                m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-            } else if(m_pilot_algo == AlgoPilot::RWPAndFC){
-                if(dist > 0.3 || dist < -0.3){
-                    m_pilot_algo_str = "rwp_fk_fk";
-                    m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
-                } else {
-                    m_pilot_algo_str = "rwp_fk_rwp";
-                    m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, m_deplacementAngle, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
-                }
+                m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, (essieu_arriere_x+essieu_avant_x)/2, (essieu_arriere_y+essieu_avant_y)/2, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
             } else {
                 m_angle_correction = 0;
             }
@@ -454,12 +448,12 @@ void GpsFramework::setDistance(double distance, bool led){
 
 void GpsFramework::savePointA(){
     if(m_tracteur.m_pt_antenne_corrige){
-        m_lineAB.m_point_origin_A = *m_tracteur.m_pt_antenne_corrige;
+        m_lineAB.m_pointA = *m_tracteur.m_pt_antenne_corrige;
     }
-    setRef(m_lineAB.m_point_origin_A.m_latitude, m_lineAB.m_point_origin_A.m_longitude);
+    setRef(m_lineAB.m_pointA.m_latitude, m_lineAB.m_pointA.m_longitude);
     
     file_job_stream << "[savePointA]\n";
-    INFO(m_lineAB.m_point_origin_A.m_time << " " << m_lineAB.m_point_origin_A.m_latitude << " " << m_lineAB.m_point_origin_A.m_longitude);
+    INFO(m_lineAB.m_pointA.m_time << " " << m_lineAB.m_pointA.m_latitude << " " << m_lineAB.m_pointA.m_longitude);
     clearSurface();
     
     m_etat = Etat_PointASaved;
@@ -467,7 +461,7 @@ void GpsFramework::savePointA(){
 
 void GpsFramework::savePointB(){
     if(m_tracteur.m_pt_antenne_corrige){
-        m_lineAB.m_point_origin_B = *m_tracteur.m_pt_antenne_corrige;
+        m_lineAB.m_pointB = *m_tracteur.m_pt_antenne_corrige;
     }
     
     setAB();
@@ -492,8 +486,8 @@ void GpsFramework::setEtat(Etat etat){
 
 void GpsFramework::setAB(){
     if(m_line){
-        setRef((m_lineAB.m_point_origin_A.m_latitude + m_lineAB.m_point_origin_B.m_latitude)/2, (m_lineAB.m_point_origin_A.m_longitude + m_lineAB.m_point_origin_B.m_longitude)/2);
-        m_lineAB.setAB();
+        setRef((m_lineAB.m_pointA.m_latitude + m_lineAB.m_pointB.m_latitude)/2, (m_lineAB.m_pointA.m_longitude + m_lineAB.m_pointB.m_longitude)/2);
+        m_lineAB.savePointB();
     } else {
         m_curveAB.m_pointA = *(m_curveAB.m_listAB[0]);
         m_curveAB.m_pointB = *(m_curveAB.m_listAB[m_curveAB.m_listAB.size()-1]);
@@ -864,12 +858,12 @@ void GpsFramework::loadParcelle(const std::string & name, int flags_i, bool line
             
             if(line){
                 m_line = true;
-                m_lineAB.m_point_origin_A = *p1;
-                m_lineAB.m_point_origin_B = *p2;
-                m_lineAB.m_deplacement = 0;
+                m_lineAB.m_pointA = *p1;
+                m_lineAB.m_pointB = *p2;
+                /*m_lineAB.m_deplacement = 0;
                 if(demi_outil){
                     m_lineAB.m_deplacement = m_config.m_outil_largeur/2;
-                }
+                }*/
                 setAB();
             } else {
                 if(debut < fin){

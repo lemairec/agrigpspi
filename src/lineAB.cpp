@@ -1,7 +1,6 @@
 #include "lineAB.hpp"
 #include <math.h>
 #include "logging.hpp"
-#include "util/util.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -10,159 +9,252 @@
 
 #include "environnement.hpp"
 #include "gps_framework.hpp"
+#include "util/util.hpp"
 
-void LineAB::setAB(){
-    m_pointA = m_point_origin_A;
-    m_pointB = m_point_origin_B;
-    
-    double dAB = sqrt(m_pointA.distanceCarre(m_pointB));
-    double xAB = (m_pointA.m_x -  m_pointB.m_x)/dAB;
-    double yAB = (m_pointA.m_y -  m_pointB.m_y)/dAB;
-    INFO(xAB << " " << yAB);
-    
-    m_pointA.m_x += yAB*m_deplacement;
-    m_pointA.m_y += -xAB*m_deplacement;
-    
-    m_pointB.m_x += yAB*m_deplacement;
-    m_pointB.m_y += -xAB*m_deplacement;
-       
-    m_ab_x = m_pointB.m_x - m_pointA.m_x;
-    m_ab_y = m_pointB.m_y - m_pointA.m_y;
-    
-    
-    m_a = -(m_pointB.m_y - m_pointA.m_y);
-    m_b = m_pointB.m_x - m_pointA.m_x;
-    m_c = -m_a * m_pointA.m_x - m_b *  m_pointA.m_y;
-    m_sqrt_m_a_m_b = sqrt(m_a*m_a + m_b*m_b);
-    
-    if(m_ab_x != 0){
-        m_angleAB = atan2(m_ab_y,m_ab_x);
-    } else {
-        m_angleAB = 0;
-    }
-    INFO("yb  " << std::fixed << m_pointB.m_y << " ya " << m_pointA.m_y << " xb " << m_pointB.m_x << " xa " << m_pointA.m_x);
-    INFO(m_a << "*x + " << m_b << "*y + " << m_c << " = 0; " << m_sqrt_m_a_m_b);
+void LineAB::clearAll(){
+    m_curves.clear();
 }
 
-void LineAB::calculProjete2(double x, double y, double deplacement_x, double deplacement_y){
-    double x_m = x;
-    double y_m = y;
+void LineAB::clearWithoutAB(){
+    m_curves.clear();
+    savePointB();
+}
+
+Line_ptr LineAB::getCurrentLine(){
+    return m_curves[m_i_current];
+}
+
+Line_ptr LineAB::getCurrentLineRel(int i){
+    int res = m_i_current+i;
+    verify(res);
+    return m_curves[res];
+}
+
+void LineAB::verify(int i){
+    if(i<m_i_min){
+        for(int j = m_i_min-1; j >= i-2; --j){
+            addLine(j);
+        }
+    }
+    if(i>m_i_max){
+        for(int j = m_i_max+1; j <= i+2; ++j){
+            addLine(j);
+        }
+    }
+}
+
+void LineAB::addLine(int i){
+    int j=i-1;
+    int j2=i-2;
+    if(i <0){
+        j=i+1;
+        j2=i+2;
+    }
     
-    double x_a = m_pointA.m_x;
-    double y_a = m_pointA.m_y;
-    double x_b = m_pointB.m_x;
-    double y_b = m_pointB.m_y;
+    m_curves[i] = Line_ptr(new Line(i));
+    if(i<m_i_min){
+        m_i_min = i;
+    }
+    if(i>m_i_max){
+        m_i_max = i;
+    }
+    
+    GpsPoint_ptr old_point = nullptr;
+    
+    m_x_ab = m_pointB.m_x - m_pointA.m_x;
+    m_y_ab = m_pointB.m_y - m_pointA.m_y;
+    double d  = std::sqrt(m_x_ab*m_x_ab + m_y_ab*m_y_ab);
+    m_x_ab = m_x_ab/d;
+    m_y_ab = m_y_ab/d;
+    
+    m_curves[i]->m_pointA.m_x = m_pointA.m_x + m_y_ab*i*m_largeur;
+    m_curves[i]->m_pointA.m_y = m_pointA.m_y - m_x_ab*i*m_largeur;
+    m_curves[i]->m_pointB.m_x = m_pointB.m_x + m_y_ab*i*m_largeur;
+    m_curves[i]->m_pointB.m_y = m_pointB.m_y - m_x_ab*i*m_largeur;
+    computeCurve(m_curves[i]);
+}
+
+void LineAB::computeCurve(Line_ptr curve){
+}
+
+void LineAB::setCurrent(int i){
+    verify(i);
+    m_i_current = i;
+}
+
+void LineAB::savePointB(){
+    m_curves.clear();
+    GpsPoint_ptr old_point = nullptr;
+    
+    addLine(0);
+    
+    for(int i = 1; i < 11; ++i){
+        addLine(i);
+        addLine(-i);
+    }
+}
+
+
+double LineAB::calculCurbature(Line_ptr line, size_t i){
+    return 1.0;
+}
+
+
+
+void LineAB::calculProjete2P(GpsPoint_ptr p, double deplacement_x, double deplacement_y){
+    calculProjete2(p->m_x, p->m_y, deplacement_x, deplacement_y);
+}
+
+
+
+void LineAB::calculProjete2(double x, double y, double deplacement_x, double deplacement_y){
+    Line_ptr list = getCurrentLine();
+    
+    double x_a = x;
+    double y_a = y;
+    
+    double x_b = list->m_pointA.m_x;
+    double y_b = list->m_pointA.m_y;
+    double x_m = list->m_pointB.m_x;
+    double y_m = list->m_pointB.m_y;
 
     //https://fr.wikipedia.org/wiki/Projection_orthogonale
-    double x_v = x_b-x_a;
-    double y_v = y_b-y_a;
+    double x_v = x_m-x_b;
+    double y_v = y_m-y_b;
+    m_proj_x_segment = x_v;
+    m_proj_y_segment = y_v;
     double d_v = sqrt(x_v*x_v + y_v*y_v);
     x_v = x_v/d_v;
     y_v = y_v/d_v;
     
     
     
-    double ah = (x_m-x_a)*x_v+(y_m-y_a)*y_v;
-    m_x_h = x_a + ah*x_v;
-    m_y_h = y_a + ah*y_v;
+    double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
+    m_proj_x = x_b + bh*x_v;
+    m_proj_y = y_b + bh*y_v;
     
     
-    double mh = sqrt((m_x_h-x_m)*(m_x_h-x_m) + (m_y_h-y_m)*(m_y_h-y_m));
-    m_distance = mh;
+    double ah = sqrt((m_proj_x-x_a)*(m_proj_x-x_a) + (m_proj_y-y_a)*(m_proj_y-y_a));
+    m_proj_distance = ah;
     
-
-    double det = (m_x_h-x_m)*deplacement_y-(m_y_h-y_m)*deplacement_x;
-    double i = round(m_distance/m_largeur);
+    m_proj_prod_vect = deplacement_x*x_v+deplacement_y*y_v;
     
-    //INFO("calculProjete2");
+    double det = (m_proj_x-x_a)*deplacement_y-(m_proj_y-y_a)*deplacement_x;
+    
     if(det < 0){
-        //INFO("det");
-        m_distance = - m_distance;
+        m_proj_distance = -m_proj_distance;
     }
-    
-    double det2 = (m_x_h-x_m)*y_v-(m_y_h-y_m)*x_v;
-    if(det2 > 0){
-        i = -i;
+}
+
+void LineAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line){
+    calculProjete2P(p, deplacement_x, deplacement_y);
+    double dist = abs(m_proj_distance);
+    if(change_line && dist > m_largeur/2){
+        double temp_x_h = m_proj_x;
+        double temp_y_h = m_proj_y;
+        double temp_i = m_i_current;
+        double temp_distance = m_proj_distance;
+        
+        setCurrent(m_i_current + 1);
+        calculProjete2P(p, deplacement_x, deplacement_y);
+        double dist2 = abs(m_proj_distance);
+        if(dist2 < dist){
+            return;
+        }
+        setCurrent(m_i_current - 2);
+        calculProjete2P(p, deplacement_x, deplacement_y);
+        double dist3 = abs(m_proj_distance);
+        if(dist3 < dist){
+            return;
+        }
+        setCurrent(temp_i);
+        m_proj_x = temp_x_h;
+        m_proj_y = temp_y_h;
+        m_proj_distance = temp_distance;
     }
-    
-    m_current_line = i;
-    //INFO(i);
-    //INFO(m_distance);
-          
-      
-    m_x_h = m_x_h + y_v*i*m_largeur;
-    m_y_h = m_y_h - x_v*i*m_largeur;
 }
 
 
 
-double LineAB::distance(double x, double y, double deplacementX, double deplacementY){
-    
-    calculProjete2(x, y, deplacementX, deplacementY);
-    
-    m_antenne_x_h = m_x_h;
-    m_antenne_y_h = m_y_h;
-    
-    if(m_pointA.m_x!=0 && m_pointB.m_x!=0){
-        double dist = m_distance;
-        dist = m_distance -m_current_line*m_largeur;
-        return dist;
-    }
-    return 0.0;
-    
-}
 
-
-double LineAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lk){
-    calculProjete2(x, y, deplacement_x, deplacement_y);
+double LineAB::anglefollowTheCarrot(double x, double y, double deplacement_x, double deplacement_y, double lookhead){
     m_fc_x = x;
     m_fc_y = y;
     
-    m_fc_xh = m_x_h;
-    m_fc_yh = m_y_h;
+    Line_ptr list = getCurrentLine();
+    if(list == NULL){
+        return 0;
+    }
+    calculProjete2(x, y, deplacement_x, deplacement_y);
+    m_fc_xh = m_proj_x;
+    m_fc_yh = m_proj_y;
     
-    double d = deplacement_x*m_ab_x+deplacement_y*m_ab_y;
+    /**
+     * Follow carrot PT LOOKHEAD
+     */
+    double x_v2 = m_pointB.m_x - m_pointA.m_x;
+    double y_v2 = m_pointB.m_y - m_pointA.m_y;
     
-    if(d>0){
-        m_fc_lh_x = m_fc_xh+cos(m_angleAB)*lk;
-        m_fc_lh_y = m_fc_yh+sin(m_angleAB)*lk;
+    double d_v2 = sqrt(x_v2*x_v2 + y_v2*y_v2);
+    x_v2 = x_v2/d_v2;
+    y_v2 = y_v2/d_v2;
+    double d2 = deplacement_x*x_v2+deplacement_y*y_v2;
+    if(d2 >0){
+        m_fc_lh_x = m_fc_xh + lookhead*x_v2;
+        m_fc_lh_y = m_fc_yh + lookhead*y_v2;
     } else {
-        m_fc_lh_x = m_fc_xh-cos(m_angleAB)*lk;
-        m_fc_lh_y = m_fc_yh-sin(m_angleAB)*lk;
+        m_fc_lh_x = m_fc_xh - lookhead*x_v2;
+        m_fc_lh_y = m_fc_yh - lookhead*y_v2;
     }
     
+    /**
+     * Follow carrot CALCUL ANGLE
+     */
+
     double x_segment = m_fc_lh_x - m_fc_x;
     double y_segment = m_fc_lh_y - m_fc_y;
-    
+
     double angle = my_angle(x_segment, y_segment, deplacement_x, deplacement_y);
     angle = angleBetweenPI2(angle);
-    
+
     return angle;
 }
 
-double LineAB::calculRearWheelPosition(double p_x, double p_y, double deplacementAngle, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
-    double x_segment = m_pointB.m_x - m_pointA.m_x;
-    double y_segment = m_pointB.m_y - m_pointA.m_y;
-    
-    double angle = -my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
-    angle = angleBetweenPI2(angle);
-    
-    double distance = this->distance(p_x, p_y, deplacement_x, deplacement_y);
-    
-    double e = -distance;
-    double th_e = -angle;//todo;
+double LineAB::calculRearWheelPosition(double x_pont, double y_pont, double x, double y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE){
     double v = vitesse*10000.0/3600.0;
-    double k = 0;//todo;
     
+    Line_ptr list = getCurrentLine();
+    if(list == NULL){
+        return 0;
+    }
+    calculProjete2(x_pont, y_pont, deplacement_x, deplacement_y);
+    double e = -m_proj_distance;
+    
+    calculProjete2(x, y, deplacement_x, deplacement_y);
+    double x_segment = m_proj_x_segment;
+    double y_segment = m_proj_y_segment;
+    
+    
+    
+    double k = 1.0;
+    double d = m_proj_prod_vect;
+    if(d < 0){
+        k = -k;
+    }
+    
+    double angle = my_angle(deplacement_x, deplacement_y, x_segment, y_segment);
+    angle = angleBetweenPI2(angle);
+    double th_e = angle;//todo;
+
     double xk = v * k * cos(th_e) / (1.0 - k * e) ;
     double xthe = KTH * abs(v) * th_e ;
     double xe = KE * v * sin(th_e) * e / th_e;
-    
+
     //std::cout << "l  e " << e << "  th_e " << th_e << std::endl;
     //std::cout << "l    " << x2 << " " << x3 << std::endl;
     double omega = xk - xe - xthe;
-    
-    
+
+
     m_d_e = e;
     m_d_angle = th_e;
     m_d_k = k;
@@ -171,14 +263,15 @@ double LineAB::calculRearWheelPosition(double p_x, double p_y, double deplacemen
     m_d_xthe = -xthe;
     m_d_xe = -xe;
     m_d_res = omega;
-  
+
     double delta = atan2(L * omega / v, 1.0);
-    
+
     m_d_delta = delta;
-    
+
     return delta;
-    
 }
+
+
 
 
 
@@ -238,8 +331,8 @@ void LineCurves::loadCurveOrLine(std::string name){
         if(l.size() == 2){
             INFO("line");
             f.m_line = true;
-            f.m_lineAB.m_point_origin_A = *(l[0]);
-            f.m_lineAB.m_point_origin_B = *(l[1]);
+            f.m_lineAB.m_pointA = *(l[0]);
+            f.m_lineAB.m_pointB = *(l[1]);
             f.setAB();
         } else {
             f.m_line = false;
@@ -270,8 +363,8 @@ void LineCurves::add(LineAB & p){
         std::ofstream file;
         file.open(path, std::ios::out);
         file << "LINE" << std::endl;
-        file << std::setprecision(14) << p.m_point_origin_A.m_latitude << " " << p.m_point_origin_A.m_longitude << std::endl;
-        file << std::setprecision(14) << p.m_point_origin_B.m_latitude << " " << p.m_point_origin_B.m_longitude << std::endl;
+        file << std::setprecision(14) << p.m_pointA.m_latitude << " " << p.m_pointA.m_longitude << std::endl;
+        file << std::setprecision(14) << p.m_pointB.m_latitude << " " << p.m_pointB.m_longitude << std::endl;
         save();
     } else {
         f.addError("line nom trop petit");

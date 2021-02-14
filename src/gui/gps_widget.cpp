@@ -211,72 +211,38 @@ void GpsWidget::drawCurve(Curve_ptr l, QPen & pen){
     m_painter->drawPath(polygonPath);
 }
 
-bool GpsWidget::addligne(double l, int i, QPen & pen){
-    GpsFramework & f = GpsFramework::Instance();
-    
-    double a = f.m_lineAB.m_a;
-    double b = f.m_lineAB.m_b;
-    
-    double res = l*b/cos(atan(-a/b));
-    double x0 = -m_width/(m_zoom*2) + m_xref;
-    double y0 = -(a * x0 + f.m_lineAB.m_c + res)/b;
-    
-    double x1 = m_width/(m_zoom*2) + m_xref;
-    double y1 = -(a * x1 + f.m_lineAB.m_c + res)/b;
-    
-    double x02;
-    double y02;
-    double x12;
-    double y12;
-    
-    my_projete(x0, y0, x02, y02);
-    my_projete(x1, y1, x12, y12);
-    
-    if(y02 > m_height/2 && y12 > m_height/2){
-        return false;
-    }
-    
-    if(y02 < -m_height/2 && y12 < -m_height/2){
-        return false;
-    }
-    
-    m_painter->setPen(pen);
-    m_painter->drawLine(m_width/2 + x02, m_height/2 - y02, m_width/2 + x12, m_height/2 - y12);
-    
-    return true;
-}
-
-void GpsWidget::drawLines(){
-    GpsFramework & f = GpsFramework::Instance();
-    if(!f.m_lineAB.isInit()){
+void GpsWidget::drawLine2(Line_ptr l, QPen & pen){
+    if(!l){
         return;
     }
-    //addligne(0, x, y);
-    double x0 = m_xref;
-    double y0 = m_yref;
-    double res = -(y0*f.m_lineAB.m_b +(f.m_lineAB.m_a * x0 + f.m_lineAB.m_c));
-    double l = res / (f.m_lineAB.m_b/cos(atan(-f.m_lineAB.m_a/f.m_lineAB.m_b)));
-    //INFO("l " << l << " x " << x << " res " << res);
+    m_painter->setPen(pen);
+    m_painter->setBrush(m_brushNo);
     
+    GpsPoint_ptr old_point = nullptr;
+    QPainterPath polygonPath;
     
-    int i0 = round(l/f.m_config.m_outil_largeur);
-    addligne((i0)*f.m_config.m_outil_largeur, -(i0), m_penBlack);
-    for(int i = 1; i < 5; ++i){
-        if(! addligne((i0 + i)*f.m_config.m_outil_largeur, -(i0 + i), m_penGray)){
-            break;
-        }
-    }
-    for(int i = 1; i < 5; ++i){
-        if(! addligne((i0 - i)*f.m_config.m_outil_largeur, -(i0 - i), m_penGray)){
-            break;
-        }
-    }
+    GpsFramework & f = GpsFramework::Instance();
+    double xA, yA;
+    my_projete2(l->m_pointA.m_x-f.m_lineAB.m_x_ab*1000, l->m_pointA.m_y-f.m_lineAB.m_y_ab*1000, xA, yA);
+    double xB, yB;
+    my_projete2(l->m_pointB.m_x+f.m_lineAB.m_x_ab*1000, l->m_pointB.m_y+f.m_lineAB.m_y_ab*1000, xB, yB);
+    m_painter->drawLine(xA, yA, xB, yB);
 }
+
 
 void GpsWidget::drawLineCurve(){
     GpsFramework & f = GpsFramework::Instance();
     if(f.m_line){
-        drawLines();
+        if(f.m_etat == Etat_OK){
+            auto list = f.m_lineAB.getCurrentLine();
+            drawLine2(list, m_penBlack);
+            for(int i = 1; i<2; ++i){
+                auto list2 = f.m_lineAB.getCurrentLineRel(i);
+                drawLine2(list2, m_penGray);
+                auto list3 = f.m_lineAB.getCurrentLineRel(-i);
+                drawLine2(list3, m_penGray);
+            }
+        }
     } else {
         if(f.m_etat == Etat_OK){
             auto list = f.m_curveAB.getCurrentLine();
@@ -918,7 +884,7 @@ void GpsWidget::drawTop(){
     {
         int current_line = 0;
         if(f.m_line){
-            current_line = f.m_lineAB.m_current_line;
+            current_line = f.m_lineAB.m_i_current;
         } else {
             current_line = f.m_curveAB.m_i_current;
         }
@@ -1051,8 +1017,6 @@ void GpsWidget::drawVolant(double y, double x){
     x = 3*m_width/4;
     int r=40;
     
-    double angle = f.m_pilotModule.m_volant;
-    
     double j = 1.2;
     m_painter->setBrush(m_brushWhite);
     m_painter->drawEllipse(x-r*j, y-r*j, 2*r*j, 2*r*j);
@@ -1092,7 +1056,7 @@ void GpsWidget::drawDebug(){
     GpsFramework & f = GpsFramework::Instance();
     
     if(f.m_pilot_algo == FollowCarrot){
-        if(f.m_line && f.m_lineAB.isInit()){
+        if(f.m_line){
             m_painter->setPen(QColor(255,157,0));
             double fc_x;
             double fc_y;
