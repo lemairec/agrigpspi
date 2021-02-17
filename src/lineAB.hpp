@@ -13,6 +13,10 @@ public:
     
     GpsPoint m_pointA;
     GpsPoint m_pointB;
+    
+    double m_proj_x, m_proj_y;
+    
+    void calculProjete2(double x, double y);
 };
 
 typedef std::shared_ptr<Line> Line_ptr;

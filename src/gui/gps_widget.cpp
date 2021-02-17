@@ -219,14 +219,42 @@ void GpsWidget::drawLine2(Line_ptr l, QPen & pen){
     m_painter->setBrush(m_brushNo);
     
     GpsPoint_ptr old_point = nullptr;
-    QPainterPath polygonPath;
     
     GpsFramework & f = GpsFramework::Instance();
-    double xA, yA;
-    my_projete2(l->m_pointA.m_x-f.m_lineAB.m_x_ab*1000, l->m_pointA.m_y-f.m_lineAB.m_y_ab*1000, xA, yA);
-    double xB, yB;
-    my_projete2(l->m_pointB.m_x+f.m_lineAB.m_x_ab*1000, l->m_pointB.m_y+f.m_lineAB.m_y_ab*1000, xB, yB);
-    m_painter->drawLine(xA, yA, xB, yB);
+    
+    l->calculProjete2(m_xref, m_yref);
+    double xH, yH;
+    my_projete2(l->m_proj_x-f.m_lineAB.m_x_ab*0, l->m_proj_y-f.m_lineAB.m_y_ab*0, xH, yH);
+    
+    
+    QPainterPath polygonPath;
+    polygonPath.moveTo(xH, yH);
+    
+    for(int i = 1; i < 10; ++i){
+        double xB, yB;
+        my_projete2(l->m_proj_x+i*f.m_lineAB.m_x_ab*1, l->m_proj_y+i*f.m_lineAB.m_y_ab*1, xB, yB);
+        polygonPath.lineTo(xB, yB);
+    }
+    for(int i = 1; i < 10; ++i){
+        double xB, yB;
+        my_projete2(l->m_proj_x+i*f.m_lineAB.m_x_ab*11, l->m_proj_y+i*f.m_lineAB.m_y_ab*11, xB, yB);
+        polygonPath.lineTo(xB, yB);
+    }
+    m_painter->drawPath(polygonPath);
+   
+    QPainterPath polygonPath2;
+    polygonPath2.moveTo(xH, yH);
+    for(int i = 1; i < 10; ++i){
+        double xB, yB;
+        my_projete2(l->m_proj_x-i*f.m_lineAB.m_x_ab*1, l->m_proj_y-i*f.m_lineAB.m_y_ab*1, xB, yB);
+        polygonPath2.lineTo(xB, yB);
+    }
+    for(int i = 1; i < 10; ++i){
+        double xB, yB;
+        my_projete2(l->m_proj_x-i*f.m_lineAB.m_x_ab*11, l->m_proj_y-i*f.m_lineAB.m_y_ab*11, xB, yB);
+        polygonPath2.lineTo(xB, yB);
+    }
+    m_painter->drawPath(polygonPath2);
 }
 
 

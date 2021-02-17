@@ -11,6 +11,26 @@
 #include "gps_framework.hpp"
 #include "util/util.hpp"
 
+void Line::calculProjete2(double x, double y){
+    double x_a = m_pointA.m_x;
+    double y_a = m_pointA.m_y;
+    
+    double x_b = m_pointB.m_x;
+    double y_b = m_pointB.m_y;
+    
+    double x_v = x_b-x_a;
+    double y_v = y_b-y_a;
+    double d_v = sqrt(x_v*x_v + y_v*y_v);
+    x_v = x_v/d_v;
+    y_v = y_v/d_v;
+    
+    
+    
+    double bh = (x-x_a)*x_v+(y-y_a)*y_v;
+    m_proj_x = x_a + bh*x_v;
+    m_proj_y = y_a + bh*y_v;
+}
+
 void LineAB::clearAll(){
     m_curves.clear();
 }
