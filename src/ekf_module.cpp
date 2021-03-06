@@ -157,7 +157,7 @@ void EkfModule::onNewGpsPoint(double x, double y, double z){
     for(auto s : m_erreurs){
         moy += s;
     }
-    INFO(moy/m_erreurs.size());
+    //INFO(moy/m_erreurs.size());
     
     m_v = sqrt(m_v_x*m_v_x + m_v_y*m_v_y);
     if(m_v_x != 0 && m_v_y != 0 && m_v>vitesse_mini_m_s){
