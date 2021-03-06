@@ -213,8 +213,13 @@ void InfosWidget::drawPage0(){
     drawQText(s, (m_width+x)/2, 0.3*m_height, sizeText_big, true);
     drawValueGui(m_ekf, f.m_config.m_ekf_coeff_lissage*100);
     
-    if(f.m_config.m_pilot_algo == FollowCarrot){
-        QString s = "follow carrot";
+    if(f.m_config.m_pilot_algo == FollowCarrotPontAvant){
+        QString s = "follow carrot avant";
+        drawQText(s, (m_width+x)/2, 0.4*m_height, sizeText_big, true);
+        drawValueGui(m_lk, f.m_config.m_pilot_lookahead_d);
+        
+    } else if(f.m_config.m_pilot_algo == FollowCarrotPontArriere){
+        QString s = "follow carrot arriere";
         drawQText(s, (m_width+x)/2, 0.4*m_height, sizeText_big, true);
         drawValueGui(m_lk, f.m_config.m_pilot_lookahead_d);
         

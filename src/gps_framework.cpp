@@ -328,7 +328,9 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
             }
             
             
-            if(m_pilot_algo == AlgoPilot::FollowCarrot){
+            if(m_pilot_algo == AlgoPilot::FollowCarrotPontAvant){
+                m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+            } else if(m_pilot_algo == AlgoPilot::FollowCarrotPontArriere){
                 m_angle_correction = m_lineAB.anglefollowTheCarrot(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
             } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
                 m_angle_correction = m_lineAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, (essieu_arriere_x+essieu_avant_x)/2, (essieu_arriere_y+essieu_avant_y)/2, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);
@@ -347,7 +349,9 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
             }
             
             
-            if(m_pilot_algo == AlgoPilot::FollowCarrot){
+            if(m_pilot_algo == AlgoPilot::FollowCarrotPontAvant){
+                m_angle_correction = m_curveAB.anglefollowTheCarrot(essieu_avant_x, essieu_avant_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
+            } else if(m_pilot_algo == AlgoPilot::FollowCarrotPontArriere){
                 m_angle_correction = m_curveAB.anglefollowTheCarrot(essieu_arriere_x, essieu_arriere_y, m_deplacementX, m_deplacementY, m_pilot_lookahead_d);
             } else if(m_pilot_algo == AlgoPilot::RearWheelPosition){
                 m_angle_correction = m_curveAB.calculRearWheelPosition(essieu_arriere_x, essieu_arriere_y, (essieu_arriere_x+essieu_avant_x)/2, (essieu_arriere_y+essieu_avant_y)/2, m_deplacementX, m_deplacementY, m_vitesse, 1.5, m_pilot_rwp_kth, m_pilot_rwp_kte);

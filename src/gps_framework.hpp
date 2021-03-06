@@ -48,9 +48,9 @@ enum ParcellePoint {
 };
 
 enum AlgoPilot {
-    FollowCarrot = 0,
-    RearWheelPosition = 1,
-    RWPAndFC = 2,
+    FollowCarrotPontAvant = 0,
+    FollowCarrotPontArriere = 1,
+    RearWheelPosition = 2,
     
 };
 
@@ -140,7 +140,7 @@ public:
     bool m_rtk = false;
     
     std::string m_pilot_algo_str = "none";
-    AlgoPilot m_pilot_algo = FollowCarrot;
+    AlgoPilot m_pilot_algo = FollowCarrotPontAvant;
     double m_angle_correction;
     
     //algo follow carrot

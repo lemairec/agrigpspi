@@ -1083,7 +1083,7 @@ void GpsWidget::drawVolant(double y, double x){
 void GpsWidget::drawDebug(){
     GpsFramework & f = GpsFramework::Instance();
     
-    if(f.m_pilot_algo == FollowCarrot){
+    if(f.m_pilot_algo == FollowCarrotPontAvant || f.m_pilot_algo == FollowCarrotPontArriere){
         if(f.m_line){
             m_painter->setPen(QColor(255,157,0));
             double fc_x;
