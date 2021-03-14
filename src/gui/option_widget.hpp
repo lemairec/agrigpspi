@@ -32,6 +32,9 @@ class OptionWidget : public BaseWidget {
     
     void addSerials();
     
+    void drawPart2(double y, double h, std::string title);
+    void drawPart1(double y, double h, std::string title);
+
 public:
     OptionWidget();
     

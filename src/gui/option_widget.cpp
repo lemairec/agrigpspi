@@ -32,12 +32,12 @@ void OptionWidget::setSize(int width, int height){
     BaseWidget::setSize(width, height);
     m_button_close.setResize(0.75*m_width, 0.83*m_height, m_gros_button);
     
-    m_button_p1.setResize(0.24*m_width, 0.20*m_height, m_gros_button);
-    m_button_p2.setResize(0.24*m_width, 0.30*m_height, m_gros_button);
-    m_button_p3.setResize(0.24*m_width, 0.40*m_height, m_gros_button);
-    m_button_p4.setResize(0.24*m_width, 0.50*m_height, m_gros_button);
-    m_button_p5.setResize(0.24*m_width, 0.60*m_height, m_gros_button);
-    m_button_p6.setResize(0.24*m_width, 0.70*m_height, m_gros_button);
+    m_button_p1.setResize(0.1*m_width, 0.20*m_height, m_gros_button);
+    m_button_p2.setResize(0.1*m_width, 0.30*m_height, m_gros_button);
+    m_button_p3.setResize(0.1*m_width, 0.40*m_height, m_gros_button);
+    m_button_p4.setResize(0.1*m_width, 0.50*m_height, m_gros_button);
+    m_button_p5.setResize(0.1*m_width, 0.60*m_height, m_gros_button);
+    m_button_p6.setResize(0.1*m_width, 0.70*m_height, m_gros_button);
     
     resizePage1();
     resizePage2();
@@ -51,9 +51,9 @@ void OptionWidget::setSize(int width, int height){
 void OptionWidget::draw(){
     m_painter->setPen(m_penBlack);
     m_painter->setBrush(m_brushWhiteAlpha);
-    m_painter->drawRect(m_width*0.2, m_height*0.1, m_width*0.6, m_height*0.8);
+    m_painter->drawRect(m_width*0.05, m_height*0.1, m_width*0.9, m_height*0.8);
     m_painter->setBrush(m_brushDarkGray);
-    m_painter->drawRect(m_width*0.2, m_height*0.1, m_width*0.08, m_height*0.8);
+    m_painter->drawRect(m_width*0.05, m_height*0.1, m_width*0.1, m_height*0.8);
     
     drawButtonImage(m_button_close, m_imgClose);
     
@@ -73,10 +73,10 @@ void OptionWidget::draw(){
     }
     
     if(m_page == 3){
-        drawButtonImage(m_button_p3, m_imgVolantBlanc);
+        drawButtonImage(m_button_p3, m_imgImuBlanc, 0.5);
         drawPage3();
     } else {
-        drawButtonImage(m_button_p3, m_imgVolantGris);
+        drawButtonImage(m_button_p3, m_imgImuGris, 0.5);
         
     }
     
@@ -97,10 +97,10 @@ void OptionWidget::draw(){
     }
     
     if(m_page == 6){
-        drawButtonImage(m_button_p6, m_imgImuBlanc, 0.5);
+        drawButtonImage(m_button_p6, m_imgVolantBlanc);
         drawPage6();
     } else {
-        drawButtonImage(m_button_p6, m_imgImuGris, 0.5);
+        drawButtonImage(m_button_p6, m_imgVolantGris);
     }
 }
 
@@ -142,19 +142,40 @@ void OptionWidget::onMouse(int x, int y){
  PAGE 1
  */
 
+double x1 = 0.22;
+double x1bis = 0.27;
+
+
+double x2 = 0.6;
+double x2bis = 0.65;
+
+void OptionWidget::drawPart1(double y, double h, std::string title){
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushNo);
+    m_painter->drawRect(m_width*0.17, y, m_width*0.37, h);
+    drawText(title, m_width*(0.17+0.37/2), y-7, sizeText_medium, true);
+}
+
+void OptionWidget::drawPart2(double y, double h, std::string title){
+    m_painter->setPen(m_penBlack);
+    m_painter->setBrush(m_brushNo);
+    m_painter->drawRect(m_width*0.55, y, m_width*0.37, h);
+    drawText(title, m_width*(0.55+0.37/2), y-7, sizeText_medium, true);
+}
+
 void OptionWidget::resizePage1(){
-    m_button_sens.setResize(0.35*m_width, 0.3*m_height, m_petit_button);
-    m_button_debug_file.setResize(0.35*m_width, 0.4*m_height, m_petit_button);
-    m_button_menu_vertical.setResize(0.35*m_width, 0.5*m_height, m_petit_button);
-    m_button_debug.setResize(0.35*m_width, 0.6*m_height, m_petit_button);
+    m_button_sens.setResize(x1*m_width, 0.3*m_height, m_petit_button);
+    m_button_debug_file.setResize(x1*m_width, 0.4*m_height, m_petit_button);
+    m_button_menu_vertical.setResize(x1*m_width, 0.5*m_height, m_petit_button);
+    m_button_debug.setResize(x1*m_width, 0.6*m_height, m_petit_button);
 };
 
 void OptionWidget::drawPage1(){
     GpsFramework & f = GpsFramework::Instance();
-    drawText("Avancé", 0.55*m_width, 0.15*m_height, sizeText_big, true);
+    drawText("Option", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     
-    drawText("Sens de la ligne", 0.4*m_width, m_button_sens.m_y);
+    drawText("Sens de la ligne", x1bis*m_width, m_button_sens.m_y);
     if(f.m_config.m_sensDraw){
         drawButtonLabel(m_button_sens, COLOR_CHECK);
     } else {
@@ -162,7 +183,7 @@ void OptionWidget::drawPage1(){
         
     }
     
-    drawText("Mode technicien", 0.4*m_width, m_button_debug.m_y);
+    drawText("Mode technicien", x1bis*m_width, m_button_debug.m_y);
     if(f.m_config.m_debug){
         drawButtonLabel(m_button_debug, COLOR_CHECK);
     } else {
@@ -170,14 +191,14 @@ void OptionWidget::drawPage1(){
         
     }
     
-    drawText("Menu Vertical", 0.4*m_width, m_button_menu_vertical.m_y);
+    drawText("Menu Vertical", x1bis*m_width, m_button_menu_vertical.m_y);
     if(f.m_config.m_menu_vertical){
         drawButtonLabel(m_button_menu_vertical, COLOR_CHECK);
     } else {
         drawButtonLabel(m_button_menu_vertical, COLOR_OTHER);
     }
     
-    drawText("Debug Log File", 0.4*m_width, m_button_debug_file.m_y);
+    drawText("Debug Log File", x1bis*m_width, m_button_debug_file.m_y);
     if(f.m_config.m_debug_log){
         drawButtonLabel(m_button_debug_file, COLOR_CHECK);
     } else {
@@ -208,45 +229,44 @@ void OptionWidget::onMousePage1(int x, int y){
  */
 
 void OptionWidget::resizePage2(){
-    m_select_gps_serial.setResize(0.35*m_width,0.3*m_height, m_petit_button);
+    m_select_gps_serial.setResize(x1*m_width,0.3*m_height, m_petit_button);
     
     m_select_gps_baudrates.clear();
-    m_select_gps_baudrates.setResize(0.35*m_width,0.4*m_height, m_petit_button);
+    m_select_gps_baudrates.setResize(x1*m_width,0.4*m_height, m_petit_button);
     m_select_gps_baudrates.addValueInt("9600", 9600);
     m_select_gps_baudrates.addValueInt("115200", 115200);
     
-    m_select_ekf.setResize(0.35*m_width, 0.6*m_height, m_petit_button);
+    m_select_ekf.setResize(x2*m_width, 0.3*m_height, m_petit_button);
     m_select_ekf.clear();
     m_select_ekf.addValue("none");
     m_select_ekf.addValue("ekf");
     m_select_ekf.addValue("custom_3m*perc");
     
-    m_ekf_lissage.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "ekf_lissage ");
-    m_correction_lateral_imu.setResize(0.35*m_width, 0.8*m_height, m_petit_button);
+    m_ekf_lissage.setResize(x2*m_width, 0.4*m_height, m_petit_button, "ekf_lissage ");
 }
 
+
+
 void OptionWidget::drawPage2(){
-    drawText("Connection GPS", 0.55*m_width, 0.15*m_height, sizeText_big, true);
+    drawText("GPS", 0.55*m_width, 0.15*m_height, sizeText_big, true);
+    
+    
     
     GpsFramework & f = GpsFramework::Instance();
     
+    drawPart1(0.25*m_height, 0.25*m_height, "connection");
     m_select_gps_baudrates.setValueInt(f.m_config.m_baudrate_gps);
     m_select_gps_serial.setValueString(f.m_config.m_input_gps);
     m_select_ekf.m_selectedValue = f.m_config.m_ekf;
     
+    drawPart2(0.25*m_height, 0.25*m_height, "lissage");
     drawSelectButtonGuiClose(m_select_gps_serial);
     drawSelectButtonGuiClose(m_select_gps_baudrates);
     drawSelectButtonGuiClose(m_select_ekf);
     
-    drawValueGui(m_ekf_lissage, f.m_config.m_ekf_coeff_lissage*100);
-    if(f.m_config.m_ekf_correction_devers){
-        drawButton(m_correction_lateral_imu, COLOR_CHECK);
-    } else {
-        drawButton(m_correction_lateral_imu);
-    }
-    drawText("correction de devers", 0.4*m_width, m_correction_lateral_imu.m_y, sizeText_medium, false);
-      
+    drawPart2(0.55*m_height, 0.25*m_height, "cap");
     
+    drawValueGui(m_ekf_lissage, f.m_config.m_ekf_coeff_lissage*100);
     
     drawSelectButtonGuiOpen(m_select_gps_serial);
     drawSelectButtonGuiOpen(m_select_gps_baudrates);
@@ -265,10 +285,7 @@ void OptionWidget::onMousePage2(int x, int y){
         f.m_config.m_baudrate_gps = m_select_gps_baudrates.getValueInt();
     } else if(onMouseSelectButton(m_select_ekf, x, y)){
         f.m_config.m_ekf = m_select_ekf.m_selectedValue;
-    } else if (m_correction_lateral_imu.isActive(x, y)){
-        f.m_config.m_ekf_correction_devers = !f.m_config.m_ekf_correction_devers;
     }
-
     f.m_config.m_ekf_coeff_lissage += 0.05*m_ekf_lissage.getIntValue(x,y);
     
     f.initOrLoadConfig();
@@ -277,41 +294,43 @@ void OptionWidget::onMousePage2(int x, int y){
 
 
 /**
- PAGE 3
+ PAGE 4
  */
 
-void OptionWidget::resizePage3(){
-    m_select_pilot_serial.setResize(0.35*m_width,0.25*m_height, m_petit_button);
+void OptionWidget::resizePage4(){
+    m_select_pilot_serial.setResize(x1*m_width,0.3*m_height, m_petit_button);
     
     m_select_pilot_baudrates.clear();
-    m_select_pilot_baudrates.setResize(0.35*m_width,0.35*m_height, m_petit_button);
+    m_select_pilot_baudrates.setResize(x1*m_width,0.4*m_height, m_petit_button);
     m_select_pilot_baudrates.addValueInt("9600", 9600);
     m_select_pilot_baudrates.addValueInt("115200", 115200);
     
     
     m_select_pilot_langage.clear();
-    m_select_pilot_langage.setResize(0.35*m_width,0.45*m_height, m_petit_button);
+    m_select_pilot_langage.setResize(x1*m_width,0.5*m_height, m_petit_button);
     m_select_pilot_langage.addValue("arduino");
     m_select_pilot_langage.addValue("hadrien");
     
-    m_button_adaptive_vitesse.setResize(0.35*m_width, 0.55*m_height, m_petit_button);
+    m_button_adaptive_vitesse.setResize(x2*m_width, 0.3*m_height, m_petit_button);
     
     m_select_algo.clear();
-    m_select_algo.setResize(0.35*m_width,0.65*m_height, m_petit_button);
+    m_select_algo.setResize(x2*m_width,0.4*m_height, m_petit_button);
     m_select_algo.addValue("follow_carrot_avant");
     m_select_algo.addValue("follow_carrot_arriere");
-    m_select_algo.addValue("rwp_follow_carrot");
+    m_select_algo.addValue("rear_wheel_position");
+    m_select_algo.addValue("rwp_follow_carrot_avant");
     
-    m_value_gui_lookahead_d.setResize(0.35*m_width, 0.75*m_height, m_petit_button, "lookahead ");
-    m_value_gui_rwp_kth.setResize(0.35*m_width, 0.75*m_height, m_petit_button, "kth ");
-    m_value_gui_rwp_kte.setResize(0.35*m_width, 0.82*m_height, m_petit_button, "kte ");
+    m_value_gui_lookahead_d.setResize(x2*m_width, 0.5*m_height, m_petit_button, "lookahead ");
+    m_value_gui_rwp_kth.setResize(x2*m_width, 0.5*m_height, m_petit_button, "kth ");
+    m_value_gui_rwp_kte.setResize(x2*m_width, 0.58*m_height, m_petit_button, "kte ");
 };
 
-void OptionWidget::drawPage3(){
+void OptionWidget::drawPage4(){
     GpsFramework & f = GpsFramework::Instance();
-    drawText("Connection Pilot", 0.55*m_width, 0.15*m_height, sizeText_big, true);
+    drawText("Pilotage", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     
+    drawPart1(0.25*m_height, 0.35*m_height, "connection");
     m_select_pilot_baudrates.setValueInt(f.m_config.m_baudratePilot);
     m_select_pilot_serial.setValueString(f.m_config.m_inputPilot);
     m_select_pilot_langage.m_selectedValue = f.m_config.m_pilot_langage;
@@ -322,6 +341,7 @@ void OptionWidget::drawPage3(){
     drawSelectButtonGuiClose(m_select_pilot_serial);
     drawSelectButtonGuiClose(m_select_algo);
     
+    drawPart2(0.25*m_height, 0.35*m_height, "guidage");
     if(f.m_pilot_algo == AlgoPilot::FollowCarrotPontAvant){
         drawValueGui(m_value_gui_lookahead_d, f.m_config.m_pilot_lookahead_d);
     } else if(f.m_pilot_algo == AlgoPilot::FollowCarrotPontArriere){
@@ -331,7 +351,7 @@ void OptionWidget::drawPage3(){
         drawValueGui(m_value_gui_rwp_kte, f.m_config.m_pilot_rwp_kte);
     }
     
-    drawText("adaptative vitesse", 0.4*m_width, m_button_adaptive_vitesse.m_y, sizeText_medium, false);
+    drawText("adaptative vitesse", x2bis*m_width, m_button_adaptive_vitesse.m_y, sizeText_medium, false);
     if(f.m_config.m_pilot_adaptive_vitesse > 0.5){
         drawButton(m_button_adaptive_vitesse, COLOR_CHECK);
     } else {
@@ -345,7 +365,7 @@ void OptionWidget::drawPage3(){
     
 }
 
-void OptionWidget::onMousePage3(int x, int y){
+void OptionWidget::onMousePage4(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
     
     if(onMouseSelectButton(m_select_pilot_serial, x, y)){
@@ -383,10 +403,10 @@ void OptionWidget::onMousePage3(int x, int y){
 
 
 /**
- PAGE 4
+ PAGE 5
  */
 
-void OptionWidget::resizePage4(){
+void OptionWidget::resizePage5(){
     m_button_motor_inverse.setResize(0.35*m_width, 0.20*m_height, m_petit_button);
     m_button_encoder_inverse.setResize(0.6*m_width, 0.20*m_height, m_petit_button);
     
@@ -403,7 +423,7 @@ void OptionWidget::resizePage4(){
     m_button_auto_active.setResize(0.35*m_width, 0.85*m_height, m_petit_button, "auto active ");
 };
 
-void OptionWidget::drawPage4(){
+void OptionWidget::drawPage5(){
     GpsFramework & f = GpsFramework::Instance();
     
     drawText("Autoguidage", 0.55*m_width, 0.15*m_height, sizeText_big, true);
@@ -437,7 +457,7 @@ void OptionWidget::drawPage4(){
     drawValueGui(m_button_auto_active, f.m_config.m_pilot_auto_active);
 }
 
-void OptionWidget::onMousePage4(int x, int y){
+void OptionWidget::onMousePage5(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
     
     if(m_button_motor_inverse.isActive(x,y)){
@@ -468,10 +488,10 @@ void OptionWidget::onMousePage4(int x, int y){
 
 
 /**
- PAGE 5
+ PAGE 6
  */
 
-void OptionWidget::resizePage5(){
+void OptionWidget::resizePage6(){
     m_button_p6connect.setResize(0.40*m_width, 0.25*m_height, m_petit_button);
     m_button_p6disable.setResize(0.55*m_width, 0.25*m_height, m_petit_button);
     m_button_p6clearError.setResize(0.70*m_width, 0.25*m_height, m_petit_button);
@@ -483,7 +503,7 @@ void OptionWidget::resizePage5(){
     m_button_p6test1.setResize(0.50*m_width, 0.65*m_height, m_petit_button);
 };
 
-void OptionWidget::drawPage5(){
+void OptionWidget::drawPage6(){
     drawText("Test Volant", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     drawButtonLabel(m_button_p6connect, COLOR_OTHER);
@@ -506,7 +526,7 @@ void OptionWidget::drawPage5(){
     drawText("button", m_button_p6test1.m_x, m_button_p6test1.m_y, sizeText_little, true);
 }
 
-void OptionWidget::onMousePage5(int x, int y){
+void OptionWidget::onMousePage6(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
     
     if(m_button_p6connect.isActive(x,y)){
@@ -529,29 +549,39 @@ void OptionWidget::onMousePage5(int x, int y){
 
 
 /**
- PAGE 6
+ PAGE 3
  */
 
-void OptionWidget::resizePage6(){
-    m_select_imu_serial.setResize(0.35*m_width,0.3*m_height, m_petit_button);
+void OptionWidget::resizePage3(){
+    m_select_imu_serial.setResize(x1*m_width,0.3*m_height, m_petit_button);
     
     m_select_imu_baudrates.clear();
-    m_select_imu_baudrates.setResize(0.35*m_width,0.4*m_height, m_petit_button);
+    m_select_imu_baudrates.setResize(x1*m_width,0.4*m_height, m_petit_button);
     m_select_imu_baudrates.addValueInt("9600", 9600);
     m_select_imu_baudrates.addValueInt("115200", 115200);
-    m_value_imu_moy.setResize(0.35*m_width,0.7*m_height, m_petit_button, "moy ");
+    m_value_imu_moy.setResize(x2*m_width,0.3*m_height, m_petit_button, "moy ");
+    
+    m_correction_lateral_imu.setResize(x2*m_width, 0.4*m_height, m_petit_button);
 }
 
-void OptionWidget::drawPage6(){
-    drawText("Connection IMU", 0.55*m_width, 0.15*m_height, sizeText_big, true);
+void OptionWidget::drawPage3(){
+    drawText("IMU", 0.55*m_width, 0.15*m_height, sizeText_big, true);
     
     GpsFramework & f = GpsFramework::Instance();
     
+    drawPart1(0.25*m_height, 0.25*m_height, "connection");
     m_select_gps_baudrates.setValueInt(f.m_config.m_imu_baudrate);
     m_select_gps_serial.setValueString(f.m_config.m_imu_input);
     
     drawSelectButtonGuiClose(m_select_imu_serial);
     drawSelectButtonGuiClose(m_select_imu_baudrates);
+    
+    drawText("correction de devers", x2bis*m_width, m_correction_lateral_imu.m_y, sizeText_medium, false);
+    if(f.m_config.m_ekf_correction_devers){
+        drawButton(m_correction_lateral_imu, COLOR_CHECK);
+    } else {
+        drawButton(m_correction_lateral_imu);
+    }
     
     drawValueGui(m_value_imu_moy, f.m_config.m_imu_moy);
     
@@ -560,7 +590,7 @@ void OptionWidget::drawPage6(){
     
 }
 
-void OptionWidget::onMousePage6(int x, int y){
+void OptionWidget::onMousePage3(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
     
     if(onMouseSelectButton(m_select_imu_serial, x, y)){
@@ -568,11 +598,13 @@ void OptionWidget::onMousePage6(int x, int y){
     };
     
     f.m_config.m_imu_moy += 5*m_value_imu_moy.getIntValue(x,y);
-       
+    if (m_correction_lateral_imu.isActive(x, y)){
+       f.m_config.m_ekf_correction_devers = !f.m_config.m_ekf_correction_devers;
+    }
     
     if(onMouseSelectButton(m_select_imu_baudrates, x, y)){
         f.m_config.m_imu_baudrate = m_select_imu_baudrates.getValueInt();
-    }
+    } 
     f.initOrLoadConfig();
 }
 

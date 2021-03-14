@@ -51,6 +51,7 @@ enum AlgoPilot {
     FollowCarrotPontAvant = 0,
     FollowCarrotPontArriere = 1,
     RearWheelPosition = 2,
+    Rwp_followCarrotPontAvant = 3,
     
 };
 
