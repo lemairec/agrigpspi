@@ -10,9 +10,19 @@
 #include <list>
 
 class EkfModule {
-    double m_coeff_lissage = 0.8;
-    EkfMode m_ekf_mode = EkfNone;
-    bool m_ekf_correction_devers = true;
+    LissageGpsMode m_lissage_gps_mode = LissageGpsMode_Ekf;
+    double m_lissage_gps_ekf = 0.7;
+
+public:
+    CapMode m_cap_mode = CapMode_Custom;
+private:
+    double m_cap_ekf = 0.7;
+    double m_cap_custom_d = 3.0;
+    
+    LissageImuMode m_lissage_imu_mode = LissageImuMode_None;
+    double m_lissage_imu_ekf = 0.7;
+    
+    bool m_imu_correction_devers = true;
 public:
     void initOrLoad(Config & config);
 
@@ -46,7 +56,8 @@ public:
     void calculDeplacement(GpsPoint_ptr p, Tracteur & tracteur);
     
     void onNewImuPoint(double ax, double ay, double az, double pitch_x_deg, double pitch_y_deg);
-    void onNewGpsPoint(double x, double y, double z);
+    void lissageGpsPoint(double x, double y, double z);
+    void calculCap();
     
     void reset();
 };

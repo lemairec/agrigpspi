@@ -199,9 +199,11 @@ void InfosWidget::onMouse(int x, int y){
 
 
 void InfosWidget::setSize0(int width, int height){
-    m_ekf.setResize(m_width*0.8, 0.35*height, m_petit_button, "ekf ");
-    m_lk.setResize(m_width*0.8, 0.5*height, m_petit_button, "lk ");
-    m_kth.setResize(m_width*0.8, 0.5*height, m_petit_button, "kth ");
+    m_ekf.setResize(m_width*0.8, 0.25*height, m_petit_button, "ekf ");
+    m_cap_ekf.setResize(m_width*0.8, 0.45*height, m_petit_button, "ekf ");
+    m_cap_d.setResize(m_width*0.8, 0.45*height, m_petit_button, "d ");
+    m_lk.setResize(m_width*0.8, 0.65*height, m_petit_button, "lk ");
+    m_kth.setResize(m_width*0.8, 0.65*height, m_petit_button, "kth ");
 }
 void InfosWidget::drawPage0(){
     GpsFramework & f =  GpsFramework::Instance();
@@ -209,32 +211,59 @@ void InfosWidget::drawPage0(){
         QString s = "Menu Rapide";
         drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
     }
-    QString s = "ekf";
-    drawQText(s, (m_width+x)/2, 0.3*m_height, sizeText_big, true);
-    drawValueGui(m_ekf, f.m_config.m_ekf_coeff_lissage*100);
+    
+    if(f.m_config.m_lissage_gps_mode == LissageGpsMode_Ekf){
+        QString s = "GPS ekf";
+        drawQText(s, (m_width+x)/2, 0.2*m_height, sizeText_medium, true);
+        drawValueGui(m_ekf, f.m_config.m_lissage_gps_ekf*100);
+    } else {
+        QString s = "pas de lissage";
+        drawQText(s, (m_width+x)/2, 0.2*m_height, sizeText_medium, true);
+    }
+    
+    if(f.m_config.m_cap_mode == CapMode_Ekf){
+        QString s = "Cap ekf";
+        drawQText(s, (m_width+x)/2, 0.4*m_height, sizeText_medium, true);
+        drawValueGui(m_cap_ekf, f.m_config.m_cap_ekf*100);
+    } else if(f.m_config.m_cap_mode == CapMode_Custom){
+        QString s = "Cap custom";
+        drawQText(s, (m_width+x)/2, 0.4*m_height, sizeText_medium, true);
+        drawValueGui(m_cap_d, f.m_config.m_cap_custom_d);
+    }
     
     if(f.m_config.m_pilot_algo == FollowCarrotPontAvant){
         QString s = "follow carrot avant";
-        drawQText(s, (m_width+x)/2, 0.4*m_height, sizeText_big, true);
+        drawQText(s, (m_width+x)/2, 0.6*m_height, sizeText_medium, true);
         drawValueGui(m_lk, f.m_config.m_pilot_lookahead_d);
         
     } else if(f.m_config.m_pilot_algo == FollowCarrotPontArriere){
         QString s = "follow carrot arriere";
-        drawQText(s, (m_width+x)/2, 0.4*m_height, sizeText_big, true);
+        drawQText(s, (m_width+x)/2, 0.6*m_height, sizeText_medium, true);
         drawValueGui(m_lk, f.m_config.m_pilot_lookahead_d);
         
     } else if(f.m_config.m_pilot_algo == RearWheelPosition){
         QString s = "rwp";
-        drawQText(s, (m_width+x)/2, 0.45*m_height, sizeText_big, true);
+        drawQText(s, (m_width+x)/2, 0.6*m_height, sizeText_medium, true);
         drawValueGui(m_kth, f.m_config.m_pilot_rwp_kth);
         QString s2 = "kte "+QString::number(f.m_pilot_rwp_kte);
-        drawQText(s2, m_kth.m_x, 0.55*m_height, sizeText_medium, false);
+        drawQText(s2, m_kth.m_x, 0.7*m_height, sizeText_medium, false);
     }
 }
 
 void InfosWidget::onMouse0(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
-    f.m_config.m_ekf_coeff_lissage += 0.05*m_ekf.getIntValue(x,y);
+    
+    if(f.m_config.m_lissage_gps_mode == LissageGpsMode_Ekf){
+        f.m_config.m_lissage_gps_ekf += 0.05*m_ekf.getIntValue(x,y);
+    }
+    
+    if(f.m_config.m_cap_mode == CapMode_Ekf){
+        f.m_config.m_cap_ekf += 0.05*m_cap_ekf.getIntValue(x,y);
+    }
+    if(f.m_config.m_cap_mode == CapMode_Custom){
+        f.m_config.m_cap_custom_d += 0.5*m_cap_d.getIntValue(x,y);
+    }
+    
     f.m_config.m_pilot_lookahead_d += 0.5*m_lk.getIntValue(x,y);
     f.m_config.m_pilot_rwp_kth += 0.1*m_kth.getIntValue(x,y);
     f.m_config.m_pilot_rwp_kte = f.m_config.m_pilot_rwp_kth/2;

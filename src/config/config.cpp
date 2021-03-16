@@ -26,9 +26,16 @@ void Config::save(){
     settings.setValue("sensDraw", m_sensDraw);
     settings.setValue("debug", m_debug);
     settings.setValue("gga", m_gga);
-    settings.setValue("ekf", m_ekf);
-    settings.setValue("ekf_coeff_lissage", m_ekf_coeff_lissage);
-    settings.setValue("ekf_correction_devers", m_ekf_correction_devers);
+    
+    settings.setValue("m_lissage_gps_mode", m_lissage_gps_mode);
+    settings.setValue("m_lissage_gps_ekf", m_lissage_gps_ekf);
+    settings.setValue("m_cap_mode", m_cap_mode);
+    settings.setValue("m_cap_ekf", m_cap_ekf);
+    settings.setValue("m_cap_custom_d", m_cap_custom_d);
+    settings.setValue("m_lissage_imu_mode", m_lissage_imu_mode);
+    settings.setValue("m_lissage_imu_ekf", m_lissage_imu_ekf);
+    
+    settings.setValue("imu_correction_devers", m_imu_correction_devers);
     
     
     
@@ -49,7 +56,6 @@ void Config::save(){
     QString inputImu = QString::fromStdString(m_imu_input);
     settings.setValue("inputImu", inputImu);
     settings.setValue("baudrateImu", m_imu_baudrate);
-    settings.setValue("m_imu_moy", m_imu_moy);
     
     settings.setValue("motor_vitesse_min", m_motor_vitesse_min);
     settings.setValue("motor_vitesse_max", m_motor_vitesse_max);
@@ -103,14 +109,33 @@ void Config::load(){
     if(settings.contains("gga")){
         m_gga = settings.value("gga").toBool();
     }
-    if(settings.contains("ekf")){
-        m_ekf = settings.value("ekf").toInt();
+    
+    if(settings.contains("m_lissage_gps_mode")){
+        m_lissage_gps_mode = settings.value("m_lissage_gps_mode").toInt();
     }
-    if(settings.contains("ekf_coeff_lissage")){
-        m_ekf_coeff_lissage = settings.value("ekf_coeff_lissage").toDouble();
+    if(settings.contains("m_lissage_gps_ekf")){
+        m_lissage_gps_ekf = settings.value("m_lissage_gps_ekf").toDouble();
     }
-    if(settings.contains("ekf_correction_devers")){
-        m_ekf_correction_devers = settings.value("ekf_correction_devers").toBool();
+    if(settings.contains("m_cap_mode")){
+        m_cap_mode = settings.value("m_cap_mode").toInt();
+    }
+    if(settings.contains("m_cap_ekf")){
+        m_cap_ekf = settings.value("m_cap_ekf").toDouble();
+    }
+    if(settings.contains("m_cap_custom_d")){
+        m_cap_custom_d = settings.value("m_cap_custom_d").toDouble();
+    }
+    
+    
+    if(settings.contains("m_lissage_imu_mode")){
+        m_lissage_imu_mode = settings.value("m_lissage_imu_mode").toInt();
+    }
+    if(settings.contains("m_lissage_imu_ekf")){
+        m_lissage_imu_ekf = settings.value("m_lissage_imu_ekf").toDouble();
+    }
+    
+    if(settings.contains("imu_correction_devers")){
+        m_imu_correction_devers = settings.value("imu_correction_devers").toBool();
     }
     
     
@@ -146,9 +171,6 @@ void Config::load(){
     }
     if(settings.contains("baudrateImu")){
         m_imu_baudrate = settings.value("baudrateImu").toInt();
-    }
-    if(settings.contains("m_imu_moy")){
-        m_imu_moy = settings.value("m_imu_moy").toDouble();
     }
     
     if(settings.contains("motor_vitesse_min")){

@@ -57,8 +57,14 @@ public:
     //page2
     SelectButtonGui m_select_gps_serial;
     SelectButtonGui m_select_gps_baudrates;
-    SelectButtonGui m_select_ekf;
-    ValueGui m_ekf_lissage;
+    
+    SelectButtonGui m_lissage_gps;
+    ValueGui m_lissage_gps_ekf;
+    
+    SelectButtonGui m_cap;
+    ValueGui m_cap_ekf;
+    ValueGui m_cap_d;
+    
     ButtonGui m_correction_lateral_imu;
     
     void resizePage2();
@@ -127,7 +133,10 @@ public:
     //page_imu
     SelectButtonGui m_select_imu_serial;
     SelectButtonGui m_select_imu_baudrates;
-    ValueGui m_value_imu_moy;
+    
+    SelectButtonGui m_lissage_imu;
+    ValueGui m_lissage_imu_ekf;
+    
     void resizePage6();
     void onMousePage6(int x, int y);
     void drawPage6();

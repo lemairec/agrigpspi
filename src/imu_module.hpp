@@ -29,7 +29,6 @@ public:
     double m_mag_z = 0;
     
     std::list<int> m_values;
-    int m_imu_moy = 100;
     
     void print(int i);
     void remove(int i);

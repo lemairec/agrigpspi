@@ -6,10 +6,20 @@
 #define PILOT_LANGAGE_ARDUINO 0
 #define PILOT_LANGAGE_HADRIEN 1
 
-enum EkfMode{
-    EkfNone = 0,
-    Ekf = 1,
-    Custom3m = 2
+enum LissageGpsMode{
+    LissageGpsMode_None = 0,
+    LissageGpsMode_Ekf = 1
+};
+
+enum CapMode{
+    CapMode_Custom = 0,
+    CapMode_Ekf = 1,
+    CapMode_Rmc = 2
+};
+
+enum LissageImuMode{
+    LissageImuMode_None = 0,
+    LissageImuMode_Ekf = 1
 };
 
 class Config  {
@@ -23,12 +33,20 @@ public:
     
     std::string m_imu_input = "none";
     int m_imu_baudrate = 115200;
-    int m_imu_moy = 10;
     
     bool m_gga = false;
-    int m_ekf = 1;
-    double m_ekf_coeff_lissage = 0.7;
-    bool m_ekf_correction_devers = true;
+    
+    int m_lissage_gps_mode = 0;
+    double m_lissage_gps_ekf = 0.7;
+    
+    int m_cap_mode = 0;
+    double m_cap_ekf = 0.7;
+    double m_cap_custom_d = 3.0;
+    
+    int m_lissage_imu_mode = 0;
+    double m_lissage_imu_ekf = 0.7;
+    
+    bool m_imu_correction_devers = true;
    
     bool m_sensDraw = true;
     bool m_debug = false;

@@ -236,13 +236,21 @@ void OptionWidget::resizePage2(){
     m_select_gps_baudrates.addValueInt("9600", 9600);
     m_select_gps_baudrates.addValueInt("115200", 115200);
     
-    m_select_ekf.setResize(x2*m_width, 0.3*m_height, m_petit_button);
-    m_select_ekf.clear();
-    m_select_ekf.addValue("none");
-    m_select_ekf.addValue("ekf");
-    m_select_ekf.addValue("custom_3m*perc");
+    m_lissage_gps.setResize(x2*m_width, 0.3*m_height, m_petit_button);
+    m_lissage_gps.clear();
+    m_lissage_gps.addValue("none");
+    m_lissage_gps.addValue("ekf");
+    m_lissage_gps_ekf.setResize(x2*m_width, 0.4*m_height, m_petit_button, "ekf_lissage ");
     
-    m_ekf_lissage.setResize(x2*m_width, 0.4*m_height, m_petit_button, "ekf_lissage ");
+    m_cap.setResize(x2*m_width, 0.6*m_height, m_petit_button);
+    m_cap.clear();
+    m_cap.addValue("custom");
+    m_cap.addValue("ekf");
+    m_cap.addValue("rmc");
+    
+    m_cap_d.setResize(x2*m_width, 0.7*m_height, m_petit_button, "cap d ");
+    m_cap_ekf.setResize(x2*m_width, 0.7*m_height, m_petit_button, "ekf_cap ");
+    
 }
 
 
@@ -254,23 +262,36 @@ void OptionWidget::drawPage2(){
     
     GpsFramework & f = GpsFramework::Instance();
     
+    drawSelectButtonGuiClose(m_select_gps_serial);
+    drawSelectButtonGuiClose(m_select_gps_baudrates);
+    drawSelectButtonGuiClose(m_lissage_gps);
+    drawSelectButtonGuiClose(m_cap);
+    
+    
     drawPart1(0.25*m_height, 0.25*m_height, "connection");
     m_select_gps_baudrates.setValueInt(f.m_config.m_baudrate_gps);
     m_select_gps_serial.setValueString(f.m_config.m_input_gps);
-    m_select_ekf.m_selectedValue = f.m_config.m_ekf;
     
-    drawPart2(0.25*m_height, 0.25*m_height, "lissage");
-    drawSelectButtonGuiClose(m_select_gps_serial);
-    drawSelectButtonGuiClose(m_select_gps_baudrates);
-    drawSelectButtonGuiClose(m_select_ekf);
+    drawPart2(0.25*m_height, 0.25*m_height, "lissage Gps");
+    m_lissage_gps.m_selectedValue = f.m_config.m_lissage_gps_mode;
+    if(f.m_config.m_lissage_gps_mode == (int)LissageGpsMode_Ekf){
+        drawValueGui(m_lissage_gps_ekf, f.m_config.m_lissage_gps_ekf*100);
+    }
     
     drawPart2(0.55*m_height, 0.25*m_height, "cap");
-    
-    drawValueGui(m_ekf_lissage, f.m_config.m_ekf_coeff_lissage*100);
+    m_cap.m_selectedValue = f.m_config.m_cap_mode;
+    if(f.m_config.m_cap_mode == (int)CapMode_Ekf){
+        drawValueGui(m_cap_ekf, f.m_config.m_cap_ekf*100);
+    }
+    if(f.m_config.m_cap_mode == (int)CapMode_Custom){
+        drawValueGui(m_cap_d, f.m_config.m_cap_custom_d);
+    }
     
     drawSelectButtonGuiOpen(m_select_gps_serial);
     drawSelectButtonGuiOpen(m_select_gps_baudrates);
-    drawSelectButtonGuiOpen(m_select_ekf);
+    drawSelectButtonGuiOpen(m_lissage_gps);
+    drawSelectButtonGuiOpen(m_cap);
+    
     
     
     
@@ -283,10 +304,25 @@ void OptionWidget::onMousePage2(int x, int y){
         f.m_config.m_input_gps = m_select_gps_serial.getValueString();
     } else if(onMouseSelectButton(m_select_gps_baudrates, x, y)){
         f.m_config.m_baudrate_gps = m_select_gps_baudrates.getValueInt();
-    } else if(onMouseSelectButton(m_select_ekf, x, y)){
-        f.m_config.m_ekf = m_select_ekf.m_selectedValue;
     }
-    f.m_config.m_ekf_coeff_lissage += 0.05*m_ekf_lissage.getIntValue(x,y);
+    
+    if(onMouseSelectButton(m_lissage_gps, x, y)){
+        f.m_config.m_lissage_gps_mode = m_lissage_gps.m_selectedValue;
+    }
+    if(f.m_config.m_lissage_gps_mode == (int)LissageGpsMode_Ekf){
+        f.m_config.m_lissage_gps_ekf += 0.05*m_lissage_gps_ekf.getIntValue(x,y);
+    }
+    
+    if(onMouseSelectButton(m_cap, x, y)){
+        f.m_config.m_cap_mode = m_cap.m_selectedValue;
+    }
+    if(f.m_config.m_cap_mode == (int)CapMode_Ekf){
+        f.m_config.m_cap_ekf += 0.05*m_cap_ekf.getIntValue(x,y);
+    }
+    if(f.m_config.m_cap_mode == (int)CapMode_Custom){
+        f.m_config.m_cap_custom_d += 0.5*m_cap_d.getIntValue(x,y);
+    }
+    
     
     f.initOrLoadConfig();
 }
@@ -559,9 +595,14 @@ void OptionWidget::resizePage3(){
     m_select_imu_baudrates.setResize(x1*m_width,0.4*m_height, m_petit_button);
     m_select_imu_baudrates.addValueInt("9600", 9600);
     m_select_imu_baudrates.addValueInt("115200", 115200);
-    m_value_imu_moy.setResize(x2*m_width,0.3*m_height, m_petit_button, "moy ");
+     
+    m_lissage_imu.setResize(x2*m_width, 0.3*m_height, m_petit_button);
+    m_lissage_imu.clear();
+    m_lissage_imu.addValue("none");
+    m_lissage_imu.addValue("ekf");
+    m_lissage_imu_ekf.setResize(x2*m_width, 0.4*m_height, m_petit_button, "ekf_lissage ");
     
-    m_correction_lateral_imu.setResize(x2*m_width, 0.4*m_height, m_petit_button);
+    m_correction_lateral_imu.setResize(x2*m_width, 0.6*m_height, m_petit_button);
 }
 
 void OptionWidget::drawPage3(){
@@ -575,18 +616,24 @@ void OptionWidget::drawPage3(){
     
     drawSelectButtonGuiClose(m_select_imu_serial);
     drawSelectButtonGuiClose(m_select_imu_baudrates);
+    drawSelectButtonGuiClose(m_lissage_imu);
+    
+    drawPart2(0.25*m_height, 0.25*m_height, "lissage Imu");
+    m_lissage_imu.m_selectedValue = f.m_config.m_lissage_imu_mode;
+    if(f.m_config.m_lissage_imu_mode == (int)LissageImuMode_Ekf){
+        drawValueGui(m_lissage_imu_ekf, f.m_config.m_lissage_imu_ekf*100);
+    }
     
     drawText("correction de devers", x2bis*m_width, m_correction_lateral_imu.m_y, sizeText_medium, false);
-    if(f.m_config.m_ekf_correction_devers){
+    if(f.m_config.m_imu_correction_devers){
         drawButton(m_correction_lateral_imu, COLOR_CHECK);
     } else {
         drawButton(m_correction_lateral_imu);
     }
     
-    drawValueGui(m_value_imu_moy, f.m_config.m_imu_moy);
-    
     drawSelectButtonGuiOpen(m_select_imu_serial);
     drawSelectButtonGuiOpen(m_select_imu_baudrates);
+    drawSelectButtonGuiOpen(m_lissage_imu);
     
 }
 
@@ -597,14 +644,22 @@ void OptionWidget::onMousePage3(int x, int y){
         f.m_config.m_imu_input = m_select_imu_serial.getValueString();
     };
     
-    f.m_config.m_imu_moy += 5*m_value_imu_moy.getIntValue(x,y);
     if (m_correction_lateral_imu.isActive(x, y)){
-       f.m_config.m_ekf_correction_devers = !f.m_config.m_ekf_correction_devers;
+       f.m_config.m_imu_correction_devers = !f.m_config.m_imu_correction_devers;
     }
     
     if(onMouseSelectButton(m_select_imu_baudrates, x, y)){
         f.m_config.m_imu_baudrate = m_select_imu_baudrates.getValueInt();
-    } 
+    }
+    
+    
+    if(onMouseSelectButton(m_lissage_imu, x, y)){
+        f.m_config.m_lissage_imu_mode = m_lissage_imu.m_selectedValue;
+    }
+    if(f.m_config.m_lissage_imu_mode == (int)LissageImuMode_Ekf){
+        f.m_config.m_lissage_imu_ekf += 0.05*m_lissage_imu_ekf.getIntValue(x,y);
+    }
+    
     f.initOrLoadConfig();
 }
 

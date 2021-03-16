@@ -72,7 +72,6 @@ void GpsFramework::initOrLoadConfig(){
     m_serialModule.initOrLoad(m_config);
     m_fileModule.initOrLoad(m_config);
     m_ekf_module.initOrLoad(m_config);
-    m_imuModule.m_imu_moy = m_config.m_imu_moy;
     
     file_job_stream << "[config]\n";
     m_reloadConfig = true;
@@ -216,6 +215,7 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     m_lastRMCFrame = f;
     if(!m_gga){
         m_vitesse = f->m_vitesse_kmh;
+        m_deplacementAngle = f->m_cap_rad;
         onNewPoint(f);
         
     }
@@ -513,13 +513,18 @@ void GpsFramework::calculDeplacement(GpsPoint_ptr p){
     m_tracteur.m_pt_antenne_corrige = nullptr;
 
     m_ekf_module.calculDeplacement(p, m_tracteur);
+       
+    if(m_ekf_module.m_cap_mode == CapMode_Rmc){
+        m_deplacementX = cos(m_deplacementAngle)*m_vitesse*0.1;
+        m_deplacementY = sin(m_deplacementAngle)*m_vitesse*0.1;
+    } else {
+        m_deplacementX = m_ekf_module.m_v_x;
+        m_deplacementY = m_ekf_module.m_v_y;
         
-    m_deplacementX = m_ekf_module.m_v_x;
-    m_deplacementY = m_ekf_module.m_v_y;
+        m_deplacementAngle = m_ekf_module.m_deplacementAngle;
+    }
     
-    m_deplacementAngle = m_ekf_module.m_deplacementAngle;
-    
-    
+    INFO(m_deplacementAngle);
     GpsPoint_ptr p2(new GpsPoint());
     p2->m_x = m_ekf_module.m_old_x;
     p2->m_y = m_ekf_module.m_old_y;

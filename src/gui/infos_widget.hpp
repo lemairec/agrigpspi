@@ -20,6 +20,8 @@ public:
     virtual void onMouse(int x, int y);
     
     ValueGui m_ekf;
+    ValueGui m_cap_ekf;
+    ValueGui m_cap_d;
     ValueGui m_lk;
     ValueGui m_kth;
     void setSize0(int width, int height);
