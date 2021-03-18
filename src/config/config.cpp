@@ -3,6 +3,7 @@
 #include <QSettings>
 #include "environnement.hpp"
 #include "../logging.hpp"
+#include "../util/directory_manager.hpp"
 
 Config::Config(){
     m_input_gps = "none";
@@ -13,7 +14,7 @@ Config::Config(){
     m_input_gps = "none";
     m_file_gps = GPS_TEST_FILE;
     m_input_gps= "file";
-    m_file_gps = ProjectSourceDir + "/gps_samples/gps_travail_3m.ubx";
+    m_file_gps = DirectoryManager::Instance().getSourceDirectory() + "/gps_samples/gps_travail_3m.ubx";
 }
 
 void Config::save(){

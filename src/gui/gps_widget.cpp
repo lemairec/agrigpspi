@@ -119,7 +119,7 @@ void GpsWidget::setSize(int width, int height){
     m_buttonErrorOk.setResize((0.5)*m_width, 0.8*m_height, m_gros_button);
     
     //f.m_lines.loadCurveOrLine("line_HADRIEN3");
-    //f.loadParcelle("CANON", 0, true, false);  
+    f.loadParcelle("CANON", 0, true, false);
 }
 
 GpsWidget * GpsWidget::Instance(){

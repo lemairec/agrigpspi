@@ -1,5 +1,6 @@
 #include "main_window.hpp"
 #include "../option_widget.hpp"
+#include "../../util/directory_manager.hpp"
 
 #include <QGridLayout>
 #include <QTabWidget>
@@ -123,7 +124,7 @@ void MainWindow::creerMenu()
 void MainWindow::openFile(){
     DEBUG("begin");
     QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Open Address Book"), QString::fromStdString(ProjectSourceDir)+QString("/gps_samples"),
+                                                    tr("Open Address Book"), QString::fromStdString(DirectoryManager::Instance().getSourceDirectory())+QString("/gps_samples"),
                                                     tr("Gps files (*.ubx)"));
     
     GpsFramework & f = GpsFramework::Instance();

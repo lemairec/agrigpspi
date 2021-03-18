@@ -2,6 +2,7 @@
 #include "environnement.hpp"
 #include <iostream>
 #include <sstream>
+#include "../util/directory_manager.hpp"
 
 ButtonGui::ButtonGui(double x, double y, double rayon, int type)
 :m_x(x), m_y(y), m_rayon(rayon), m_type(type)
@@ -405,7 +406,7 @@ void BaseWidget::drawValueGui2(ValueGui & valueGui, QPixmap * pixmap1, QPixmap *
 
 }
 QPixmap * BaseWidget::loadImage(const std::string & s){
-    std::string s2 = ProjectSourceDir+s;
+    std::string s2 = DirectoryManager::Instance().getSourceDirectory()+s;
     QImage image2(QString::fromStdString(s2));
     QPixmap * res  = new QPixmap(QPixmap::fromImage(image2));
     return res;

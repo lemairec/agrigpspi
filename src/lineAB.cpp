@@ -10,6 +10,7 @@
 #include "environnement.hpp"
 #include "gps_framework.hpp"
 #include "util/util.hpp"
+#include "util/directory_manager.hpp"
 
 void Line::calculProjete2(double x, double y){
     double x_a = m_pointA.m_x;
@@ -296,7 +297,7 @@ double LineAB::calculRearWheelPosition(double x_pont, double y_pont, double x, d
 
 
 void LineCurves::load(){
-    std::string file_parcelles = ProjectSourceBin + "/line/lines.txt";
+    std::string file_parcelles = DirectoryManager::Instance().getBinDirectory() + "/line/lines.txt";
     std::ifstream file(file_parcelles);
     std::string line;
     while (std::getline(file, line))
@@ -308,7 +309,7 @@ void LineCurves::load(){
 
 void LineCurves::save(){
     std::ofstream file;
-    std::string file_parcelles = ProjectSourceBin + "/line/lines.txt";
+    std::string file_parcelles = DirectoryManager::Instance().getBinDirectory() + "/line/lines.txt";
     file.open(file_parcelles, std::ios::out);
     for(auto p : m_lines_curves){
         file << p << std::endl;
@@ -319,7 +320,7 @@ void LineCurves::save(){
 void LineCurves::loadCurveOrLine(std::string name){
     GpsFramework & f = GpsFramework::Instance();
     
-    std::string file_job = ProjectSourceBin + "/line/" + name + ".txt";
+    std::string file_job = DirectoryManager::Instance().getBinDirectory() + "/line/" + name + ".txt";
     std::ifstream file(file_job);
     std::string line;
     
@@ -379,7 +380,7 @@ void LineCurves::add(LineAB & p){
         std::string name = "line_" + p.m_name;
         m_lines_curves.push_back(name);
         
-        std::string path = ProjectSourceBin + "/line/" + name + ".txt";
+        std::string path = DirectoryManager::Instance().getBinDirectory() + "/line/" + name + ".txt";
         std::ofstream file;
         file.open(path, std::ios::out);
         file << "LINE" << std::endl;
@@ -397,7 +398,7 @@ void LineCurves::add(CurveAB & p){
         std::string name = "curve_" + p.m_name;
         m_lines_curves.push_back(name);
         
-        std::string path = ProjectSourceBin + "/line/" + name + ".txt";
+        std::string path = DirectoryManager::Instance().getBinDirectory() + "/line/" + name + ".txt";
         std::ofstream file;
         file.open(path, std::ios::out);
         file << "CURVE" << std::endl;

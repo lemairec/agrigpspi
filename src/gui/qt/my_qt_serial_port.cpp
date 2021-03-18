@@ -6,6 +6,7 @@
 #include <QSerialPortInfo>
 
 #include "environnement.hpp"
+#include "../../util/directory_manager.hpp"
 
 MyQTSerialPorts::MyQTSerialPorts(){
     connect(&m_serialPortGps, SIGNAL(readyRead()), this, SLOT(handleReadyReadGps()));
@@ -247,7 +248,7 @@ void MyQTSerialPorts::writePilotSerialS(const std::string & l){
 #include <sstream>
 
 std::string execute3(std::string cmd){
-    std::string file = ProjectSourceBin + "/tmp_cmd";
+    std::string file = DirectoryManager::Instance().getBinDirectory() + "/tmp_cmd";
     std::string cmd2 = cmd + " > " + file;
     system(cmd2.c_str());
     std::ifstream infile(file);

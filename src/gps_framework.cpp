@@ -3,6 +3,7 @@
 #include "config/config.hpp"
 #include "environnement.hpp"
 #include "util/util.hpp"
+#include "util/directory_manager.hpp"
 
 #include <QDateTime>
 #include <math.h>
@@ -18,7 +19,7 @@ std::ofstream file_debug_stream;
 std::string date_str;
 
 void makedir(std::string dir2){
-    std::string dir = ProjectSourceBin + dir2;
+    std::string dir = DirectoryManager::Instance().getBinDirectory() + dir2;
     std::string s2 = "mkdir -p "+ dir + ";";
     INFO(s2);
     if(system( s2.c_str() )){
@@ -40,12 +41,12 @@ GpsFramework::GpsFramework(){
     makedir("/parcelle");
     makedir("/line");
     
-    file_info = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".info";
+    file_info = DirectoryManager::Instance().getBinDirectory() + "/job/gps_" + s.toUtf8().constData() + ".info";
     
-    std::string file_job = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".job";
+    std::string file_job = DirectoryManager::Instance().getBinDirectory() + "/job/gps_" + s.toUtf8().constData() + ".job";
     file_job_stream.open(file_job, std::ios::out);
     
-    std::string file_debug = ProjectSourceBin + "/job/gps_" + s.toUtf8().constData() + ".debug";
+    std::string file_debug = DirectoryManager::Instance().getBinDirectory() + "/job/gps_" + s.toUtf8().constData() + ".debug";
     file_debug_stream.open(file_debug, std::ios::out);
     //mode_t mt;
     

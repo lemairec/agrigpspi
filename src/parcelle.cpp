@@ -9,6 +9,7 @@
 
 #include "environnement.hpp"
 #include "gps_framework.hpp"
+#include "util/directory_manager.hpp"
 
 #include <QDateTime>
 
@@ -152,7 +153,7 @@ void Parcelle::addFlag(){
 }
 
 void Parcelle::saveParcelle(std::string name){
-    std::string path = ProjectSourceBin + "/parcelle/" + name + ".txt";
+    std::string path = DirectoryManager::Instance().getBinDirectory() + "/parcelle/" + name + ".txt";
     std::ofstream file;
     file.open(path, std::ios::out);
     
@@ -174,7 +175,7 @@ void Parcelle::saveParcelle(std::string name){
 
 void Parcelle::loadParcelle(std::string name){
     clear();
-    std::string file_job = ProjectSourceBin + "/parcelle/" + name + ".txt";
+    std::string file_job = DirectoryManager::Instance().getBinDirectory() + "/parcelle/" + name + ".txt";
     std::ifstream file(file_job);
     std::string line;
     bool init = false;
@@ -249,7 +250,7 @@ double Parcelle::distance(GpsPoint_ptr p){
 
 
 void Parcelles::load(){
-    std::string file_parcelles = ProjectSourceBin + "/parcelle/parcelles.txt";
+    std::string file_parcelles = DirectoryManager::Instance().getBinDirectory() + "/parcelle/parcelles.txt";
     std::ifstream file(file_parcelles);
     std::string line;
     while (std::getline(file, line))
@@ -262,7 +263,7 @@ void Parcelles::load(){
 
 void Parcelles::save(){
     std::ofstream file;
-    std::string file_parcelles = ProjectSourceBin + "/parcelle/parcelles.txt";
+    std::string file_parcelles = DirectoryManager::Instance().getBinDirectory() + "/parcelle/parcelles.txt";
     file.open(file_parcelles, std::ios::out);
     for(auto p : m_parcelles){
         file << p << std::endl;
