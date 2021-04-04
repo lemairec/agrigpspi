@@ -168,6 +168,7 @@ void OptionWidget::resizePage1(){
     m_button_debug_file.setResize(x1*m_width, 0.4*m_height, m_petit_button);
     m_button_menu_vertical.setResize(x1*m_width, 0.5*m_height, m_petit_button);
     m_button_debug.setResize(x1*m_width, 0.6*m_height, m_petit_button);
+    m_button_auto.setResize(x1*m_width, 0.7*m_height, m_petit_button);
 };
 
 void OptionWidget::drawPage1(){
@@ -204,6 +205,11 @@ void OptionWidget::drawPage1(){
     } else {
         drawButtonLabel(m_button_debug_file, COLOR_OTHER);
     }
+    
+    QString s;
+    s = "Recherche auto des ports " + QString::number(f.m_serialModule.m_serial_searchs_i) + " / 1000";
+    drawQText(s, x1bis*m_width, m_button_auto.m_y);
+    drawButtonLabel(m_button_auto, COLOR_OTHER);
 
 }
 
@@ -218,6 +224,8 @@ void OptionWidget::onMousePage1(int x, int y){
         f.m_config.m_debug_log = !f.m_config.m_debug_log;
     } else if(m_button_menu_vertical.isActive(x,y)){
         f.m_config.m_menu_vertical = !f.m_config.m_menu_vertical;
+    } else if(m_button_auto.isActive(x,y)){
+        f.m_serialModule.rechercheAuto();
     }
 
     f.initOrLoadConfig();

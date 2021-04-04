@@ -44,12 +44,6 @@ public:
     virtual void onMouse(int x, int y);
     
     
-    //page1
-    ButtonGui m_button_p1add1;
-    ButtonGui m_button_p1add2;
-    ButtonGui m_button_p1minus1;
-    ButtonGui m_button_p1minus2;
-    
     void resizePage1();
     void onMousePage1(int x, int y);
     void drawPage1();
@@ -90,6 +84,7 @@ public:
     //page4
     ButtonGui m_button_sens;
     ButtonGui m_button_debug;
+    ButtonGui m_button_auto;
     ButtonGui m_button_debug_file;
     ButtonGui m_button_menu_vertical;
     

@@ -11,6 +11,11 @@
 
 QT_USE_NAMESPACE
 
+struct SerialSearch {
+    QSerialPort m_serial_port;
+    std::string m_serial_s;
+};
+
 class MyQTSerialPorts : public QObject{
     Q_OBJECT
     
@@ -23,9 +28,12 @@ class MyQTSerialPorts : public QObject{
     QSerialPort m_serialPortImu;
 
     std::vector<std::string> m_serials;
+    std::map<std::string, SerialSearch *> m_serial_searchs;
     
     int m_pilot_langage = PILOT_LANGAGE_ARDUINO;
 public:
+    int m_serial_searchs_i = 0;
+    
     MyQTSerialPorts();
     
     void initOrLoad(Config & config);
@@ -39,6 +47,11 @@ public:
     void writePilotSerialS(const std::string & l);
     
     bool imuIsOpen(){return m_serialPortImu.isOpen();};
+    
+    void rechercheAuto();
+    void setRecherche();
+    void ecrireRecherche();
+    void analyseRecherche();
     
     void addSerialPorts(std::string s);
     std::vector<std::string> & getAvailablePorts();
