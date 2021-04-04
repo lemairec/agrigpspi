@@ -71,6 +71,15 @@ void InfosWidget::draw(){
             QString s = QString::number(h) + ":" + QString::number(min) + ":" + QString::number(sec, 'f', 2);
             drawQText(s, x2, 0.60*m_height, sizeText_medium, false);
         }
+        {
+            QString s = "lat " + QString::number(last_frame.m_latitude, 'f', 4);
+            drawQText(s, x2, 0.65*m_height, sizeText_medium, false);
+        }
+        {
+            QString s = "long " + QString::number(last_frame.m_longitude, 'f', 4);
+            drawQText(s, x2, 0.70*m_height, sizeText_medium, false);
+        }
+        
     } else if (m_type == 2){
         {
             QString s = "Pilot";
