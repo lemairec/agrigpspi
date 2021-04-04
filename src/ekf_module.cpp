@@ -178,7 +178,7 @@ void EkfModule::calculCap(){
             
             double d_x = point1->m_x - point2->m_x;
             double d_y = point1->m_y - point2->m_y;
-            INFO(m_list_tracteur.size() << " " << d_x << " " << d_y);
+            //INFO(m_list_tracteur.size() << " " << d_x << " " << d_y);
             
             
             double time = (point1->m_timeHour - point2->m_timeHour)*3600;

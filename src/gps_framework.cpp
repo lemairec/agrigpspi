@@ -525,7 +525,6 @@ void GpsFramework::calculDeplacement(GpsPoint_ptr p){
         m_deplacementAngle = m_ekf_module.m_deplacementAngle;
     }
     
-    INFO(m_deplacementAngle);
     GpsPoint_ptr p2(new GpsPoint());
     p2->m_x = m_ekf_module.m_old_x;
     p2->m_y = m_ekf_module.m_old_y;
