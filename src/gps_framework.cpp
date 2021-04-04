@@ -722,9 +722,9 @@ void GpsFramework::calculSurface(){
     m_surface_h = 0;
     //INFO("****");
     for(auto s : m_listSurfaceToDraw){
-        if(s->m_points.size()>0){
-            auto last_frame = s->m_lastPoint->m_point_center;
-            if(s->m_lastPoint && last_frame){
+        if(s && s->m_points.size()>0){
+            if(s->m_lastPoint && s->m_lastPoint->m_point_center){
+                auto last_frame = s->m_lastPoint->m_point_center;
                 double x1 = last_frame->m_x;
                 double y1 = last_frame->m_y;
                 for(auto it = s->m_points.begin(); it != s->m_points.end(); ++it){
