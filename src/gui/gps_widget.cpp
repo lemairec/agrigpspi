@@ -291,13 +291,24 @@ void GpsWidget::drawParcelle(bool force){
     GpsFramework & f = GpsFramework::Instance();
     if(force || f.m_parcelle.isInit()){
         QPolygon p;
-        for(auto s: f.m_parcelle.m_contour_to_draw){
-            double x, y;
-            my_projete2(s->m_x, s->m_y, x, y);
-            if(m_debug){
-                //scene->addEllipse(x, y, 1, 1, m_penBlack);
+        if(force){
+            for(auto s: f.m_parcelle.m_contour){
+                double x, y;
+                my_projete2(s->m_x, s->m_y, x, y);
+                if(m_debug){
+                    //scene->addEllipse(x, y, 1, 1, m_penBlack);
+                }
+                p.push_back(QPoint(x, y));
             }
-            p.push_back(QPoint(x, y));
+        } else {
+            for(auto s: f.m_parcelle.m_contour){
+                double x, y;
+                my_projete2(s->m_x, s->m_y, x, y);
+                if(m_debug){
+                    //scene->addEllipse(x, y, 1, 1, m_penBlack);
+                }
+                p.push_back(QPoint(x, y));
+            }
         }
         if(force){
             m_painter->setPen(m_penBlack);
@@ -464,6 +475,7 @@ void GpsWidget::draw_force(){
     
     
     if(f.m_etat == Etat_ParcelleAdd || f.m_etat == Etat_ParcellePause){
+        //la
         drawParcelle(true);
         drawTracteur();
     } else {
