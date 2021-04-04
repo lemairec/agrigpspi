@@ -100,11 +100,11 @@ void ParcelleNewWidget::onMouse(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
     if(m_buttonCancel.isActive(x, y)){
         m_close = true;
-        f.m_etat = Etat_OK;
+        f.m_etat = Etat_Reset;
     }
     if(m_buttonOk.isActive(x, y)){
         m_close = true;
-        f.m_etat = Etat_OK;
+        f.m_etat = Etat_Reset;
         f.m_parcelle.m_name = m_name.m_text;
         f.m_parcelle.compute();
         f.m_parcelles.add(f.m_parcelle);
