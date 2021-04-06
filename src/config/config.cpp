@@ -90,6 +90,11 @@ void Config::save(){
     settings.setValue("outil_largeur", m_outil_largeur);
     settings.setValue("outil_distance", m_outil_distance);
     
+    settings.setValue("largeur_AB", m_largeur_AB);
+    settings.setValue("largeur_AB_set", m_largeur_AB_set);
+    /*settings.setValue("offset_AB", m_offset_AB);
+    settings.setValue("angle_AB", m_angle_AB);*/
+    
     settings.setValue("3d", m_3d);
     
     m_resolution_draw = 3;
@@ -254,9 +259,20 @@ void Config::load(){
     if(settings.contains("outil_distance")){
         m_outil_distance = settings.value("outil_distance").toDouble();
     }
+    if(settings.contains("largeur_AB")){
+        m_largeur_AB = settings.value("largeur_AB").toDouble();
+    }
+    if(settings.contains("largeur_AB_set")){
+        m_largeur_AB_set = settings.value("largeur_AB_set").toDouble();
+    }
+    /*if(settings.contains("offset_AB")){
+        m_offset_AB = settings.value("offset_AB").toDouble();
+    }
+    if(settings.contains("angle_AB")){
+        m_angle_AB = settings.value("angle_AB").toDouble();
+    }*/
+    
     if(settings.contains("3d")){
         m_3d = settings.value("3d").toBool();
     }
-    
-    
 }

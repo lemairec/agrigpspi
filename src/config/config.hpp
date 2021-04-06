@@ -91,6 +91,11 @@ public:
     double m_outil_distance = 1.5;
     double m_outil_largeur = 3.0;
     
+    bool m_largeur_AB_set = false;
+    double m_largeur_AB = 3.0;
+    double m_offset_AB = 0;
+    double m_angle_AB = 0;
+    
     double m_resolution_calcul = 0.5;
     double m_resolution_draw = 1.0;
        

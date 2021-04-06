@@ -97,8 +97,12 @@ void GpsFramework::initOrLoadConfig(){
         m_tracteur.m_antenne_lateral = m_config.m_tracteur_antenne_lateral;
     }
     
-    m_lineAB.m_largeur = m_config.m_outil_largeur;
-    m_curveAB.m_largeur = m_config.m_outil_largeur;
+    m_lineAB.m_largeur = m_config.m_largeur_AB;
+    m_curveAB.m_largeur = m_config.m_largeur_AB;
+    
+    m_lineAB.m_largeur = m_config.m_largeur_AB;
+    m_curveAB.m_largeur = m_config.m_largeur_AB;
+    
     m_gga = m_config.m_gga;
     
     m_curveAB.clearWithoutAB();

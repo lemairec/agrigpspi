@@ -116,8 +116,10 @@ void OutilWidget::setSize(int width, int height){
        
     m_buttonOk.setResize(m_x + m_lg/2, 0.85*m_height, m_petit_button);
     
-    m_valueA.setResize(0.3*m_width, 0.8*m_height);
-    m_valueB.setResize(0.7*m_width, 0.8*m_height);
+    m_valueA.setResize(0.2*m_width, 0.8*m_height);
+    m_valueB.setResize(0.6*m_width, 0.8*m_height);
+    m_valueAB.setResize(0.8*m_width, 0.8*m_height);
+    m_buttonSame.setResize(0.7*m_width, 0.7*m_height, m_petit_button);
 //    m_buttonDebug.setResize((m_width+x)/2-m_width/12, 0.8*m_height, m_petit_button);
 }
 
@@ -128,7 +130,7 @@ void OutilWidget::open(){
     m_valueA.m_label = "A :";
     m_valueB.m_value = f.m_config.m_outil_largeur;
     m_valueB.m_label = "B :";
-    
+    m_valueAB.m_value = f.m_config.m_largeur_AB;
 }
 
 void OutilWidget::draw(){
@@ -151,15 +153,33 @@ void OutilWidget::draw(){
     drawValueGuiKeyPad(m_valueA);
     drawValueGuiKeyPad(m_valueB);
     
+    QString s = "Largeur AB";
+    drawQText(s, 0.8*m_width, 0.7*m_height, sizeText_big, true);
+    GpsFramework & f = GpsFramework::Instance();
+    if(f.m_config.m_largeur_AB_set){
+        drawButton(m_buttonSame, COLOR_CHECK);
+        drawValueGuiKeyPad(m_valueAB);
+    } else {
+        drawButton(m_buttonSame, COLOR_OTHER);
+       
+    }
+    
+    
 }
 void OutilWidget::onMouse(int x, int y){
+    GpsFramework & f = GpsFramework::Instance();
     if(!m_key_pad_widget->m_close){
         return;
     }
+    
     if(m_buttonOk.isActive(x, y)){
-        GpsFramework & f = GpsFramework::Instance();
         f.m_config.m_outil_distance = m_valueA.m_value;
         f.m_config.m_outil_largeur = m_valueB.m_value;
+        if(f.m_config.m_largeur_AB_set){
+            f.m_config.m_largeur_AB = m_valueAB.m_value;
+        } else {
+            f.m_config.m_largeur_AB = m_valueB.m_value;
+        }
         f.initOrLoadConfig();
         m_close = true;
     }
@@ -171,6 +191,15 @@ void OutilWidget::onMouse(int x, int y){
     if(isActiveValueGuiKeyPad(m_valueB,x,y)){
         m_key_pad_widget->m_close = false;
         m_key_pad_widget->setValueGuiKeyPad(&m_valueB);
+    }
+    if(f.m_config.m_largeur_AB_set){
+        if(isActiveValueGuiKeyPad(m_valueAB,x,y)){
+            m_key_pad_widget->m_close = false;
+            m_key_pad_widget->setValueGuiKeyPad(&m_valueAB);
+        }
+    }
+    if(m_buttonSame.isActive(x, y)){
+        f.m_config.m_largeur_AB_set = !f.m_config.m_largeur_AB_set;
     }
         
     
