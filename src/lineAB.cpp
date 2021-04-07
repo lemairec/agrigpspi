@@ -88,10 +88,10 @@ void LineAB::addLine(int i){
     m_x_ab = m_x_ab/d;
     m_y_ab = m_y_ab/d;
     
-    m_curves[i]->m_pointA.m_x = m_pointA.m_x + m_y_ab*i*m_largeur;
-    m_curves[i]->m_pointA.m_y = m_pointA.m_y - m_x_ab*i*m_largeur;
-    m_curves[i]->m_pointB.m_x = m_pointB.m_x + m_y_ab*i*m_largeur;
-    m_curves[i]->m_pointB.m_y = m_pointB.m_y - m_x_ab*i*m_largeur;
+    m_curves[i]->m_pointA.m_x = m_pointA.m_x + m_y_ab*(i*m_largeur+m_offset);
+    m_curves[i]->m_pointA.m_y = m_pointA.m_y - m_x_ab*(i*m_largeur+m_offset);
+    m_curves[i]->m_pointB.m_x = m_pointB.m_x + m_y_ab*(i*m_largeur+m_offset);
+    m_curves[i]->m_pointB.m_y = m_pointB.m_y - m_x_ab*(i*m_largeur+m_offset);
     computeCurve(m_curves[i]);
 }
 

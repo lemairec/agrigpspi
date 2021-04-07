@@ -28,6 +28,7 @@ public:
     GpsPoint m_pointB;
     
     double m_largeur = 10;
+    double m_offset = 0;
 
     std::string m_name;
     

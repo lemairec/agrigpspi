@@ -98,6 +98,7 @@ void GpsFramework::initOrLoadConfig(){
     }
     
     m_lineAB.m_largeur = m_config.m_largeur_AB;
+    m_lineAB.m_offset = m_config.m_offset_AB;
     m_curveAB.m_largeur = m_config.m_largeur_AB;
     
     m_lineAB.m_largeur = m_config.m_largeur_AB;
@@ -106,6 +107,7 @@ void GpsFramework::initOrLoadConfig(){
     m_gga = m_config.m_gga;
     
     m_curveAB.clearWithoutAB();
+    m_lineAB.clearWithoutAB();
     
     m_parcelle.m_resolution_to_draw = m_config.m_resolution_draw;
     m_parcelle.calculContourToDraw();

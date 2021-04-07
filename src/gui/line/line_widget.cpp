@@ -7,6 +7,7 @@
 
 LineWidget::LineWidget(){
     m_imgOk = loadImage("/images/ok.png");
+    m_imgRecentre = loadImage("/images/ab_middle.png");
 }
 
 
@@ -18,6 +19,7 @@ void LineWidget::setSize(int width, int height){
     
     m_buttonParcelleNew.setResize(m_x+30, 0.25*m_height, m_petit_button);
     m_buttonParcelleLoad.setResize(m_x+30, 0.35*m_height, m_petit_button);
+    m_buttonRecentre.setResize(m_x+m_lg/2, 0.55*m_height, m_petit_button);
 }
 
 
@@ -47,7 +49,7 @@ void LineWidget::draw(){
         
         drawQText(s, m_x + m_lg/2, m_height*0.5, sizeText_big, true);
     }
-    
+    drawButtonImage(m_buttonRecentre, m_imgRecentre);
     
     drawButtonImage(m_buttonOk, m_imgOk);
     
@@ -65,6 +67,11 @@ void LineWidget::onMouse(int x, int y){
         GpsWidget * g = GpsWidget::Instance();
         g->m_lineLoadWidget.open();
         g->m_lineLoadWidget.m_close = false;
+    }
+    if(m_buttonRecentre.isActive(x, y)){
+        GpsFramework & f = GpsFramework::Instance();
+        f.m_config.m_offset_AB += f.m_distanceAB;
+        f.initOrLoadConfig();
     }
 
 }
