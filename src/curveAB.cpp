@@ -250,49 +250,22 @@ void CurveAB::savePointB(){
             
             double temp = sqrt(dx*dx + dy*dy);
             
+            GpsPoint_ptr p0(new GpsPoint());
+            p0->m_x = (old_point->m_x + p->m_x)/2 + dy/temp*(m_offset);
+            p0->m_y = (old_point->m_y + p->m_y)/2 - dx/temp*(m_offset);
+            
             GpsPoint_ptr p2(new GpsPoint());
-            p2->m_x = (old_point->m_x + p->m_x)/2 + dy/temp*m_largeur;
-            p2->m_y = (old_point->m_y + p->m_y)/2 - dx/temp*m_largeur;
+            p2->m_x = (old_point->m_x + p->m_x)/2 + dy/temp*(m_offset+m_largeur);
+            p2->m_y = (old_point->m_y + p->m_y)/2 - dx/temp*(m_offset+m_largeur);
             
             GpsPoint_ptr p3(new GpsPoint());
-            p3->m_x = (old_point->m_x + p->m_x)/2 - dy/temp*m_largeur;
-            p3->m_y = (old_point->m_y + p->m_y)/2 + dx/temp*m_largeur;
+            p3->m_x = (old_point->m_x + p->m_x)/2 + dy/temp*(m_offset-m_largeur);
+            p3->m_y = (old_point->m_y + p->m_y)/2 - dx/temp*(m_offset-m_largeur);
             
-            if(m_curves[1]->m_points.size() > 0){
-                double d2 = m_curves[1]->m_points.back()->distanceCarre(*p2);
-                double d3 = m_curves[1]->m_points.back()->distanceCarre(*p3);
-                
-                if(d2 < d3){
-                    auto r = p3;
-                    p3 = p2;
-                    p2 = r;
-                }
-                
-            }
-            bool eliminate = false;
-            for(auto p: m_listAB){
-                double res = p2->distanceCarre(*p);
-                if(res < m_largeur*m_largeur){
-                    eliminate = true;
-                }
-            }
-            if(!eliminate){
-                m_curves[-1]->m_points.push_back(p2);
-                
-            }
             
-            eliminate = false;
-            for(auto p: m_listAB){
-                double res = p3->distanceCarre(*p);
-                if(res < m_largeur*m_largeur){
-                    eliminate = true;
-                }
-            }
-            if(!eliminate){
-                m_curves[1]->m_points.push_back(p3);
-            }
-                       
-            m_curves[0]->m_points.push_back(p);
+            m_curves[-1]->m_points.push_back(p2);
+            m_curves[1]->m_points.push_back(p3);
+            m_curves[0]->m_points.push_back(p0);
         }
         old_point = p;
     }

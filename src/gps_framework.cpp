@@ -100,9 +100,7 @@ void GpsFramework::initOrLoadConfig(){
     m_lineAB.m_largeur = m_config.m_largeur_AB;
     m_lineAB.m_offset = m_config.m_offset_AB;
     m_curveAB.m_largeur = m_config.m_largeur_AB;
-    
-    m_lineAB.m_largeur = m_config.m_largeur_AB;
-    m_curveAB.m_largeur = m_config.m_largeur_AB;
+    m_curveAB.m_offset = m_config.m_offset_AB;
     
     m_gga = m_config.m_gga;
     
@@ -881,6 +879,7 @@ void GpsFramework::loadParcelle(const std::string & name, int flags_i, bool line
                 }*/
                 setAB();
             } else {
+                m_curveAB.clearAll();
                 if(debut < fin){
                     m_line = false;
                     for(int i = debut; i < fin; ++i){
