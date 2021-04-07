@@ -10,7 +10,7 @@
 #include "environnement.hpp"
 #include "util/util.hpp"
 
-const double longeur = 0.5;
+const double longeur = 2;
 
 
 void CurveAB::clearAll(){
