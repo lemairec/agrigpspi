@@ -149,6 +149,25 @@ void InfosWidget::draw(){
         
     } else  if (m_type == 5) {
         {
+            QString s = "Line";
+            drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
+        }
+        
+        {
+            if(f.m_line){
+                QString s = "lineAB\n\n";
+                s += "offset "+QString::number(round(f.m_lineAB.m_offset*10000)/100.0)+" cm\n";
+                
+                drawQTexts(s, x2, 0.25*m_height, sizeText_little, false);
+            } else {
+                QString s = "curveAB\n\n";
+                s += "offset "+QString::number(round(f.m_lineAB.m_offset*10000)/100.0)+" cm\n";
+                
+                drawQTexts(s, x2, 0.25   *m_height, sizeText_little, false);
+            }
+        }
+    } else  if (m_type == 6) {
+        {
             QString s = "Debug";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
         }
@@ -199,7 +218,7 @@ void InfosWidget::onMouse(int x, int y){
         m_close = true;
     }
     if(m_buttonDebug.isActive(x, y)){
-        m_type = (m_type+1)%5;
+        m_type = (m_type+1)%6;
     }
     if(m_type == 0){
         onMouse0(x, y);

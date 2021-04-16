@@ -167,6 +167,50 @@ void LineAB::calculProjete2(double x, double y, double deplacement_x, double dep
     }
 }
 
+double LineAB::getOffsetAB(GpsPoint_ptr p){
+    Line_ptr list = getCurrentLine();
+    
+    double x_a = p->m_x;
+    double y_a = p->m_y;
+    
+    double x_b = list->m_pointA.m_x;
+    double y_b = list->m_pointA.m_y;
+    double x_m = list->m_pointB.m_x;
+    double y_m = list->m_pointB.m_y;
+
+    //https://fr.wikipedia.org/wiki/Projection_orthogonale
+    double x_v = x_m-x_b;
+    double y_v = y_m-y_b;
+    m_proj_x_segment = x_v;
+    m_proj_y_segment = y_v;
+    double d_v = sqrt(x_v*x_v + y_v*y_v);
+    x_v = x_v/d_v;
+    y_v = y_v/d_v;
+    
+    
+    
+    double bh = (x_a-x_b)*x_v+(y_a-y_b)*y_v;
+    m_proj_x = x_b + bh*x_v;
+    m_proj_y = y_b + bh*y_v;
+    
+    
+    double ah = sqrt((m_proj_x-x_a)*(m_proj_x-x_a) + (m_proj_y-y_a)*(m_proj_y-y_a));
+    m_proj_distance = ah;
+    
+    double deplacement_x = m_pointB.m_x - m_pointA.m_x;
+    double deplacement_y = m_pointB.m_y - m_pointA.m_y;
+    
+    m_proj_prod_vect = deplacement_x*x_v+deplacement_y*y_v;
+    
+    double det = (m_proj_x-x_a)*deplacement_y-(m_proj_y-y_a)*deplacement_x;
+    
+    if(det < 0){
+        m_proj_distance = -m_proj_distance;
+    }
+    
+    return m_proj_distance;
+}
+
 void LineAB::calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line){
     calculProjete2P(p, deplacement_x, deplacement_y);
     double dist = abs(m_proj_distance);

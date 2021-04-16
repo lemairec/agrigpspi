@@ -62,15 +62,21 @@ void LineWidget::onMouse(int x, int y){
         GpsWidget * g = GpsWidget::Instance();
         g->m_lineNewWidget.open();
         g->m_lineNewWidget.m_close = false;
+        GpsFramework & f = GpsFramework::Instance();
+        f.m_config.m_offset_AB = 0;
+        f.initOrLoadConfig();
     }
     if(m_buttonParcelleLoad.isActive(x, y)){
         GpsWidget * g = GpsWidget::Instance();
         g->m_lineLoadWidget.open();
         g->m_lineLoadWidget.m_close = false;
+        GpsFramework & f = GpsFramework::Instance();
+        f.m_config.m_offset_AB = 0;
+        f.initOrLoadConfig();
     }
     if(m_buttonRecentre.isActive(x, y)){
         GpsFramework & f = GpsFramework::Instance();
-        f.m_config.m_offset_AB += f.m_distanceAB;
+        f.m_config.m_offset_AB -= f.getOffsetAB();
         f.initOrLoadConfig();
     }
 

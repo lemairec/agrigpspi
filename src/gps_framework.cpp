@@ -391,6 +391,14 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
     
 }
 
+double GpsFramework::getOffsetAB(){
+    if(m_line){
+        return m_lineAB.getOffsetAB(m_tracteur.m_pt_antenne_corrige);
+    }
+    return 0.0;
+}
+
+
 void GpsFramework::updateWithoutGps(){
     if(m_tracteur.m_pt_essieu_arriere){
         m_virtual_point.setNewTime();

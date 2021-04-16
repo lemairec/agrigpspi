@@ -100,6 +100,7 @@ public:
     void setRef(double latitude, double longitude);
     
     void setDistance(double distance, bool led);
+    double getOffsetAB();
     
     void savePointA();
     void savePointB();
