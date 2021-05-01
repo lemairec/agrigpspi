@@ -538,8 +538,8 @@ void GpsFramework::calculDeplacement(GpsPoint_ptr p){
     }
     
     GpsPoint_ptr p2(new GpsPoint());
-    p2->m_x = m_ekf_module.m_old_x;
-    p2->m_y = m_ekf_module.m_old_y;
+    p2->m_x = m_ekf_module.m_final_x;
+    p2->m_y = m_ekf_module.m_final_y;
     
     m_ekf_module.m_list_ekf.push_front(p2);
     if(m_ekf_module.m_list_ekf.size()>100){

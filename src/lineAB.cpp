@@ -38,6 +38,10 @@ void LineAB::clearAll(){
 
 void LineAB::clearWithoutAB(){
     m_curves.clear();
+    m_i_min = 0;
+    m_i_max = 0;
+    m_i_current = 0;
+    
     savePointB();
 }
 

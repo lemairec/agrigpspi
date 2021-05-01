@@ -28,6 +28,14 @@ public:
     void drawPage0();
     virtual void onMouse0(int x, int y);
 
+    QPixmap * m_imgRecentre;
+    ButtonGui m_buttonRecentre;
+    ButtonGui m_buttonMoins10;
+    ButtonGui m_buttonPlus10;
+    void setSize1(int width, int height);
+    void drawPage1();
+    virtual void onMouse1(int x, int y);
+
     
 };
 

@@ -6,6 +6,7 @@
 
 InfosWidget::InfosWidget(){
     m_imgOk = loadImage("/images/ok.png");
+    m_imgRecentre = loadImage("/images/ab_middle.png");
 }
 
 int x = 0;
@@ -19,6 +20,7 @@ void InfosWidget::setSize(int width, int height){
     m_buttonDebug.setResize(0.9*m_width, 0.8*m_height, m_petit_button);
     
     setSize0(width, height);
+    setSize1(width, height);
 }
 
 
@@ -33,6 +35,8 @@ void InfosWidget::draw(){
     if(m_type == 0){
         drawPage0();
     }else if(m_type == 1){
+        drawPage1();
+    }else if(m_type == 2){
         {
             QString s = "Satellite";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -80,7 +84,7 @@ void InfosWidget::draw(){
             drawQText(s, x2, 0.70*m_height, sizeText_medium, false);
         }
         
-    } else if (m_type == 2){
+    } else if (m_type == 3){
         {
             QString s = "Pilot";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -105,7 +109,7 @@ void InfosWidget::draw(){
         }
               
         
-    } else  if (m_type == 3){
+    } else  if (m_type == 4){
         {
             QString s = "IMU";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -129,7 +133,7 @@ void InfosWidget::draw(){
             QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral_imu*1000)/10.0)+" cm";
             drawQText(s, x2, 0.7*m_height, sizeText_little, false);
         }
-    } else  if (m_type == 4) {
+    } else  if (m_type == 5) {
         {
             QString s = "Info";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -147,7 +151,7 @@ void InfosWidget::draw(){
         }
         
         
-    } else  if (m_type == 5) {
+    } else  if (m_type == 6) {
         {
             QString s = "Line";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -166,7 +170,7 @@ void InfosWidget::draw(){
                 drawQTexts(s, x2, 0.25   *m_height, sizeText_little, false);
             }
         }
-    } else  if (m_type == 6) {
+    } else  if (m_type == 7) {
         {
             QString s = "Debug";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -218,10 +222,12 @@ void InfosWidget::onMouse(int x, int y){
         m_close = true;
     }
     if(m_buttonDebug.isActive(x, y)){
-        m_type = (m_type+1)%6;
+        m_type = (m_type+1)%7;
     }
     if(m_type == 0){
         onMouse0(x, y);
+    } else if(m_type == 1){
+        onMouse1(x, y);
     }
 }
 
@@ -296,4 +302,48 @@ void InfosWidget::onMouse0(int x, int y){
     f.m_config.m_pilot_rwp_kth += 0.1*m_kth.getIntValue(x,y);
     f.m_config.m_pilot_rwp_kte = f.m_config.m_pilot_rwp_kth/2;
     f.initOrLoadConfig();
+}
+
+
+void InfosWidget::setSize1(int width, int height){
+    m_buttonRecentre.setResize(m_width*0.8, 0.25*height, m_petit_button);
+    m_buttonMoins10.setResize(m_width*0.78, 0.35*height, m_petit_button);
+    m_buttonPlus10.setResize(m_width*0.88, 0.35*height, m_petit_button);
+}
+void InfosWidget::drawPage1(){
+    GpsFramework & f =  GpsFramework::Instance();
+    {
+        QString s = "Menu Bineuse";
+        drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
+    }
+    
+    drawButtonImage(m_buttonRecentre, m_imgRecentre);
+    drawButton(m_buttonMoins10);
+    {
+        QString s = "-";
+        drawQText(s, m_buttonMoins10.m_x, m_buttonMoins10.m_y, sizeText_big, true);
+    }
+    drawButton(m_buttonPlus10);
+    {
+        QString s = "+";
+        drawQText(s, m_buttonPlus10.m_x, m_buttonPlus10.m_y, sizeText_big, true);
+    }
+}
+
+void InfosWidget::onMouse1(int x, int y){
+    GpsFramework & f = GpsFramework::Instance();
+    
+    if(m_buttonRecentre.isActive(x, y)){
+        f.m_config.m_offset_AB -= f.getOffsetAB();
+        f.m_tracteur.m_antenne_lateral = 0;
+        f.initOrLoadConfig();
+    }
+    if(m_buttonPlus10.isActive(x, y)){
+        f.m_tracteur.m_antenne_lateral += 0.10;
+    }
+    if(m_buttonMoins10.isActive(x, y)){
+        f.m_tracteur.m_antenne_lateral -= 0.10;
+    }
+    INFO(f.m_tracteur.m_antenne_lateral);
+
 }

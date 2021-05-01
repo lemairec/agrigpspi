@@ -42,6 +42,8 @@ public:
     double m_a_y;
     double m_a_z;
     
+    double m_final_x;
+    double m_final_y;
     
     
     double m_pitch_y_deg;
