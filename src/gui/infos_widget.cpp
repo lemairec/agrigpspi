@@ -306,26 +306,31 @@ void InfosWidget::onMouse0(int x, int y){
 
 
 void InfosWidget::setSize1(int width, int height){
-    m_buttonRecentre.setResize(m_width*0.8, 0.25*height, m_petit_button);
-    m_buttonMoins10.setResize(m_width*0.78, 0.35*height, m_petit_button);
-    m_buttonPlus10.setResize(m_width*0.88, 0.35*height, m_petit_button);
+    m_buttonRecentre.setResize(m_width*0.8, 0.35*height, m_petit_button);
+    m_buttonMoins10.setResize(m_width*0.78, 0.45*height, m_petit_button);
+    m_buttonPlus10.setResize(m_width*0.88, 0.45*height, m_petit_button);
 }
 void InfosWidget::drawPage1(){
-    GpsFramework & f =  GpsFramework::Instance();
+    GpsFramework & f = GpsFramework::Instance();
     {
         QString s = "Menu Bineuse";
         drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
     }
     
+    {
+        QString s = QString::number(-f.m_tracteur.m_antenne_lateral*100) + " cm";
+        drawQText(s, (m_width+x)/2, 0.25*m_height, sizeText_big, true);
+    }
+    
     drawButtonImage(m_buttonRecentre, m_imgRecentre);
     drawButton(m_buttonMoins10);
     {
-        QString s = "-";
+        QString s = "G";
         drawQText(s, m_buttonMoins10.m_x, m_buttonMoins10.m_y, sizeText_big, true);
     }
     drawButton(m_buttonPlus10);
     {
-        QString s = "+";
+        QString s = "D";
         drawQText(s, m_buttonPlus10.m_x, m_buttonPlus10.m_y, sizeText_big, true);
     }
 }
@@ -339,10 +344,10 @@ void InfosWidget::onMouse1(int x, int y){
         f.initOrLoadConfig();
     }
     if(m_buttonPlus10.isActive(x, y)){
-        f.m_tracteur.m_antenne_lateral += 0.10;
+        f.m_tracteur.m_antenne_lateral -= 0.05;
     }
     if(m_buttonMoins10.isActive(x, y)){
-        f.m_tracteur.m_antenne_lateral -= 0.10;
+        f.m_tracteur.m_antenne_lateral += 0.05;
     }
     INFO(f.m_tracteur.m_antenne_lateral);
 
