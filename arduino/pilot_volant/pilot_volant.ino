@@ -24,67 +24,67 @@ void version(){
 }
 
 void printPosition(){
-  String s  = "$P,";
-  s+=position;
-  s+=';';
-  Serial.println(s);
+    String s  = "$P,";
+    s+=position;
+    s+=';';
+    Serial.println(s);
 }
 
 int i = 0;
 void updatePosition(){
-  state_A = digitalRead(ENCODER_A); // Reads the "current" state of the outputA
-  state_B = digitalRead(ENCODER_B); // Reads the "current" state of the outputA
-  // If the previous and the current state of the outputA are different, that means a Pulse has occured
-  if (state_A != encoder_last_state_A){     
-    // If the outputB state is different to the outputA state, that means the encoder is rotating clockwise
-    if (state_B != state_A) { 
-      position ++;
-    } else {
-      position --;
-    }
-    ++i;
-    if(i>5){
-      i = 0;
-      //printPosition();
-    }
+    state_A = digitalRead(ENCODER_A); // Reads the "current" state of the outputA
+    state_B = digitalRead(ENCODER_B); // Reads the "current" state of the outputA
+    // If the previous and the current state of the outputA are different, that means a Pulse has occured
+    if (state_A != encoder_last_state_A){     
+        // If the outputB state is different to the outputA state, that means the encoder is rotating clockwise
+        if (state_B != state_A) { 
+            position ++;
+        } else {
+            position --;
+        }
+        ++i;
+        if(i>5){
+            i = 0;
+            //printPosition();
+        }
 
-    
-  } 
-  //Serial.print("$P,");Serial.print(state_A);Serial.print(" ");Serial.println(state_B);
-  encoder_last_state_A = state_A; // Updates the previous state of the outputA with the current state
+      
+    } 
+    //Serial.print("$P,");Serial.print(state_A);Serial.print(" ");Serial.println(state_B);
+    encoder_last_state_A = state_A; // Updates the previous state of the outputA with the current state
 }
 
 void goTo(long res){
-  desired_position = res;
-  //Serial.print("Go to ");Serial.print(desired_position);Serial.print(" ");Serial.println(position);
-  updateMotor();
-  
+    desired_position = res;
+    //Serial.print("Go to ");Serial.print(desired_position);Serial.print(" ");Serial.println(position);
+    updateMotor();
+    
 }
 
 void updateMotor(){
-  int i = 0;
-  while(!Serial.available()){
-    long abs = 5*(position - desired_position);
-    if(i%100 == 0){
-      //Serial.print(abs);Serial.print(" p ");Serial.print(position);Serial.print(" - ");Serial.print(desired_position);Serial.print(" = ");Serial.println((position - desired_position));
+    int i = 0;
+    while(!Serial.available()){
+        long abs = 5*(position - desired_position);
+        if(i%100 == 0){
+            //Serial.print(abs);Serial.print(" p ");Serial.print(position);Serial.print(" - ");Serial.print(desired_position);Serial.print(" = ");Serial.println((position - desired_position));
+        }
+        if(abs>250){
+            abs=255;
+        }
+        if(abs<-250){
+            abs=-255;
+        }
+        //erial.print(abs);
+        if(abs <0){
+            SetMotor2(-abs, 0);
+        } else {
+            SetMotor2(+abs, 1);
+        }
+        //Serial.println(abs);
+        updatePosition(); ++i;
     }
-    if(abs>250){
-      abs=255;
-    }
-    if(abs<-250){
-      abs=-255;
-    }
-    //erial.print(abs);
-    if(abs <0){
-      SetMotor2(-abs, 0);
-    } else {
-      SetMotor2(+abs, 1);
-    }
-    //Serial.println(abs);
-    updatePosition(); ++i;
-  }
-  Serial.println("ok");
-  SetMotor2(0,0);
+    Serial.println("ok");
+    SetMotor2(0,0);
 }
 
 
@@ -113,14 +113,14 @@ void updateMotor(){
 void SetMotor2(int speed, boolean reverse)
 {
   //Serial.print("SetMotor2 speed ");Serial.println(speed);
-  if(speed > 255){
-    analogWrite(MOTOR_ENABLE_PIN, 255);
-      
-  } else {
-    analogWrite(MOTOR_ENABLE_PIN, speed);
-  }
-  digitalWrite(MOTOR_PIN1, ! reverse);
-  digitalWrite(MOTOR_PIN2, reverse);
+    if(speed > 255){
+        analogWrite(MOTOR_ENABLE_PIN, 255);
+        
+    } else {
+        analogWrite(MOTOR_ENABLE_PIN, speed);
+    }
+    digitalWrite(MOTOR_PIN1, ! reverse);
+    digitalWrite(MOTOR_PIN2, reverse);
 }
 
 /**
@@ -213,68 +213,68 @@ void printBuffer(){
 }
 
 void parseBuffer(){
-  //printBuffer();
-  updatePosition();
-  if(m_buffer[0] == 'H'){
-    Serial.println("");
-    Serial.println("$G,100  //goto 100");
-    Serial.println("$D      //disable");
-    Serial.println("$V      //give version");
-    Serial.println("$P      //print position");
-    Serial.println("$C,100  //config; motor max");
-    Serial.println("$L,255  //left; motor 255");
-    Serial.println("$R,255  //right; motor 255");
-    Serial.println("$S      //stop");
-    
-    Serial.println("");
-  } else if(m_buffer[0] == 'V'){
-    version();
-  } else if(m_buffer[0] == 'R'){
-    int speed = myReadInt();
-    m_tempInd = 2;
-    //Serial.print("#R,");Serial.println(speed);
-    SetMotor2(speed, false);
-  } else if(m_buffer[0] == 'L'){
-    int speed = myReadInt();
-    m_tempInd = 2;
-    //Serial.print("#L,");Serial.println(speed);
-    SetMotor2(speed, true);
-  } else if(m_buffer[0] == 'S'){
-    SetMotor2(0, true);
-  } else if(m_buffer[0] == 'C'){
-    m_tempInd = 2;
-    motor_max = myReadInt();
-    Serial.print("#C,");Serial.println(motor_max);
-  } else if(m_buffer[0] == 'D'){
-    
-  } else if(m_buffer[0] == 'G'){
-    m_tempInd = 2;
-    long res = myReadInt();
-    Serial.print("#G,");Serial.println(res);
-    goTo(res);
-  } else if(m_buffer[0] == 'P'){
-    printPosition();
-  }  else {
-    printBuffer();
-    Serial.println("$error");
-    
-  }
+    //printBuffer();
+    updatePosition();
+    if(m_buffer[0] == 'H'){
+        Serial.println("");
+        Serial.println("$G,100  //goto 100");
+        Serial.println("$D      //disable");
+        Serial.println("$V      //give version");
+        Serial.println("$P      //print position");
+        Serial.println("$C,100  //config; motor max");
+        Serial.println("$L,255  //left; motor 255");
+        Serial.println("$R,255  //right; motor 255");
+        Serial.println("$S      //stop");
+        
+        Serial.println("");
+    } else if(m_buffer[0] == 'V'){
+        version();
+    } else if(m_buffer[0] == 'R'){
+        int speed = myReadInt();
+        m_tempInd = 2;
+        //Serial.print("#R,");Serial.println(speed);
+        SetMotor2(speed, false);
+    } else if(m_buffer[0] == 'L'){
+        int speed = myReadInt();
+        m_tempInd = 2;
+        //Serial.print("#L,");Serial.println(speed);
+        SetMotor2(speed, true);
+    } else if(m_buffer[0] == 'S'){
+        SetMotor2(0, true);
+    } else if(m_buffer[0] == 'C'){
+        m_tempInd = 2;
+        motor_max = myReadInt();
+        Serial.print("#C,");Serial.println(motor_max);
+    } else if(m_buffer[0] == 'D'){
+
+    } else if(m_buffer[0] == 'G'){
+        m_tempInd = 2;
+        long res = myReadInt();
+        Serial.print("#G,");Serial.println(res);
+        goTo(res);
+    } else if(m_buffer[0] == 'P'){
+        printPosition();
+    }  else {
+        printBuffer();
+        Serial.println("$error");
+
+    }
 }
 
 void setup(){
-  Serial.begin(115200);
-  pinMode (ENCODER_A,INPUT);
-  pinMode (ENCODER_B,INPUT);
-  pinMode(MOTOR_PIN1, OUTPUT);
-  pinMode(MOTOR_PIN2, OUTPUT);
-  pinMode(MOTOR_ENABLE_PIN, OUTPUT);
-  
-  encoder_last_state_A = digitalRead(ENCODER_A); 
-  version();
+    Serial.begin(115200);
+    pinMode (ENCODER_A,INPUT);
+    pinMode (ENCODER_B,INPUT);
+    pinMode(MOTOR_PIN1, OUTPUT);
+    pinMode(MOTOR_PIN2, OUTPUT);
+    pinMode(MOTOR_ENABLE_PIN, OUTPUT);
+    
+    encoder_last_state_A = digitalRead(ENCODER_A); 
+    version();
 }
 
 
 void loop(){ 
-  readNextFrame();
-  updatePosition();
+    readNextFrame();
+    updatePosition();
 }
