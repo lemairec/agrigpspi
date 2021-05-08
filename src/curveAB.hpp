@@ -69,7 +69,8 @@ public:
     void calculProjete2(double x, double y, double deplacement_x, double deplacement_y);
     void calculProjete2P(GpsPoint_ptr p, double deplacement_x, double deplacement_y);
     void calculProjete(GpsPoint_ptr p, double deplacement_x, double deplacement_y, bool change_line);
-    
+    double getOffsetAB(GpsPoint_ptr p);
+
     double calculRearWheelPosition(double x_pont, double y_pont, double x, double y, double deplacement_x, double deplacement_y, double vitesse, double L, double KTH, double KE);
 
     

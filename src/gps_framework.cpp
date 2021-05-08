@@ -394,8 +394,9 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
 double GpsFramework::getOffsetAB(){
     if(m_line){
         return m_lineAB.getOffsetAB(m_tracteur.m_pt_antenne_corrige);
+    } else {
+        return m_curveAB.getOffsetAB(m_tracteur.m_pt_antenne_corrige);
     }
-    return 0.0;
 }
 
 
