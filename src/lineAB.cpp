@@ -57,12 +57,12 @@ Line_ptr LineAB::getCurrentLineRel(int i){
 
 void LineAB::verify(int i){
     if(i<m_i_min){
-        for(int j = m_i_min-1; j >= i-2; --j){
+        for(int j = m_i_min-1; j >= i-10; --j){
             addLine(j);
         }
     }
     if(i>m_i_max){
-        for(int j = m_i_max+1; j <= i+2; ++j){
+        for(int j = m_i_max+1; j <= i+10; ++j){
             addLine(j);
         }
     }
