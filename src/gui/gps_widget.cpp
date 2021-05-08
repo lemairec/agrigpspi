@@ -1178,6 +1178,18 @@ void GpsWidget::drawDebug(){
         }
     }
     
+    if(f.m_config.m_cap_mode == CapMode_Custom){
+        double x1;
+        double y1;
+        my_projete2(f.m_ekf_module.m_debug_cap_x1, f.m_ekf_module.m_debug_cap_y1, x1, y1);
+        
+        double x2;
+        double y2;
+        my_projete2(f.m_ekf_module.m_debug_cap_x2, f.m_ekf_module.m_debug_cap_y2, x2, y2);
+        m_painter->drawLine(x1, y1, x2, y2);
+       
+    }
+    
     //surface
     {
         /*int x = 0;

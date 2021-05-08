@@ -45,6 +45,13 @@ public:
     double m_final_x;
     double m_final_y;
     
+    double m_debug_cap_x1;
+    double m_debug_cap_y1;
+    double m_debug_cap_x2;
+    double m_debug_cap_y2;
+    
+    
+    
     
     double m_pitch_y_deg;
 

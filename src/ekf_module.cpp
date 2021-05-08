@@ -176,6 +176,11 @@ void EkfModule::calculCap(){
                 ++i;
             }
             
+            m_debug_cap_x1 = point1->m_x;
+            m_debug_cap_y1 = point1->m_y;
+            m_debug_cap_x2 = point2->m_x;
+            m_debug_cap_y2 = point2->m_y;
+            
             double d_x = point1->m_x - point2->m_x;
             double d_y = point1->m_y - point2->m_y;
             //INFO(m_list_tracteur.size() << " " << d_x << " " << d_y);
