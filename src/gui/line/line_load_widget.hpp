@@ -6,13 +6,18 @@
 class LineLoadWidget : public BaseWidget {
     QPixmap * m_imgOk;
     QPixmap * m_imgCancel;
-    ButtonGui m_buttonOk;
     ButtonGui m_buttonCancel;
+    ButtonGui m_buttonPageUp;
+    ButtonGui m_buttonPageDown;
     
-    SelectButtonGui m_selectLines;
+    std::vector<ButtonGui *> m_buttons;
     
     int m_x = 0;
     int m_lg = 20;
+    int m_inter;
+    int m_page = 0;
+    int m_nbr_page = 0;
+    
 public:
     LineLoadWidget();
     
@@ -25,6 +30,7 @@ public:
     virtual void onMouse(int x, int y);
     
     void open();
+    bool m_delete = false;
 };
 
 #endif

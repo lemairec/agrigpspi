@@ -350,7 +350,15 @@ void LineCurves::load(){
     std::string line;
     while (std::getline(file, line))
     {
-        m_lines_curves.push_back(line);
+        bool find = false;
+        for(auto l : m_lines_curves){
+            if(line == l){
+                find = true;
+            }
+        }
+        if(!find){
+            m_lines_curves.push_back(line);
+        }
     }
     INFO("lines_curves "  << m_lines_curves.size());
 }
@@ -413,6 +421,7 @@ void LineCurves::loadCurveOrLine(std::string name){
             //m_etat = Etat_OK;
             
         }
+        m_line_selected = name;
         /*m_name = name;
         compute();*/
     } else {

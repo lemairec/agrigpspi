@@ -90,6 +90,7 @@ public:
 
 class LineCurves {
 public:
+    std::string m_line_selected;
     std::vector<std::string> m_lines_curves;
     void load();
     void loadCurveOrLine(std::string name);

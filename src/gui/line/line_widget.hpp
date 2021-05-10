@@ -6,10 +6,14 @@
 class LineWidget : public BaseWidget {
     QPixmap * m_imgOk;
     QPixmap * m_imgRecentre;
+    QPixmap * m_img_new;
+    QPixmap * m_img_load;
+    QPixmap * m_img_delete;
     ButtonGui m_buttonOk;
     
     ButtonGui m_buttonParcelleNew;
     ButtonGui m_buttonParcelleLoad;
+    ButtonGui m_button_delete;
     ButtonGui m_buttonRecentre;
     
     int m_x = 0;
