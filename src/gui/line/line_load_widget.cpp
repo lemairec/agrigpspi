@@ -56,6 +56,8 @@ void LineLoadWidget::onMouse(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
     if(m_buttonCancel.isActive(x, y)){
         m_close = true;
+        GpsFramework * f2 = NULL;
+        f2->changeDraw();
     }
     if(m_buttonPageUp.isActive(x, y)){
         m_page++;
