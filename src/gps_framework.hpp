@@ -34,11 +34,11 @@ typedef std::shared_ptr<OutilPosition> OutilPosition_ptr;
 
 
 enum Etat {
-    Etat_Reset,
-    Etat_PointASaved,
-    Etat_OK,
-    Etat_ParcelleAdd,
-    Etat_ParcellePause
+    Etat_Reset = 0,
+    Etat_PointASaved = 1,
+    Etat_OK = 2,
+    Etat_ParcelleAdd = 3,
+    Etat_ParcellePause = 4
 };
 
 enum ParcellePoint {

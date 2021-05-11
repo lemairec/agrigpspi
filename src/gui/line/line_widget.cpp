@@ -86,6 +86,7 @@ void LineWidget::onMouse(int x, int y){
         GpsWidget * g = GpsWidget::Instance();
         g->m_lineLoadWidget.open();
         g->m_lineLoadWidget.m_close = false;
+        g->m_lineLoadWidget.m_delete = false;
         GpsFramework & f = GpsFramework::Instance();
         f.m_config.m_offset_AB = 0;
         f.initOrLoadConfig();
@@ -94,7 +95,7 @@ void LineWidget::onMouse(int x, int y){
         GpsWidget * g = GpsWidget::Instance();
         g->m_lineLoadWidget.open();
         g->m_lineLoadWidget.m_close = false;
-        g->m_lineLoadWidget.m_delete = false;
+        g->m_lineLoadWidget.m_delete = true;
         GpsFramework & f = GpsFramework::Instance();
         f.m_config.m_offset_AB = 0;
         f.initOrLoadConfig();

@@ -76,7 +76,11 @@ void LineLoadWidget::onMouse(int x, int y){
         if(i+(m_page*6) < m_buttons.size()){
             auto b = m_buttons[i+(m_page*6)];
             if(b->isActive(x, y)){
-                f.m_lines.loadCurveOrLine(b->m_label);
+                if(m_delete){
+                    f.m_lines.remove(b->m_label);
+                } else {
+                    f.m_lines.loadCurveOrLine(b->m_label);
+                }
                 m_close = true;
             }
         }

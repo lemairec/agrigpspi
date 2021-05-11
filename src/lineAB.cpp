@@ -373,6 +373,25 @@ void LineCurves::save(){
     INFO("lines_curves "  << m_lines_curves.size());
 }
 
+void LineCurves::remove(std::string name){
+    std::string path = DirectoryManager::Instance().getBinDirectory() + "/line/" + name + ".txt";
+    std::ofstream file;
+    file.open(path, std::ios::out);
+    file << "DELETE" << std::endl;
+    
+    std::vector<std::string> temp;
+    for(auto s : m_lines_curves){
+        temp.push_back(s);
+    }
+    m_lines_curves.clear();
+    for(auto s : temp){
+        if(s != name){
+            m_lines_curves.push_back(s);
+        }
+    }
+    save();
+}
+
 void LineCurves::loadCurveOrLine(std::string name){
     GpsFramework & f = GpsFramework::Instance();
     
