@@ -112,10 +112,13 @@ public:
     bool m_debug_log = false;
     bool m_gga = false;
     
-    bool m_reloadConfig = true;
-    
     bool m_line = true;
+private:
     Etat m_etat = Etat_Reset;
+public:
+    void setEtat(Etat etat);
+    Etat getEtat();
+    
     LineAB m_lineAB;
     CurveAB m_curveAB;
     LineCurves m_lines;
@@ -124,7 +127,6 @@ public:
     Parcelle m_parcelle;
     Parcelles m_parcelles;
     
-    void setEtat(Etat etat);
     void setAB();
     
     //deplacement

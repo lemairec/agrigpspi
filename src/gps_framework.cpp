@@ -75,7 +75,6 @@ void GpsFramework::initOrLoadConfig(){
     m_ekf_module.initOrLoad(m_config);
     
     file_job_stream << "[config]\n";
-    m_reloadConfig = true;
     m_debug_log = m_config.m_debug_log;
     
     m_pilot_algo = (AlgoPilot)m_config.m_pilot_algo;
@@ -97,15 +96,18 @@ void GpsFramework::initOrLoadConfig(){
         m_tracteur.m_antenne_lateral = m_config.m_tracteur_antenne_lateral;
     }
     
-    m_lineAB.m_largeur = m_config.m_largeur_AB;
-    m_lineAB.m_offset = m_config.m_offset_AB;
-    m_curveAB.m_largeur = m_config.m_largeur_AB;
-    m_curveAB.m_offset = m_config.m_offset_AB;
+    if(m_lineAB.m_largeur != m_config.m_largeur_AB || m_lineAB.m_offset != m_config.m_offset_AB){
+        m_lineAB.m_largeur = m_config.m_largeur_AB;
+        m_lineAB.m_offset = m_config.m_offset_AB;
+        m_curveAB.m_largeur = m_config.m_largeur_AB;
+        m_curveAB.m_offset = m_config.m_offset_AB;
+        
+        m_curveAB.clearWithoutAB();
+        m_lineAB.clearWithoutAB();
+    }
     
     m_gga = m_config.m_gga;
     
-    m_curveAB.clearWithoutAB();
-    m_lineAB.clearWithoutAB();
     
     m_parcelle.m_resolution_to_draw = m_config.m_resolution_draw;
     m_parcelle.calculContourToDraw();
@@ -497,6 +499,10 @@ void GpsFramework::setEtat(Etat etat){
         m_curveAB.m_curves.clear();
         m_curveAB.m_listAB.clear();
     }
+}
+
+Etat GpsFramework::getEtat(){
+    return m_etat;
 }
 
 

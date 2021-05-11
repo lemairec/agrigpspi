@@ -260,8 +260,8 @@ void GpsWidget::drawLine2(Line_ptr l, QPen & pen){
 
 void GpsWidget::drawLineCurve(){
     GpsFramework & f = GpsFramework::Instance();
-    if(f.m_line){
-        if(f.m_etat == Etat_OK){
+    if(f.getEtat() == Etat_OK){
+        if(f.m_line){
             auto list = f.m_lineAB.getCurrentLine();
             drawLine2(list, m_penBlack);
             for(int i = 1; i<2; ++i){
@@ -270,9 +270,7 @@ void GpsWidget::drawLineCurve(){
                 auto list3 = f.m_lineAB.getCurrentLineRel(-i);
                 drawLine2(list3, m_penGray);
             }
-        }
-    } else {
-        if(f.m_etat == Etat_OK){
+        } else {
             auto list = f.m_curveAB.getCurrentLine();
             drawCurve(list, m_penBlack);
             for(int i = 1; i<2; ++i){
@@ -474,7 +472,7 @@ void GpsWidget::draw_force(){
     //scene->clear();
     
     
-    if(f.m_etat == Etat_ParcelleAdd || f.m_etat == Etat_ParcellePause){
+    if(f.getEtat() == Etat_ParcelleAdd || f.getEtat() == Etat_ParcellePause){
         //la
         drawParcelle(true);
         drawTracteur();

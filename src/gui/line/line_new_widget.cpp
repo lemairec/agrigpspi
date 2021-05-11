@@ -42,7 +42,7 @@ void LineNewWidget::draw(){
     
     GpsFramework & f = GpsFramework::Instance();
     drawButtonImage(m_buttonOk, m_imgOk);
-    if(f.m_etat == Etat_Reset){
+    if(f.getEtat() == Etat_Reset){
         drawButtonImage(m_buttonAB, m_imgA);
     } else {
         drawButtonImage(m_buttonAB, m_imgB);
@@ -76,7 +76,7 @@ void LineNewWidget::onMouse(int x, int y){
     }
     
     if(m_buttonAB.isActive(x, y)){
-        if(f.m_etat == Etat_Reset){
+        if(f.getEtat() == Etat_Reset){
             f.savePointA();
         } else {
             f.savePointB();

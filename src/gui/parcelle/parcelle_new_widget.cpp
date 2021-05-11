@@ -49,7 +49,7 @@ void ParcelleNewWidget::draw(){
     {
         QPixmap * p = m_imgRecord;
         QString s = "Play";
-        if(f.m_etat == Etat_ParcelleAdd){
+        if(f.getEtat() == Etat_ParcelleAdd){
             s = "Pause";
             p = m_imgPause;
         }
@@ -100,21 +100,21 @@ void ParcelleNewWidget::onMouse(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
     if(m_buttonCancel.isActive(x, y)){
         m_close = true;
-        f.m_etat = Etat_Reset;
+        f.setEtat(Etat_Reset);
     }
     if(m_buttonOk.isActive(x, y)){
         m_close = true;
-        f.m_etat = Etat_Reset;
+        f.setEtat(Etat_Reset);
         f.m_parcelle.m_name = m_name.m_text;
         f.m_parcelle.compute();
         f.m_parcelles.add(f.m_parcelle);
         
     }
     if(m_buttonParcelleStartPause.isActive(x, y)){
-        if(f.m_etat == Etat_ParcelleAdd){
-            f.m_etat = Etat_ParcellePause;
+        if(f.getEtat() == Etat_ParcelleAdd){
+            f.setEtat(Etat_ParcellePause);
         } else {
-            f.m_etat = Etat_ParcelleAdd;
+            f.setEtat(Etat_ParcelleAdd);
         }
     }
     if(m_buttonFlag.isActive(x, y)){
@@ -132,5 +132,5 @@ void ParcelleNewWidget::onMouse(int x, int y){
 
 void ParcelleNewWidget::open(){
     GpsFramework & f = GpsFramework::Instance();
-    f.m_etat = Etat_ParcellePause;
+    f.setEtat(Etat_ParcellePause);
 }
