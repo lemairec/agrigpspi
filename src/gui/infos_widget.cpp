@@ -333,6 +333,30 @@ void InfosWidget::drawPage1(){
         QString s = "D";
         drawQText(s, m_buttonPlus10.m_x, m_buttonPlus10.m_y, sizeText_big, true);
     }
+    
+    {
+        QString s = "Etat : ";
+        Etat e = f.getEtat();
+        switch(e){
+            case Etat_OK:
+                s+="OK";
+                break;
+            case Etat_Reset:
+                s+="Reset";
+                break;
+            case Etat_ParcelleAdd:
+                s+="parcelle_add";
+                break;
+            case Etat_ParcellePause:
+                s+="parcelle_pause";
+                break;
+            case Etat_PointASaved:
+                s+="Point A";
+                break;
+                
+        }
+        drawQText(s, x+10, 0.6*m_height, sizeText_big, false);
+    }
 }
 
 void InfosWidget::onMouse1(int x, int y){

@@ -455,14 +455,10 @@ void GpsFramework::setDistance(double distance, bool led){
     m_distanceAB = distance;
     
     double coeff = m_config.m_outil_largeur/(2*10);
-    if(led){
-        if(m_distanceAB < 0.0){
-            m_ledAB = round(-m_distanceAB/coeff);
-        } else {
-            m_ledAB = -round(m_distanceAB/coeff);
-        }
+    if(m_distanceAB < 0.0){
+        m_ledAB = round(-m_distanceAB/coeff);
     } else {
-        m_ledAB = 888;
+        m_ledAB = -round(m_distanceAB/coeff);
     }
 }
 
@@ -566,129 +562,6 @@ void GpsFramework::calculDeplacement(GpsPoint_ptr p){
         }
     }
 }
-/*void GpsFramework::calculDeplacement(GpsPoint_ptr p){
-    if(m_vitesse < 0.1){
-        return;
-    }
-    
-    m_ekf_module.m_list.push_front(p);
-    if(m_ekf_module.m_list.size()>100){
-        m_ekf_module.m_list.pop_back();
-    };
-    
-    
-    
-    m_tracteur.m_pt_outil_arriere = nullptr;
-    m_tracteur.m_pt_outil_arriere_droite = nullptr;
-    m_tracteur.m_pt_outil_arriere_gauche = nullptr;
-    m_tracteur.m_pt_antenne_corrige = nullptr;
-
-    if(m_ekf_module.m_list.size() > 3){
-        GpsPoint_ptr point1 = m_ekf_module.m_list.front();
-              
-        
-        
-        GpsPoint_ptr point2 = NULL;
-        int i = 0;
-        for(auto point : m_ekf_module.m_list){
-            point2 = point;
-            
-            double x = point1->m_x - point2->m_x;
-            double y = point1->m_y - point2->m_y;
-            
-            double d = x*x+y*y;
-            if(d>(m_distance_cap_vitesse*m_distance_cap_vitesse)){
-                break;
-            }
-            
-            //point2 = NULL;
-            ++i;
-        }
-        if(point2!=NULL){
-            double x = point1->m_x - point2->m_x;
-            double y = point1->m_y - point2->m_y;
-            
-            m_deplacementX = x;
-            m_deplacementY = y;
-            
-            if(m_deplacementY != 0){
-                double temp = atan(m_deplacementX/m_deplacementY);
-                if(m_deplacementY>0){
-                    m_deplacementAngle = temp;
-                } else {
-                    m_deplacementAngle = temp+3.14;
-                }
-            }
-            
-            m_distance_last_point = sqrt(m_deplacementX*m_deplacementX + m_deplacementY*m_deplacementY);
-            m_time_last_point = point1->m_timeHour - point2->m_timeHour;
-            
-            m_tracteur.m_time_received = std::chrono::system_clock::now();
-            m_tracteur.m_correction_lateral_imu = sin(m_imuModule.m_pitch_y_deg/180.0*3.14)*m_tracteur.m_hauteur_antenne;
-            m_tracteur.m_correction_lateral = m_tracteur.m_correction_lateral_imu + m_tracteur.m_antenne_lateral;
-            
-            m_tracteur.m_x_antenne = point1->m_x;
-            m_tracteur.m_y_antenne = point1->m_y;
-            
-            m_tracteur.m_pt_antenne_corrige = GpsPoint_ptr(new GpsPoint);
-            m_tracteur.m_pt_antenne_corrige->m_x = point1->m_x + cos(m_deplacementAngle)*m_tracteur.m_correction_lateral;
-            m_tracteur.m_pt_antenne_corrige->m_y = point1->m_y - sin(m_deplacementAngle)*m_tracteur.m_correction_lateral;
-            
-            GpsPoint_ptr p(new GpsPoint());
-            p->m_x = m_tracteur.m_pt_antenne_corrige->m_x;
-            p->m_y = m_tracteur.m_pt_antenne_corrige->m_y;
-                      
-            m_ekf_module.m_list_tracteur.push_front(p);
-            if(m_ekf_module.m_list_tracteur.size()>100){
-                m_ekf_module.m_list_tracteur.pop_back();
-            };
-            
-            m_ekf_module.onNewEkfPoint(m_tracteur.m_pt_antenne_corrige->m_x, m_tracteur.m_pt_antenne_corrige->m_y, 0, m_vitesse*1000/3600, m_deplacementAngle, m_imuModule.m_ax, m_imuModule.m_ay, m_imuModule.m_az);
-            m_tracteur.m_pt_antenne_corrige->m_x =m_ekf_module.m_old_x;
-            m_tracteur.m_pt_antenne_corrige->m_y =m_ekf_module.m_old_y;
-            
-            
-            m_ekf_module.m_list_ekf.push_front(m_tracteur.m_pt_antenne_corrige);
-            if(m_ekf_module.m_list_ekf.size()>100){
-                m_ekf_module.m_list_ekf.pop_back();
-            };
-            
-            m_tracteur.setPoint(m_tracteur.m_pt_antenne_corrige, m_deplacementAngle);
-            
-            m_gpsModule.SetLatLong(*(m_tracteur.m_pt_antenne_corrige));
-            m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere));
-            m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere_gauche));
-            m_gpsModule.SetLatLong(*(m_tracteur.m_pt_outil_arriere_droite));
-            
-            if(m_gga && m_time_last_point > 0 ){
-                m_vitesse = m_distance_last_point/1000.0/m_time_last_point;
-                if(m_vitesse >50){
-                    INFO("erreur");
-                }
-            }
-            
-        }
-        
-        double hx = m_imuModule.m_mag_x;
-        double hy = m_imuModule.m_mag_y;
-        double hz = m_imuModule.m_mag_z;
-        
-        double h = sqrtf(hx * hx + hy * hy + hz * hz);
-        hx /= h;
-        hy /= h;
-        hz /= h;
-        double yaw_rad = atan2f(-hy, hx)+3.14;
-        if(m_deplacementY>0){
-         } else {
-            yaw_rad = yaw_rad+3.14;
-        }
-        
-        INFO(yaw_rad << " " << m_deplacementAngle << " " << (m_deplacementAngle-yaw_rad) << " " << (m_deplacementAngle-yaw_rad)/3.14*180);
-                
-        //INFO(deplacementTime << " " << vitesse);
-    }
-}*/
-
 
 void GpsFramework::changeDraw(){
     if(m_pauseDraw == false){
@@ -802,57 +675,6 @@ double polygonArea(std::vector<GpsPoint_ptr> tab)
     }
     return abs(sum)/2.0;
 }
-
-
-/*void GpsFramework::calculContourExterieur(){
-    if(m_ekf_module.m_list.size()>10){
-        m_contour.clear();
-        // Find the leftmost point
-        std::vector<GpsPoint_ptr> points;
-        for(auto p: m_ekf_module.m_list){
-            points.push_back(p);
-        }
-        
-        int l = 0;
-        int n = points.size();
-        for (int i = 1; i < n; i++)
-            if (points[i]->m_x < points[l]->m_x)
-                l = i;
-        
-        // Start from leftmost point, keep moving counterclockwise
-        // until reach the start point again.  This loop runs O(h)
-        // times where h is number of points in result or output.
-        int p = l, q;
-        do
-        {
-            // Add current point to result
-            m_contour.push_back(points[p]);
-            
-            // Search for a point 'q' such that orientation(p, x,
-            // q) is counterclockwise for all points 'x'. The idea
-            // is to keep track of last visited most counterclock-
-            // wise point in q. If any point 'i' is more counterclock-
-            // wise than q, then update q.
-            q = (p+1)%n;
-            for (int i = 0; i < n; i++)
-            {
-                // If i is more counterclockwise than current q, then
-                // update q
-                if (orientation(*points[p], *points[i], *points[q]) == 2)
-                    q = i;
-            }
-            
-            // Now q is the most counterclockwise with respect to p
-            // Set p as q for next iteration, so that q is added to
-            // result 'hull'
-            p = q;
-            
-        } while (p != l);  // Whil
-        m_contour.push_back(m_contour[0]);
-        m_surface_exterieur = polygonArea(m_contour)/10000.0;
-        m_surface_exterieur_h = m_surface_exterieur/(m_list.front()->m_timeHour - m_lineAB.m_point_origin_A.m_timeHour);
-    }
-}*/
 
 
 void GpsFramework::setVolantEngaged(bool value){

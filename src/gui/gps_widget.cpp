@@ -840,79 +840,76 @@ void GpsWidget::drawDebugEkf(){
 const int l1 = 15;
 void GpsWidget::drawTop(){
     GpsFramework & f = GpsFramework::Instance();
-    
     m_painter->setPen(m_penBlack);
     m_painter->setBrush(m_brushDarkGray);
     
     m_painter->drawRect(0, 0, m_width, 40);
     
-    m_painter->setBrush(m_brushGray);
-    if(f.m_ledAB == 888 && abs(f.m_distanceAB) < 0.025){
-        m_painter->setBrush(m_brushGreen);
-    }
-    m_painter->drawRect(m_width/2-50, 5, 100, 30);
-    QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
-    
-    drawQText(s, m_width/2, 23,sizeText_big, true);
-    
-    /*scene->addRect(m_width/2-60, 40, 120, 40, m_penBlack, m_brushDarkGray);
-     scene->addRect(m_width/2-50, 45, 100, 30, m_penBlack, m_grayBrush);
-     {
-     QString s = QString::number(f.m_angle_correction/3.14*180, 'f', 2) + " °";
-     drawQText(s, m_width/2, 63,sizeText_big, true);
-     }*/
-    
-    if(f.m_ledAB != 888){
+    if(f.getEtat() == Etat_OK){
+        
         m_painter->setBrush(m_brushGray);
-        for(int i = 0; i < 8; ++i){
-            m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
-            m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
+        if(abs(f.m_distanceAB) < 0.025){
+            m_painter->setBrush(m_brushGreen);
         }
-        m_painter->setBrush(m_brushGreen);
-        if(f.m_ledAB > 0){
-            for(int i = 0; i < std::min(8, f.m_ledAB); ++i){
-                m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
+        
+        m_painter->drawRect(m_width/2-50, 5, 100, 30);
+        QString s = QString::number(f.m_distanceAB, 'f', 2) + " m";
+        
+        drawQText(s, m_width/2, 23,sizeText_big, true);
+        
+        if(f.m_pilotModule.m_engaged){
+            if(f.m_distanceAB < 0){
+                if(f.m_distanceAB > -0.025){
+                    m_painter->setBrush(m_brushNo);
+                } else if(f.m_distanceAB > -0.05){
+                    m_painter->setBrush(m_brushGreen);
+                } else if(f.m_distanceAB > -0.15){
+                    m_painter->setBrush(m_brushOrange);
+                } else {
+                    m_painter->setBrush(m_brushRed);
+                }
+                QPointF points[4] = {
+                    QPointF(m_width/2 - 80, 10),
+                    QPointF(m_width/2 - 100, 20),
+                    QPointF(m_width/2 - 80, 30),};
+                m_painter->drawPolygon(points, 3);
+                
+                
+            } else {
+                if(f.m_distanceAB < 0.025){
+                    m_painter->setBrush(m_brushNo);
+                } else if(f.m_distanceAB < 0.05){
+                    m_painter->setBrush(m_brushGreen);
+                } else if(f.m_distanceAB < 0.15){
+                    m_painter->setBrush(m_brushOrange);
+                } else {
+                    m_painter->setBrush(m_brushRed);
+                }
+                QPointF points2[4] = {
+                    QPointF(m_width/2 + 80, 10),
+                    QPointF(m_width/2 + 100, 20),
+                    QPointF(m_width/2 + 80, 30),};
+                m_painter->drawPolygon(points2, 3);
             }
         } else {
-            for(int i = 0; i < std::min(8, -f.m_ledAB); ++i){
+            m_painter->setBrush(m_brushGray);
+            for(int i = 0; i < 8; ++i){
+                m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
                 m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
             }
-        }
-    } else {
-        if(f.m_distanceAB < 0){
-            if(f.m_distanceAB > -0.025){
-                m_painter->setBrush(m_brushNo);
-            } else if(f.m_distanceAB > -0.05){
-                m_painter->setBrush(m_brushGreen);
-            } else if(f.m_distanceAB > -0.15){
-                m_painter->setBrush(m_brushOrange);
+            m_painter->setBrush(m_brushGreen);
+            if(f.m_ledAB > 0){
+                for(int i = 0; i < std::min(8, f.m_ledAB); ++i){
+                    m_painter->drawRect(m_width/2 - 60 - 10 - l1*i, 10, 10, 20);
+                }
             } else {
-                m_painter->setBrush(m_brushRed);
+                for(int i = 0; i < std::min(8, -f.m_ledAB); ++i){
+                    m_painter->drawRect(m_width/2 + 60 + l1*i, 10, 10, 20);
+                }
             }
-            QPointF points[4] = {
-                QPointF(m_width/2 - 80, 10),
-                QPointF(m_width/2 - 100, 20),
-                QPointF(m_width/2 - 80, 30),};
-            m_painter->drawPolygon(points, 3);
-            
-            
-        } else {
-            if(f.m_distanceAB < 0.025){
-                m_painter->setBrush(m_brushNo);
-            } else if(f.m_distanceAB < 0.05){
-                m_painter->setBrush(m_brushGreen);
-            } else if(f.m_distanceAB < 0.15){
-                m_painter->setBrush(m_brushOrange);
-            } else {
-                m_painter->setBrush(m_brushRed);
-            }
-            QPointF points2[4] = {
-                QPointF(m_width/2 + 80, 10),
-                QPointF(m_width/2 + 100, 20),
-                QPointF(m_width/2 + 80, 30),};
-            m_painter->drawPolygon(points2, 3);
         }
     }
+    
     
     {
         QString s = QString::number(f.m_vitesse, 'f', 1) + " km/h";
