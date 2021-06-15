@@ -298,8 +298,10 @@ void GpsFramework::onNewImportantPoint(GpsPoint_ptr p){
     if(m_tracteur.m_pt_outil_arriere){
         calculDraw(m_tracteur.m_pt_outil_arriere);
     }
-    file_job_stream << p->m_time << "," << std::setprecision(14) << p->m_latitude << "," << p->m_longitude << std::endl;
-    saveInfoFile();
+    if(p){
+        file_job_stream << p->m_time << "," << std::setprecision(14) << p->m_latitude << "," << p->m_longitude << std::endl;
+        saveInfoFile();
+    }
     
     
     
