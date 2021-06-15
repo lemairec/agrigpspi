@@ -95,9 +95,9 @@ void GpsWidget::setSize(int width, int height){
     m_buttonMinus.setResize(temp*m_width, 0.70*m_height, m_gros_button);
     
     m_buttonOption.setResize(40, m_height-30, m_gros_button);
-    m_buttonGuidage.setResize(100, m_height-30, m_gros_button);
-    m_buttonParcelle.setResize(160, m_height-30, m_gros_button);
-    m_buttonChamp.setResize(m_width - 160, m_height-30, m_gros_gros_button);
+    m_buttonGuidage.setResize(140, m_height-30, m_gros_button);
+    m_buttonParcelle.setResize(240, m_height-30, m_gros_button);
+    m_buttonChamp.setResize(m_width - 140, m_height-30, m_gros_gros_button);
     m_buttonVolant.setResize(m_width - 40, m_height-30, m_gros_gros_button);
     m_buttonVolantAuto.setResize(m_width - 100, m_height-30, m_gros_gros_button);
     m_button3d.setResize(m_width/2, m_height/2, m_gros_gros_button);
@@ -1117,14 +1117,14 @@ void GpsWidget::drawDebug(){
             double a_y;
             my_projete2(f.m_lineAB.m_pointA.m_x, f.m_lineAB.m_pointA.m_y, a_x, a_y);
             m_painter->drawEllipse(a_x-1, a_y-1, 2, 2);
-            m_painter->drawText(a_x-1, a_y-1, "A");
+            m_painter->drawText(a_x-6, a_y-3, "A");
             
             
             double b_x;
             double b_y;
             my_projete2(f.m_lineAB.m_pointB.m_x, f.m_lineAB.m_pointB.m_y, b_x, b_y);
             m_painter->drawEllipse(b_x-1, b_y-1, 2, 2);
-            m_painter->drawText(b_x-1, b_y-1, "B");
+            m_painter->drawText(b_x-6, b_y-3, "B");
             
             
         }
