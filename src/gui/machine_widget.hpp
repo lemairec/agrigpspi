@@ -33,7 +33,6 @@ class OutilWidget : public BaseWidget {
     
     int m_x = 0;
     int m_lg = 0;
-    int m_lgAB = 0;
 public:
     OutilWidget();
     
