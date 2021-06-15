@@ -101,7 +101,6 @@ void LineLoadWidget::open(){
     m_buttons.clear();//toto fuite memoire
     
     double y = 140;
-    int i=0;
     m_inter = m_petit_button*2.2;
     
     size_t len =  f.m_lines.m_lines_curves.size();
