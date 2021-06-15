@@ -6,6 +6,8 @@
 class LineLoadWidget : public BaseWidget {
     QPixmap * m_imgOk;
     QPixmap * m_imgCancel;
+    QPixmap * m_img_up;
+    QPixmap * m_img_down;
     ButtonGui m_buttonCancel;
     ButtonGui m_buttonPageUp;
     ButtonGui m_buttonPageDown;

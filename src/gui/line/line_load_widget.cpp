@@ -7,6 +7,8 @@
 LineLoadWidget::LineLoadWidget(){
     m_imgOk = loadImage("/images/ok.png");
     m_imgCancel = loadImage("/images/cancel.png");
+    m_img_up = loadImage("/images/page_droite.png");
+    m_img_down = loadImage("/images/page_gauche.png");
 }
 
 
@@ -30,7 +32,10 @@ void LineLoadWidget::draw(){
     m_painter->drawRect(m_x, m_height*0.1, m_lg, m_height*0.8);
     
     {
-        QString s = "load ligne";
+        QString s = "Charger une ligne";
+        if(m_delete){
+            s = "Supprimer une ligne";
+        }
         drawQText(s, m_lg/2, 0.15*m_height, sizeText_big, true);
     }
     
@@ -42,12 +47,12 @@ void LineLoadWidget::draw(){
         }
     }
     
-    drawButton(m_buttonPageDown);
+    drawButtonImage(m_buttonPageDown, m_img_down);
     {
         QString s = QString::number(m_page+1)+ "/"+ QString::number(m_nbr_page+1);
         drawQText(s, m_lg/2, m_buttonPageDown.m_y, sizeText_big, true);
     }
-    drawButton(m_buttonPageUp);
+    drawButtonImage(m_buttonPageUp, m_img_up);
     
     drawButtonImage(m_buttonCancel, m_imgCancel);
     
@@ -56,8 +61,10 @@ void LineLoadWidget::onMouse(int x, int y){
     GpsFramework & f = GpsFramework::Instance();
     if(m_buttonCancel.isActive(x, y)){
         m_close = true;
-        GpsFramework * f2 = NULL;
-        f2->changeDraw();
+        if(m_delete){
+            GpsFramework * f2 = NULL;
+            f2->changeDraw();
+        }
     }
     if(m_buttonPageUp.isActive(x, y)){
         m_page++;

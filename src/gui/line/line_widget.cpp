@@ -10,6 +10,7 @@ LineWidget::LineWidget(){
     m_imgRecentre = loadImage("/images/ab_middle.png");
     m_img_new = loadImage("/images/new.png");
     m_img_load = loadImage("/images/load.png");
+    m_img_delete = loadImage("/images/delete.png");
 }
 
 
@@ -49,7 +50,7 @@ void LineWidget::draw(){
         drawQText(s, m_buttonParcelleLoad.m_x + 25, m_buttonParcelleLoad.m_y, sizeText_big, false);
     }
     {
-        drawButton(m_button_delete);
+        drawButtonImage(m_button_delete, m_img_delete);
         QString s = "Supprimer";
         drawQText(s, m_button_delete.m_x + 25, m_button_delete.m_y, sizeText_big, false);
     }
