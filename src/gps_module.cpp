@@ -127,6 +127,13 @@ void GpsModule::parseBuffer(){
             f.m_imuModule.m_mag_z = readDouble();
         }
     }
+    if(m_buffer[0] == 'C' && m_buffer[1] == 'S' && m_buffer[2] == 'Q'){
+        std::string s = "";
+        for(size_t i =0; i < m_bufferIndLast; ++i){
+            s += m_buffer[i];
+        }
+        GpsFramework::Instance().m_last_csq = s;
+    }
 }
 
 //GNRMC,124450.80,A,4925.15859,N,00400.48455,E,0.006,,070620,,,A*63

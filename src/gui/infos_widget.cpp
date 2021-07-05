@@ -62,10 +62,14 @@ void InfosWidget::draw(){
             } else {
                 s += "invalid";
             }
-            drawQText(s, x2, 0.40*m_height, sizeText_medium, false);
+            drawQText(s, x2, 0.35*m_height, sizeText_medium, false);
         }
         {
             QString s = "hdop " + QString::number(last_frame.m_hdop, 'f', 2);
+            drawQText(s, x2, 0.40*m_height, sizeText_medium, false);
+        }
+        {
+            QString s = QString::fromStdString(f.m_last_csq);
             drawQText(s, x2, 0.50*m_height, sizeText_medium, false);
         }
         {

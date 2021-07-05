@@ -222,7 +222,9 @@ void GpsFramework::onRMCFrame(RMCFrame_ptr f){
     m_lastRMCFrame = f;
     if(!m_gga){
         m_vitesse = f->m_vitesse_kmh;
-        m_deplacementAngle = f->m_cap_rad;
+        if(m_vitesse > 0.1 && m_config.m_cap_mode == CapMode::CapMode_Rmc){
+            m_deplacementAngle = f->m_cap_rad;
+        }
         onNewPoint(f);
         
     }
@@ -521,7 +523,7 @@ void GpsFramework::setAB(){
 }
 
 void GpsFramework::calculDeplacement(GpsPoint_ptr p){
-    if(m_vitesse < 0.1){
+    if(m_vitesse < 0.3){
         return;
     }
 
@@ -539,6 +541,7 @@ void GpsFramework::calculDeplacement(GpsPoint_ptr p){
         m_deplacementX = m_ekf_module.m_v_x;
         m_deplacementY = m_ekf_module.m_v_y;
         
+        INFO("ici");
         m_deplacementAngle = m_ekf_module.m_deplacementAngle;
     }
     

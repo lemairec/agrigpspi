@@ -88,7 +88,7 @@ void GpsWidget::setSize(int width, int height){
     
     double temp = 0.05;
     
-    m_buttonSat.setResize(m_width-30, 20, m_gros_button);
+    m_buttonSat.setResize(m_width-40, 20, m_gros_button);
     
     
     m_buttonPlus.setResize(temp*m_width, 0.60*m_height, m_gros_button);
@@ -460,6 +460,7 @@ void GpsWidget::draw_force(){
     
     
     m_a = -3.14/2+f.m_deplacementAngle;
+    INFO(f.m_deplacementAngle/3.14*180);
     if(!f.m_config.m_sensDraw){
         m_a = 0;
     }
@@ -950,9 +951,13 @@ void GpsWidget::drawTop(){
                 img = m_imgSatRouge;
             }
         }
+        if(last_frame.m_fix == 4){
+            drawText("RTK", m_buttonSat.m_x+5, m_buttonSat.m_y+10);
+        }
     }
     
     drawButtonImage(m_buttonSat, img);
+    
 }
 
 

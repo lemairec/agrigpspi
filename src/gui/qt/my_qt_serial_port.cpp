@@ -149,7 +149,6 @@ void MyQTSerialPorts::handleReadyReadPilot(){
     } else {
         QString hex(b);
         std::string s = (hex.toUtf8().constData());
-        
         GpsFramework::Instance().m_pilotModule.arduinoParse(s);
     }
     DEBUG("end");

@@ -143,6 +143,8 @@ public:
     int m_ledAB = 0;
     bool m_rtk = false;
     
+    std::string m_last_csq;
+    
     std::string m_pilot_algo_str = "none";
     AlgoPilot m_pilot_algo = FollowCarrotPontAvant;
     double m_angle_correction;
