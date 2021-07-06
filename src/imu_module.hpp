@@ -20,9 +20,9 @@ public:
     double m_ay = 0;
     double m_az = 0;
     
-    double m_a_v_x = 0;
-    double m_a_v_y = 0;
-    double m_a_v_z = 0;
+    double m_w_x = 0;
+    double m_w_y = 0;
+    double m_w_z = 0;
     
     double m_mag_x = 0;
     double m_mag_y = 0;

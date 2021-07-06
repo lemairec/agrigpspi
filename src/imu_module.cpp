@@ -51,16 +51,17 @@ void ImuModule::run(){
                 m_ay = ((double)ay)/32768.0*16.0*9.8;
                 signed short int az = ((c7<<8)|c6);
                 m_az = ((double)az)/32768.0*16.0*9.8;
+                
             } else if(c1 == 0x52){
                 //acceleration angulaire
                 signed short int axis_x = ((c3<<8)|c2);
-                m_a_v_x = ((double)axis_x)/32768.0*2000.0;
+                m_w_x = ((double)axis_x)/32768.0*2000.0;
 
                 signed short int axis_y = ((c5<<8)|c4);
-                m_a_v_y = ((double)axis_y)/32768.0*2000.0;
+                m_w_y = ((double)axis_y)/32768.0*2000.0;
 
                 signed short int axis_z = ((c7<<8)|c6);
-                m_a_v_z = ((double)axis_z)/32768.0*2000.0;
+                m_w_z = ((double)axis_z)/32768.0*2000.0;
             } else if(c1 == 0x53){
                 //inclinometre
                 signed short int axis_x = ((c3<<8)|c2);

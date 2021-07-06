@@ -20,7 +20,7 @@ int state_B;
 int motor_max = 150;
 
 void version(){
-    Serial.println("$PILOT_0_0_5");
+    Serial.println("$PILOT_21_07_01");
 }
 
 void printPosition(){
@@ -112,15 +112,21 @@ void updateMotor(){
 
 void SetMotor2(int speed, boolean reverse)
 {
-  //Serial.print("SetMotor2 speed ");Serial.println(speed);
+    Serial.print(" ");Serial.println(speed);
     if(speed > 255){
-        analogWrite(MOTOR_ENABLE_PIN, 255);
+        speed = 255;
         
+    } 
+    analogWrite(MOTOR_ENABLE_PIN, speed);
+    Serial.print("$M,");Serial.print(speed);Serial.print(",");Serial.println(reverse);
+    if(reverse){
+        digitalWrite(MOTOR_PIN1, HIGH);
+        digitalWrite(MOTOR_PIN2, LOW);
     } else {
-        analogWrite(MOTOR_ENABLE_PIN, speed);
+        digitalWrite(MOTOR_PIN2, HIGH);
+        digitalWrite(MOTOR_PIN1, LOW);
     }
-    digitalWrite(MOTOR_PIN1, ! reverse);
-    digitalWrite(MOTOR_PIN2, reverse);
+    
 }
 
 /**

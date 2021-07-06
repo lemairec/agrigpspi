@@ -118,9 +118,9 @@ void GpsModule::parseBuffer(){
             f.m_imuModule.m_ay = readDouble();
             f.m_imuModule.m_az = readDouble();
             readUntilCommat();
-            f.m_imuModule.m_a_v_x = readDouble();
-            f.m_imuModule.m_a_v_y = readDouble();
-            f.m_imuModule.m_a_v_z = readDouble();
+            f.m_imuModule.m_w_x = readDouble();
+            f.m_imuModule.m_w_y = readDouble();
+            f.m_imuModule.m_w_z = readDouble();
             readUntilCommat();
             f.m_imuModule.m_mag_x = readDouble();
             f.m_imuModule.m_mag_y = readDouble();

@@ -126,12 +126,17 @@ void InfosWidget::draw(){
         
         {
             QString s = "roll_x "+QString::number(f.m_imuModule.m_roll_x_deg)+"°\npitch_y "+QString::number(f.m_imuModule.m_pitch_y_deg)+"°\nyaw_z "+QString::number(f.m_imuModule.m_yaw_z_deg)+"°";
-            drawQTexts(s, x2, 0.4*m_height, sizeText_little, false);
+            drawQTexts(s, x2, 0.3*m_height, sizeText_little, false);
+        }
+        
+        {
+            QString s = "w_x "+QString::number(f.m_imuModule.m_w_x)+"°/s\nw_y "+QString::number(f.m_imuModule.m_w_y)+"°/s\nw_z "+QString::number(f.m_imuModule.m_w_z)+"°/s";
+            drawQTexts(s, x2, 0.45*m_height, sizeText_little, false);
         }
         
         {
             QString s = "a_x "+QString::number(f.m_imuModule.m_ax)+"\na_y "+QString::number(f.m_imuModule.m_ay)+"\na_z "+QString::number(f.m_imuModule.m_az)+"";
-            drawQTexts(s, x2, 0.55*m_height, sizeText_little, false);
+            drawQTexts(s, x2, 0.6*m_height, sizeText_little, false);
         }
         {
             QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral_imu*1000)/10.0)+" cm";
