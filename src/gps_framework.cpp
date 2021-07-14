@@ -396,9 +396,9 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
     
     if(m_config.m_algo_volant_mode == AlgoVolantMode_CapteurVitesse){
         double correction = m_angle_correction - m_config.m_agressivite_yawl*m_imuModule.m_w_z;
-        m_pilotModule.run(correction, m_time_last_point);
+        m_pilotModule.setAngleRoueDesired(correction, m_time_last_point);
     } else {
-        m_pilotModule.run(m_angle_correction, m_time_last_point);
+        m_pilotModule.setAngleRoueDesired(m_angle_correction, m_time_last_point);
     }
     
 }
@@ -739,5 +739,14 @@ void GpsFramework::loadParcelle(const std::string & name, int flags_i, bool line
                 }
             }
         }
+    }
+}
+
+void GpsFramework::onNewImu(){
+    if(m_config.m_algo_volant_mode == AlgoVolantMode_CapteurVitesse){
+        double vitesse_ms = m_vitesse*1000.0/3600.0;
+        double temp = vitesse_ms/(m_tracteur.m_empatement+(m_config.m_yawl_kus/9.8)*vitesse_ms*vitesse_ms);
+        
+        m_angle_roue_by_yawl_deg = m_imuModule.m_w_z/temp;
     }
 }

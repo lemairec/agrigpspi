@@ -32,7 +32,7 @@ public:
     
     void print(int i);
     void remove(int i);
-    void run();
+    void parseImu();
     void addIChar(int c);
 };
 

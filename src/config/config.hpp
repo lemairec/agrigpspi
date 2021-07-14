@@ -81,6 +81,7 @@ public:
     
     AlgoVolantMode m_algo_volant_mode = AlgoVolantMode_Encodeur;
     double m_agressivite_yawl = 1.0;
+    double m_yawl_kus = 1.0;
     
     double m_volant_pas_by_tour = 4500;
     double m_volant_angle_by_tour = 35;

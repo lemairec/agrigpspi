@@ -20,7 +20,7 @@ void ImuModule::print(int s){
     std::cout << std::endl;
 }
 
-void ImuModule::run(){
+void ImuModule::parseImu(){
     if(m_list.size() < 20){
         return;
     }
@@ -62,6 +62,8 @@ void ImuModule::run(){
 
                 signed short int axis_z = ((c7<<8)|c6);
                 m_w_z = ((double)axis_z)/32768.0*2000.0;
+                GpsFramework & f = GpsFramework::Instance();
+                f.onNewImu();
             } else if(c1 == 0x53){
                 //inclinometre
                 signed short int axis_x = ((c3<<8)|c2);
@@ -92,5 +94,5 @@ void ImuModule::run(){
 
 void ImuModule::addIChar(int c){
     m_list.push_back(c);
-    run();
+    parseImu();
 }

@@ -21,6 +21,8 @@ void InfosWidget::setSize(int width, int height){
     
     setSize0(width, height);
     setSize1(width, height);
+    
+    m_kus.setResize(0.8*m_width, 0.7*m_height, m_petit_button, "kus ");
 }
 
 
@@ -113,7 +115,7 @@ void InfosWidget::draw(){
         }
               
         
-    } else  if (m_type == 4){
+    } else if (m_type == 4){
         {
             QString s = "IMU";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -142,7 +144,29 @@ void InfosWidget::draw(){
             QString s = "correction "+QString::number(round(f.m_tracteur.m_correction_lateral_imu*1000)/10.0)+" cm";
             drawQText(s, x2, 0.7*m_height, sizeText_little, false);
         }
-    } else  if (m_type == 5) {
+    } else if (m_type == 5){
+        {
+            QString s = "IMU2";
+            drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
+        }
+        if(f.m_serialModule.imuIsOpen()){
+            drawText("open", x2, 0.25*m_height, sizeText_medium, false);
+        } else {
+            drawText("close", x2, 0.25*m_height, sizeText_medium, false);
+        }
+        
+        {
+            QString s = "w_z "+QString::number(f.m_imuModule.m_w_z)+" °/s";
+            drawQTexts(s, x2, 0.35*m_height, sizeText_little, false);
+        }
+        drawValueGui(m_kus, f.m_config.m_yawl_kus);
+    
+        
+        {
+            QString s = "angle calcule roue "+QString::number(f.m_angle_roue_by_yawl_deg)+" °";
+            drawQTexts(s, x2, 0.45*m_height, sizeText_little, false);
+        }
+    } else if (m_type == 6) {
         {
             QString s = "Info";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -160,7 +184,7 @@ void InfosWidget::draw(){
         }
         
         
-    } else  if (m_type == 6) {
+    } else  if (m_type == 7) {
         {
             QString s = "Line";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -179,7 +203,7 @@ void InfosWidget::draw(){
                 drawQTexts(s, x2, 0.25   *m_height, sizeText_little, false);
             }
         }
-    } else  if (m_type == 7) {
+    } else  if (m_type == 8) {
         {
             QString s = "Debug";
             drawQText(s, (m_width+x)/2, 0.15*m_height, sizeText_big, true);
@@ -233,10 +257,14 @@ void InfosWidget::onMouse(int x, int y){
     if(m_buttonDebug.isActive(x, y)){
         m_type = (m_type+1)%7;
     }
+    
     if(m_type == 0){
         onMouse0(x, y);
     } else if(m_type == 1){
         onMouse1(x, y);
+    } else if(m_type == 5){
+        GpsFramework & f = GpsFramework::Instance();
+        f.m_config.m_yawl_kus *= m_kus.getMultValue(x,y);
     }
 }
 

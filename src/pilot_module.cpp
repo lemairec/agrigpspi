@@ -46,7 +46,7 @@ void PilotModule::desengage(){
 }
 
 
-void PilotModule::run(double value, double time){
+void PilotModule::setAngleRoueDesired(double value, double time){
     if(m_engaged){
         double res = value/m_algo2_goto_angle_by_tour;
         m_volant = res;

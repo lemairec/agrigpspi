@@ -19,6 +19,9 @@ public:
     virtual void draw();
     virtual void onMouse(int x, int y);
     
+    ValueGui m_kus;
+    
+    
     ValueGui m_ekf;
     ValueGui m_cap_ekf;
     ValueGui m_cap_d;

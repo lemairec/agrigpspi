@@ -78,6 +78,7 @@ void Config::save(){
     
     settings.setValue("m_algo_volant_mode", m_algo_volant_mode);
     settings.setValue("m_agressivite_yawl", m_agressivite_yawl);
+    settings.setValue("m_yawl_kus", m_yawl_kus);
     
     settings.setValue("m_volant_pas_by_tour", m_volant_pas_by_tour);
     settings.setValue("m_volant_angle_by_tour", m_volant_angle_by_tour);
@@ -236,6 +237,10 @@ void Config::load(){
     
     if(settings.contains("m_agressivite_yawl")){
         m_agressivite_yawl = settings.value("m_agressivite_yawl").toDouble();
+    }
+    
+    if(settings.contains("m_yawl_kus")){
+        m_yawl_kus = settings.value("m_yawl_kus").toDouble();
     }
     
     

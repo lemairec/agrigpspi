@@ -200,6 +200,9 @@ public:
     void setVolantEngaged(bool value);
     bool getVolantEngaged();
     
+    double m_angle_roue_by_yawl_deg = 0;
+    void onNewImu();
+    
     Tracteur m_tracteur;
     GpsModule m_gpsModule;
     MyQTSerialPorts m_serialModule;
