@@ -515,16 +515,16 @@ void GpsWidget::draw_force(){
         drawVolant(m_height/2, m_width/2);
     }
     
-    
+    if(!m_infosWidget.m_close){
+        m_infosWidget.draw();
+    }
+    drawError();
     for(auto p : m_widgets){
         if(!p->m_close){
             p->draw();
         }
     }
-    if(!m_infosWidget.m_close){
-        m_infosWidget.draw();
-    }
-    drawError();
+    
     
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> diff2 = end - begin;
