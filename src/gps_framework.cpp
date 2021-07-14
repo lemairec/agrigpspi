@@ -393,7 +393,13 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
             m_pilotModule.desengage();
         }
     }
-    m_pilotModule.run(m_angle_correction, m_time_last_point);
+    
+    if(m_config.m_algo_volant_mode == AlgoVolantMode_CapteurVitesse){
+        double correction = m_angle_correction - m_config.m_agressivite_yawl*m_imuModule.m_w_z;
+        m_pilotModule.run(correction, m_time_last_point);
+    } else {
+        m_pilotModule.run(m_angle_correction, m_time_last_point);
+    }
     
 }
 

@@ -545,6 +545,10 @@ void OptionWidget::resizePage6(){
     m_button_p6testGoToVRight.setResize(0.70*m_width, 0.55*m_height, m_petit_button);
     
     m_button_p6test1.setResize(0.50*m_width, 0.65*m_height, m_petit_button);
+    
+    m_button_yawl.setResize(0.30*m_width, 0.75*m_height, m_petit_button);
+    
+    m_button_yawl_value.setResize(0.30*m_width, 0.85*m_height, m_petit_button, "yawl agressivite");
 };
 
 void OptionWidget::drawPage6(){
@@ -568,6 +572,15 @@ void OptionWidget::drawPage6(){
 
     drawButtonLabel(m_button_p6test1, COLOR_OTHER);
     drawText("button", m_button_p6test1.m_x, m_button_p6test1.m_y, sizeText_little, true);
+    
+    GpsFramework & f = GpsFramework::Instance();
+    if(f.m_config.m_algo_volant_mode == AlgoVolantMode_CapteurVitesse){
+        drawButtonLabel(m_button_yawl, COLOR_OTHER);
+    } else {
+        drawButtonLabel(m_button_yawl, COLOR_CHECK);
+    }
+    
+    drawValueGui(m_button_yawl_value, f.m_config.m_agressivite_yawl);
 }
 
 void OptionWidget::onMousePage6(int x, int y){
@@ -589,6 +602,18 @@ void OptionWidget::onMousePage6(int x, int y){
     } else if(m_button_p6test1.isActive(x,y)){
         f.m_pilotModule.test();
     }
+    
+    if(m_button_yawl.isActive(x, y)){
+        if(f.m_config.m_algo_volant_mode == AlgoVolantMode_CapteurVitesse){
+            f.m_config.m_algo_volant_mode = AlgoVolantMode_Encodeur;
+        } else {
+            f.m_config.m_algo_volant_mode = AlgoVolantMode_Encodeur;
+        }
+    }
+    
+    f.m_config.m_agressivite_yawl *= m_button_yawl_value.getMultValue(x,y);
+    
+    f.initOrLoadConfig();
 }
 
 

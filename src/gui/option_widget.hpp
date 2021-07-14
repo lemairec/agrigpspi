@@ -125,6 +125,9 @@ public:
     ButtonGui m_button_p6test1;
     
     
+    ButtonGui m_button_yawl;
+    ValueGui m_button_yawl_value;
+    
     //page_imu
     SelectButtonGui m_select_imu_serial;
     SelectButtonGui m_select_imu_baudrates;

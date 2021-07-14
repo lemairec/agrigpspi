@@ -22,6 +22,11 @@ enum LissageImuMode{
     LissageImuMode_Ekf = 1
 };
 
+enum AlgoVolantMode{
+    AlgoVolantMode_Encodeur = 0,
+    AlgoVolantMode_CapteurVitesse = 1
+};
+
 class Config  {
 public:
     std::string m_input_gps;
@@ -73,6 +78,9 @@ public:
     double m_pilot_rwp_kte = 0.5;
     
     int m_pilot_adaptive_vitesse = 0;
+    
+    AlgoVolantMode m_algo_volant_mode = AlgoVolantMode_Encodeur;
+    double m_agressivite_yawl = 1.0;
     
     double m_volant_pas_by_tour = 4500;
     double m_volant_angle_by_tour = 35;

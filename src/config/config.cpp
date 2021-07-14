@@ -76,6 +76,9 @@ void Config::save(){
     settings.setValue("m_pilot_frequence", m_pilot_frequence);
     settings.setValue("m_pilot_virtual_point", m_pilot_virtual_point);
     
+    settings.setValue("m_algo_volant_mode", m_algo_volant_mode);
+    settings.setValue("m_agressivite_yawl", m_agressivite_yawl);
+    
     settings.setValue("m_volant_pas_by_tour", m_volant_pas_by_tour);
     settings.setValue("m_volant_angle_by_tour", m_volant_angle_by_tour);
     settings.setValue("m_volant_derive", m_volant_derive);
@@ -226,6 +229,15 @@ void Config::load(){
     if(settings.contains("m_pilot_auto_deactive")){
         m_pilot_auto_deactive = settings.value("m_pilot_auto_deactive").toInt();
     }
+    
+    if(settings.contains("m_algo_volant_mode")){
+        m_algo_volant_mode = (AlgoVolantMode) settings.value("m_algo_volant_mode").toInt();
+    }
+    
+    if(settings.contains("m_agressivite_yawl")){
+        m_agressivite_yawl = settings.value("m_agressivite_yawl").toDouble();
+    }
+    
     
     if(settings.contains("m_volant_pas_by_tour")){
         m_volant_pas_by_tour = settings.value("m_volant_pas_by_tour").toDouble();
