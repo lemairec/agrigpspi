@@ -743,10 +743,10 @@ void GpsFramework::loadParcelle(const std::string & name, int flags_i, bool line
 }
 
 void GpsFramework::onNewImu(){
-    if(m_config.m_algo_volant_mode == AlgoVolantMode_CapteurVitesse){
+    //if(m_config.m_algo_volant_mode == AlgoVolantMode_CapteurVitesse){
         double vitesse_ms = m_vitesse*1000.0/3600.0;
         double temp = vitesse_ms/(m_tracteur.m_empatement+(m_config.m_yawl_kus/9.8)*vitesse_ms*vitesse_ms);
         
         m_angle_roue_by_yawl_deg = m_imuModule.m_w_z/temp;
-    }
+    //}
 }
