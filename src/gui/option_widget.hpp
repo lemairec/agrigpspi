@@ -104,7 +104,6 @@ public:
     ValueGui m_volant_derive;
     
     ValueGui m_volant_frequence;
-    ValueGui m_virtual_point;
     
     ValueGui m_button_auto_deactive;
     ValueGui m_button_auto_active;

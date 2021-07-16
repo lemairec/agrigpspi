@@ -74,7 +74,6 @@ void Config::save(){
     settings.setValue("m_pilot_auto_deactive", m_pilot_auto_deactive);
     settings.setValue("m_pilot_auto_active", m_pilot_auto_active);
     settings.setValue("m_pilot_frequence", m_pilot_frequence);
-    settings.setValue("m_pilot_virtual_point", m_pilot_virtual_point);
     
     settings.setValue("m_algo_volant_mode", m_algo_volant_mode);
     settings.setValue("m_agressivite_yawl", m_agressivite_yawl);
@@ -194,9 +193,6 @@ void Config::load(){
     }
     if(settings.contains("m_pilot_frequence")){
         m_pilot_frequence = settings.value("m_pilot_frequence").toInt();
-    }
-    if(settings.contains("m_pilot_virtual_point")){
-        m_pilot_virtual_point = settings.value("m_pilot_virtual_point").toInt();
     }
     
     if(settings.contains("m_pilot_motor_inverse")){
