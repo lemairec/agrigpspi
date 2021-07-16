@@ -396,7 +396,7 @@ void GpsFramework::processPilot(double deplacementX, double deplacementY
     
     if(m_config.m_algo_volant_mode == AlgoVolantMode_CapteurVitesse){
         double correction = m_angle_correction - m_angle_roue_by_yawl_deg;
-        m_pilotModule.turnRoue(correction*0.5);
+        m_pilotModule.turnRoue(correction*0.25);
     } else {
         m_pilotModule.setAngleRoueDesired(m_angle_correction, m_time_last_point);
     }
