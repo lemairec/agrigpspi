@@ -367,6 +367,10 @@ void OptionWidget::resizePage4(){
     m_value_gui_lookahead_d.setResize(x2*m_width, 0.5*m_height, m_petit_button, "lookahead ");
     m_value_gui_rwp_kth.setResize(x2*m_width, 0.5*m_height, m_petit_button, "kth ");
     m_value_gui_rwp_kte.setResize(x2*m_width, 0.58*m_height, m_petit_button, "kte ");
+    
+    m_button_auto_deactive.setResize(x1*m_width, 0.7*m_height, m_petit_button, "auto deactive ");
+    m_button_auto_active.setResize(x1*m_width, 0.78*m_height, m_petit_button, "auto active ");
+
 };
 
 void OptionWidget::drawPage4(){
@@ -402,6 +406,11 @@ void OptionWidget::drawPage4(){
         drawButton(m_button_adaptive_vitesse);
     }
     
+    drawPart1(0.65*m_height, 0.20*m_height, "auto_parcelle");
+    drawValueGui(m_button_auto_deactive, f.m_config.m_pilot_auto_deactive);
+    drawValueGui(m_button_auto_active, f.m_config.m_pilot_auto_active);
+
+    
     drawSelectButtonGuiOpen(m_select_pilot_serial);
     drawSelectButtonGuiOpen(m_select_pilot_langage);
     drawSelectButtonGuiOpen(m_select_pilot_baudrates);
@@ -432,6 +441,10 @@ void OptionWidget::onMousePage4(int x, int y){
         f.m_config.m_pilot_adaptive_vitesse = !f.m_config.m_pilot_adaptive_vitesse;
     }
     
+    f.m_config.m_pilot_auto_deactive += 5*m_button_auto_deactive.getIntValue(x,y);
+    f.m_config.m_pilot_auto_active += 5*m_button_auto_active.getIntValue(x,y);
+    
+    
     if(f.m_pilot_algo == AlgoPilot::FollowCarrotPontAvant){
         f.m_config.m_pilot_lookahead_d = f.m_config.m_pilot_lookahead_d * m_value_gui_lookahead_d.getMultValue(x,y);
     } else if(f.m_pilot_algo == AlgoPilot::FollowCarrotPontArriere){
@@ -461,10 +474,7 @@ void OptionWidget::resizePage5(){
     m_volant_derive.setResize(0.35*m_width, 0.55*m_height, m_petit_button, "rattrapage de derive ");
     
     m_volant_frequence.setResize(0.35*m_width, 0.65*m_height, m_petit_button, "frequence ");
-    m_virtual_point.setResize(0.35*m_width, 0.7*m_height, m_petit_button, "virtual point ");
     
-    m_button_auto_deactive.setResize(0.35*m_width, 0.8*m_height, m_petit_button, "auto deactive ");
-    m_button_auto_active.setResize(0.35*m_width, 0.85*m_height, m_petit_button, "auto active ");
 };
 
 void OptionWidget::drawPage5(){
@@ -495,10 +505,7 @@ void OptionWidget::drawPage5(){
     drawValueGui(m_volant_derive, f.m_config.m_volant_derive);
     
     //drawValueGui(m_volant_frequence, f.m_config.m_pilot_frequence);
-    drawValueGui(m_virtual_point, f.m_config.m_pilot_virtual_point);
     
-    drawValueGui(m_button_auto_deactive, f.m_config.m_pilot_auto_deactive);
-    drawValueGui(m_button_auto_active, f.m_config.m_pilot_auto_active);
 }
 
 void OptionWidget::onMousePage5(int x, int y){
@@ -520,11 +527,6 @@ void OptionWidget::onMousePage5(int x, int y){
     INFO(f.m_config.m_volant_derive);
     
     //f.m_config.m_pilot_frequence += 10*m_volant_angle_by_tour.getIntValue(x,y);
-    f.m_config.m_pilot_virtual_point += m_virtual_point.getIntValue(x,y);
-    
-    f.m_config.m_pilot_auto_deactive += 5*m_button_auto_deactive.getIntValue(x,y);
-    f.m_config.m_pilot_auto_active += 5*m_button_auto_active.getIntValue(x,y);
-    
     
     f.initOrLoadConfig();
     

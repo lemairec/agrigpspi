@@ -46,11 +46,24 @@ void PilotModule::desengage(){
 }
 
 
+void PilotModule::turnRoue(double degree){
+    if(m_engaged){
+        double res = degree/m_algo2_goto_angle_by_tour;
+        m_volant = m_volantMesured + res;
+    }
+}
+
 void PilotModule::setAngleRoueDesired(double value, double time){
     if(m_engaged){
         double res = value/m_algo2_goto_angle_by_tour;
         m_volant = res;
         
+        if(res > 0.2){
+            res = 0.2;
+        }
+        if(res < -0.2){
+            res = -0.2;
+        }
         
         m_volant0 += res*m_volant_derive;
         
@@ -78,13 +91,13 @@ int temp_i = 0;
 void PilotModule::setVolant(double vol){
     GpsFramework & f = GpsFramework::Instance();
     f.m_pilot_time.setNewTime();
-    int frequence = f.m_config.m_pilot_virtual_point;
+    /*int frequence = f.m_config.m_pilot_virtual_point;
     if(frequence > 0){
         temp_i = (temp_i+1)%frequence;
         if(temp_i == 0){
             GpsFramework::Instance().updateWithoutGps();
         }
-    }
+    }*/
     
     if(!m_pilot_encoder_inverse){
         m_volantMesured = vol;

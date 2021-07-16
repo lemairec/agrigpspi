@@ -40,6 +40,7 @@ public:
     
     PilotModule();
     void setAngleRoueDesired(double value, double time);
+    void turnRoue(double degree);
     void initOrLoadConfig(Config & config);
 
     void clear();
